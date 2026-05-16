@@ -27,7 +27,7 @@ module.exports = {
       },
       TemplateElement(node) {
         const raw = node.value?.cooked ?? "";
-        const match = raw.match(/#(?:[0-9a-fA-F]{3,8})\b/);
+        const match = raw.match(/#(?:[0-9a-fA-F]{3}|[0-9a-fA-F]{6}|[0-9a-fA-F]{8})\b/);
         if (match) {
           context.report({ node, messageId: "noHex", data: { value: match[0] } });
         }
