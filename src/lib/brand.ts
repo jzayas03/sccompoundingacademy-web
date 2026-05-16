@@ -1,10 +1,16 @@
+// Source of truth: Compounding Academy Brandsheet.pdf
+//   tealDeep   #195561   primary background
+//   teal       #228698   secondary surfaces / mid-band dividers
+//   chartreuse #E6EA82   primary accent (CTAs, brand mark fills)
+//   sand       #EAE1D6   warm neutral surface
+//   offWhite   #F3F3F4   light surface / body text on dark bg
 export const brand = {
   colors: {
-    tealDeep: "#225560",
-    teal: "#368798",
-    chartreuse: "#E9EA8A",
-    sand: "#EAE2D6",
-    offWhite: "#F5F6F7",
+    tealDeep: "#195561",
+    teal: "#228698",
+    chartreuse: "#E6EA82",
+    sand: "#EAE1D6",
+    offWhite: "#F3F3F4",
     white: "#FFFFFF",
     black: "#000000",
     gray: {
@@ -17,7 +23,7 @@ export const brand = {
   },
   gradient: {
     brand:
-      "linear-gradient(90deg, #225560 0%, #368798 25%, #E9EA8A 50%, #EAE2D6 75%, #F5F6F7 100%)",
+      "linear-gradient(90deg, #195561 0%, #228698 25%, #E6EA82 50%, #EAE1D6 75%, #F3F3F4 100%)",
   },
   radii: {
     sm: "8px",
@@ -27,8 +33,9 @@ export const brand = {
     pill: "9999px",
   },
   shadows: {
-    soft: "0 4px 12px rgba(34, 85, 96, 0.08)",
-    lift: "0 8px 24px rgba(34, 85, 96, 0.12)",
+    // rgba derived from tealDeep #195561 = rgb(25, 85, 97)
+    soft: "0 4px 12px rgba(25, 85, 97, 0.08)",
+    lift: "0 8px 24px rgba(25, 85, 97, 0.12)",
   },
   type: {
     heading: [
