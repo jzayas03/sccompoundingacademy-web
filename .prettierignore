@@ -2,3 +2,7 @@ node_modules
 .next
 test-results
 playwright-report
+pnpm-lock.yaml
+
+# Pristine reference assets dropped in by the user — do not reformat.
+brand/source/components-reference/
