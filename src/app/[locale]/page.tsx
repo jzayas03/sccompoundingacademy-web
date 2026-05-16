@@ -1,18 +1,27 @@
 import { setRequestLocale } from "next-intl/server";
-import { useTranslations } from "next-intl";
+import { HeroBillboard } from "@/components/marketing/HeroBillboard";
+import { TaglineBand } from "@/components/marketing/TaglineBand";
+import { FeaturedCoursesPlaceholder } from "@/components/marketing/FeaturedCoursesPlaceholder";
+import { WhySCCA } from "@/components/marketing/WhySCCA";
+import { InstructorSection } from "@/components/marketing/InstructorSection";
+import { PatternDivider } from "@/components/marketing/PatternDivider";
+import { FAQ } from "@/components/marketing/FAQ";
+import { FooterCTA } from "@/components/marketing/FooterCTA";
 
 export default async function LandingPage({ params }: { params: Promise<{ locale: string }> }) {
   const { locale } = await params;
   setRequestLocale(locale);
-  return <LandingPageInner />;
-}
-
-function LandingPageInner() {
-  const t = useTranslations("hero");
   return (
-    <main className="bg-teal-deep min-h-screen p-8">
-      <h1 className="font-heading text-chartreuse text-4xl">{t("headline")}</h1>
-      <p className="text-off-white mt-2">{t("subhead")}</p>
-    </main>
+    <>
+      <HeroBillboard />
+      <TaglineBand />
+      <FeaturedCoursesPlaceholder locale={locale as "es" | "en"} />
+      <WhySCCA />
+      <PatternDivider />
+      <InstructorSection />
+      <FAQ />
+      <PatternDivider />
+      <FooterCTA />
+    </>
   );
 }
