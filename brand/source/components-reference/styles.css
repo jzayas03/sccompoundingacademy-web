@@ -1,0 +1,230 @@
+
+:root{
+  --scca-dark:#1F4E55;
+  --scca-teal:#2E7F88;
+  --scca-lime:#E6EF7A;
+  --scca-beige:#E9E2D6;
+  --scca-cream:#F7F5EF;
+  --scca-white:#FFFFFF;
+  --scca-black:#111111;
+  --scca-muted:#617174;
+  --scca-line:rgba(31,78,85,.16);
+  --scca-shadow:0 18px 45px rgba(17,17,17,.09);
+  --radius-xl:28px;
+  --radius-lg:18px;
+  --radius-md:12px;
+  --font-display: "Playfair Display", Georgia, serif;
+  --font-body: Inter, Arial, sans-serif;
+}
+
+*{box-sizing:border-box}
+body{
+  margin:0;
+  background:var(--scca-cream);
+  color:var(--scca-black);
+  font-family:var(--font-body);
+}
+a{text-decoration:none;color:inherit}
+img{max-width:100%;display:block}
+.scca-container{width:min(1180px,92vw);margin-inline:auto}
+.scca-section{padding:72px 0}
+.scca-eyebrow{
+  letter-spacing:.12em;
+  text-transform:uppercase;
+  color:var(--scca-teal);
+  font-weight:700;
+  font-size:.78rem;
+}
+.scca-h1,.scca-h2,.scca-h3{
+  font-family:var(--font-display);
+  color:var(--scca-dark);
+  line-height:.98;
+  margin:0;
+}
+.scca-h1{font-size:clamp(3rem,7vw,6.5rem);letter-spacing:-.045em}
+.scca-h2{font-size:clamp(2.2rem,4vw,4.5rem);letter-spacing:-.035em}
+.scca-h3{font-size:clamp(1.45rem,2vw,2rem);letter-spacing:-.02em}
+.scca-lead{font-size:1.12rem;line-height:1.65;color:#435457;max-width:620px}
+.scca-btn{
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  gap:.65rem;
+  min-height:48px;
+  padding:0 1.25rem;
+  border-radius:999px;
+  font-weight:800;
+  border:1px solid transparent;
+  cursor:pointer;
+  transition:.2s ease;
+}
+.scca-btn-primary{background:var(--scca-lime);color:var(--scca-black)}
+.scca-btn-primary:hover{transform:translateY(-2px);filter:saturate(1.08) brightness(.98)}
+.scca-btn-secondary{background:var(--scca-dark);color:white}
+.scca-btn-secondary:hover{background:#143c42;transform:translateY(-2px)}
+.scca-btn-outline{border-color:var(--scca-dark);color:var(--scca-dark);background:transparent}
+.scca-btn-outline:hover{background:var(--scca-dark);color:white}
+.scca-card{
+  background:rgba(255,255,255,.9);
+  border:1px solid rgba(31,78,85,.12);
+  border-radius:var(--radius-lg);
+  box-shadow:var(--scca-shadow);
+}
+.scca-logo{display:flex;align-items:center;gap:.75rem}
+.scca-logo-mark{width:50px;height:50px;flex:0 0 auto}
+.scca-logo-text{
+  font-family:var(--font-display);
+  color:var(--scca-dark);
+  font-weight:700;
+  line-height:.9;
+  font-size:1.32rem;
+}
+.scca-nav{
+  position:sticky;top:18px;z-index:20;
+  margin-top:18px;
+}
+.scca-nav-inner{
+  min-height:74px;
+  background:linear-gradient(135deg,var(--scca-dark),#12363b);
+  color:white;
+  border-radius:18px;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:1.5rem;
+  padding:0 1rem 0 1.25rem;
+  box-shadow:0 18px 55px rgba(31,78,85,.22);
+}
+.scca-nav .scca-logo-text{color:white;font-size:1rem}
+.scca-nav-links{display:flex;align-items:center;gap:1.35rem;font-size:.92rem}
+.scca-nav-links a{opacity:.88}
+.scca-nav-links a:hover{opacity:1;color:var(--scca-lime)}
+.scca-hero{
+  display:grid;
+  grid-template-columns:1.04fr .96fr;
+  overflow:hidden;
+  min-height:560px;
+}
+.scca-hero-copy{padding:clamp(2rem,6vw,5.5rem)}
+.scca-hero-actions{display:flex;gap:.9rem;flex-wrap:wrap;margin-top:2rem}
+.scca-hero-media{
+  position:relative;
+  min-height:420px;
+  background:
+    linear-gradient(145deg,rgba(31,78,85,.1),rgba(31,78,85,.82)),
+    url('https://images.unsplash.com/photo-1581093458791-9f3c3900df7b?auto=format&fit=crop&w=1000&q=80') center/cover;
+}
+.scca-hero-media::after{
+  content:"Educamos para formar\A bienestar y salud.";
+  white-space:pre;
+  position:absolute;
+  right:32px;
+  bottom:32px;
+  color:var(--scca-lime);
+  font-family:var(--font-display);
+  font-size:1.45rem;
+  line-height:1.05;
+  text-align:right;
+}
+.scca-feature-grid,.scca-course-grid{
+  display:grid;
+  grid-template-columns:repeat(4,1fr);
+  gap:1rem;
+}
+.scca-feature{
+  padding:2rem 1.45rem;
+  text-align:center;
+}
+.scca-icon-circle{
+  width:72px;height:72px;
+  margin:0 auto 1.2rem;
+  border-radius:50%;
+  background:radial-gradient(circle at 30% 20%,#2E7F88,var(--scca-dark));
+  color:var(--scca-lime);
+  display:grid;place-items:center;
+}
+.scca-feature p{color:#47595c;line-height:1.55}
+.scca-course-grid{grid-template-columns:repeat(3,1fr)}
+.scca-course{overflow:hidden}
+.scca-course-img{
+  height:190px;
+  background:linear-gradient(rgba(31,78,85,.18),rgba(31,78,85,.04)), url('https://images.unsplash.com/photo-1532187863486-abf9dbad1b69?auto=format&fit=crop&w=900&q=80') center/cover;
+}
+.scca-course:nth-child(2) .scca-course-img{background-image:linear-gradient(rgba(31,78,85,.18),rgba(31,78,85,.04)),url('https://images.unsplash.com/photo-1616401784845-180882ba9ba8?auto=format&fit=crop&w=900&q=80')}
+.scca-course:nth-child(3) .scca-course-img{background-image:linear-gradient(rgba(31,78,85,.18),rgba(31,78,85,.04)),url('https://images.unsplash.com/photo-1587854692152-cbe660dbde88?auto=format&fit=crop&w=900&q=80')}
+.scca-course-body{padding:1.35rem}
+.scca-course-footer{display:flex;align-items:center;justify-content:space-between;margin-top:1.2rem}
+.scca-pill{font-size:.82rem;color:var(--scca-dark);background:rgba(46,127,136,.11);border-radius:999px;padding:.38rem .7rem}
+.scca-stats{
+  display:grid;
+  grid-template-columns:repeat(4,1fr);
+  background:linear-gradient(135deg,var(--scca-dark),#12383e);
+  color:white;
+  border-radius:var(--radius-xl);
+  padding:2rem;
+  gap:1rem;
+}
+.scca-stat{text-align:center;border-right:1px solid rgba(255,255,255,.22)}
+.scca-stat:last-child{border-right:0}
+.scca-stat strong{display:block;color:var(--scca-lime);font-size:2.2rem;font-family:var(--font-display)}
+.scca-testimonial{padding:2rem}
+.scca-quote-mark{font-size:5rem;color:var(--scca-lime);font-family:var(--font-display);line-height:.6}
+.scca-person{display:flex;gap:.8rem;align-items:center;margin-top:1.2rem}
+.scca-avatar{width:54px;height:54px;border-radius:50%;background:linear-gradient(135deg,var(--scca-teal),var(--scca-lime))}
+.scca-faq{overflow:hidden}
+.scca-faq-item{border-bottom:1px solid var(--scca-line)}
+.scca-faq-q{display:flex;justify-content:space-between;padding:1rem 1.25rem;font-weight:800;color:var(--scca-dark)}
+.scca-faq-a{padding:0 1.25rem 1.25rem;color:#47595c;line-height:1.55}
+.scca-form-wrap{display:grid;grid-template-columns:.75fr 1.25fr;overflow:hidden}
+.scca-form-side{
+  background:linear-gradient(135deg,var(--scca-dark),#10373d);
+  color:white;
+  padding:2.2rem;
+}
+.scca-form-side h3{color:var(--scca-lime)}
+.scca-form{padding:2rem;display:grid;grid-template-columns:1fr 1fr;gap:.9rem}
+.scca-form label{font-size:.78rem;font-weight:800;color:var(--scca-dark)}
+.scca-field{display:flex;flex-direction:column;gap:.35rem}
+.scca-input,.scca-textarea,.scca-select{
+  width:100%;
+  border:1px solid var(--scca-line);
+  background:white;
+  border-radius:10px;
+  min-height:46px;
+  padding:.75rem .9rem;
+  font:inherit;
+}
+.scca-textarea{min-height:110px;resize:vertical}
+.scca-span-2{grid-column:1/-1}
+.scca-banner{
+  background:linear-gradient(90deg,rgba(31,78,85,.95),rgba(31,78,85,.68)),url('https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?auto=format&fit=crop&w=1200&q=80') center/cover;
+  color:white;
+  border-radius:var(--radius-xl);
+  padding:2.4rem;
+}
+.scca-banner h2{color:var(--scca-lime)}
+.scca-footer{
+  background:linear-gradient(135deg,var(--scca-dark),#0e3136);
+  color:white;
+  border-radius:var(--radius-xl) var(--radius-xl) 0 0;
+  padding:3rem 0 1rem;
+}
+.scca-footer-grid{display:grid;grid-template-columns:1.4fr repeat(3,1fr) 1.25fr;gap:2rem}
+.scca-footer h4{color:var(--scca-lime);margin:0 0 1rem}
+.scca-footer p,.scca-footer a,.scca-footer li{color:rgba(255,255,255,.78);font-size:.94rem;line-height:1.7}
+.scca-footer ul{list-style:none;padding:0;margin:0}
+.scca-newsletter{display:flex;gap:.5rem;margin-top:1rem}
+.scca-newsletter input{min-width:0;flex:1;border:0;border-radius:999px;padding:.8rem 1rem}
+.scca-copyright{border-top:1px solid rgba(255,255,255,.16);margin-top:2rem;padding-top:1rem;display:flex;justify-content:space-between;color:rgba(255,255,255,.62);font-size:.85rem}
+
+@media (max-width:900px){
+  .scca-nav-links{display:none}
+  .scca-hero{grid-template-columns:1fr}
+  .scca-feature-grid,.scca-course-grid,.scca-stats,.scca-footer-grid{grid-template-columns:1fr 1fr}
+  .scca-form-wrap{grid-template-columns:1fr}
+}
+@media (max-width:620px){
+  .scca-feature-grid,.scca-course-grid,.scca-stats,.scca-footer-grid,.scca-form{grid-template-columns:1fr}
+  .scca-stat{border-right:0;border-bottom:1px solid rgba(255,255,255,.18);padding-bottom:1rem}
+  .scca-copyright{flex-direction:column;gap:.5rem}
+}

@@ -1,0 +1,62 @@
+@import "tailwindcss";
+
+@theme {
+  --color-teal-deep: #225560;
+  --color-teal: #368798;
+  --color-chartreuse: #e9ea8a;
+  --color-sand: #eae2d6;
+  --color-off-white: #f5f6f7;
+
+  --color-gray-900: #404040;
+  --color-gray-700: #666666;
+  --color-gray-500: #bababa;
+  --color-gray-300: #e0e0e0;
+  --color-gray-100: #f5f5f5;
+
+  --radius-sm: 8px;
+  --radius-md: 16px;
+  --radius-lg: 20px;
+  --radius-xl: 28px;
+  --radius-pill: 9999px;
+
+  --shadow-soft: 0 4px 12px rgba(34, 85, 96, 0.08);
+  --shadow-lift: 0 8px 24px rgba(34, 85, 96, 0.12);
+
+  --font-heading:
+    var(--font-heading-loaded), "ITC Avant Garde Gothic Pro", "Century Gothic", "Futura",
+    "Montserrat", system-ui, sans-serif;
+  --font-body: var(--font-heading);
+  --font-accent: var(--font-accent-loaded), "Khmer MN", "Cormorant Garamond", "Garamond", serif;
+
+  --background-image-brand-gradient: linear-gradient(
+    90deg,
+    #225560 0%,
+    #368798 25%,
+    #e9ea8a 50%,
+    #eae2d6 75%,
+    #f5f6f7 100%
+  );
+}
+
+@layer base {
+  html {
+    color: var(--color-gray-900);
+    background: var(--color-off-white);
+    font-family: var(--font-body);
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+  }
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
+    font-family: var(--font-heading);
+    letter-spacing: -0.01em;
+  }
+  ::selection {
+    background: var(--color-chartreuse);
+    color: var(--color-teal-deep);
+  }
+}

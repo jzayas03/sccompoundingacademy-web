@@ -137,6 +137,7 @@ sccompoundingacademy-web/
 ## Task 1 — Initialize the Next.js project
 
 **Files:**
+
 - Create: `package.json`, `tsconfig.json`, `next.config.ts`, `src/app/layout.tsx`, `src/app/page.tsx`, `src/app/globals.css`, `next-env.d.ts`, `.gitignore` additions
 
 - [ ] **Step 1: Run create-next-app non-interactively**
@@ -223,6 +224,7 @@ Co-Authored-By: Claude Opus 4.7 (1M context) <noreply@anthropic.com>"
 ## Task 3 — Strict TypeScript & Prettier
 
 **Files:**
+
 - Modify: `tsconfig.json`
 - Create: `.prettierrc`
 
@@ -309,6 +311,7 @@ Co-Authored-By: Claude Opus 4.7 (1M context) <noreply@anthropic.com>"
 ## Task 4 — Vitest setup
 
 **Files:**
+
 - Create: `vitest.config.ts`, `vitest.setup.ts`
 - Modify: `package.json` (scripts)
 
@@ -396,6 +399,7 @@ Co-Authored-By: Claude Opus 4.7 (1M context) <noreply@anthropic.com>"
 ## Task 5 — Playwright setup
 
 **Files:**
+
 - Create: `playwright.config.ts`
 
 - [ ] **Step 1: Create `playwright.config.ts`**
@@ -413,9 +417,7 @@ export default defineConfig({
     baseURL: "http://localhost:3000",
     trace: "on-first-retry",
   },
-  projects: [
-    { name: "chromium", use: { ...devices["Desktop Chrome"] } },
-  ],
+  projects: [{ name: "chromium", use: { ...devices["Desktop Chrome"] } }],
   webServer: {
     command: "pnpm dev",
     url: "http://localhost:3000",
@@ -459,6 +461,7 @@ Co-Authored-By: Claude Opus 4.7 (1M context) <noreply@anthropic.com>"
 ## Task 6 — Tailwind merge + cn() utility
 
 **Files:**
+
 - Create: `src/lib/cn.ts`, `tests/unit/cn.test.ts`
 
 - [ ] **Step 1: Write the failing test**
@@ -522,6 +525,7 @@ Co-Authored-By: Claude Opus 4.7 (1M context) <noreply@anthropic.com>"
 ## Task 7 — Brand tokens (`src/lib/brand.ts`)
 
 **Files:**
+
 - Create: `src/lib/brand.ts`, `tests/unit/brand.test.ts`
 
 - [ ] **Step 1: Write the test**
@@ -655,6 +659,7 @@ Co-Authored-By: Claude Opus 4.7 (1M context) <noreply@anthropic.com>"
 ## Task 8 — Wire Tailwind 4 to brand tokens
 
 **Files:**
+
 - Modify: `src/app/globals.css`
 
 - [ ] **Step 1: Replace `src/app/globals.css` entirely**
@@ -665,15 +670,15 @@ Co-Authored-By: Claude Opus 4.7 (1M context) <noreply@anthropic.com>"
 @theme {
   --color-teal-deep: #225560;
   --color-teal: #368798;
-  --color-chartreuse: #E9EA8A;
-  --color-sand: #EAE2D6;
-  --color-off-white: #F5F6F7;
+  --color-chartreuse: #e9ea8a;
+  --color-sand: #eae2d6;
+  --color-off-white: #f5f6f7;
 
   --color-gray-900: #404040;
   --color-gray-700: #666666;
-  --color-gray-500: #BABABA;
-  --color-gray-300: #E0E0E0;
-  --color-gray-100: #F5F5F5;
+  --color-gray-500: #bababa;
+  --color-gray-300: #e0e0e0;
+  --color-gray-100: #f5f5f5;
 
   --radius-sm: 8px;
   --radius-md: 16px;
@@ -684,8 +689,8 @@ Co-Authored-By: Claude Opus 4.7 (1M context) <noreply@anthropic.com>"
   --shadow-soft: 0 4px 12px rgba(34, 85, 96, 0.08);
   --shadow-lift: 0 8px 24px rgba(34, 85, 96, 0.12);
 
-  --font-heading: "ITC Avant Garde Gothic Pro", "Century Gothic", "Futura",
-    "Montserrat", system-ui, sans-serif;
+  --font-heading:
+    "ITC Avant Garde Gothic Pro", "Century Gothic", "Futura", "Montserrat", system-ui, sans-serif;
   --font-body: var(--font-heading);
   --font-accent: "Khmer MN", "Cormorant Garamond", "Garamond", serif;
 
@@ -693,9 +698,9 @@ Co-Authored-By: Claude Opus 4.7 (1M context) <noreply@anthropic.com>"
     90deg,
     #225560 0%,
     #368798 25%,
-    #E9EA8A 50%,
-    #EAE2D6 75%,
-    #F5F6F7 100%
+    #e9ea8a 50%,
+    #eae2d6 75%,
+    #f5f6f7 100%
   );
 }
 
@@ -707,7 +712,12 @@ Co-Authored-By: Claude Opus 4.7 (1M context) <noreply@anthropic.com>"
     -webkit-font-smoothing: antialiased;
     text-rendering: optimizeLegibility;
   }
-  h1, h2, h3, h4, h5, h6 {
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
     font-family: var(--font-heading);
     letter-spacing: -0.01em;
   }
@@ -723,11 +733,11 @@ Co-Authored-By: Claude Opus 4.7 (1M context) <noreply@anthropic.com>"
 ```tsx
 export default function Page() {
   return (
-    <main className="min-h-screen bg-teal-deep p-8">
-      <h1 className="font-heading text-chartreuse text-4xl">
-        SCCA tokens wired
-      </h1>
-      <p className="text-off-white mt-2">If this is teal+chartreuse, Tailwind reads from brand tokens.</p>
+    <main className="bg-teal-deep min-h-screen p-8">
+      <h1 className="font-heading text-chartreuse text-4xl">SCCA tokens wired</h1>
+      <p className="text-off-white mt-2">
+        If this is teal+chartreuse, Tailwind reads from brand tokens.
+      </p>
     </main>
   );
 }
@@ -754,6 +764,7 @@ Co-Authored-By: Claude Opus 4.7 (1M context) <noreply@anthropic.com>"
 ## Task 9 — ESLint rule blocking hex literals
 
 **Files:**
+
 - Create: `src/eslint-rules/no-hex-literal.js`, `tests/unit/no-hex-literal.test.ts`
 - Modify: `eslint.config.mjs`
 
@@ -857,6 +868,7 @@ Co-Authored-By: Claude Opus 4.7 (1M context) <noreply@anthropic.com>"
 ## Task 10 — Fonts via next/font
 
 **Files:**
+
 - Create: `src/app/fonts.ts`
 - Modify: `src/app/layout.tsx`
 
@@ -893,11 +905,7 @@ export const metadata: Metadata = {
   description: "Educamos para formar bienestar y salud.",
 };
 
-export default function RootLayout({
-  children,
-}: {
-  children: React.ReactNode;
-}) {
+export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="es" className={`${heading.variable} ${accent.variable}`}>
       <body>{children}</body>
@@ -911,11 +919,11 @@ export default function RootLayout({
 In `src/app/globals.css`, change the `--font-heading` and `--font-accent` lines inside `@theme` to:
 
 ```css
-  --font-heading: var(--font-heading-loaded), "ITC Avant Garde Gothic Pro",
-    "Century Gothic", "Futura", "Montserrat", system-ui, sans-serif;
-  --font-body: var(--font-heading);
-  --font-accent: var(--font-accent-loaded), "Khmer MN", "Cormorant Garamond",
-    "Garamond", serif;
+--font-heading:
+  var(--font-heading-loaded), "ITC Avant Garde Gothic Pro", "Century Gothic", "Futura",
+  "Montserrat", system-ui, sans-serif;
+--font-body: var(--font-heading);
+--font-accent: var(--font-accent-loaded), "Khmer MN", "Cormorant Garamond", "Garamond", serif;
 ```
 
 - [ ] **Step 4: Visual check**
@@ -939,6 +947,7 @@ Co-Authored-By: Claude Opus 4.7 (1M context) <noreply@anthropic.com>"
 ## Task 11 — i18n routing config
 
 **Files:**
+
 - Create: `src/i18n/routing.ts`, `src/i18n/request.ts`, `middleware.ts`, `src/messages/en.json`, `src/messages/es.json`
 - Modify: `next.config.ts`
 
@@ -963,8 +972,7 @@ export const routing = defineRouting({
 
 export type AppPathname = keyof typeof routing.pathnames;
 
-export const { Link, redirect, usePathname, useRouter, getPathname } =
-  createNavigation(routing);
+export const { Link, redirect, usePathname, useRouter, getPathname } = createNavigation(routing);
 ```
 
 - [ ] **Step 2: Create `src/i18n/request.ts`**
@@ -1071,11 +1079,23 @@ export default withNextIntl(nextConfig);
     "title": "Preguntas frecuentes",
     "items": [
       { "q": "¿Cómo se imparten los cursos?", "a": "En línea o presencial, según la cohorte." },
-      { "q": "¿Qué es USP 795?", "a": "El capítulo de la USP que define la práctica de compounding no estéril." },
-      { "q": "¿Qué es USP 800?", "a": "El capítulo de la USP sobre manejo seguro de medicamentos peligrosos." },
-      { "q": "¿Recibo certificación?", "a": "Sí — un certificado de SCCA al completar el programa." },
+      {
+        "q": "¿Qué es USP 795?",
+        "a": "El capítulo de la USP que define la práctica de compounding no estéril."
+      },
+      {
+        "q": "¿Qué es USP 800?",
+        "a": "El capítulo de la USP sobre manejo seguro de medicamentos peligrosos."
+      },
+      {
+        "q": "¿Recibo certificación?",
+        "a": "Sí — un certificado de SCCA al completar el programa."
+      },
       { "q": "¿Aceptan tarjeta de crédito?", "a": "Sí — pago seguro con tarjeta vía Stripe." },
-      { "q": "¿Puedo solicitar reembolso?", "a": "Sí, hasta 7 días antes del inicio de la cohorte." }
+      {
+        "q": "¿Puedo solicitar reembolso?",
+        "a": "Sí, hasta 7 días antes del inicio de la cohorte."
+      }
     ]
   },
   "footerCta": {
@@ -1109,8 +1129,14 @@ export default withNextIntl(nextConfig);
     "comingSoonNotice": "Catálogo completo próximamente. Mientras tanto, contáctanos para consultas."
   },
   "legal": {
-    "privacy": { "title": "Política de privacidad", "body": "Documento en preparación. Para preguntas, escríbenos a contacto." },
-    "terms": { "title": "Términos y condiciones", "body": "Documento en preparación. Para preguntas, escríbenos a contacto." }
+    "privacy": {
+      "title": "Política de privacidad",
+      "body": "Documento en preparación. Para preguntas, escríbenos a contacto."
+    },
+    "terms": {
+      "title": "Términos y condiciones",
+      "body": "Documento en preparación. Para preguntas, escríbenos a contacto."
+    }
   },
   "common": {
     "languageToggle": "Idioma",
@@ -1175,9 +1201,15 @@ export default withNextIntl(nextConfig);
     "title": "Frequently asked questions",
     "items": [
       { "q": "How are courses delivered?", "a": "Online or in person, depending on the cohort." },
-      { "q": "What is USP 795?", "a": "The USP chapter that defines non-sterile compounding practice." },
+      {
+        "q": "What is USP 795?",
+        "a": "The USP chapter that defines non-sterile compounding practice."
+      },
       { "q": "What is USP 800?", "a": "The USP chapter on safe handling of hazardous drugs." },
-      { "q": "Do I get a certificate?", "a": "Yes — an SCCA professional certificate on completion." },
+      {
+        "q": "Do I get a certificate?",
+        "a": "Yes — an SCCA professional certificate on completion."
+      },
       { "q": "Do you accept credit cards?", "a": "Yes — secure card payment via Stripe." },
       { "q": "Can I request a refund?", "a": "Yes, up to 7 days before the cohort start." }
     ]
@@ -1213,8 +1245,14 @@ export default withNextIntl(nextConfig);
     "comingSoonNotice": "Full catalog coming soon. In the meantime, contact us with questions."
   },
   "legal": {
-    "privacy": { "title": "Privacy policy", "body": "Document in progress. For questions, contact us." },
-    "terms": { "title": "Terms & conditions", "body": "Document in progress. For questions, contact us." }
+    "privacy": {
+      "title": "Privacy policy",
+      "body": "Document in progress. For questions, contact us."
+    },
+    "terms": {
+      "title": "Terms & conditions",
+      "body": "Document in progress. For questions, contact us."
+    }
   },
   "common": {
     "languageToggle": "Language",
@@ -1231,19 +1269,11 @@ Delete `src/app/page.tsx` and create `src/app/[locale]/page.tsx`:
 import { setRequestLocale } from "next-intl/server";
 import { useTranslations } from "next-intl";
 
-export default function LandingPage({
-  params,
-}: {
-  params: Promise<{ locale: string }>;
-}) {
+export default function LandingPage({ params }: { params: Promise<{ locale: string }> }) {
   return <LandingPageContent params={params} />;
 }
 
-async function LandingPageContent({
-  params,
-}: {
-  params: Promise<{ locale: string }>;
-}) {
+async function LandingPageContent({ params }: { params: Promise<{ locale: string }> }) {
   const { locale } = await params;
   setRequestLocale(locale);
   return <LandingPageInner />;
@@ -1252,7 +1282,7 @@ async function LandingPageContent({
 function LandingPageInner() {
   const t = useTranslations("hero");
   return (
-    <main className="min-h-screen bg-teal-deep p-8">
+    <main className="bg-teal-deep min-h-screen p-8">
       <h1 className="font-heading text-chartreuse text-4xl">{t("headline")}</h1>
       <p className="text-off-white mt-2">{t("subhead")}</p>
     </main>
@@ -1285,11 +1315,7 @@ export default async function LocaleLayout({
   }
   setRequestLocale(locale);
   const messages = await getMessages();
-  return (
-    <NextIntlClientProvider messages={messages}>
-      {children}
-    </NextIntlClientProvider>
-  );
+  return <NextIntlClientProvider messages={messages}>{children}</NextIntlClientProvider>;
 }
 ```
 
@@ -1305,11 +1331,7 @@ export const metadata: Metadata = {
   description: "Educamos para formar bienestar y salud.",
 };
 
-export default function RootLayout({
-  children,
-}: {
-  children: React.ReactNode;
-}) {
+export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html className={`${heading.variable} ${accent.variable}`}>
       <body>{children}</body>
@@ -1345,6 +1367,7 @@ Co-Authored-By: Claude Opus 4.7 (1M context) <noreply@anthropic.com>"
 ## Task 12 — CI guard: message-key parity
 
 **Files:**
+
 - Create: `scripts/check-i18n-parity.mjs`
 - Modify: `package.json` (scripts)
 
@@ -1412,6 +1435,7 @@ Co-Authored-By: Claude Opus 4.7 (1M context) <noreply@anthropic.com>"
 ## Task 13 — E2E: locale routing
 
 **Files:**
+
 - Modify: `tests/e2e/sanity.spec.ts` → rename to `locale-routing.spec.ts`
 
 - [ ] **Step 1: Replace `tests/e2e/sanity.spec.ts` content and rename**
@@ -1432,12 +1456,16 @@ test("root redirects to /es by default", async ({ page }) => {
 
 test("/en renders English headline", async ({ page }) => {
   await page.goto("/en");
-  await expect(page.getByRole("heading", { level: 1 })).toContainText("Your next certification starts here");
+  await expect(page.getByRole("heading", { level: 1 })).toContainText(
+    "Your next certification starts here",
+  );
 });
 
 test("/es renders Spanish headline", async ({ page }) => {
   await page.goto("/es");
-  await expect(page.getByRole("heading", { level: 1 })).toContainText("Tu próxima certificación comienza aquí");
+  await expect(page.getByRole("heading", { level: 1 })).toContainText(
+    "Tu próxima certificación comienza aquí",
+  );
 });
 ```
 
@@ -1462,6 +1490,7 @@ Co-Authored-By: Claude Opus 4.7 (1M context) <noreply@anthropic.com>"
 ## Task 14 — UI primitive: Container
 
 **Files:**
+
 - Create: `src/components/ui/Container.tsx`
 
 - [ ] **Step 1: Create the component**
@@ -1477,9 +1506,7 @@ export function Container({
   children: React.ReactNode;
 }) {
   return (
-    <div className={cn("mx-auto w-full max-w-7xl px-4 sm:px-6 lg:px-8", className)}>
-      {children}
-    </div>
+    <div className={cn("mx-auto w-full max-w-7xl px-4 sm:px-6 lg:px-8", className)}>{children}</div>
   );
 }
 ```
@@ -1505,6 +1532,7 @@ Co-Authored-By: Claude Opus 4.7 (1M context) <noreply@anthropic.com>"
 ## Task 15 — UI primitive: Heading
 
 **Files:**
+
 - Create: `src/components/ui/Heading.tsx`
 
 - [ ] **Step 1: Create**
@@ -1531,7 +1559,9 @@ export function Heading({
   className?: string;
   children: React.ReactNode;
 }) {
-  return <Tag className={cn("font-heading tracking-tight", SIZES[size], className)}>{children}</Tag>;
+  return (
+    <Tag className={cn("font-heading tracking-tight", SIZES[size], className)}>{children}</Tag>
+  );
 }
 ```
 
@@ -1548,6 +1578,7 @@ Co-Authored-By: Claude Opus 4.7 (1M context) <noreply@anthropic.com>"
 ## Task 16 — UI primitive: Button
 
 **Files:**
+
 - Create: `src/components/ui/Button.tsx`
 
 - [ ] **Step 1: Create**
@@ -1587,11 +1618,7 @@ export const Button = forwardRef<HTMLButtonElement, Props>(function Button(
   ref,
 ) {
   return (
-    <button
-      ref={ref}
-      className={cn(BASE, VARIANTS[variant], SIZES[size], className)}
-      {...rest}
-    />
+    <button ref={ref} className={cn(BASE, VARIANTS[variant], SIZES[size], className)} {...rest} />
   );
 });
 ```
@@ -1609,6 +1636,7 @@ Co-Authored-By: Claude Opus 4.7 (1M context) <noreply@anthropic.com>"
 ## Task 17 — UI primitive: Card, Badge, SectionBand
 
 **Files:**
+
 - Create: `src/components/ui/Card.tsx`, `src/components/ui/Badge.tsx`, `src/components/ui/SectionBand.tsx`
 
 - [ ] **Step 1: Create `Card.tsx`**
@@ -1633,7 +1661,7 @@ export function Card({
   return (
     <div
       className={cn(
-        "rounded-2xl shadow-[var(--shadow-soft)] p-6 sm:p-8",
+        "rounded-2xl p-6 shadow-[var(--shadow-soft)] sm:p-8",
         toneClasses[tone],
         className,
       )}
@@ -1669,7 +1697,7 @@ export function Badge({
   return (
     <span
       className={cn(
-        "inline-flex items-center rounded-full px-3 py-1 text-xs font-semibold uppercase tracking-wide",
+        "inline-flex items-center rounded-full px-3 py-1 text-xs font-semibold tracking-wide uppercase",
         TONES[tone],
         className,
       )}
@@ -1727,6 +1755,7 @@ Co-Authored-By: Claude Opus 4.7 (1M context) <noreply@anthropic.com>"
 ## Task 18 — UI primitive: LocaleSwitch (with component test)
 
 **Files:**
+
 - Create: `src/components/ui/LocaleSwitch.tsx`, `tests/components/LocaleSwitch.test.tsx`
 
 - [ ] **Step 1: Write the failing test**
@@ -1739,7 +1768,11 @@ import { render, screen } from "@testing-library/react";
 import { LocaleSwitch } from "@/components/ui/LocaleSwitch";
 
 vi.mock("@/i18n/routing", () => ({
-  Link: ({ href, children, ...rest }: any) => <a href={typeof href === "string" ? href : "/"} {...rest}>{children}</a>,
+  Link: ({ href, children, ...rest }: any) => (
+    <a href={typeof href === "string" ? href : "/"} {...rest}>
+      {children}
+    </a>
+  ),
   usePathname: () => "/cursos",
   routing: { locales: ["es", "en"] },
 }));
@@ -1785,7 +1818,9 @@ export function LocaleSwitch({
 }) {
   const pathname = usePathname();
   return (
-    <div className={cn("inline-flex items-center rounded-full bg-teal-deep/10 p-1 text-sm", className)}>
+    <div
+      className={cn("bg-teal-deep/10 inline-flex items-center rounded-full p-1 text-sm", className)}
+    >
       {(["es", "en"] as const).map((locale) => {
         const active = locale === currentLocale;
         return (
@@ -1795,7 +1830,7 @@ export function LocaleSwitch({
             locale={locale}
             aria-current={active ? "true" : undefined}
             className={cn(
-              "rounded-full px-3 py-1 font-semibold uppercase tracking-wide transition-colors",
+              "rounded-full px-3 py-1 font-semibold tracking-wide uppercase transition-colors",
               active ? "bg-teal-deep text-chartreuse" : "text-teal-deep hover:bg-teal-deep/10",
             )}
           >
@@ -1829,6 +1864,7 @@ Co-Authored-By: Claude Opus 4.7 (1M context) <noreply@anthropic.com>"
 ## Task 19 — UI primitive: Accordion (with test)
 
 **Files:**
+
 - Create: `src/components/ui/Accordion.tsx`, `tests/components/Accordion.test.tsx`
 
 - [ ] **Step 1: Write failing test**
@@ -1888,7 +1924,7 @@ export function Accordion({ items, className }: { items: Item[]; className?: str
   const [openIdx, setOpenIdx] = useState<number | null>(null);
   const id = useId();
   return (
-    <ul className={cn("divide-y divide-teal-deep/10", className)}>
+    <ul className={cn("divide-teal-deep/10 divide-y", className)}>
       {items.map((item, idx) => {
         const open = openIdx === idx;
         const panelId = `${id}-panel-${idx}`;
@@ -1901,10 +1937,12 @@ export function Accordion({ items, className }: { items: Item[]; className?: str
               aria-expanded={open}
               aria-controls={panelId}
               onClick={() => setOpenIdx(open ? null : idx)}
-              className="flex w-full items-center justify-between gap-4 py-5 text-left font-heading text-lg font-semibold text-teal-deep"
+              className="font-heading text-teal-deep flex w-full items-center justify-between gap-4 py-5 text-left text-lg font-semibold"
             >
               <span>{item.q}</span>
-              <span aria-hidden className={cn("transition-transform", open && "rotate-45")}>+</span>
+              <span aria-hidden className={cn("transition-transform", open && "rotate-45")}>
+                +
+              </span>
             </button>
             <div
               id={panelId}
@@ -1944,6 +1982,7 @@ Co-Authored-By: Claude Opus 4.7 (1M context) <noreply@anthropic.com>"
 ## Task 20 — UI primitive: FormField (with test)
 
 **Files:**
+
 - Create: `src/components/ui/FormField.tsx`, `tests/components/FormField.test.tsx`
 
 - [ ] **Step 1: Failing test**
@@ -2012,7 +2051,7 @@ export function FormField(props: Props) {
   );
   return (
     <div>
-      <label htmlFor={id} className="mb-1 block text-sm font-semibold text-teal-deep">
+      <label htmlFor={id} className="text-teal-deep mb-1 block text-sm font-semibold">
         {label}
       </label>
       {as === "textarea" ? (
@@ -2061,6 +2100,7 @@ Co-Authored-By: Claude Opus 4.7 (1M context) <noreply@anthropic.com>"
 ## Task 21 — Logo SVG components
 
 **Files:**
+
 - Create: `src/components/brand/LogoShield.tsx`, `LogoShieldInverse.tsx`, `LogoFull.tsx`, `LogoFullInverse.tsx`, `Wordmark.tsx`, `Pattern.tsx`, `index.ts`
 
 > **Asset note:** the SVG geometry below is a faithful placeholder of the SCCA shield/mortar shape — a rounded-corner shield with a mortar+pestle silhouette inside. If you want a pixel-exact re-trace, open `brand/source/SC Compounding Academy.pdf` in Illustrator/Inkscape, export the shield as SVG, and replace the `<path>` content. The component API stays identical.
@@ -2088,10 +2128,7 @@ export function LogoShield({
       <title>{title}</title>
       <rect x="0" y="0" width="100" height="110" rx="22" fill="currentColor" />
       {/* mortar bowl */}
-      <path
-        d="M28 62 Q50 92 72 62 Z"
-        fill="var(--color-chartreuse)"
-      />
+      <path d="M28 62 Q50 92 72 62 Z" fill="var(--color-chartreuse)" />
       {/* mortar rim */}
       <rect x="26" y="56" width="48" height="8" rx="4" fill="var(--color-chartreuse)" />
       {/* pestle */}
@@ -2163,12 +2200,16 @@ export function LogoFull({
   title?: string;
 }) {
   return (
-    <div className={cn("inline-flex items-center gap-3 text-chartreuse", className)} aria-label={title} role="img">
+    <div
+      className={cn("text-chartreuse inline-flex items-center gap-3", className)}
+      aria-label={title}
+      role="img"
+    >
       <LogoShield className={cn("h-12 w-auto", shieldClass)} title="" />
       <span className="font-heading leading-none">
-        <span className="block text-xs font-medium text-off-white">Santa Cruz</span>
-        <span className="block text-xl font-bold text-off-white">Compounding</span>
-        <span className="block text-xl font-bold text-off-white">Academy</span>
+        <span className="text-off-white block text-xs font-medium">Santa Cruz</span>
+        <span className="text-off-white block text-xl font-bold">Compounding</span>
+        <span className="text-off-white block text-xl font-bold">Academy</span>
       </span>
     </div>
   );
@@ -2191,7 +2232,11 @@ export function LogoFullInverse({
   title?: string;
 }) {
   return (
-    <div className={cn("inline-flex items-center gap-3 text-teal-deep", className)} aria-label={title} role="img">
+    <div
+      className={cn("text-teal-deep inline-flex items-center gap-3", className)}
+      aria-label={title}
+      role="img"
+    >
       <LogoShield className={cn("h-12 w-auto", shieldClass)} title="" />
       <span className="font-heading leading-none">
         <span className="block text-xs font-medium">Santa Cruz</span>
@@ -2222,13 +2267,7 @@ export function Wordmark({ className }: { className?: string }) {
 ```tsx
 import { cn } from "@/lib/cn";
 
-export function Pattern({
-  className,
-  opacity = 0.12,
-}: {
-  className?: string;
-  opacity?: number;
-}) {
+export function Pattern({ className, opacity = 0.12 }: { className?: string; opacity?: number }) {
   const id = "scca-pattern";
   return (
     <svg
@@ -2282,6 +2321,7 @@ Co-Authored-By: Claude Opus 4.7 (1M context) <noreply@anthropic.com>"
 ## Task 22 — Header
 
 **Files:**
+
 - Create: `src/components/layout/Header.tsx`
 
 - [ ] **Step 1: Create**
@@ -2298,20 +2338,28 @@ import { LocaleSwitch } from "@/components/ui/LocaleSwitch";
 export function Header({ locale }: { locale: "es" | "en" }) {
   const t = useTranslations("nav");
   return (
-    <header className="sticky top-0 z-50 bg-teal-deep/95 backdrop-blur supports-[backdrop-filter]:bg-teal-deep/80">
+    <header className="bg-teal-deep/95 supports-[backdrop-filter]:bg-teal-deep/80 sticky top-0 z-50 backdrop-blur">
       <Container className="flex h-16 items-center justify-between gap-4">
         <Link href="/" className="flex items-center">
           <LogoFull shieldClass="h-9 w-auto" />
         </Link>
-        <nav className="hidden items-center gap-6 text-sm font-semibold text-off-white sm:flex">
-          <Link href="/" className="hover:text-chartreuse">{t("home")}</Link>
-          <Link href="/cursos" className="hover:text-chartreuse">{t("courses")}</Link>
-          <Link href="/contacto" className="hover:text-chartreuse">{t("contact")}</Link>
+        <nav className="text-off-white hidden items-center gap-6 text-sm font-semibold sm:flex">
+          <Link href="/" className="hover:text-chartreuse">
+            {t("home")}
+          </Link>
+          <Link href="/cursos" className="hover:text-chartreuse">
+            {t("courses")}
+          </Link>
+          <Link href="/contacto" className="hover:text-chartreuse">
+            {t("contact")}
+          </Link>
         </nav>
         <div className="flex items-center gap-3">
           <LocaleSwitch currentLocale={locale} />
           <Link href="/cursos">
-            <Button variant="primary" size="md">{t("enroll")}</Button>
+            <Button variant="primary" size="md">
+              {t("enroll")}
+            </Button>
           </Link>
         </div>
       </Container>
@@ -2333,6 +2381,7 @@ Co-Authored-By: Claude Opus 4.7 (1M context) <noreply@anthropic.com>"
 ## Task 23 — Footer
 
 **Files:**
+
 - Create: `src/components/layout/Footer.tsx`
 
 - [ ] **Step 1: Create**
@@ -2351,27 +2400,39 @@ export function Footer() {
       <Container className="grid gap-10 py-12 sm:grid-cols-3">
         <div>
           <LogoFull shieldClass="h-12 w-auto" />
-          <p className="mt-4 max-w-xs text-sm italic text-chartreuse">{t("tagline")}</p>
+          <p className="text-chartreuse mt-4 max-w-xs text-sm italic">{t("tagline")}</p>
         </div>
         <div>
-          <h3 className="font-heading text-sm font-bold uppercase tracking-wide text-chartreuse">
+          <h3 className="font-heading text-chartreuse text-sm font-bold tracking-wide uppercase">
             {t("legal")}
           </h3>
           <ul className="mt-3 space-y-2 text-sm">
-            <li><Link href="/legal/privacidad" className="hover:text-chartreuse">{t("privacy")}</Link></li>
-            <li><Link href="/legal/terminos" className="hover:text-chartreuse">{t("terms")}</Link></li>
+            <li>
+              <Link href="/legal/privacidad" className="hover:text-chartreuse">
+                {t("privacy")}
+              </Link>
+            </li>
+            <li>
+              <Link href="/legal/terminos" className="hover:text-chartreuse">
+                {t("terms")}
+              </Link>
+            </li>
           </ul>
         </div>
         <div>
-          <h3 className="font-heading text-sm font-bold uppercase tracking-wide text-chartreuse">
+          <h3 className="font-heading text-chartreuse text-sm font-bold tracking-wide uppercase">
             {t("contact")}
           </h3>
           <ul className="mt-3 space-y-2 text-sm">
-            <li><Link href="/contacto" className="hover:text-chartreuse">{t("contact")}</Link></li>
+            <li>
+              <Link href="/contacto" className="hover:text-chartreuse">
+                {t("contact")}
+              </Link>
+            </li>
           </ul>
         </div>
       </Container>
-      <div className="bg-teal-deep/90 py-4 text-center text-xs text-off-white/80">
+      <div className="bg-teal-deep/90 text-off-white/80 py-4 text-center text-xs">
         {t("copyright", { year })}
       </div>
     </footer>
@@ -2392,6 +2453,7 @@ Co-Authored-By: Claude Opus 4.7 (1M context) <noreply@anthropic.com>"
 ## Task 24 — Wire Header + Footer into the locale layout
 
 **Files:**
+
 - Modify: `src/app/[locale]/layout.tsx`
 
 - [ ] **Step 1: Replace contents**
@@ -2452,6 +2514,7 @@ Co-Authored-By: Claude Opus 4.7 (1M context) <noreply@anthropic.com>"
 ## Task 25 — Marketing section: TaglineBand
 
 **Files:**
+
 - Create: `src/components/marketing/TaglineBand.tsx`
 
 - [ ] **Step 1: Create**
@@ -2463,9 +2526,8 @@ export function TaglineBand() {
   const t = useTranslations("tagline");
   return (
     <section aria-label="tagline" className="bg-teal-deep py-12 sm:py-16">
-      <p className="mx-auto max-w-6xl px-6 text-center font-heading text-4xl font-extrabold uppercase leading-tight tracking-tight text-chartreuse sm:text-6xl lg:text-7xl">
-        {t("line1")}{" "}
-        <em className="font-accent italic">{t("line2")}</em>
+      <p className="font-heading text-chartreuse mx-auto max-w-6xl px-6 text-center text-4xl leading-tight font-extrabold tracking-tight uppercase sm:text-6xl lg:text-7xl">
+        {t("line1")} <em className="font-accent italic">{t("line2")}</em>
       </p>
     </section>
   );
@@ -2485,6 +2547,7 @@ Co-Authored-By: Claude Opus 4.7 (1M context) <noreply@anthropic.com>"
 ## Task 26 — Marketing section: HeroBillboard (without mortar slot yet)
 
 **Files:**
+
 - Create: `src/components/marketing/HeroBillboard.tsx`, `src/components/marketing/HeroMortarSlot.tsx`
 
 - [ ] **Step 1: Create `HeroMortarSlot.tsx`** (placeholder; real component arrives in Task 35)
@@ -2494,9 +2557,9 @@ export function HeroMortarSlot() {
   return (
     <div
       aria-hidden
-      className="pointer-events-none absolute inset-y-0 right-0 hidden w-1/2 select-none opacity-30 sm:block"
+      className="pointer-events-none absolute inset-y-0 right-0 hidden w-1/2 opacity-30 select-none sm:block"
     >
-      <div className="h-full w-full rounded-full bg-chartreuse/20 blur-3xl" />
+      <div className="bg-chartreuse/20 h-full w-full rounded-full blur-3xl" />
     </div>
   );
 }
@@ -2516,18 +2579,26 @@ import { HeroMortarSlot } from "./HeroMortarSlot";
 export function HeroBillboard() {
   const t = useTranslations("hero");
   return (
-    <section className="relative isolate overflow-hidden bg-teal-deep">
+    <section className="bg-teal-deep relative isolate overflow-hidden">
       <HeroMortarSlot />
       <Container className="relative grid items-center gap-10 py-20 sm:py-28 lg:grid-cols-2">
         <div>
           <Badge tone="chartreuse">USP 795 · USP 800</Badge>
-          <h1 className="mt-4 font-heading text-5xl font-extrabold uppercase leading-[1.05] tracking-tight text-chartreuse sm:text-6xl lg:text-7xl">
+          <h1 className="font-heading text-chartreuse mt-4 text-5xl leading-[1.05] font-extrabold tracking-tight uppercase sm:text-6xl lg:text-7xl">
             {t("headline")}
           </h1>
-          <p className="mt-6 max-w-lg text-lg text-off-white">{t("subhead")}</p>
+          <p className="text-off-white mt-6 max-w-lg text-lg">{t("subhead")}</p>
           <div className="mt-8 flex flex-wrap gap-3">
-            <Link href="/cursos"><Button variant="primary" size="lg">{t("primaryCta")}</Button></Link>
-            <Link href="/contacto"><Button variant="inverse" size="lg">{t("secondaryCta")}</Button></Link>
+            <Link href="/cursos">
+              <Button variant="primary" size="lg">
+                {t("primaryCta")}
+              </Button>
+            </Link>
+            <Link href="/contacto">
+              <Button variant="inverse" size="lg">
+                {t("secondaryCta")}
+              </Button>
+            </Link>
           </div>
         </div>
         <div className="relative hidden h-[440px] lg:block">
@@ -2614,6 +2685,7 @@ Co-Authored-By: Claude Opus 4.7 (1M context) <noreply@anthropic.com>"
 ## Task 27 — Marketing section: WhySCCA
 
 **Files:**
+
 - Create: `src/components/marketing/WhySCCA.tsx`
 
 - [ ] **Step 1: Create**
@@ -2644,12 +2716,20 @@ export function WhySCCA() {
         <ul className="mt-10 grid gap-8 sm:grid-cols-2 lg:grid-cols-4">
           {KEYS.map((k) => (
             <li key={k} className="flex flex-col gap-3">
-              <span className="inline-flex h-12 w-12 items-center justify-center rounded-2xl bg-chartreuse">
-                <svg viewBox="0 0 24 24" className="h-6 w-6" fill="none" stroke="var(--color-teal-deep)" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+              <span className="bg-chartreuse inline-flex h-12 w-12 items-center justify-center rounded-2xl">
+                <svg
+                  viewBox="0 0 24 24"
+                  className="h-6 w-6"
+                  fill="none"
+                  stroke="var(--color-teal-deep)"
+                  strokeWidth="2"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                >
                   <path d={ICONS[k]} />
                 </svg>
               </span>
-              <h3 className="font-heading text-lg font-bold text-teal-deep">
+              <h3 className="font-heading text-teal-deep text-lg font-bold">
                 {t(`items.${k}.title`)}
               </h3>
               <p className="text-base text-gray-900">{t(`items.${k}.body`)}</p>
@@ -2675,6 +2755,7 @@ Co-Authored-By: Claude Opus 4.7 (1M context) <noreply@anthropic.com>"
 ## Task 28 — Marketing section: FeaturedCoursesPlaceholder
 
 **Files:**
+
 - Create: `src/components/marketing/FeaturedCoursesPlaceholder.tsx`
 
 - [ ] **Step 1: Create**
@@ -2689,9 +2770,24 @@ import { SectionBand } from "@/components/ui/SectionBand";
 import { Link } from "@/i18n/routing";
 
 const PLACEHOLDER_COURSES = [
-  { id: "usp-795", badge: "USP 795", titleEs: "Fundamentos de Compounding No Estéril", titleEn: "Non-Sterile Compounding Foundations" },
-  { id: "usp-800", badge: "USP 800", titleEs: "Manejo de Medicamentos Peligrosos", titleEn: "Hazardous Drug Handling" },
-  { id: "combined", badge: "USP 795 + 800", titleEs: "Programa Combinado", titleEn: "Combined Track" },
+  {
+    id: "usp-795",
+    badge: "USP 795",
+    titleEs: "Fundamentos de Compounding No Estéril",
+    titleEn: "Non-Sterile Compounding Foundations",
+  },
+  {
+    id: "usp-800",
+    badge: "USP 800",
+    titleEs: "Manejo de Medicamentos Peligrosos",
+    titleEn: "Hazardous Drug Handling",
+  },
+  {
+    id: "combined",
+    badge: "USP 795 + 800",
+    titleEs: "Programa Combinado",
+    titleEn: "Combined Track",
+  },
 ] as const;
 
 export function FeaturedCoursesPlaceholder({ locale }: { locale: "es" | "en" }) {
@@ -2700,8 +2796,13 @@ export function FeaturedCoursesPlaceholder({ locale }: { locale: "es" | "en" }) 
     <SectionBand tone="off-white" id="featured">
       <Container>
         <div className="flex items-end justify-between">
-          <Heading as="h2" size="h2" className="text-teal-deep">{t("title")}</Heading>
-          <Link href="/cursos" className="hidden font-heading text-sm font-semibold text-teal-deep hover:text-teal sm:inline">
+          <Heading as="h2" size="h2" className="text-teal-deep">
+            {t("title")}
+          </Heading>
+          <Link
+            href="/cursos"
+            className="font-heading text-teal-deep hover:text-teal hidden text-sm font-semibold sm:inline"
+          >
             {t("viewAll")} →
           </Link>
         </div>
@@ -2710,7 +2811,7 @@ export function FeaturedCoursesPlaceholder({ locale }: { locale: "es" | "en" }) 
             <li key={c.id}>
               <Card tone="white" className="h-full">
                 <Badge tone="chartreuse">{c.badge}</Badge>
-                <h3 className="mt-4 font-heading text-xl font-bold text-teal-deep">
+                <h3 className="font-heading text-teal-deep mt-4 text-xl font-bold">
                   {locale === "es" ? c.titleEs : c.titleEn}
                 </h3>
                 <p className="mt-3 text-sm text-gray-700">{t("comingSoon")}</p>
@@ -2737,6 +2838,7 @@ Co-Authored-By: Claude Opus 4.7 (1M context) <noreply@anthropic.com>"
 ## Task 29 — Marketing section: InstructorSection
 
 **Files:**
+
 - Create: `src/components/marketing/InstructorSection.tsx`
 
 - [ ] **Step 1: Create**
@@ -2753,11 +2855,13 @@ export function InstructorSection() {
     <SectionBand tone="teal-deep" id="instructor">
       <Container className="grid gap-10 lg:grid-cols-5">
         <div className="lg:col-span-2">
-          <div className="aspect-[4/5] w-full rounded-2xl bg-teal" aria-hidden />
+          <div className="bg-teal aspect-[4/5] w-full rounded-2xl" aria-hidden />
         </div>
         <div className="lg:col-span-3">
-          <Heading as="h2" size="h2" className="text-chartreuse">{t("title")}</Heading>
-          <p className="mt-6 max-w-2xl text-lg text-off-white">{t("bioPlaceholder")}</p>
+          <Heading as="h2" size="h2" className="text-chartreuse">
+            {t("title")}
+          </Heading>
+          <p className="text-off-white mt-6 max-w-2xl text-lg">{t("bioPlaceholder")}</p>
         </div>
       </Container>
     </SectionBand>
@@ -2778,6 +2882,7 @@ Co-Authored-By: Claude Opus 4.7 (1M context) <noreply@anthropic.com>"
 ## Task 30 — Marketing section: PatternDivider
 
 **Files:**
+
 - Create: `src/components/marketing/PatternDivider.tsx`
 
 - [ ] **Step 1: Create**
@@ -2787,7 +2892,7 @@ import { Pattern } from "@/components/brand";
 
 export function PatternDivider() {
   return (
-    <div className="relative h-32 w-full overflow-hidden bg-teal">
+    <div className="bg-teal relative h-32 w-full overflow-hidden">
       <Pattern opacity={0.18} />
     </div>
   );
@@ -2807,6 +2912,7 @@ Co-Authored-By: Claude Opus 4.7 (1M context) <noreply@anthropic.com>"
 ## Task 31 — Marketing section: FAQ
 
 **Files:**
+
 - Create: `src/components/marketing/FAQ.tsx`
 
 - [ ] **Step 1: Create**
@@ -2826,7 +2932,9 @@ export function FAQ() {
   return (
     <SectionBand tone="off-white" id="faq">
       <Container className="max-w-3xl">
-        <Heading as="h2" size="h2" className="text-teal-deep">{t("title")}</Heading>
+        <Heading as="h2" size="h2" className="text-teal-deep">
+          {t("title")}
+        </Heading>
         <div className="mt-8">
           <Accordion items={items} />
         </div>
@@ -2849,6 +2957,7 @@ Co-Authored-By: Claude Opus 4.7 (1M context) <noreply@anthropic.com>"
 ## Task 32 — Marketing section: FooterCTA
 
 **Files:**
+
 - Create: `src/components/marketing/FooterCTA.tsx`
 
 - [ ] **Step 1: Create**
@@ -2866,10 +2975,16 @@ export function FooterCTA() {
   return (
     <SectionBand tone="sand">
       <Container className="text-center">
-        <Heading as="h2" size="h2" className="text-teal-deep">{t("headline")}</Heading>
+        <Heading as="h2" size="h2" className="text-teal-deep">
+          {t("headline")}
+        </Heading>
         <p className="mx-auto mt-4 max-w-xl text-lg text-gray-900">{t("subhead")}</p>
         <div className="mt-8">
-          <Link href="/cursos"><Button variant="primary" size="lg">{t("button")}</Button></Link>
+          <Link href="/cursos">
+            <Button variant="primary" size="lg">
+              {t("button")}
+            </Button>
+          </Link>
         </div>
       </Container>
     </SectionBand>
@@ -2890,6 +3005,7 @@ Co-Authored-By: Claude Opus 4.7 (1M context) <noreply@anthropic.com>"
 ## Task 33 — Compose the landing page
 
 **Files:**
+
 - Modify: `src/app/[locale]/page.tsx`
 
 - [ ] **Step 1: Replace contents**
@@ -2905,11 +3021,7 @@ import { PatternDivider } from "@/components/marketing/PatternDivider";
 import { FAQ } from "@/components/marketing/FAQ";
 import { FooterCTA } from "@/components/marketing/FooterCTA";
 
-export default async function LandingPage({
-  params,
-}: {
-  params: Promise<{ locale: string }>;
-}) {
+export default async function LandingPage({ params }: { params: Promise<{ locale: string }> }) {
   const { locale } = await params;
   setRequestLocale(locale);
   return (
@@ -2949,6 +3061,7 @@ Co-Authored-By: Claude Opus 4.7 (1M context) <noreply@anthropic.com>"
 ## Task 34 — Catalog placeholder, contact page, legal pages
 
 **Files:**
+
 - Create: `src/app/[locale]/cursos/page.tsx`, `src/app/[locale]/courses/page.tsx`, `src/app/[locale]/contacto/page.tsx`, `src/app/[locale]/contact/page.tsx`, `src/app/[locale]/legal/privacidad/page.tsx`, `src/app/[locale]/legal/privacy/page.tsx`, `src/app/[locale]/legal/terminos/page.tsx`, `src/app/[locale]/legal/terms/page.tsx`
 
 > **Note:** because we use translated pathnames, each locale needs its own file at its specific slug. Files mirror each other and re-export a shared component.
@@ -2968,7 +3081,9 @@ export function CatalogPlaceholder() {
   return (
     <SectionBand tone="off-white">
       <Container>
-        <Heading as="h1" size="h1" className="text-teal-deep">{t("title")}</Heading>
+        <Heading as="h1" size="h1" className="text-teal-deep">
+          {t("title")}
+        </Heading>
         <p className="mt-4 max-w-2xl text-lg text-gray-900">{t("comingSoonNotice")}</p>
       </Container>
     </SectionBand>
@@ -2993,6 +3108,7 @@ export default async function Page({ params }: { params: Promise<{ locale: strin
 ```
 
 Copy this exact content into:
+
 - `src/app/[locale]/cursos/page.tsx`
 - `src/app/[locale]/courses/page.tsx`
 
@@ -3011,7 +3127,9 @@ export function LegalPage({ doc }: { doc: "privacy" | "terms" }) {
   return (
     <SectionBand tone="off-white">
       <Container className="max-w-3xl">
-        <Heading as="h1" size="h1" className="text-teal-deep">{t("title")}</Heading>
+        <Heading as="h1" size="h1" className="text-teal-deep">
+          {t("title")}
+        </Heading>
         <p className="mt-6 text-base text-gray-900">{t("body")}</p>
       </Container>
     </SectionBand>
@@ -3052,6 +3170,7 @@ cd ~/Desktop/sccompoundingacademy-web && pnpm dev
 ```
 
 Visit:
+
 - `/es/cursos` and `/en/courses` — catalog placeholder
 - `/es/legal/privacidad` and `/en/legal/privacy`
 - `/es/legal/terminos` and `/en/legal/terms`
@@ -3071,6 +3190,7 @@ Co-Authored-By: Claude Opus 4.7 (1M context) <noreply@anthropic.com>"
 ## Task 35 — Contact page + Resend-backed API route
 
 **Files:**
+
 - Create: `src/components/marketing/ContactForm.tsx`, `src/app/[locale]/contacto/page.tsx`, `src/app/[locale]/contact/page.tsx`, `src/app/api/contact/route.ts`, `.env.example`
 
 - [ ] **Step 1: Add env keys to `.env.example`**
@@ -3129,7 +3249,9 @@ export function ContactForm() {
   return (
     <SectionBand tone="off-white">
       <Container className="max-w-2xl">
-        <Heading as="h1" size="h1" className="text-teal-deep">{t("title")}</Heading>
+        <Heading as="h1" size="h1" className="text-teal-deep">
+          {t("title")}
+        </Heading>
         <p className="mt-3 text-lg text-gray-900">{t("subhead")}</p>
         <form onSubmit={onSubmit} className="mt-8 space-y-5">
           <FormField label={t("name")} name="name" required />
@@ -3275,6 +3397,7 @@ Co-Authored-By: Claude Opus 4.7 (1M context) <noreply@anthropic.com>"
 ## Task 36 — E2E: contact form happy path
 
 **Files:**
+
 - Create: `tests/e2e/contact-form.spec.ts`
 
 - [ ] **Step 1: Write the test**
@@ -3322,6 +3445,7 @@ Co-Authored-By: Claude Opus 4.7 (1M context) <noreply@anthropic.com>"
 ## Task 37 — Blender mortar — manual asset production
 
 **Files:**
+
 - Create: `blender/README.md`, `blender/mortar.blend` (binary, manually produced)
 
 > **This task is manual creative work in Blender, not code.** Follow these steps in Blender; commit the `.blend` file at the end. If you skip this task, the placeholder mortar-poster.webp keeps the site working (no broken images), but the scroll-driven animation will simply show the static poster.
@@ -3394,7 +3518,7 @@ File → Save As → `blender/mortar.blend`.
 
 - [ ] **Step 10: Write `blender/README.md`**
 
-```markdown
+````markdown
 # Mortar 3D Asset
 
 The scroll-driven hero mortar is rendered once from `mortar.blend` and exported as 80 WebP frames into `/public/hero/mortar/`.
@@ -3409,6 +3533,7 @@ The scroll-driven hero mortar is rendered once from `mortar.blend` and exported 
    ```bash
    pnpm build:mortar
    ```
+````
 
 5. Confirm output: `public/hero/mortar/frame_0001.webp` through `frame_0080.webp` + `manifest.json`.
 6. `git add public/hero/mortar/manifest.json && git commit -m "feat(hero): re-render mortar frames"`. WebP frames themselves are gitignored.
@@ -3420,7 +3545,8 @@ The scroll-driven hero mortar is rendered once from `mortar.blend` and exported 
 - Lights: Key (warm white, 700W), Fill (cool white, 250W), Rim Teal #368798 (900W), Rim Chartreuse #E9EA8A (400W)
 - Animation: pestle orbits bowl center, linear Z-rotation, eased X-lean and Z-bob
 - Output: 1600×1600 PNG with alpha, 80 frames at 24fps
-```
+
+````
 
 - [ ] **Step 11: Commit**
 
@@ -3428,13 +3554,14 @@ The scroll-driven hero mortar is rendered once from `mortar.blend` and exported 
 cd ~/Desktop/sccompoundingacademy-web && git add blender/ && git commit -m "feat(hero): add Blender mortar source + render instructions
 
 Co-Authored-By: Claude Opus 4.7 (1M context) <noreply@anthropic.com>"
-```
+````
 
 ---
 
 ## Task 38 — Frame conversion pipeline (PNG → WebP + manifest)
 
 **Files:**
+
 - Create: `scripts/build-mortar-frames.mjs`
 - Modify: `package.json` (scripts)
 
@@ -3523,6 +3650,7 @@ Co-Authored-By: Claude Opus 4.7 (1M context) <noreply@anthropic.com>"
 ## Task 39 — HeroMortar React component (scroll-scrub)
 
 **Files:**
+
 - Create: `src/components/marketing/HeroMortar.tsx`
 - Modify: `src/components/marketing/HeroBillboard.tsx` (replace HeroMortarSlot)
 - Delete: `src/components/marketing/HeroMortarSlot.tsx`
@@ -3571,14 +3699,18 @@ export function HeroMortar() {
         });
       }
     })();
-    return () => { cancelled = true; };
+    return () => {
+      cancelled = true;
+    };
   }, [reduced]);
 
   // IntersectionObserver: pause when hero leaves viewport.
   useEffect(() => {
     const el = containerRef.current;
     if (!el) return;
-    const io = new IntersectionObserver(([entry]) => { inViewRef.current = entry.isIntersecting; });
+    const io = new IntersectionObserver(([entry]) => {
+      inViewRef.current = entry.isIntersecting;
+    });
     io.observe(el);
     return () => io.disconnect();
   }, []);
@@ -3600,8 +3732,16 @@ export function HeroMortar() {
       const viewport = window.innerHeight;
       // 0 when hero top hits viewport top; 1 when hero bottom leaves viewport top.
       const progress = Math.min(1, Math.max(0, (viewport - rect.top) / (viewport + rect.height)));
-      const target = Math.min(M.frameCount - 1, Math.max(0, Math.floor(progress * (M.frameCount - 1))));
-      if (target !== currentFrameRef.current && loaded.has(target) && imgRef.current && M.frames[target]) {
+      const target = Math.min(
+        M.frameCount - 1,
+        Math.max(0, Math.floor(progress * (M.frameCount - 1))),
+      );
+      if (
+        target !== currentFrameRef.current &&
+        loaded.has(target) &&
+        imgRef.current &&
+        M.frames[target]
+      ) {
         imgRef.current.src = M.frames[target];
         currentFrameRef.current = target;
       }
@@ -3611,7 +3751,10 @@ export function HeroMortar() {
   }, [loaded, reduced]);
 
   return (
-    <div ref={containerRef} className="pointer-events-none absolute inset-y-0 right-0 hidden w-1/2 select-none sm:block">
+    <div
+      ref={containerRef}
+      className="pointer-events-none absolute inset-y-0 right-0 hidden w-1/2 select-none sm:block"
+    >
       <img
         ref={imgRef}
         src={M.frames[0]}
@@ -3651,7 +3794,7 @@ Replace the `import` of `HeroMortarSlot` and its usage:
 // Replace:
 import { HeroMortarSlot } from "./HeroMortarSlot";
 // ...
-<HeroMortarSlot />
+<HeroMortarSlot />;
 ```
 
 with:
@@ -3659,7 +3802,7 @@ with:
 ```tsx
 import { HeroMortar } from "./HeroMortar";
 // ...
-<HeroMortar />
+<HeroMortar />;
 ```
 
 - [ ] **Step 4: Delete the placeholder slot**
@@ -3693,6 +3836,7 @@ Co-Authored-By: Claude Opus 4.7 (1M context) <noreply@anthropic.com>"
 ## Task 40 — SEO metadata helpers
 
 **Files:**
+
 - Create: `src/lib/seo.ts`
 - Modify: `src/app/[locale]/layout.tsx`, `src/app/[locale]/page.tsx`
 
@@ -3724,7 +3868,10 @@ export function pageMetadata({ locale, title, description, pathname, ogImage }: 
     alternates: {
       canonical: url,
       languages: Object.fromEntries(
-        [...altLocales, locale].map((l) => [l, `${BASE_URL}/${l}${pathname === "/" ? "" : pathname}`]),
+        [...altLocales, locale].map((l) => [
+          l,
+          `${BASE_URL}/${l}${pathname === "/" ? "" : pathname}`,
+        ]),
       ),
     },
     openGraph: {
@@ -3850,6 +3997,7 @@ Co-Authored-By: Claude Opus 4.7 (1M context) <noreply@anthropic.com>"
 ## Task 41 — sitemap.ts + robots.ts
 
 **Files:**
+
 - Create: `src/app/sitemap.ts`, `src/app/robots.ts`
 
 - [ ] **Step 1: Create `src/app/sitemap.ts`**
@@ -3922,6 +4070,7 @@ Co-Authored-By: Claude Opus 4.7 (1M context) <noreply@anthropic.com>"
 ## Task 42 — Favicon + OG images
 
 **Files:**
+
 - Create: `scripts/build-static-assets.mjs`, `public/favicon.ico`, `public/icon.svg`, `public/apple-touch-icon.png`, `public/og-image-es.png`, `public/og-image-en.png`
 
 - [ ] **Step 1: Create `scripts/build-static-assets.mjs`**
@@ -3994,8 +4143,12 @@ function ogSvg(slogan, secondary) {
 }
 
 // And update the two calls:
-await sharp(Buffer.from(ogSvg("Educamos para formar", "Bienestar y salud."))).png().toFile("public/og-image-es.png");
-await sharp(Buffer.from(ogSvg("We educate to build", "Wellness and health."))).png().toFile("public/og-image-en.png");
+await sharp(Buffer.from(ogSvg("Educamos para formar", "Bienestar y salud.")))
+  .png()
+  .toFile("public/og-image-es.png");
+await sharp(Buffer.from(ogSvg("We educate to build", "Wellness and health.")))
+  .png()
+  .toFile("public/og-image-en.png");
 ```
 
 - [ ] **Step 2: Add to package.json scripts**
@@ -4041,6 +4194,7 @@ Co-Authored-By: Claude Opus 4.7 (1M context) <noreply@anthropic.com>"
 ## Task 43 — Skip link + a11y polish
 
 **Files:**
+
 - Modify: `src/app/[locale]/layout.tsx`
 
 - [ ] **Step 1: Add a "Skip to content" link**
@@ -4050,7 +4204,7 @@ In `src/app/[locale]/layout.tsx`, inside `<body>` and before `<Header>`:
 ```tsx
 <a
   href="#content"
-  className="sr-only focus:not-sr-only focus:fixed focus:left-2 focus:top-2 focus:z-[100] focus:rounded-md focus:bg-chartreuse focus:px-4 focus:py-2 focus:font-semibold focus:text-teal-deep"
+  className="focus:bg-chartreuse focus:text-teal-deep sr-only focus:not-sr-only focus:fixed focus:top-2 focus:left-2 focus:z-[100] focus:rounded-md focus:px-4 focus:py-2 focus:font-semibold"
 >
   {/* Translated message resolved client-side via a small component, or just use English fallback here. */}
   Skip to content
@@ -4070,7 +4224,7 @@ export function SkipLink() {
   return (
     <a
       href="#content"
-      className="sr-only focus:not-sr-only focus:fixed focus:left-2 focus:top-2 focus:z-[100] focus:rounded-md focus:bg-chartreuse focus:px-4 focus:py-2 focus:font-semibold focus:text-teal-deep"
+      className="focus:bg-chartreuse focus:text-teal-deep sr-only focus:not-sr-only focus:fixed focus:top-2 focus:left-2 focus:z-[100] focus:rounded-md focus:px-4 focus:py-2 focus:font-semibold"
     >
       {t("skipToContent")}
     </a>
@@ -4100,6 +4254,7 @@ Co-Authored-By: Claude Opus 4.7 (1M context) <noreply@anthropic.com>"
 ## Task 44 — E2E: brand lint check
 
 **Files:**
+
 - Create: `tests/e2e/brand-lint.spec.ts`
 
 > This isn't really E2E (no browser) — it's a smoke test that lives in the e2e folder for convenience. It runs the brand lint across the source tree.
@@ -4189,6 +4344,7 @@ Co-Authored-By: Claude Opus 4.7 (1M context) <noreply@anthropic.com>"
 ## Self-Review Notes
 
 **Spec coverage check:**
+
 - §1 Stack — Tasks 1, 2, 8, 10, 11 ✓
 - §2 Routes — Tasks 11, 33, 34, 35 ✓
 - §3 Data model — not in Plan 1 (deferred to Plan 2) ✓
