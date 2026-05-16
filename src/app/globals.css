@@ -23,9 +23,10 @@
   --shadow-lift: 0 8px 24px rgba(34, 85, 96, 0.12);
 
   --font-heading:
-    "ITC Avant Garde Gothic Pro", "Century Gothic", "Futura", "Montserrat", system-ui, sans-serif;
+    var(--font-heading-loaded), "ITC Avant Garde Gothic Pro", "Century Gothic", "Futura",
+    "Montserrat", system-ui, sans-serif;
   --font-body: var(--font-heading);
-  --font-accent: "Khmer MN", "Cormorant Garamond", "Garamond", serif;
+  --font-accent: var(--font-accent-loaded), "Khmer MN", "Cormorant Garamond", "Garamond", serif;
 
   --background-image-brand-gradient: linear-gradient(
     90deg,
