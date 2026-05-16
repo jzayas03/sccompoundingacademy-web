@@ -1,11 +1,14 @@
 @import "tailwindcss";
 
+/* Source of truth: Compounding Academy Brandsheet.pdf — keep these in lockstep
+   with src/lib/brand.ts. (TODO: generate this block from brand.ts via build
+   script so the two can't drift.) */
 @theme {
-  --color-teal-deep: #225560;
-  --color-teal: #368798;
-  --color-chartreuse: #e9ea8a;
-  --color-sand: #eae2d6;
-  --color-off-white: #f5f6f7;
+  --color-teal-deep: #195561;
+  --color-teal: #228698;
+  --color-chartreuse: #e6ea82;
+  --color-sand: #eae1d6;
+  --color-off-white: #f3f3f4;
 
   --color-gray-900: #404040;
   --color-gray-700: #666666;
@@ -19,8 +22,9 @@
   --radius-xl: 28px;
   --radius-pill: 9999px;
 
-  --shadow-soft: 0 4px 12px rgba(34, 85, 96, 0.08);
-  --shadow-lift: 0 8px 24px rgba(34, 85, 96, 0.12);
+  /* rgba derived from tealDeep #195561 = rgb(25, 85, 97) */
+  --shadow-soft: 0 4px 12px rgba(25, 85, 97, 0.08);
+  --shadow-lift: 0 8px 24px rgba(25, 85, 97, 0.12);
 
   --font-heading:
     var(--font-heading-loaded), "ITC Avant Garde Gothic Pro", "Century Gothic", "Futura",
@@ -30,11 +34,11 @@
 
   --background-image-brand-gradient: linear-gradient(
     90deg,
-    #225560 0%,
-    #368798 25%,
-    #e9ea8a 50%,
-    #eae2d6 75%,
-    #f5f6f7 100%
+    #195561 0%,
+    #228698 25%,
+    #e6ea82 50%,
+    #eae1d6 75%,
+    #f3f3f4 100%
   );
 }
 
