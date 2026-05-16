@@ -4,13 +4,13 @@ import { Link } from "@/i18n/routing";
 import { Container } from "@/components/ui/Container";
 import { Button } from "@/components/ui/Button";
 import { Badge } from "@/components/ui/Badge";
-import { HeroMortarSlot } from "./HeroMortarSlot";
+import { HeroMortar } from "./HeroMortar";
 
 export function HeroBillboard() {
   const t = useTranslations("hero");
   return (
     <section className="bg-teal-deep relative isolate overflow-hidden">
-      <HeroMortarSlot />
+      <HeroMortar />
       <Container className="relative grid items-center gap-10 py-20 sm:py-28 lg:grid-cols-2">
         <div>
           <Badge tone="chartreuse">USP 795 · USP 800</Badge>
