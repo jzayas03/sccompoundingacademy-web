@@ -1,0 +1,55 @@
+# Dependencies
+node_modules/
+.pnp
+.pnp.js
+.yarn/install-state.gz
+
+# Testing
+coverage/
+
+# Next.js
+.next/
+out/
+build/
+next-env.d.ts
+
+# Production
+*.tsbuildinfo
+
+# Local env
+.env*.local
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+
+# Vercel
+.vercel
+
+# Logs
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+.pnpm-debug.log*
+
+# Editor / OS
+.DS_Store
+.idea/
+.vscode/
+*.swp
+*.swo
+
+# Blender
+# Source .blend files ARE committed; render artifacts are not.
+/blender/renders/
+/blender/cache/
+*.blend1
+*.blend2
+
+# Build outputs from the brand pipeline
+/public/hero/mortar/*.webp
+!/public/hero/mortar/manifest.json
+
+# Supabase local dev
+supabase/.branches/
+supabase/.temp/
