@@ -1,16 +1,13 @@
-import Image from "next/image";
 import { useTranslations } from "next-intl";
 import { Link } from "@/i18n/routing";
 import { Container } from "@/components/ui/Container";
 import { Button } from "@/components/ui/Button";
 import { Badge } from "@/components/ui/Badge";
-import { HeroMortar } from "./HeroMortar";
 
 export function HeroBillboard() {
   const t = useTranslations("hero");
   return (
     <section className="bg-teal-deep relative isolate overflow-hidden">
-      <HeroMortar />
       <Container className="relative grid items-center gap-10 py-20 sm:py-28 lg:grid-cols-2">
         <div>
           <Badge tone="chartreuse">USP 795 · USP 800</Badge>
@@ -31,16 +28,9 @@ export function HeroBillboard() {
             </Link>
           </div>
         </div>
-        <div className="relative hidden h-[440px] lg:block">
-          <Image
-            src="/hero/pharmacist-placeholder.webp"
-            alt=""
-            fill
-            priority
-            sizes="(max-width: 1024px) 0px, 50vw"
-            className="object-contain"
-          />
-        </div>
+        {/* Right column intentionally empty — mortar concept abandoned. Future
+            visual (photo, illustration, etc.) drops in here. */}
+        <div className="hidden lg:block" aria-hidden />
       </Container>
     </section>
   );
