@@ -14,7 +14,8 @@
     "test:watch": "vitest",
     "test:e2e": "playwright test",
     "check:i18n": "node scripts/check-i18n-parity.mjs",
-    "build:placeholders": "node scripts/make-placeholders.mjs"
+    "build:placeholders": "node scripts/make-placeholders.mjs",
+    "build:mortar": "node scripts/build-mortar-frames.mjs"
   },
   "dependencies": {
     "clsx": "^2.1",
