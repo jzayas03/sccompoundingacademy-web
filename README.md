@@ -3,7 +3,7 @@
 Bilingual (ES/EN) landing site and enrollment platform for **Santa Cruz Compounding Academy (SCCA)**, a Puerto Rico–based pharmacy education provider specializing in **USP 795** (Non-Sterile Compounding) and **USP 800** (Hazardous Drug Handling).
 
 > **Educamos para formar bienestar y salud.**
-> *We educate to build wellness and health.*
+> _We educate to build wellness and health._
 
 ## Status
 

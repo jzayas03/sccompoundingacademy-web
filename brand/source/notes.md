@@ -7,7 +7,7 @@ The two PDFs in this folder are the **canonical brand reference** for the SCCA w
 
 ## In-code source of truth
 
-The PDFs are the *visual* reference. The *executable* source of truth is **`/lib/brand.ts`** (added during implementation). That file mirrors the PDFs and is the only place hex literals live. A lint rule blocks hex literals anywhere else.
+The PDFs are the _visual_ reference. The _executable_ source of truth is **`/lib/brand.ts`** (added during implementation). That file mirrors the PDFs and is the only place hex literals live. A lint rule blocks hex literals anywhere else.
 
 If the PDFs are updated, `brand.ts` must be updated to match in the same PR.
 

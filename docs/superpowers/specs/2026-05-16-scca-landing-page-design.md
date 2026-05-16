@@ -24,18 +24,18 @@ The intended outcome: a learner discovers the Academy, picks a course, picks an 
 
 ## 1. Architecture & Stack
 
-| Concern | Choice | Why |
-|---|---|---|
-| Framework | Next.js 15 (App Router, TypeScript, RSC) | Marketing + dynamic flows in one codebase |
-| Hosting | Vercel | Zero-config for Next.js; free tier covers launch |
-| Styling | Tailwind CSS + `/lib/brand.ts` tokens | No hex literals outside tokens file (lint-enforced) |
-| i18n | `next-intl` with locale-prefixed routes (`/es/...`, `/en/...`) | App Router native; supports translated slugs |
-| DB + Auth + Storage | Supabase (Postgres) | Built-in table editor doubles as admin; RLS for security |
-| Payments | Stripe Checkout (hosted) | Zero PCI scope; auto receipts; invoice PDF; Stripe Tax for IVU |
-| Webhooks | Stripe → Next.js API route → Supabase | Single source of truth: seats flip to "sold" only on webhook |
-| Transactional email | Resend + React Email | Branded enrollment confirmation in HTML email |
-| 3D hero | Blender (Eevee) → 80 WebP frames, scroll-scrubbed | Apple-style cinematic, no WebGL, mobile-safe |
-| Domain | TBD — to be registered before launch | Stripe + email both depend on it |
+| Concern             | Choice                                                         | Why                                                            |
+| ------------------- | -------------------------------------------------------------- | -------------------------------------------------------------- |
+| Framework           | Next.js 15 (App Router, TypeScript, RSC)                       | Marketing + dynamic flows in one codebase                      |
+| Hosting             | Vercel                                                         | Zero-config for Next.js; free tier covers launch               |
+| Styling             | Tailwind CSS + `/lib/brand.ts` tokens                          | No hex literals outside tokens file (lint-enforced)            |
+| i18n                | `next-intl` with locale-prefixed routes (`/es/...`, `/en/...`) | App Router native; supports translated slugs                   |
+| DB + Auth + Storage | Supabase (Postgres)                                            | Built-in table editor doubles as admin; RLS for security       |
+| Payments            | Stripe Checkout (hosted)                                       | Zero PCI scope; auto receipts; invoice PDF; Stripe Tax for IVU |
+| Webhooks            | Stripe → Next.js API route → Supabase                          | Single source of truth: seats flip to "sold" only on webhook   |
+| Transactional email | Resend + React Email                                           | Branded enrollment confirmation in HTML email                  |
+| 3D hero             | Blender (Eevee) → 80 WebP frames, scroll-scrubbed              | Apple-style cinematic, no WebGL, mobile-safe                   |
+| Domain              | TBD — to be registered before launch                           | Stripe + email both depend on it                               |
 
 **Runtime cost at zero traffic:** $0/mo. **Recurring:** domain (~$12/yr). **Per-transaction:** Stripe 2.9% + $0.30.
 
@@ -195,13 +195,13 @@ Two simultaneous last-seat checkouts: both create `pending` rows, Stripe process
 
 ### Row Level Security
 
-| Table | Anonymous | Authenticated instructor | Service role (server) |
-|---|---|---|---|
-| `courses` | SELECT where `is_published` | full | full |
-| `cohorts` | SELECT where parent published + status='open' | full | full |
-| `registrations` | none | full | full (writes via webhook) |
-| `contact_messages` | none | full | full (writes via API) |
-| `cohort_seats` view | SELECT | full | full |
+| Table               | Anonymous                                     | Authenticated instructor | Service role (server)     |
+| ------------------- | --------------------------------------------- | ------------------------ | ------------------------- |
+| `courses`           | SELECT where `is_published`                   | full                     | full                      |
+| `cohorts`           | SELECT where parent published + status='open' | full                     | full                      |
+| `registrations`     | none                                          | full                     | full (writes via webhook) |
+| `contact_messages`  | none                                          | full                     | full (writes via API)     |
+| `cohort_seats` view | SELECT                                        | full                     | full                      |
 
 ---
 
@@ -250,6 +250,7 @@ Pending rows that never receive a webhook are swept by a daily Supabase cron at 
 ### Webhook handler
 
 Endpoint: `POST /api/stripe/webhook`. Listens to:
+
 - `checkout.session.completed` → flip `paid` (atomic seat check; auto-refund on race)
 - `charge.refunded` → flip `refunded`, free seat
 - `checkout.session.expired` → flip pending → `cancelled`
@@ -261,11 +262,13 @@ Endpoint: `POST /api/stripe/webhook`. Listens to:
 ### Receipts, invoices, and what's stored
 
 **Buyer receives:**
+
 - Stripe receipt email (with hosted receipt page + PDF link)
 - Stripe invoice PDF (auto-generated, with IVU breakdown)
 - SCCA-branded confirmation email (separate, with cohort details + .ics)
 
 **Academy retains:**
+
 - `stripe_invoice_id`, `stripe_invoice_url`, `stripe_receipt_url` on the registration row
 - Cold-backup PDF copy in Supabase Storage (we control)
 - Full transaction record in Stripe Dashboard (forever)
@@ -275,16 +278,16 @@ Endpoint: `POST /api/stripe/webhook`. Listens to:
 
 ### Edge cases
 
-| Case | Handling |
-|---|---|
-| User double-clicks Pay | Idempotent API: same pending row reused; one Stripe session only |
-| Last seat sold mid-checkout | Webhook detects oversold, auto-refunds, sends "sold out" email + offers other cohorts |
-| Card declined | Stays on Stripe Checkout; no DB change until success |
-| User closes Stripe tab | Pending row expires in 24h via cron; seat released |
-| Instructor cancels cohort | v1: refund manually in Stripe; v1.1: one-click admin action |
-| Stripe-initiated refund | `charge.refunded` webhook flips row to `refunded` automatically |
-| Duplicate email on same cohort | DB UNIQUE blocks; UI shows "Ya estás inscrito en esta cohorte" |
-| Webhook delayed | Success page polls every 3s; swaps to confirmation when webhook lands |
+| Case                           | Handling                                                                              |
+| ------------------------------ | ------------------------------------------------------------------------------------- |
+| User double-clicks Pay         | Idempotent API: same pending row reused; one Stripe session only                      |
+| Last seat sold mid-checkout    | Webhook detects oversold, auto-refunds, sends "sold out" email + offers other cohorts |
+| Card declined                  | Stays on Stripe Checkout; no DB change until success                                  |
+| User closes Stripe tab         | Pending row expires in 24h via cron; seat released                                    |
+| Instructor cancels cohort      | v1: refund manually in Stripe; v1.1: one-click admin action                           |
+| Stripe-initiated refund        | `charge.refunded` webhook flips row to `refunded` automatically                       |
+| Duplicate email on same cohort | DB UNIQUE blocks; UI shows "Ya estás inscrito en esta cohorte"                        |
+| Webhook delayed                | Success page polls every 3s; swaps to confirmation when webhook lands                 |
 
 ---
 
@@ -296,14 +299,14 @@ Instructor uses the Supabase Dashboard (`supabase.com/dashboard`) — **no custo
 
 ### Daily workflows (all in Supabase Table Editor)
 
-| Task | How |
-|---|---|
-| Add a course | Insert row in `courses`, fill bilingual JSONB, toggle `is_published` |
-| Create a cohort | Insert row in `cohorts`, set dates, seats, schedule |
-| View enrolled students | Filter `registrations` by `cohort_id` + `status='paid'`; one-click CSV export |
-| Download an invoice | Click `invoice_pdf_storage_path` field |
-| Handle refund | Refund in Stripe Dashboard; webhook auto-updates DB |
-| Cancel a cohort | Set `cohorts.status='cancelled'`; manually refund registrants (v1.1 automates) |
+| Task                   | How                                                                            |
+| ---------------------- | ------------------------------------------------------------------------------ |
+| Add a course           | Insert row in `courses`, fill bilingual JSONB, toggle `is_published`           |
+| Create a cohort        | Insert row in `cohorts`, set dates, seats, schedule                            |
+| View enrolled students | Filter `registrations` by `cohort_id` + `status='paid'`; one-click CSV export  |
+| Download an invoice    | Click `invoice_pdf_storage_path` field                                         |
+| Handle refund          | Refund in Stripe Dashboard; webhook auto-updates DB                            |
+| Cancel a cohort        | Set `cohorts.status='cancelled'`; manually refund registrants (v1.1 automates) |
 
 ### Permissions
 
@@ -334,34 +337,36 @@ A glossy white ceramic mortar with a pestle that **grinds inside the bowl** as t
 
 ### Geometry brief
 
-| Spec | Value |
-|---|---|
-| Style | Photoreal-leaning ceramic, soft beveled edges |
-| Mortar | Wide bowl, slight outward rim flare, smooth foot |
-| Pestle | Resting at ~30° tilt, full handle visible above rim |
-| Bowl interior | Modeled concave — pestle visibly moves inside it |
-| Topology | Quad-based, subdivision-surface modifier level 2 |
-| Asset | Modeled from scratch (not traced from any stock file) |
+| Spec          | Value                                                 |
+| ------------- | ----------------------------------------------------- |
+| Style         | Photoreal-leaning ceramic, soft beveled edges         |
+| Mortar        | Wide bowl, slight outward rim flare, smooth foot      |
+| Pestle        | Resting at ~30° tilt, full handle visible above rim   |
+| Bowl interior | Modeled concave — pestle visibly moves inside it      |
+| Topology      | Quad-based, subdivision-surface modifier level 2      |
+| Asset         | Modeled from scratch (not traced from any stock file) |
 
 ### Materials (two shaders, no textures)
 
 **Mortar body** — warm off-white ceramic
+
 - Base: `#F1ECE2` · Roughness: 0.32 · Specular: 0.55 · Clearcoat: 0.25
 
 **Pestle** — cooler off-white
+
 - Base: `#EAE6DC` · same shader otherwise
 
 No textures, no PBR maps. Pure shaders keep renders fast and crisp.
 
 ### Lighting (Eevee-friendly, brand-toned rims)
 
-| Light | Position | Color | Strength |
-|---|---|---|---|
-| Key | Upper-front-right, 45° | Warm white 4800K | 700W |
-| Fill | Lower-front-left | Cool white 6500K | 250W |
-| Rim (teal) | Upper-back-left | `#368798` | 900W |
-| Rim (chartreuse) | Upper-back-right | `#E9EA8A` | 400W |
-| Contact shadow | Soft area light below | — | tuned |
+| Light            | Position               | Color            | Strength |
+| ---------------- | ---------------------- | ---------------- | -------- |
+| Key              | Upper-front-right, 45° | Warm white 4800K | 700W     |
+| Fill             | Lower-front-left       | Cool white 6500K | 250W     |
+| Rim (teal)       | Upper-back-left        | `#368798`        | 900W     |
+| Rim (chartreuse) | Upper-back-right       | `#E9EA8A`        | 400W     |
+| Contact shadow   | Soft area light below  | —                | tuned    |
 
 Background: **transparent** (alpha). Hero deep-teal is a CSS background-color, not baked.
 
@@ -371,6 +376,7 @@ Background: **transparent** (alpha). Hero deep-teal is a CSS background-color, n
 
 **Mortar:** zero motion (the stage).
 **Pestle:**
+
 - Tip orbits horizontal circle inside bowl (~1.5cm radius), linear interpolation
 - Pestle leans 8° into direction of travel ("hand pressing" feel)
 - Handle traces larger ~2.5cm circle inversely-phased to tip (wrist motion)
@@ -390,11 +396,12 @@ Combined = visceral "hand grinding" gesture every pharmacist recognizes.
 ### Export pipeline
 
 After Blender outputs 80 PNGs, a build script:
+
 1. `cwebp -q 78 frame_NNNN.png → frame_NNNN.webp` (~25–30 KB/frame)
 2. Outputs to `/public/hero/mortar/frame_NNNN.webp`
 3. Generates `/public/hero/mortar/manifest.json`
 
-**Frames not committed to git** — they're a build artifact, gitignored. The `.blend` file *is* committed at `/blender/mortar.blend`.
+**Frames not committed to git** — they're a build artifact, gitignored. The `.blend` file _is_ committed at `/blender/mortar.blend`.
 
 ### Web integration: `<HeroMortar />`
 
@@ -413,15 +420,15 @@ After Blender outputs 80 PNGs, a build script:
 
 ### Performance budget (firm)
 
-| Metric | Limit |
-|---|---|
-| Total payload | ≤ 2.5 MB (all 80 frames) |
-| Per-frame size | ≤ 35 KB WebP |
-| Frame 1 preload | inline `<link rel="preload">`, < 100 KB |
-| LCP impact | 0 ms (frame 1 IS part of LCP) |
-| Main-thread CPU during scroll | ≤ 4 ms/frame |
-| Memory | ≤ 30 MB decoded; capped at ~20 decoded frames |
-| Mobile (viewport < 768px) | Frames downscaled to 800px, half bytes |
+| Metric                        | Limit                                         |
+| ----------------------------- | --------------------------------------------- |
+| Total payload                 | ≤ 2.5 MB (all 80 frames)                      |
+| Per-frame size                | ≤ 35 KB WebP                                  |
+| Frame 1 preload               | inline `<link rel="preload">`, < 100 KB       |
+| LCP impact                    | 0 ms (frame 1 IS part of LCP)                 |
+| Main-thread CPU during scroll | ≤ 4 ms/frame                                  |
+| Memory                        | ≤ 30 MB decoded; capped at ~20 decoded frames |
+| Mobile (viewport < 768px)     | Frames downscaled to 800px, half bytes        |
 
 **Fallback:** if budget blown for any reason, single static hero image — page never breaks.
 
@@ -457,17 +464,17 @@ Translated slugs for SEO + shareability. Mapping declared once in `i18n.config.t
 
 ### Content tier split
 
-| Type | Location | Edited by |
-|---|---|---|
-| UI strings (buttons, nav, errors) | `messages/{es,en}.json` | Developer (in Git) |
-| Course/cohort content | JSONB columns | Instructor (in Supabase) |
+| Type                              | Location                | Edited by                |
+| --------------------------------- | ----------------------- | ------------------------ |
+| UI strings (buttons, nav, errors) | `messages/{es,en}.json` | Developer (in Git)       |
+| Course/cohort content             | JSONB columns           | Instructor (in Supabase) |
 
 This split is the whole point of Supabase admin: instructor never touches Git to publish a course.
 
 ### Language toggle UX
 
 - Persistent header pill: `[ES | EN]`, active locale in deep-teal
-- Clicking swaps to the *equivalent translated URL* (not just home)
+- Clicking swaps to the _equivalent translated URL_ (not just home)
 - Preference persists in `NEXT_LOCALE` cookie
 - Same on mobile, never in a hamburger
 
@@ -516,28 +523,43 @@ Machine translation, per-user locale preferences (no accounts), locale-aware pri
 ```ts
 export const brand = {
   colors: {
-    tealDeep:   "#225560",
-    teal:       "#368798",
+    tealDeep: "#225560",
+    teal: "#368798",
     chartreuse: "#E9EA8A",
-    sand:       "#EAE2D6",
-    offWhite:   "#F5F6F7",
-    white:      "#FFFFFF",
-    black:      "#000000",
-    gray: { 900:"#404040", 700:"#666666", 500:"#BABABA", 300:"#E0E0E0", 100:"#F5F5F5" },
+    sand: "#EAE2D6",
+    offWhite: "#F5F6F7",
+    white: "#FFFFFF",
+    black: "#000000",
+    gray: { 900: "#404040", 700: "#666666", 500: "#BABABA", 300: "#E0E0E0", 100: "#F5F5F5" },
     // Plus tint/shade ramps from brandsheet page 3 for each brand color
   },
   gradient: {
-    brand: "linear-gradient(90deg, #225560 0%, #368798 25%, #E9EA8A 50%, #EAE2D6 75%, #F5F6F7 100%)",
+    brand:
+      "linear-gradient(90deg, #225560 0%, #368798 25%, #E9EA8A 50%, #EAE2D6 75%, #F5F6F7 100%)",
   },
-  radii: { sm:"8px", md:"16px", lg:"20px", xl:"28px", pill:"9999px" },
+  radii: { sm: "8px", md: "16px", lg: "20px", xl: "28px", pill: "9999px" },
   shadows: {
     soft: "0 4px 12px rgba(34, 85, 96, 0.08)",
     lift: "0 8px 24px rgba(34, 85, 96, 0.12)",
   },
   type: {
-    heading: ["ITC Avant Garde Gothic Pro","Century Gothic","Futura","Montserrat","system-ui","sans-serif"],
-    body:    ["ITC Avant Garde Gothic Pro","Century Gothic","Futura","Montserrat","system-ui","sans-serif"],
-    accent:  ["Khmer MN","Cormorant Garamond","Garamond","serif"],
+    heading: [
+      "ITC Avant Garde Gothic Pro",
+      "Century Gothic",
+      "Futura",
+      "Montserrat",
+      "system-ui",
+      "sans-serif",
+    ],
+    body: [
+      "ITC Avant Garde Gothic Pro",
+      "Century Gothic",
+      "Futura",
+      "Montserrat",
+      "system-ui",
+      "sans-serif",
+    ],
+    accent: ["Khmer MN", "Cormorant Garamond", "Garamond", "serif"],
   },
 } as const;
 ```
@@ -583,16 +605,16 @@ SVGs traced from PDFs, not raster exports. All accept `className` + `aria-label`
 
 Drawn from the existing brand-sheet treatments:
 
-| Application | Where on landing page |
-|---|---|
-| Billboard-style hero (pharmacist on teal + chartreuse callout) | Hero section — section 1 of landing page |
-| Tagline band (deep teal, chartreuse ALL CAPS, italic emphasis) | Section 2, full-bleed |
-| SCCA monogram pattern (secondary teal, low opacity) | Section 7 + section 9 — thin dividers |
+| Application                                                            | Where on landing page                                                 |
+| ---------------------------------------------------------------------- | --------------------------------------------------------------------- |
+| Billboard-style hero (pharmacist on teal + chartreuse callout)         | Hero section — section 1 of landing page                              |
+| Tagline band (deep teal, chartreuse ALL CAPS, italic emphasis)         | Section 2, full-bleed                                                 |
+| SCCA monogram pattern (secondary teal, low opacity)                    | Section 7 + section 9 — thin dividers                                 |
 | Letterhead treatment (off-white sheet, teal header, chartreuse accent) | Branded enrollment confirmation email + instructor notification email |
-| Logo lockup (full horizontal) | Header, footer, every email |
-| Shield monogram | Favicon, app icon, hero accent, OG images |
-| Brand gradient | Hero only (overuse cheapens it) |
-| Brand pattern | Section dividers only (never as primary background) |
+| Logo lockup (full horizontal)                                          | Header, footer, every email                                           |
+| Shield monogram                                                        | Favicon, app icon, hero accent, OG images                             |
+| Brand gradient                                                         | Hero only (overuse cheapens it)                                       |
+| Brand pattern                                                          | Section dividers only (never as primary background)                   |
 
 ### Component vocabulary
 
@@ -661,25 +683,25 @@ End-to-end test of the system after build:
 
 ## Critical files to be added during implementation
 
-| Path | Purpose |
-|---|---|
-| `/lib/brand.ts` | Brand tokens (only legal home for hex values) |
-| `/tailwind.config.ts` | Reads from `brand.ts` |
-| `/i18n.config.ts` | Locales + pathname mapping |
-| `/messages/{es,en}.json` | UI strings |
-| `/app/[locale]/page.tsx` | Landing page |
-| `/app/[locale]/cursos/[slug]/page.tsx` | Course detail |
-| `/app/api/checkout/session/route.ts` | Stripe Checkout session creation |
-| `/app/api/stripe/webhook/route.ts` | Stripe webhook handler |
-| `/components/marketing/HeroBillboard.tsx` | Hero section |
-| `/components/marketing/HeroMortar.tsx` | Scroll-scrub 3D component |
-| `/components/marketing/TaglineBand.tsx` | Full-bleed slogan |
-| `/components/email/EnrollmentConfirmation.tsx` | Branded confirmation email |
-| `/components/email/InstructorNotification.tsx` | Branded admin notification |
-| `/supabase/migrations/*.sql` | Schema migrations |
-| `/blender/mortar.blend` | 3D source |
-| `/blender/README.md` | Re-render instructions |
-| `/docs/instructor-guide.md` | Admin walkthrough |
+| Path                                           | Purpose                                       |
+| ---------------------------------------------- | --------------------------------------------- |
+| `/lib/brand.ts`                                | Brand tokens (only legal home for hex values) |
+| `/tailwind.config.ts`                          | Reads from `brand.ts`                         |
+| `/i18n.config.ts`                              | Locales + pathname mapping                    |
+| `/messages/{es,en}.json`                       | UI strings                                    |
+| `/app/[locale]/page.tsx`                       | Landing page                                  |
+| `/app/[locale]/cursos/[slug]/page.tsx`         | Course detail                                 |
+| `/app/api/checkout/session/route.ts`           | Stripe Checkout session creation              |
+| `/app/api/stripe/webhook/route.ts`             | Stripe webhook handler                        |
+| `/components/marketing/HeroBillboard.tsx`      | Hero section                                  |
+| `/components/marketing/HeroMortar.tsx`         | Scroll-scrub 3D component                     |
+| `/components/marketing/TaglineBand.tsx`        | Full-bleed slogan                             |
+| `/components/email/EnrollmentConfirmation.tsx` | Branded confirmation email                    |
+| `/components/email/InstructorNotification.tsx` | Branded admin notification                    |
+| `/supabase/migrations/*.sql`                   | Schema migrations                             |
+| `/blender/mortar.blend`                        | 3D source                                     |
+| `/blender/README.md`                           | Re-render instructions                        |
+| `/docs/instructor-guide.md`                    | Admin walkthrough                             |
 
 ---
 
