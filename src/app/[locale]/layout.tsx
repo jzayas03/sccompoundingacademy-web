@@ -5,6 +5,7 @@ import { routing } from "@/i18n/routing";
 import { heading, accent } from "@/app/fonts";
 import { Header } from "@/components/layout/Header";
 import { Footer } from "@/components/layout/Footer";
+import { SkipLink } from "@/components/layout/SkipLink";
 
 export function generateStaticParams() {
   return routing.locales.map((locale) => ({ locale }));
@@ -25,6 +26,7 @@ export default async function LocaleLayout({
     <html lang={locale} className={`${heading.variable} ${accent.variable}`}>
       <body>
         <NextIntlClientProvider messages={messages} locale={locale}>
+          <SkipLink />
           <Header locale={locale as "es" | "en"} />
           <main id="content">{children}</main>
           <Footer />
