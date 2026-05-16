@@ -1,0 +1,111 @@
+{
+  "nav": {
+    "home": "Home",
+    "courses": "Courses",
+    "about": "About",
+    "contact": "Contact",
+    "enroll": "Enroll"
+  },
+  "hero": {
+    "eyebrow": "Compounding Academy",
+    "headline": "Your next certification starts here.",
+    "subhead": "Professional certification in USP 795 and USP 800.",
+    "primaryCta": "Browse courses",
+    "secondaryCta": "Learn more"
+  },
+  "tagline": {
+    "line1": "We educate to build",
+    "line2": "Wellness and health."
+  },
+  "featured": {
+    "title": "Featured courses",
+    "comingSoon": "Coming soon",
+    "viewAll": "View all courses"
+  },
+  "whySCCA": {
+    "title": "Why SCCA",
+    "items": {
+      "instructor": {
+        "title": "Certified instructor",
+        "body": "Decades of compounding pharmacy experience."
+      },
+      "cohorts": {
+        "title": "Small cohorts",
+        "body": "Supervised learning with real-time feedback."
+      },
+      "usp": {
+        "title": "Aligned with USP 795 & USP 800",
+        "body": "Curriculum mapped to USP chapter standards."
+      },
+      "certification": {
+        "title": "Certification on completion",
+        "body": "Receive your professional certificate at program completion."
+      }
+    }
+  },
+  "instructor": {
+    "title": "Your instructor",
+    "bioPlaceholder": "Instructor bio coming soon."
+  },
+  "faq": {
+    "title": "Frequently asked questions",
+    "items": [
+      { "q": "How are courses delivered?", "a": "Online or in person, depending on the cohort." },
+      {
+        "q": "What is USP 795?",
+        "a": "The USP chapter that defines non-sterile compounding practice."
+      },
+      { "q": "What is USP 800?", "a": "The USP chapter on safe handling of hazardous drugs." },
+      {
+        "q": "Do I get a certificate?",
+        "a": "Yes — an SCCA professional certificate on completion."
+      },
+      { "q": "Do you accept credit cards?", "a": "Yes — secure card payment via Stripe." },
+      { "q": "Can I request a refund?", "a": "Yes, up to 7 days before the cohort start." }
+    ]
+  },
+  "footerCta": {
+    "headline": "Ready to certify?",
+    "subhead": "Join SCCA's next cohort.",
+    "button": "Browse courses"
+  },
+  "footer": {
+    "tagline": "We educate to build wellness and health.",
+    "contact": "Contact",
+    "legal": "Legal",
+    "privacy": "Privacy",
+    "terms": "Terms",
+    "copyright": "© {year} Santa Cruz Compounding Academy. All rights reserved."
+  },
+  "contact": {
+    "title": "Contact us",
+    "subhead": "Questions about our courses? Write to us.",
+    "name": "Name",
+    "email": "Email",
+    "phone": "Phone (optional)",
+    "subject": "Subject",
+    "message": "Message",
+    "submit": "Send message",
+    "submitting": "Sending…",
+    "success": "Thanks — we'll be in touch shortly.",
+    "error": "Something went wrong. Please try again."
+  },
+  "courses": {
+    "title": "Courses",
+    "comingSoonNotice": "Full catalog coming soon. In the meantime, contact us with questions."
+  },
+  "legal": {
+    "privacy": {
+      "title": "Privacy policy",
+      "body": "Document in progress. For questions, contact us."
+    },
+    "terms": {
+      "title": "Terms & conditions",
+      "body": "Document in progress. For questions, contact us."
+    }
+  },
+  "common": {
+    "languageToggle": "Language",
+    "skipToContent": "Skip to content"
+  }
+}

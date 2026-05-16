@@ -9,7 +9,7 @@ export const metadata: Metadata = {
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="es" className={`${heading.variable} ${accent.variable}`}>
+    <html className={`${heading.variable} ${accent.variable}`}>
       <body>{children}</body>
     </html>
   );
