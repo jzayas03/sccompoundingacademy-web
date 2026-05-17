@@ -7,14 +7,16 @@ test("root redirects to /es by default", async ({ page }) => {
 
 test("/en renders English headline", async ({ page }) => {
   await page.goto("/en");
-  // §00 Atrium opens the page; assertion covers both lines of the stacked
-  // headline ("We educate to build" + "wellness and health.").
-  await expect(page.getByRole("heading", { level: 1 })).toContainText("We educate to build");
-  await expect(page.getByRole("heading", { level: 1 })).toContainText("wellness and health");
+  // Hero h1 carries the program promise — assertion covers the
+  // core phrase that should not regress without explicit intent.
+  await expect(page.getByRole("heading", { level: 1 })).toContainText(
+    "Practical compounding training",
+  );
 });
 
 test("/es renders Spanish headline", async ({ page }) => {
   await page.goto("/es");
-  await expect(page.getByRole("heading", { level: 1 })).toContainText("Educamos para formar");
-  await expect(page.getByRole("heading", { level: 1 })).toContainText("bienestar y salud");
+  await expect(page.getByRole("heading", { level: 1 })).toContainText(
+    "Formación práctica en compounding",
+  );
 });

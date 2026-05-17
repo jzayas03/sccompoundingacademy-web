@@ -18,24 +18,24 @@
         "a": "Cada cohorte combina sesiones teóricas en línea con prácticas presenciales en el laboratorio de Santa Cruz Pharma Care en Bayamón. El componente teórico se cursa de forma flexible y asincrónica; las prácticas se calendarizan en bloques intensivos para que profesionales en ejercicio puedan participar sin interrumpir su rutina."
       },
       {
-        "q": "¿Qué es USP 795?",
-        "a": "USP 〈795〉 es el capítulo de la United States Pharmacopeia que establece los estándares para preparaciones magistrales no estériles —cremas, ungüentos, cápsulas, suspensiones orales y similares. Define controles de calidad, fechas límite de uso, documentación y prácticas de instalaciones que toda farmacia que prepara medicamentos debe seguir."
+        "q": "¿Recibo certificado al finalizar?",
+        "a": "Sí. Al completar todos los módulos y aprobar la evaluación práctica y escrita, recibes un certificado profesional de Santa Cruz Compounding Academy que documenta horas de instrucción y competencias adquiridas en USP 〈795〉 y USP 〈800〉. Sirve como evidencia de educación continua y de preparación para auditorías de calidad."
       },
       {
-        "q": "¿Qué es USP 800?",
-        "a": "USP 〈800〉 regula el manejo seguro de medicamentos peligrosos (HD) —desde la recepción y almacenamiento hasta la preparación, administración y disposición. Cubre controles de ingeniería, equipo de protección personal, vigilancia médica y procedimientos para proteger al personal, los pacientes y el ambiente de la exposición a estos compuestos."
+        "q": "¿Qué requisitos previos necesito?",
+        "a": "Para los programas de fundamentos basta con licencia activa de farmacéutico o estudios en curso en farmacia o tecnología farmacéutica. El módulo de USP 〈800〉 se recomienda después de fundamentos o con experiencia equivalente en preparaciones no estériles. Si tienes dudas, escríbenos antes de inscribirte."
       },
       {
-        "q": "¿Recibo certificación?",
-        "a": "Sí. Al completar todos los módulos y aprobar la evaluación final, recibes un certificado profesional de Santa Cruz Compounding Academy que documenta horas de instrucción y competencias adquiridas en USP 795 y USP 800. El certificado sirve como evidencia de educación continua y de preparación para auditorías de calidad."
+        "q": "¿Cómo accedo al material del curso?",
+        "a": "Al confirmar tu inscripción recibes acceso al portal del estudiante con el material teórico, calendario de cohorte, lecturas USP de referencia y descargables. Las prácticas se calendarizan en bloques presenciales en la sede de Bayamón y se notifican con dos semanas de antelación."
       },
       {
-        "q": "¿Aceptan tarjeta de crédito?",
-        "a": "Sí. Procesamos pagos seguros con tarjeta de crédito o débito a través de Stripe, con cifrado de extremo a extremo. También aceptamos transferencias ATH Móvil y planes de pago divididos para cohortes inscritas con anticipación; coordina la opción contigo al momento de la inscripción."
+        "q": "¿Tienen planes para equipos de farmacia?",
+        "a": "Sí. Para farmacias que quieren capacitar a su equipo completo ofrecemos cohortes privadas, ya sea en nuestra sede en Bayamón o, según el alcance, en las instalaciones del cliente. Incluye personalización del temario y reporte de competencias por participante. Escríbenos para coordinar."
       },
       {
         "q": "¿Puedo solicitar reembolso?",
-        "a": "Sí. Aceptamos reembolsos completos hasta siete (7) días naturales antes del inicio de la cohorte, sin preguntas. Después de esa fecha y antes del primer día puedes transferir tu plaza a otra persona o a una cohorte futura sin penalidad."
+        "a": "Sí. Aceptamos reembolsos completos hasta siete (7) días naturales antes del inicio de la cohorte, sin preguntas. Después de esa fecha puedes transferir tu plaza a otra persona o a una cohorte futura sin penalidad."
       }
     ]
   },
@@ -92,95 +92,142 @@
     "languageToggle": "Idioma",
     "skipToContent": "Saltar al contenido"
   },
-  "atrium": {
-    "edition": "Edición 01 · 2026",
-    "openingLine1": "Educamos para formar",
-    "openingLine2": "bienestar y salud.",
-    "supportingLine": "Certificación profesional · USP 795 · USP 800 · Puerto Rico",
-    "primaryLink": "Ver el catálogo",
-    "dateline": "Bayamón · Puerto Rico",
-    "scrollCue": "Manifiesto"
+  "hero": {
+    "eyebrow": "Certificación profesional · USP 〈795〉 · 〈797〉 · 〈800〉 · Bayamón, PR",
+    "headline": "Formación práctica en compounding para profesionales de farmacia.",
+    "subheadline": "Cursos estructurados para fortalecer técnica, cumplimiento y criterio profesional en preparaciones no estériles y manejo de medicamentos peligrosos. Programa afiliado a Santa Cruz Pharma Care.",
+    "primaryCta": "Ver cursos",
+    "secondaryCta": "Agendar orientación",
+    "imageAlt": "Banco de preparación con balanza analítica, mortero y materia prima USP/NF — sede de Santa Cruz Pharma Care en Bayamón, Puerto Rico.",
+    "trustItems": [
+      "Práctica supervisada en laboratorio activo",
+      "Marco normativo USP 〈795〉 · 〈797〉 · 〈800〉",
+      "Cohortes pequeñas con seguimiento individual",
+      "Sede en Bayamón, Puerto Rico"
+    ]
   },
-  "manifiesto": {
-    "sectionNumber": "§01",
-    "sectionLabel": "Manifiesto",
-    "paragraph": "En Santa Cruz Compounding Academy preparamos a farmacéuticos para una práctica que une la tradición galénica del compounding con los estándares contemporáneos de calidad, seguridad y rigor científico. Nuestro programa, alineado con los capítulos USP 795 y USP 800, ofrece formación práctica y certificación profesional para quienes formulan medicamentos personalizados para cada paciente — desde preparaciones no estériles cotidianas hasta el manejo seguro de medicamentos peligrosos. Educamos para que cada preparación sea segura, efectiva y hecha a medida.",
-    "marginaliaTerm": "Compounding (n.)",
-    "marginaliaDefinition": "La preparación, mezcla, ensamblaje, alteración o etiquetado de medicamentos personalizados para un paciente específico, prescritos por un profesional autorizado.",
-    "readingLabel": "Primera lectura"
-  },
-  "epigraph": {
-    "attribution": "— SCCA · Edición 01"
-  },
-  "cursos": {
-    "sectionNumber": "§02",
-    "sectionLabel": "Cursos",
-    "intro": "Tres programas de certificación profesional alineados con los capítulos USP 795 y USP 800. Cada uno combina fundamentos teóricos con práctica supervisada en laboratorio.",
-    "nextCohort": "Próxima cohorte",
-    "cohortDate": "Enero 2026",
-    "hoursLabel": "horas",
+  "confianza": {
+    "srHeading": "Por qué Santa Cruz Compounding Academy",
     "items": [
       {
-        "id": "usp-795",
-        "chapter": "USP 795",
-        "title": "Fundamentos de Compounding No Estéril",
-        "description": "Técnicas, manejo de excipientes, control de calidad y documentación para preparaciones magistrales.",
-        "hours": "40"
+        "label": "Programa afiliado",
+        "body": "Santa Cruz Compounding Academy nace de Santa Cruz Pharma Care, farmacia en Bayamón con más de quince años de práctica activa en preparaciones magistrales y medicamentos personalizados."
       },
       {
-        "id": "usp-800",
-        "chapter": "USP 800",
-        "title": "Manejo de Medicamentos Peligrosos",
-        "description": "Riesgo ocupacional, equipos de protección, ventilación y procedimientos de contención.",
-        "hours": "32"
+        "label": "Práctica supervisada",
+        "body": "Las cohortes operan en el laboratorio activo de la farmacia. Cada técnica se ejecuta el mismo día que se enseña, con revisión individual del instructor y portafolio documentado de preparaciones."
       },
       {
-        "id": "combinado",
-        "chapter": "USP 795 + 800",
-        "title": "Programa Combinado",
-        "description": "Cobertura completa de ambos capítulos con un módulo integrador de práctica avanzada.",
-        "hours": "60"
-      }
-    ],
-    "viewAll": "Ver catálogo completo"
-  },
-  "metodo": {
-    "sectionNumber": "§03",
-    "sectionLabel": "Método",
-    "intro": "Cuatro principios que ordenan cada cohorte. Educamos para que el conocimiento se traduzca en práctica responsable, no en certificados decorativos.",
-    "tenets": [
-      {
-        "number": "01",
-        "title": "Práctica supervisada",
-        "body": "Cada concepto se ejecuta en el laboratorio el mismo día que se enseña. Sin teoría aislada: cada cohorte termina con un portafolio de preparaciones revisadas individualmente."
-      },
-      {
-        "number": "02",
-        "title": "Cohortes pequeñas",
-        "body": "Grupos limitados a doce participantes por cohorte. El instructor conoce el progreso de cada uno y adapta la profundidad técnica al nivel del grupo."
-      },
-      {
-        "number": "03",
-        "title": "Alineado con USP",
-        "body": "Currículo construido capítulo por capítulo desde USP 795 y USP 800. Las preparaciones, equipos y procedimientos siguen las versiones vigentes; los cambios regulatorios se incorporan al material."
-      },
-      {
-        "number": "04",
-        "title": "Certificación al completar",
-        "body": "Evaluación práctica + escrita al cierre de cada programa. Quienes aprueban reciben un certificado profesional de SCCA con horas acreditadas y fecha de emisión."
+        "label": "Alineado con USP",
+        "body": "Currículo construido capítulo por capítulo desde USP 〈795〉, 〈797〉 y 〈800〉 vigentes. Las actualizaciones regulatorias se incorporan al material entre cohortes."
       }
     ]
   },
-  "frontispiece": {
-    "sectionNumber": "§01.5",
-    "sectionLabel": "Frontispicio",
-    "caption": "Banco de preparación con materia prima USP/NF y hoja de compounding.",
-    "alt": "Composición sobre mármol blanco: mortero, balanza analítica, frascos rotulados como Zinc Oxide USP, White Petrolatum USP, PEG 400 USP, Glycerin USP y Methylparaben NF, junto a una hoja de compounding."
+  "cursosGrid": {
+    "eyebrow": "Programas",
+    "heading": "Cursos disponibles",
+    "intro": "Tres programas de certificación alineados con los capítulos USP 〈795〉 y 〈800〉. Cada uno combina fundamentos teóricos con práctica supervisada en laboratorio.",
+    "durationLabel": "Duración",
+    "courseCta": "Ver curso",
+    "courseLinkAria": "Ver detalles del curso",
+    "items": [
+      {
+        "id": "usp-795",
+        "level": "Fundamentos",
+        "title": "Compounding No Estéril — USP 〈795〉",
+        "description": "Técnicas de preparación, manejo de excipientes, cálculo de BUD, control de calidad y documentación para preparaciones magistrales.",
+        "duration": "40 h"
+      },
+      {
+        "id": "usp-800",
+        "level": "Intermedio",
+        "title": "Manejo de Medicamentos Peligrosos — USP 〈800〉",
+        "description": "Riesgo ocupacional, equipo de protección personal, controles de ingeniería y procedimientos de contención y descontaminación.",
+        "duration": "32 h"
+      },
+      {
+        "id": "combinado",
+        "level": "Avanzado",
+        "title": "Programa Combinado USP 〈795〉 + 〈800〉",
+        "description": "Cobertura completa de ambos capítulos más un módulo integrador de práctica avanzada con casos de farmacia real.",
+        "duration": "60 h"
+      }
+    ]
+  },
+  "aprenderas": {
+    "eyebrow": "Qué aprenderás",
+    "heading": "Competencias concretas, no certificados decorativos.",
+    "intro": "El programa entrena seis disciplinas que un farmacéutico necesita para preparar medicamentos de forma segura, documentada y conforme con las normas vigentes.",
+    "items": [
+      {
+        "label": "Técnica de preparación",
+        "body": "Pesaje, trituración, incorporación y homogeneización de preparaciones no estériles — control granulométrico, uniformidad y verificación de la formulación final."
+      },
+      {
+        "label": "Documentación y trazabilidad",
+        "body": "Hojas maestras, registros de lote, control de calidad y rotulado conforme a USP 〈795〉, listos para inspección de la Junta de Farmacia."
+      },
+      {
+        "label": "Seguridad ocupacional bajo USP 〈800〉",
+        "body": "Equipo de protección personal, controles de ingeniería, vigilancia médica y procedimientos para proteger al equipo, al paciente y al ambiente."
+      },
+      {
+        "label": "Cálculo de BUD",
+        "body": "Fechas límite de uso (Beyond-Use Dating) según categoría de preparación, condiciones de almacenamiento y forma farmacéutica."
+      },
+      {
+        "label": "Manejo de excipientes y bases",
+        "body": "Selección de bases tópicas y orales, compatibilidad fisicoquímica, estabilidad y conservación de la preparación final."
+      },
+      {
+        "label": "Cumplimiento y auditoría",
+        "body": "Preparación para inspecciones regulatorias, auditorías internas de calidad y revisión continua de procedimientos operativos estándar."
+      }
+    ]
+  },
+  "paraQuienEs": {
+    "eyebrow": "Para quién es",
+    "heading": "Pensado para profesionales que trabajan con preparaciones reales.",
+    "intro": "Estructuramos los cursos para cuatro perfiles distintos. Cada uno entra al programa con un objetivo profesional definido y sale con competencias documentadas y aplicables el lunes siguiente.",
+    "items": [
+      {
+        "title": "Farmacéuticos licenciados",
+        "body": "Profesionales en ejercicio que quieren añadir compounding a su práctica con criterio técnico y respaldo normativo, o profundizar competencias que ya ejercen.",
+        "bullets": [
+          "Educación continua acreditada y documentada",
+          "Plan de aplicación inmediata en la farmacia"
+        ]
+      },
+      {
+        "title": "Técnicos de farmacia",
+        "body": "Personal técnico que asiste preparaciones y necesita formación estructurada en procedimientos, seguridad y documentación de calidad.",
+        "bullets": [
+          "Entrenamiento práctico bajo instructor",
+          "Reporte de competencias por participante"
+        ]
+      },
+      {
+        "title": "Owners y managers",
+        "body": "Propietarios y administradores que evalúan abrir o expandir un servicio de compounding y necesitan cumplir USP desde el día uno.",
+        "bullets": [
+          "Cohortes privadas para equipos completos",
+          "Asesoría sobre requisitos y equipos"
+        ]
+      },
+      {
+        "title": "Estudiantes en transición",
+        "body": "Estudiantes avanzados y profesionales cambiando de área que buscan una entrada técnica al compounding con mentoría real.",
+        "bullets": [
+          "Prerrequisitos mínimos accesibles",
+          "Mentoría con farmacéuticos en ejercicio"
+        ]
+      }
+    ]
   },
   "especialidades": {
-    "sectionNumber": "§02.5",
-    "sectionLabel": "Especialidades",
-    "intro": "Áreas de práctica que el programa prepara a sus graduados a ejercer. Cada especialidad aplica los principios de USP 795 y USP 800 a un público y necesidad específica.",
+    "eyebrow": "Especialidades",
+    "heading": "Áreas de práctica que cubre el programa.",
+    "intro": "El currículo prepara a sus graduados para ejercer las áreas que Santa Cruz Pharma Care atiende a diario, aplicando los principios de USP 〈795〉 y 〈800〉 a cada población y necesidad.",
     "items": [
       {
         "id": "dermatologico",
@@ -195,7 +242,7 @@
       {
         "id": "pediatria",
         "label": "Pediatría",
-        "body": "Medicamentos pediátricos con sabores amigables para niños y dosis ajustadas al peso."
+        "body": "Medicamentos pediátricos con sabores amigables y dosis ajustadas al peso del paciente."
       },
       {
         "id": "veterinario",
@@ -212,51 +259,39 @@
         "label": "Compounding general",
         "body": "Personalización de medicamentos según las necesidades únicas de cada paciente, desde formas farmacéuticas alternativas hasta excipientes específicos."
       }
-    ],
-    "attribution": "Áreas alineadas con la práctica de Santa Cruz Pharma Care, más de 15 años en Bayamón, Puerto Rico."
+    ]
   },
   "galeria": {
-    "sectionNumber": "§04",
-    "sectionLabel": "Galería",
-    "intro": "Tres miradas al trabajo cotidiano: la práctica controlada, el laboratorio de procesos no estériles y el manejo seguro de medicamentos peligrosos.",
+    "eyebrow": "Laboratorio",
+    "heading": "Dónde se entrena cada técnica.",
+    "intro": "Tres miradas al trabajo cotidiano de la sede: el banco controlado, la preparación no estéril y la cabina de seguridad para medicamentos peligrosos.",
     "items": [
       {
         "id": "bench",
-        "caption": "Banco de preparación equipado con balanza analítica y materia prima clasificada. Es el espacio donde se pesa, se mide y se documenta cada componente antes de comenzar la formulación —el primer eslabón de la cadena de calidad que enseña USP 795.",
+        "caption": "Banco de preparación con balanza analítica y materia prima clasificada.",
         "src": "/photos/photo-instructor.jpg"
       },
       {
         "id": "mortar",
-        "caption": "Mortero y pestillo en uso durante una preparación no estéril. La triturada y la incorporación manual siguen siendo técnicas fundamentales del compounding —los estudiantes practican el control granulométrico que distingue una formulación uniforme de una inconsistente.",
+        "caption": "Mortero y pestillo en uso durante una preparación no estéril.",
         "src": "/photos/photo-mortar.jpg"
       },
       {
         "id": "chemo",
-        "caption": "Cabina de seguridad biológica para el manejo de medicamentos peligrosos bajo USP 800. Filtración HEPA, presión negativa y equipo de protección personal completo —el estándar al que se entrenan los participantes para proteger al farmacéutico, al paciente y al ambiente.",
+        "caption": "Cabina de seguridad biológica para el manejo de medicamentos peligrosos bajo USP 〈800〉.",
         "src": "/photos/photo-chemo-hood.jpg"
       }
     ]
   },
-  "preguntas": {
-    "sectionNumber": "§05",
-    "sectionLabel": "Preguntas",
-    "intro": "Lo más consultado por farmacéuticos antes de inscribirse. Si tu pregunta no está aquí, escríbenos."
-  },
-  "inscripcion": {
-    "sectionNumber": "§06",
-    "sectionLabel": "Inscripción",
-    "headline": "Para la próxima cohorte",
-    "subheadline": "Plazas limitadas a doce participantes. La cohorte inaugural comienza en enero de 2026.",
-    "cohortLabel": "Cohorte inaugural",
-    "cohortDate": "Enero 2026",
-    "primaryCta": "Inscribirme",
-    "secondaryNote": "¿Preguntas antes de inscribirte?",
-    "secondaryCta": "Escríbenos"
+  "faqClean": {
+    "eyebrow": "Preguntas frecuentes",
+    "heading": "Lo que los farmacéuticos preguntan antes de inscribirse.",
+    "intro": "Si tu pregunta no está aquí, escríbenos. Respondemos en menos de 48 horas laborables."
   },
   "ubicacion": {
-    "sectionNumber": "§07",
-    "sectionLabel": "Ubicación",
-    "intro": "La academia comparte sede con Santa Cruz Pharma Care en Bayamón, con acceso al laboratorio activo de la farmacia.",
+    "eyebrow": "Ubicación",
+    "heading": "Sede en Bayamón, Puerto Rico.",
+    "intro": "La academia comparte sede con Santa Cruz Pharma Care y opera dentro de su laboratorio activo. A minutos de la PR-22 y la PR-2.",
     "addressLabel": "Sede",
     "addressLine": "Calle Santa Cruz, Barrio Pueblo, Bayamón, PR 00960",
     "parkingLabel": "Estacionamiento",
@@ -265,5 +300,13 @@
     "transitNote": "A minutos de la PR-22 y PR-2. Coordinación con servicios de transporte disponible.",
     "openInMapsLabel": "Abrir en Google Maps",
     "embedQuery": "Farmacia+Santa+Cruz+Calle+Santa+Cruz+Bayamon+PR+00960"
+  },
+  "ctaFinal": {
+    "eyebrow": "Cohorte inaugural · Enero 2026",
+    "headline": "Reserva tu plaza para la próxima cohorte.",
+    "subheadline": "Plazas limitadas a doce participantes. La inscripción cierra cuando la cohorte se completa.",
+    "primaryCta": "Reservar plaza",
+    "secondaryNote": "¿Tienes preguntas antes de decidir?",
+    "secondaryCta": "Escríbenos"
   }
 }
