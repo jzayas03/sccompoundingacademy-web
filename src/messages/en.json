@@ -43,10 +43,6 @@
       }
     }
   },
-  "instructor": {
-    "title": "Your instructor",
-    "bioPlaceholder": "Instructor bio coming soon."
-  },
   "faq": {
     "title": "Frequently asked questions",
     "items": [

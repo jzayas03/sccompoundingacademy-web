@@ -43,10 +43,6 @@
       }
     }
   },
-  "instructor": {
-    "title": "Tu instructor",
-    "bioPlaceholder": "Biografía del instructor (próximamente)."
-  },
   "faq": {
     "title": "Preguntas frecuentes",
     "items": [

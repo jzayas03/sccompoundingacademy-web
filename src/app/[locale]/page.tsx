@@ -7,7 +7,6 @@ import { Manifiesto } from "@/components/marketing/Manifiesto";
 import { Frontispiece } from "@/components/marketing/Frontispiece";
 import { Cursos } from "@/components/marketing/Cursos";
 import { Metodo } from "@/components/marketing/Metodo";
-import { InstructorSection } from "@/components/marketing/InstructorSection";
 import { PatternDivider } from "@/components/marketing/PatternDivider";
 import { FAQ } from "@/components/marketing/FAQ";
 import { FooterCTA } from "@/components/marketing/FooterCTA";
@@ -42,9 +41,8 @@ export default async function LandingPage({ params }: { params: Promise<{ locale
             §01.5  Frontispiece (full-bleed editorial photograph + caption)
             §02    Cursos       (table-of-contents catalog with photo header)
             §03    Método       (4 numbered tenets in asymmetric layout)
-          Below this we keep the previous-batch sections (Instructor [now
-          with real portrait], FAQ, FooterCTA) until they get converted in
-          the next batch. */}
+          Below this we keep the previous-batch sections (FAQ, FooterCTA)
+          until they get converted in the next batch. */}
       <Atrium />
       <Epigraph />
       <Manifiesto />
@@ -52,7 +50,6 @@ export default async function LandingPage({ params }: { params: Promise<{ locale
       <Cursos />
       <Metodo />
       <PatternDivider />
-      <InstructorSection />
       <FAQ />
       <PatternDivider />
       <FooterCTA />
