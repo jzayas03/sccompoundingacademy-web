@@ -43,7 +43,7 @@ export function Especialidades() {
             </p>
             <h2
               id="especialidades-heading"
-              className="font-heading text-teal-deep mt-2 text-4xl font-bold tracking-[-0.025em] sm:text-5xl lg:text-6xl"
+              className="font-heading text-teal-deep mt-2 text-4xl font-bold tracking-[-0.025em] text-balance break-words hyphens-auto sm:text-5xl lg:text-[2.75rem] xl:text-5xl"
             >
               {t("sectionLabel")}
             </h2>
