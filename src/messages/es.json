@@ -258,12 +258,12 @@
     "sectionLabel": "Ubicación",
     "intro": "La academia comparte sede con Santa Cruz Pharma Care en Bayamón, con acceso al laboratorio activo de la farmacia.",
     "addressLabel": "Sede",
-    "addressLine": "Bayamón, Puerto Rico",
+    "addressLine": "Calle Santa Cruz, Barrio Pueblo, Bayamón, PR 00960",
     "parkingLabel": "Estacionamiento",
     "parkingNote": "Disponible en sitio para participantes de cohorte.",
     "transitLabel": "Acceso",
     "transitNote": "A minutos de la PR-22 y PR-2. Coordinación con servicios de transporte disponible.",
     "openInMapsLabel": "Abrir en Google Maps",
-    "embedQuery": "Santa+Cruz+Pharma+Care+Bayamon+Puerto+Rico"
+    "embedQuery": "Farmacia+Santa+Cruz+Calle+Santa+Cruz+Bayamon+PR+00960"
   }
 }
