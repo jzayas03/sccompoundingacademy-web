@@ -49,7 +49,7 @@ export function CtaFinal() {
           <div className="mt-8 flex flex-col items-center justify-center gap-4 sm:flex-row sm:gap-6">
             <Link
               href="/contacto"
-              className="bg-chartreuse text-teal-deep hover:bg-chartreuse/90 font-heading focus-visible:ring-chartreuse focus-visible:ring-offset-teal-deep inline-flex h-12 items-center justify-center rounded-md px-7 text-sm font-semibold transition-colors focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none sm:h-14 sm:px-8 sm:text-base"
+              className="bg-chartreuse text-teal-deep ring-chartreuse/40 shadow-lift hover:bg-chartreuse/95 hover:shadow-lift focus-visible:ring-chartreuse font-heading inline-flex h-12 items-center justify-center rounded-md px-7 text-sm font-semibold ring-1 transition-[color,background-color,box-shadow,transform] duration-200 ease-out focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-offset-teal-deep focus-visible:outline-none motion-safe:hover:-translate-y-px sm:h-14 sm:px-8 sm:text-base"
             >
               {t("primaryCta")}
             </Link>
