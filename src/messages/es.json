@@ -43,14 +43,13 @@
       }
     }
   },
-  "instructor": {
-    "title": "Tu instructor",
-    "bioPlaceholder": "Biografía del instructor (próximamente)."
-  },
   "faq": {
     "title": "Preguntas frecuentes",
     "items": [
-      { "q": "¿Cómo se imparten los cursos?", "a": "En línea o presencial, según la cohorte." },
+      {
+        "q": "¿Cómo se imparten los cursos?",
+        "a": "En línea o presencial, según la cohorte."
+      },
       {
         "q": "¿Qué es USP 795?",
         "a": "El capítulo de la USP que define la práctica de compounding no estéril."
@@ -63,7 +62,10 @@
         "q": "¿Recibo certificación?",
         "a": "Sí — un certificado de SCCA al completar el programa."
       },
-      { "q": "¿Aceptan tarjeta de crédito?", "a": "Sí — pago seguro con tarjeta vía Stripe." },
+      {
+        "q": "¿Aceptan tarjeta de crédito?",
+        "a": "Sí — pago seguro con tarjeta vía Stripe."
+      },
       {
         "q": "¿Puedo solicitar reembolso?",
         "a": "Sí, hasta 7 días antes del inicio de la cohorte."
@@ -81,7 +83,16 @@
     "legal": "Legal",
     "privacy": "Privacidad",
     "terms": "Términos",
-    "copyright": "© {year} Santa Cruz Compounding Academy. Todos los derechos reservados."
+    "copyright": "© {year} Santa Cruz Compounding Academy. Todos los derechos reservados.",
+    "contactInfoLabel": "Información de contacto",
+    "address": "Bayamón, Puerto Rico",
+    "phone": "787-798-4646",
+    "phoneLabel": "Teléfono",
+    "whatsapp": "787-408-5748",
+    "whatsappLabel": "WhatsApp",
+    "email": "scpcpr@gmail.com",
+    "emailLabel": "Correo",
+    "addressLabel": "Sede"
   },
   "contact": {
     "title": "Contáctanos",
@@ -113,5 +124,128 @@
   "common": {
     "languageToggle": "Idioma",
     "skipToContent": "Saltar al contenido"
+  },
+  "atrium": {
+    "edition": "Edición 01 · 2026",
+    "openingLine1": "Educamos para formar",
+    "openingLine2": "bienestar y salud.",
+    "supportingLine": "Certificación profesional · USP 795 · USP 800 · Puerto Rico",
+    "primaryLink": "Ver el catálogo",
+    "dateline": "San Juan · Puerto Rico",
+    "scrollCue": "Manifiesto"
+  },
+  "manifiesto": {
+    "sectionNumber": "§01",
+    "sectionLabel": "Manifiesto",
+    "paragraph": "En Santa Cruz Compounding Academy preparamos a farmacéuticos para una práctica que une la tradición galénica del compounding con los estándares contemporáneos de calidad, seguridad y rigor científico. Nuestro programa, alineado con los capítulos USP 795 y USP 800, ofrece formación práctica y certificación profesional para quienes formulan medicamentos personalizados para cada paciente — desde preparaciones no estériles cotidianas hasta el manejo seguro de medicamentos peligrosos. Educamos para que cada preparación sea segura, efectiva y hecha a medida.",
+    "marginaliaTerm": "Compounding (n.)",
+    "marginaliaDefinition": "La preparación, mezcla, ensamblaje, alteración o etiquetado de medicamentos personalizados para un paciente específico, prescritos por un profesional autorizado.",
+    "readingLabel": "Primera lectura"
+  },
+  "epigraph": {
+    "attribution": "— SCCA · Edición 01"
+  },
+  "cursos": {
+    "sectionNumber": "§02",
+    "sectionLabel": "Cursos",
+    "intro": "Tres programas de certificación profesional alineados con los capítulos USP 795 y USP 800. Cada uno combina fundamentos teóricos con práctica supervisada en laboratorio.",
+    "nextCohort": "Próxima cohorte",
+    "cohortDate": "Enero 2026",
+    "hoursLabel": "horas",
+    "items": [
+      {
+        "id": "usp-795",
+        "chapter": "USP 795",
+        "title": "Fundamentos de Compounding No Estéril",
+        "description": "Técnicas, manejo de excipientes, control de calidad y documentación para preparaciones magistrales.",
+        "hours": "40"
+      },
+      {
+        "id": "usp-800",
+        "chapter": "USP 800",
+        "title": "Manejo de Medicamentos Peligrosos",
+        "description": "Riesgo ocupacional, equipos de protección, ventilación y procedimientos de contención.",
+        "hours": "32"
+      },
+      {
+        "id": "combinado",
+        "chapter": "USP 795 + 800",
+        "title": "Programa Combinado",
+        "description": "Cobertura completa de ambos capítulos con un módulo integrador de práctica avanzada.",
+        "hours": "60"
+      }
+    ],
+    "viewAll": "Ver catálogo completo"
+  },
+  "metodo": {
+    "sectionNumber": "§03",
+    "sectionLabel": "Método",
+    "intro": "Cuatro principios que ordenan cada cohorte. Educamos para que el conocimiento se traduzca en práctica responsable, no en certificados decorativos.",
+    "tenets": [
+      {
+        "number": "01",
+        "title": "Práctica supervisada",
+        "body": "Cada concepto se ejecuta en el laboratorio el mismo día que se enseña. Sin teoría aislada: cada cohorte termina con un portafolio de preparaciones revisadas individualmente."
+      },
+      {
+        "number": "02",
+        "title": "Cohortes pequeñas",
+        "body": "Grupos limitados a doce participantes por cohorte. El instructor conoce el progreso de cada uno y adapta la profundidad técnica al nivel del grupo."
+      },
+      {
+        "number": "03",
+        "title": "Alineado con USP",
+        "body": "Currículo construido capítulo por capítulo desde USP 795 y USP 800. Las preparaciones, equipos y procedimientos siguen las versiones vigentes; los cambios regulatorios se incorporan al material."
+      },
+      {
+        "number": "04",
+        "title": "Certificación al completar",
+        "body": "Evaluación práctica + escrita al cierre de cada programa. Quienes aprueban reciben un certificado profesional de SCCA con horas acreditadas y fecha de emisión."
+      }
+    ]
+  },
+  "frontispiece": {
+    "sectionNumber": "§01.5",
+    "sectionLabel": "Frontispicio",
+    "caption": "Banco de preparación con materia prima USP/NF y hoja de compounding.",
+    "alt": "Composición sobre mármol blanco: mortero, balanza analítica, frascos rotulados como Zinc Oxide USP, White Petrolatum USP, PEG 400 USP, Glycerin USP y Methylparaben NF, junto a una hoja de compounding."
+  },
+  "especialidades": {
+    "sectionNumber": "§02.5",
+    "sectionLabel": "Especialidades",
+    "intro": "Áreas de práctica que el programa prepara a sus graduados a ejercer. Cada especialidad aplica los principios de USP 795 y USP 800 a un público y necesidad específica.",
+    "items": [
+      {
+        "id": "dermatologico",
+        "label": "Dermatológico",
+        "body": "Cremas personalizadas para manchas, arrugas y acné — formulación de bases tópicas y manejo de principios activos."
+      },
+      {
+        "id": "hormonal",
+        "label": "Hormonal",
+        "body": "Progesterona, estrógenos y otras hormonas bioidénticas ajustadas a las necesidades específicas de cada paciente."
+      },
+      {
+        "id": "pediatria",
+        "label": "Pediatría",
+        "body": "Medicamentos pediátricos con sabores amigables para niños y dosis ajustadas al peso."
+      },
+      {
+        "id": "veterinario",
+        "label": "Veterinario",
+        "body": "Fórmulas para animales ajustadas según especie, peso y presentación necesaria."
+      },
+      {
+        "id": "blt",
+        "label": "Anestésicos tópicos · BLT",
+        "body": "Fórmulas BLT (benzocaína, lidocaína, tetracaína) para minimizar dolor y maximizar confort en procedimientos."
+      },
+      {
+        "id": "general",
+        "label": "Compounding general",
+        "body": "Personalización de medicamentos según las necesidades únicas de cada paciente, desde formas farmacéuticas alternativas hasta excipientes específicos."
+      }
+    ],
+    "attribution": "Áreas alineadas con la práctica de Santa Cruz Pharma Care, más de 15 años en Bayamón, Puerto Rico."
   }
 }
