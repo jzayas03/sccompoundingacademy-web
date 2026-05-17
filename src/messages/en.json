@@ -258,12 +258,12 @@
     "sectionLabel": "Location",
     "intro": "The academy shares a campus with Santa Cruz Pharma Care in Bayamón, with access to the pharmacy's working laboratory.",
     "addressLabel": "Office",
-    "addressLine": "Bayamón, Puerto Rico",
+    "addressLine": "Calle Santa Cruz, Barrio Pueblo, Bayamón, PR 00960",
     "parkingLabel": "Parking",
     "parkingNote": "On-site parking available for cohort participants.",
     "transitLabel": "Access",
     "transitNote": "Minutes from PR-22 and PR-2. Transit coordination available on request.",
     "openInMapsLabel": "Open in Google Maps",
-    "embedQuery": "Santa+Cruz+Pharma+Care+Bayamon+Puerto+Rico"
+    "embedQuery": "Farmacia+Santa+Cruz+Calle+Santa+Cruz+Bayamon+PR+00960"
   }
 }
