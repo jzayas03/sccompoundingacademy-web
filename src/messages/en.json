@@ -45,6 +45,7 @@
     "legal": "Legal",
     "privacy": "Privacy",
     "terms": "Terms",
+    "refund": "Refunds",
     "copyright": "© {year} Santa Cruz Compounding Academy. All rights reserved.",
     "contactInfoLabel": "Contact information",
     "address": "73 Calle Santa Cruz, Suite 101, Bayamón, PR 00960",
@@ -80,12 +81,160 @@
   },
   "legal": {
     "privacy": {
-      "title": "Privacy policy",
-      "body": "Document in progress. For questions, contact us."
+      "title": "Privacy Policy",
+      "lastUpdated": "Last updated: May 17, 2026",
+      "draftNotice": "Draft — pending legal review",
+      "intro": "Santa Cruz Compounding Academy, LLC (\"SCCA\", \"we\") respects your privacy and is committed to protecting the personal data you entrust to us. This Privacy Policy describes what information we collect when you visit or interact with sccompoundingacademy.com (the \"Site\"), how we use it, with whom we share it, and what your rights are. It applies to all individuals who visit the Site, request information, or enroll in any of our educational programs.",
+      "sections": [
+        {
+          "heading": "1. Information we collect",
+          "body": "We collect the information you yourself provide when you complete forms on the Site, enroll in a course, or contact us. This includes, as applicable: full name, email address, phone number, professional license number (when applicable), payment information (processed by our payment processor — see section 4), and any comments or inquiries you send us.\n\nWe also automatically collect certain technical information when you browse the Site: IP address, browser type and version, operating system, pages visited, date and duration of the visit, and the referrer (URL you came from). This information is collected through cookies and similar technologies.\n\nWe do not collect special categories of sensitive data (racial origin, political opinions, health, sexual orientation, etc.) unless you expressly provide them for an identified legitimate purpose."
+        },
+        {
+          "heading": "2. How we use your information",
+          "body": "We use your personal information for the following purposes: (a) processing your enrollment and charging the course fee; (b) communicating with you about your enrollment, cohort schedule, program changes, and related matters; (c) issuing completion certificates and assessment reports; (d) responding to your inquiries and support requests; (e) complying with applicable legal, tax, and regulatory obligations in Puerto Rico; (f) preventing fraud, abuse, or misuse of the Site; and (g) improving our services through aggregated and anonymized usage analysis.\n\nWe do not use your information for third-party advertising nor do we sell it to marketing entities."
+        },
+        {
+          "heading": "3. Legal basis for processing",
+          "body": "We process your personal data based on at least one of the following legal grounds: (a) performance of a contract when you enroll in a course; (b) compliance with legal obligations (for example, PR Department of Treasury requirements); (c) SCCA's legitimate interests in operating and improving our services, provided your fundamental rights do not prevail; and (d) your explicit consent when applicable (for example, optional subscription to marketing communications)."
+        },
+        {
+          "heading": "4. Service providers (processors)",
+          "body": "We share limited data with trusted third-party providers, each under contractual obligation to protect your information:\n\nStripe, Inc. — processes card payments. We do not store card numbers on our servers; Stripe receives them directly under PCI-DSS compliance. Policy: https://stripe.com/privacy\n\nResend — delivers transactional emails (enrollment confirmation, cohort reminders, operational communications). Policy: https://resend.com/legal/privacy-policy\n\nAirtable — stores the enrollment registry, cohorts, and assessment results. Policy: https://www.airtable.com/company/privacy\n\nVercel, Inc. — hosts the Site and maintains technical access logs. Policy: https://vercel.com/legal/privacy-policy\n\nGoogle Maps — campus map embed; when the page loads, your browser may send your IP to Google. Policy: https://policies.google.com/privacy\n\nSome of these providers process data outside Puerto Rico (primarily in the continental United States). By using the Site, you accept this transfer."
+        },
+        {
+          "heading": "5. Cookies and similar technologies",
+          "body": "The Site uses cookies strictly necessary for its operation (language preference, session, security). These cookies do not require your prior consent under applicable regulations.\n\nWe do not use advertising or cross-site tracking cookies. If we incorporate aggregated analytics in the future (for example, Plausible Analytics or Google Analytics), we will update this policy and, as appropriate, enable a consent mechanism.\n\nYou can configure your browser to reject cookies, but this may affect Site functionality."
+        },
+        {
+          "heading": "6. Retention period",
+          "body": "We retain your personal information only for as long as necessary to fulfill the purposes described in this policy, except where a legal or tax obligation requires longer periods. As a general reference:\n\nEnrollment and payment data: up to seven (7) years, per PR Treasury Department requirements for accounting records.\n\nInquiry emails without subsequent enrollment: up to two (2) years.\n\nAssessment results and certificates: indefinitely, as they are necessary for later verification by third parties (employers, regulatory agencies).\n\nTechnical browsing data: up to twelve (12) months."
+        },
+        {
+          "heading": "7. Your rights",
+          "body": "You have the following rights regarding your personal information: (a) access — request a copy of the data we hold about you; (b) rectification — correct inaccurate or incomplete information; (c) deletion — request erasure, except when the law requires retention; (d) limitation — ask us to restrict processing in certain circumstances; (e) portability — receive your data in a structured, readable format; (f) objection — object to processing based on legitimate interests.\n\nTo exercise any of these rights, write to us at scpcpr@gmail.com clearly identifying your request. We respond within a maximum of thirty (30) calendar days."
+        },
+        {
+          "heading": "8. Security",
+          "body": "We implement reasonable technical and organizational measures to protect your information: TLS encryption in transit, role-based access control to our systems, and selection of providers with recognized security standards (PCI-DSS, SOC 2). However, no system on the internet is 100 % secure; if you detect or suspect a security incident, report it immediately to scpcpr@gmail.com."
+        },
+        {
+          "heading": "9. Minors",
+          "body": "The Site and SCCA's educational programs are directed at adult pharmacy professionals. We do not intentionally collect personal information from minors under 18 years of age. If we discover that we have collected data from a minor without adequate parental verification, we will delete it promptly."
+        },
+        {
+          "heading": "10. International transfers",
+          "body": "As noted in section 4, some of our providers operate servers outside Puerto Rico, primarily in the continental United States. These providers comply with recognized data protection frameworks (including, as applicable, European Union adequacy frameworks and U.S. privacy certifications). By using the Site, you acknowledge and accept these transfers."
+        },
+        {
+          "heading": "11. Changes to this policy",
+          "body": "We may update this Privacy Policy when we add new services or operational changes. Any material change will be notified via a visible notice on the Site and, when applicable, by email to active enrollees. The \"Last updated\" date at the start of the document reflects the version in force."
+        },
+        {
+          "heading": "12. Contact",
+          "body": "For questions, requests, or complaints about this Privacy Policy or the treatment of your personal data:\n\nSanta Cruz Compounding Academy, LLC\nEdificio Médico Santa Cruz, 73 Calle Santa Cruz, Suite 101\nBayamón, Puerto Rico 00960\nEmail: scpcpr@gmail.com\nPhone: 787-798-4646"
+        }
+      ]
     },
     "terms": {
-      "title": "Terms & conditions",
-      "body": "Document in progress. For questions, contact us."
+      "title": "Terms and Conditions",
+      "lastUpdated": "Last updated: May 17, 2026",
+      "draftNotice": "Draft — pending legal review",
+      "intro": "These Terms and Conditions (\"Terms\") govern access to sccompoundingacademy.com and enrollment in the educational programs offered by Santa Cruz Compounding Academy, LLC (\"SCCA\", \"we\"). By enrolling in any course or using the Site, you accept these Terms in full. If you do not agree, refrain from enrolling or using the Site.",
+      "sections": [
+        {
+          "heading": "1. Nature of the service",
+          "body": "SCCA offers in-person professional training programs in pharmaceutical compounding, aligned with USP chapters 〈795〉 (non-sterile preparations) and 〈800〉 (hazardous drug handling). Courses are delivered at our campus in Bayamón, Puerto Rico, in cohort format with limited seats.\n\nCertificates issued by SCCA document instruction hours and acquired competencies. They do not, by themselves, constitute official continuing education (CE) accreditation unless we expressly indicate so in writing at the start of a specific cohort."
+        },
+        {
+          "heading": "2. Eligibility",
+          "body": "To enroll you must be over 18 years of age and have legal capacity to enter into contracts. Programs are directed at licensed pharmacists, pharmacy technicians, pharmacy owners or administrators, and advanced students in pharmacy or pharmacy technology. Some programs may require specific technical prerequisites indicated in each course's description.\n\nSCCA reserves the right to validate information provided at enrollment and to reject or cancel enrollments when false, incomplete, or unverifiable data is detected."
+        },
+        {
+          "heading": "3. Enrollment and payment process",
+          "body": "Enrollment is completed through the form available on the Site. Payment is processed securely through Stripe at the time of enrollment. We accept Visa, Mastercard, American Express, and Discover credit and debit cards. Charges are made in U.S. dollars (USD).\n\nAn enrollment is considered confirmed only when payment has been completed successfully and you have received the confirmation email. If payment fails for any reason, your seat is not reserved.\n\nPublished prices may or may not include applicable taxes (for example, PR's IVU). Final breakdown is shown at checkout before confirming payment."
+        },
+        {
+          "heading": "4. Refund policy",
+          "body": "Our complete refund policy is available on the Refund Policy page. In summary: we accept full refunds up to seven (7) calendar days before the cohort starts; after that period and before the first day you can transfer your seat to another person or to a future cohort at no penalty. Refunds are not granted once the cohort has begun, except in documented exceptional cases (see Refund Policy)."
+        },
+        {
+          "heading": "5. Student obligations",
+          "body": "By enrolling you agree to: (a) attend in-person sessions according to the cohort's published calendar; (b) comply with laboratory safety standards, including correct use of provided or required personal protective equipment; (c) not photograph, record, or share course material without express written authorization; (d) behave respectfully toward instructors, staff, and cohort peers; (e) refrain from any conduct that puts at risk your own or others' physical integrity, the facilities, or the material; and (f) provide truthful information and keep it updated throughout the cohort.\n\nFailure to meet these obligations may result in expulsion from the cohort without right to refund, at SCCA's reasonable discretion."
+        },
+        {
+          "heading": "6. Intellectual property",
+          "body": "All instructional material — manuals, presentations, videos, templates, procedure sheets, exercises, and online portal materials — is the exclusive property of SCCA, its instructors, or its licensors, and is protected by the intellectual property laws of Puerto Rico and the United States.\n\nYou are granted a personal, non-exclusive, non-transferable, revocable license to use the material exclusively for your own learning during and after the cohort. It is expressly prohibited to reproduce, distribute, publish, modify, sell, or create derivative works from the material without prior written authorization from SCCA.\n\nThe marks \"Santa Cruz Compounding Academy\", \"SCCA\", and the academy logo are registered or pending trademarks and may not be used without authorization."
+        },
+        {
+          "heading": "7. References to USP",
+          "body": "References to USP chapters 〈795〉 and 〈800〉 in our materials and communications are made for educational and regulatory-compliance purposes. \"USP\" and the chapter numbers are property of the United States Pharmacopeial Convention, Inc. SCCA is not affiliated with, sponsored by, or endorsed by USP, and our certificates are not official USP certificates."
+        },
+        {
+          "heading": "8. Certification",
+          "body": "Upon completing all sessions of a program and passing the required assessments, you will receive a professional certificate issued by SCCA. The certificate documents: (a) your name, (b) the completed program, (c) instruction hours, (d) competencies assessed, and (e) date of issuance.\n\nThe certificate may be used as evidence of continuing education with employers and regulatory authorities, subject to the policies of each receiving institution. SCCA does not guarantee acceptance of the certificate by third parties."
+        },
+        {
+          "heading": "9. Limitation of liability",
+          "body": "Educational content is provided for professional training purposes. SCCA does not guarantee specific professional results (for example, passing regulatory exams, obtaining employment, or operational compliance of a specific pharmacy). The student is responsible for applying the acquired knowledge according to their professional judgment and the regulations applicable in their jurisdiction.\n\nTo the maximum extent permitted by law, SCCA's total liability to the student for any claim arising from these Terms or from the delivery of the course is limited to the amount actually paid by the student for that course. SCCA will not be liable for indirect, incidental, punitive, or consequential damages.\n\nNothing in this clause limits liabilities that by law cannot be excluded (for example, willful misconduct, physical injuries caused by gross negligence)."
+        },
+        {
+          "heading": "10. Program modifications",
+          "body": "SCCA reserves the right to modify dates, schedules, instructors, location, or specific content of a cohort for operational reasons, force majeure, or pedagogical improvement. When a change is substantial, enrolled students will be notified with as much advance notice as possible and, when the rescheduling is not acceptable to the student, a full refund or transfer to a future cohort will be offered."
+        },
+        {
+          "heading": "11. Modifications to these Terms",
+          "body": "We may update these Terms when we add new services, operational changes, or due to legal requirements. The current version will be published on the Site with the update date at the start. Material changes will be notified by email to active students. Continued use of the Site or enrollment in cohorts after a change constitutes acceptance of the updated Terms."
+        },
+        {
+          "heading": "12. Dispute resolution and governing law",
+          "body": "These Terms are governed by the laws of the Commonwealth of Puerto Rico, without regard to its conflict-of-laws principles. Any dispute arising from or relating to these Terms shall be submitted to the exclusive jurisdiction of the competent courts in San Juan, Puerto Rico.\n\nBefore initiating any formal proceeding, the parties agree to attempt to resolve disputes in good faith through direct communication for a period of no less than thirty (30) days."
+        },
+        {
+          "heading": "13. Severability clause",
+          "body": "If any provision of these Terms is found invalid, illegal, or unenforceable under applicable law, that provision shall be interpreted in the manner closest to its original intent that is valid; the remaining provisions shall remain in full force."
+        },
+        {
+          "heading": "14. Contact",
+          "body": "For questions or clarifications about these Terms:\n\nSanta Cruz Compounding Academy, LLC\nEdificio Médico Santa Cruz, 73 Calle Santa Cruz, Suite 101\nBayamón, Puerto Rico 00960\nEmail: scpcpr@gmail.com\nPhone: 787-798-4646"
+        }
+      ]
+    },
+    "refund": {
+      "title": "Refund Policy",
+      "lastUpdated": "Last updated: May 17, 2026",
+      "draftNotice": "Draft — pending legal review",
+      "intro": "We know circumstances change. This policy defines when you can request a refund of your enrollment, how to transfer your seat if you cannot attend, and the applicable timelines. It forms an integral part of SCCA's Terms and Conditions.",
+      "sections": [
+        {
+          "heading": "1. Full refund (up to 7 days before start)",
+          "body": "If you request your refund at least seven (7) calendar days before the first scheduled day of your cohort, we refund one hundred percent (100 %) of the amount paid, no questions asked and no penalty.\n\nThe refund is processed by the same method you paid with (typically refund to the original card). Stripe processes refunds within five (5) to ten (10) business days, depending on the issuing bank."
+        },
+        {
+          "heading": "2. Seat transfer (between 7 days and the first day of the cohort)",
+          "body": "If your request arrives between seven (7) calendar days before the start and before the first day of the cohort, we no longer process a monetary refund, but you can choose one of these two options, with no penalty:\n\nTransfer your seat to another eligible person. The designated person must meet the same program eligibility requirements and confirm attendance at least twenty-four (24) hours before the first day. Enrollment data is updated to the new person's name and the certificate is reissued at the end of the cohort in their name.\n\nTransfer your seat to a future cohort of the same program within the next twelve (12) months. If the new cohort has a different price, the difference is adjusted (in your favor or billed separately).\n\nTo request a transfer, write to scpcpr@gmail.com with your name, original cohort date, and the chosen option (including the name and email of the designated person, if applicable)."
+        },
+        {
+          "heading": "3. After the cohort starts",
+          "body": "Once the cohort has begun (first day of in-person session), no monetary refunds are granted. However, in duly documented exceptional cases — serious illness, family emergency, force-majeure situation — we will evaluate on a case-by-case basis the possibility of transferring your remaining seat to a future cohort of the same program.\n\nPost-start transfer requests must be accompanied by supporting documentation (medical certificate, deployment order, etc.) and will be evaluated within ten (10) business days of receipt. The decision rests with SCCA's reasonable discretion."
+        },
+        {
+          "heading": "4. Cancellations by SCCA",
+          "body": "If, for operational, regulatory, or force-majeure reasons, SCCA cancels a cohort before its start, we offer the enrolled student two options, at their choice:\n\nFull refund of the amount paid, processed within no more than ten (10) business days from the cancellation notification.\n\nAutomatic priority transfer to the next scheduled cohort of the same program, at no additional cost and with no penalty.\n\nIf the cancellation occurs after the cohort has begun for reasons attributable to SCCA, the portion proportional to the undelivered material will be refunded, or completion of the program in a subsequent cohort will be offered."
+        },
+        {
+          "heading": "5. How to request a refund or transfer",
+          "body": "All requests must be sent by email to scpcpr@gmail.com, including: (a) your full name, (b) the email you enrolled with, (c) course and cohort date, (d) type of request (refund, transfer to person, transfer to cohort), and (e) when applicable, supporting documentation.\n\nWe confirm receipt of your request within the following forty-eight (48) business hours and resolve within ten (10) business days thereafter."
+        },
+        {
+          "heading": "6. Cases not covered by this policy",
+          "body": "This policy does not apply to, nor cover: (a) charges for optional services or additional materials purchased separately; (b) enrollments in special events (one-off workshops, seminars) whose individual policy is published on its registration page; (c) granted discounts or scholarships, which have their own transferability rules; (d) partial absences of the student for own causes without prior notification.\n\nIn any scenario not contemplated in this policy, SCCA will evaluate the situation in good faith prioritizing a fair resolution for both parties."
+        },
+        {
+          "heading": "7. Contact",
+          "body": "For questions about this policy or to initiate a request:\n\nSanta Cruz Compounding Academy, LLC\nEdificio Médico Santa Cruz, 73 Calle Santa Cruz, Suite 101\nBayamón, Puerto Rico 00960\nEmail: scpcpr@gmail.com\nPhone: 787-798-4646"
+        }
+      ]
     }
   },
   "common": {

@@ -31,6 +31,11 @@ export function Footer() {
                 {t("terms")}
               </Link>
             </li>
+            <li>
+              <Link href="/legal/reembolso" className="hover:text-chartreuse">
+                {t("refund")}
+              </Link>
+            </li>
           </ul>
         </div>
 
