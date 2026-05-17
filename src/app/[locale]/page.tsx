@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { setRequestLocale } from "next-intl/server";
 import { pageMetadata } from "@/lib/seo";
 import { Atrium } from "@/components/marketing/Atrium";
+import { Epigraph } from "@/components/marketing/Epigraph";
 import { Manifiesto } from "@/components/marketing/Manifiesto";
 import { TaglineBand } from "@/components/marketing/TaglineBand";
 import { FeaturedCoursesPlaceholder } from "@/components/marketing/FeaturedCoursesPlaceholder";
@@ -33,10 +34,13 @@ export default async function LandingPage({ params }: { params: Promise<{ locale
   setRequestLocale(locale);
   return (
     <>
-      {/* §00 + §01 — new editorial direction (teaser).
-          Replaces the old HeroBillboard. The sections below remain on the
-          previous "marketing" layout until subsequent batches convert them. */}
+      {/* §00 → §00.5 → §01 — Apothecary Editorial teaser.
+          Atrium (sand cover) → Epigraph (pattern-backed tagline band) →
+          Manifesto (drop-cap journal paragraph). Sections below remain on
+          the previous "marketing" layout until subsequent batches convert
+          them. */}
       <Atrium />
+      <Epigraph />
       <Manifiesto />
       <TaglineBand />
       <FeaturedCoursesPlaceholder locale={locale as "es" | "en"} />

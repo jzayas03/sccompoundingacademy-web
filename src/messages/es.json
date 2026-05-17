@@ -125,13 +125,19 @@
     "openingLine1": "Educamos para formar",
     "openingLine2": "bienestar y salud.",
     "supportingLine": "Certificación profesional · USP 795 · USP 800 · Puerto Rico",
-    "primaryLink": "Ver el catálogo"
+    "primaryLink": "Ver el catálogo",
+    "dateline": "San Juan · Puerto Rico",
+    "scrollCue": "Manifiesto"
   },
   "manifiesto": {
     "sectionNumber": "§01",
     "sectionLabel": "Manifiesto",
     "paragraph": "En Santa Cruz Compounding Academy preparamos a farmacéuticos para una práctica que une la tradición galénica del compounding con los estándares contemporáneos de calidad, seguridad y rigor científico. Nuestro programa, alineado con los capítulos USP 795 y USP 800, ofrece formación práctica y certificación profesional para quienes formulan medicamentos personalizados — desde preparaciones no estériles cotidianas hasta el manejo seguro de medicamentos peligrosos.",
     "marginaliaTerm": "Compounding (n.)",
-    "marginaliaDefinition": "La preparación, mezcla, ensamblaje, alteración o etiquetado de medicamentos personalizados para un paciente específico, prescritos por un profesional autorizado."
+    "marginaliaDefinition": "La preparación, mezcla, ensamblaje, alteración o etiquetado de medicamentos personalizados para un paciente específico, prescritos por un profesional autorizado.",
+    "readingLabel": "Primera lectura"
+  },
+  "epigraph": {
+    "attribution": "— SCCA · Edición 01"
   }
 }
