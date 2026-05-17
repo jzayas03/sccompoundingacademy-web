@@ -1,5 +1,6 @@
 import { useTranslations } from "next-intl";
 import { Container } from "@/components/ui/Container";
+import { Reveal } from "@/components/ui/Reveal";
 
 /**
  * §01 — Manifiesto.
@@ -30,8 +31,8 @@ export function Manifiesto() {
       aria-labelledby="manifiesto-heading"
       className="bg-sand text-teal-deep border-teal-deep/10 relative isolate border-t"
     >
-      <Container className="relative py-16 sm:py-24 lg:py-32">
-        <div className="grid gap-10 lg:grid-cols-12 lg:gap-x-12">
+      <Container className="relative py-20 sm:py-28 lg:py-40">
+        <Reveal className="grid gap-10 lg:grid-cols-12 lg:gap-x-12">
           {/* Left gutter: reading label + section number + label, stacked tight */}
           <header className="lg:col-span-2">
             <p className="font-heading text-chartreuse-foreground/0 text-teal-deep/50 text-[0.6875rem] font-medium tracking-[0.25em] uppercase">
@@ -87,7 +88,7 @@ export function Manifiesto() {
               {t("marginaliaDefinition")}
             </p>
           </aside>
-        </div>
+        </Reveal>
       </Container>
     </section>
   );

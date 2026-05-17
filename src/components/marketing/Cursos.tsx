@@ -2,6 +2,7 @@ import Image from "next/image";
 import { useTranslations, useMessages } from "next-intl";
 import { Link } from "@/i18n/routing";
 import { Container } from "@/components/ui/Container";
+import { Reveal } from "@/components/ui/Reveal";
 
 type CourseRow = {
   id: string;
@@ -40,11 +41,11 @@ export function Cursos() {
       aria-labelledby="cursos-heading"
       className="bg-sand text-teal-deep border-teal-deep/10 relative isolate border-t"
     >
-      <Container className="relative py-16 sm:py-24 lg:py-32">
+      <Container className="relative py-20 sm:py-28 lg:py-40">
         {/* Contextual header photograph — workplace shot above the catalog.
             No caption; the visual just grounds the section in real
             compounding work. Decorative-only, so aria-hidden. */}
-        <div className="ring-teal-deep/10 mb-12 aspect-[21/9] w-full overflow-hidden rounded-sm ring-1 sm:mb-16 lg:mb-20">
+        <Reveal className="ring-teal-deep/10 mb-12 aspect-[21/9] w-full overflow-hidden rounded-sm ring-1 sm:mb-16 lg:mb-20">
           <Image
             src="/photos/photo-cursos-bench.jpg"
             alt=""
@@ -54,9 +55,9 @@ export function Cursos() {
             sizes="(max-width: 1280px) 100vw, 1280px"
             className="h-full w-full object-cover"
           />
-        </div>
+        </Reveal>
 
-        <div className="grid gap-10 lg:grid-cols-12 lg:gap-x-12">
+        <Reveal className="grid gap-10 lg:grid-cols-12 lg:gap-x-12">
           {/* Left gutter: §02 / Cursos */}
           <header className="lg:col-span-3">
             <p className="font-heading text-teal-deep/60 text-xs font-medium tracking-[0.25em] uppercase">
@@ -64,7 +65,7 @@ export function Cursos() {
             </p>
             <h2
               id="cursos-heading"
-              className="font-heading text-teal-deep mt-2 text-3xl font-bold tracking-tight sm:text-4xl"
+              className="font-heading text-teal-deep mt-2 text-4xl font-bold tracking-[-0.025em] sm:text-5xl lg:text-6xl"
             >
               {t("sectionLabel")}
             </h2>
@@ -132,7 +133,7 @@ export function Cursos() {
               </Link>
             </div>
           </div>
-        </div>
+        </Reveal>
       </Container>
     </section>
   );

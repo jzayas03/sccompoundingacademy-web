@@ -11,6 +11,7 @@ import { Metodo } from "@/components/marketing/Metodo";
 import { Galeria } from "@/components/marketing/Galeria";
 import { Preguntas } from "@/components/marketing/Preguntas";
 import { Inscripcion } from "@/components/marketing/Inscripcion";
+import { Ubicacion } from "@/components/marketing/Ubicacion";
 
 export async function generateMetadata({
   params,
@@ -46,6 +47,7 @@ export default async function LandingPage({ params }: { params: Promise<{ locale
             §04    Galería        (3-photo editorial grid with captions)
             §05    Preguntas      (editorial Q&A — replaces accordion FAQ)
             §06    Inscripción    (letterpress closing CTA — replaces FooterCTA)
+            §07    Ubicación      (address card + embedded Google Maps)
           Old marketing-batch components (PatternDivider, FAQ, FooterCTA)
           fully retired with this batch. */}
       <Atrium />
@@ -58,6 +60,7 @@ export default async function LandingPage({ params }: { params: Promise<{ locale
       <Galeria />
       <Preguntas />
       <Inscripcion />
+      <Ubicacion />
     </>
   );
 }

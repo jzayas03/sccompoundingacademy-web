@@ -1,5 +1,6 @@
 import { useTranslations, useMessages } from "next-intl";
 import { Container } from "@/components/ui/Container";
+import { Reveal } from "@/components/ui/Reveal";
 
 type Specialty = { id: string; label: string; body: string };
 
@@ -33,8 +34,8 @@ export function Especialidades() {
       aria-labelledby="especialidades-heading"
       className="bg-sand text-teal-deep border-teal-deep/10 relative isolate border-t"
     >
-      <Container className="relative py-16 sm:py-24 lg:py-32">
-        <div className="grid gap-10 lg:grid-cols-12 lg:gap-x-12">
+      <Container className="relative py-20 sm:py-28 lg:py-40">
+        <Reveal className="grid gap-10 lg:grid-cols-12 lg:gap-x-12">
           {/* Left gutter: §02.5 / Especialidades */}
           <header className="lg:col-span-3">
             <p className="font-heading text-teal-deep/60 text-xs font-medium tracking-[0.25em] uppercase">
@@ -42,7 +43,7 @@ export function Especialidades() {
             </p>
             <h2
               id="especialidades-heading"
-              className="font-heading text-teal-deep mt-2 text-3xl font-bold tracking-tight sm:text-4xl"
+              className="font-heading text-teal-deep mt-2 text-4xl font-bold tracking-[-0.025em] sm:text-5xl lg:text-6xl"
             >
               {t("sectionLabel")}
             </h2>
@@ -71,7 +72,7 @@ export function Especialidades() {
               {t("attribution")}
             </p>
           </div>
-        </div>
+        </Reveal>
       </Container>
     </section>
   );

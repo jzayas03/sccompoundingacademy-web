@@ -98,7 +98,7 @@
     "openingLine2": "bienestar y salud.",
     "supportingLine": "Certificación profesional · USP 795 · USP 800 · Puerto Rico",
     "primaryLink": "Ver el catálogo",
-    "dateline": "San Juan · Puerto Rico",
+    "dateline": "Bayamón · Puerto Rico",
     "scrollCue": "Manifiesto"
   },
   "manifiesto": {
@@ -252,5 +252,18 @@
     "primaryCta": "Inscribirme",
     "secondaryNote": "¿Preguntas antes de inscribirte?",
     "secondaryCta": "Escríbenos"
+  },
+  "ubicacion": {
+    "sectionNumber": "§07",
+    "sectionLabel": "Ubicación",
+    "intro": "La academia comparte sede con Santa Cruz Pharma Care en Bayamón, con acceso al laboratorio activo de la farmacia.",
+    "addressLabel": "Sede",
+    "addressLine": "Bayamón, Puerto Rico",
+    "parkingLabel": "Estacionamiento",
+    "parkingNote": "Disponible en sitio para participantes de cohorte.",
+    "transitLabel": "Acceso",
+    "transitNote": "A minutos de la PR-22 y PR-2. Coordinación con servicios de transporte disponible.",
+    "openInMapsLabel": "Abrir en Google Maps",
+    "embedQuery": "Santa+Cruz+Pharma+Care+Bayamon+Puerto+Rico"
   }
 }
