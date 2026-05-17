@@ -139,5 +139,64 @@
   },
   "epigraph": {
     "attribution": "— SCCA · Edición 01"
+  },
+  "cursos": {
+    "sectionNumber": "§02",
+    "sectionLabel": "Cursos",
+    "intro": "Tres programas de certificación profesional alineados con los capítulos USP 795 y USP 800. Cada uno combina fundamentos teóricos con práctica supervisada en laboratorio.",
+    "nextCohort": "Próxima cohorte",
+    "cohortDate": "Enero 2026",
+    "hoursLabel": "horas",
+    "items": [
+      {
+        "id": "usp-795",
+        "chapter": "USP 795",
+        "title": "Fundamentos de Compounding No Estéril",
+        "description": "Técnicas, manejo de excipientes, control de calidad y documentación para preparaciones magistrales.",
+        "hours": "40"
+      },
+      {
+        "id": "usp-800",
+        "chapter": "USP 800",
+        "title": "Manejo de Medicamentos Peligrosos",
+        "description": "Riesgo ocupacional, equipos de protección, ventilación y procedimientos de contención.",
+        "hours": "32"
+      },
+      {
+        "id": "combinado",
+        "chapter": "USP 795 + 800",
+        "title": "Programa Combinado",
+        "description": "Cobertura completa de ambos capítulos con un módulo integrador de práctica avanzada.",
+        "hours": "60"
+      }
+    ],
+    "viewAll": "Ver catálogo completo"
+  },
+  "metodo": {
+    "sectionNumber": "§03",
+    "sectionLabel": "Método",
+    "intro": "Cuatro principios que ordenan cada cohorte. Educamos para que el conocimiento se traduzca en práctica responsable, no en certificados decorativos.",
+    "tenets": [
+      {
+        "number": "01",
+        "title": "Práctica supervisada",
+        "body": "Cada concepto se ejecuta en el laboratorio el mismo día que se enseña. Sin teoría aislada: cada cohorte termina con un portafolio de preparaciones revisadas individualmente."
+      },
+      {
+        "number": "02",
+        "title": "Cohortes pequeñas",
+        "body": "Grupos limitados a doce participantes por cohorte. El instructor conoce el progreso de cada uno y adapta la profundidad técnica al nivel del grupo."
+      },
+      {
+        "number": "03",
+        "title": "Alineado con USP",
+        "body": "Currículo construido capítulo por capítulo desde USP 795 y USP 800. Las preparaciones, equipos y procedimientos siguen las versiones vigentes; los cambios regulatorios se incorporan al material."
+      },
+      {
+        "number": "04",
+        "title": "Certificación al completar",
+        "body": "Evaluación práctica + escrita al cierre de cada programa. Quienes aprueban reciben un certificado profesional de SCCA con horas acreditadas y fecha de emisión."
+      }
+    ]
   }
 }

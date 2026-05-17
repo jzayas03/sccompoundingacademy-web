@@ -4,9 +4,8 @@ import { pageMetadata } from "@/lib/seo";
 import { Atrium } from "@/components/marketing/Atrium";
 import { Epigraph } from "@/components/marketing/Epigraph";
 import { Manifiesto } from "@/components/marketing/Manifiesto";
-import { TaglineBand } from "@/components/marketing/TaglineBand";
-import { FeaturedCoursesPlaceholder } from "@/components/marketing/FeaturedCoursesPlaceholder";
-import { WhySCCA } from "@/components/marketing/WhySCCA";
+import { Cursos } from "@/components/marketing/Cursos";
+import { Metodo } from "@/components/marketing/Metodo";
 import { InstructorSection } from "@/components/marketing/InstructorSection";
 import { PatternDivider } from "@/components/marketing/PatternDivider";
 import { FAQ } from "@/components/marketing/FAQ";
@@ -32,19 +31,23 @@ export async function generateMetadata({
 export default async function LandingPage({ params }: { params: Promise<{ locale: string }> }) {
   const { locale } = await params;
   setRequestLocale(locale);
+  void locale; // reserved for sections that need per-locale data
   return (
     <>
-      {/* §00 → §00.5 → §01 — Apothecary Editorial teaser.
-          Atrium (sand cover) → Epigraph (pattern-backed tagline band) →
-          Manifesto (drop-cap journal paragraph). Sections below remain on
-          the previous "marketing" layout until subsequent batches convert
-          them. */}
+      {/* Apothecary Editorial — top-to-bottom:
+            §00   Atrium      (sand cover, stacked tagline)
+            §00.5 Epigraph    (pattern-backed brand tagline pull quote)
+            §01   Manifiesto  (drop-cap journal paragraph + marginalia)
+            §02   Cursos      (table-of-contents catalog with hours + cohort)
+            §03   Método      (4 numbered tenets in asymmetric layout)
+          Below this we keep the previous-batch sections (Instructor,
+          PatternDivider, FAQ, FooterCTA) until they get converted in the
+          next batch. */}
       <Atrium />
       <Epigraph />
       <Manifiesto />
-      <TaglineBand />
-      <FeaturedCoursesPlaceholder locale={locale as "es" | "en"} />
-      <WhySCCA />
+      <Cursos />
+      <Metodo />
       <PatternDivider />
       <InstructorSection />
       <FAQ />

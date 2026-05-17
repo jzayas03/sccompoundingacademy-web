@@ -139,5 +139,64 @@
   },
   "epigraph": {
     "attribution": "— SCCA · Inaugural Edition"
+  },
+  "cursos": {
+    "sectionNumber": "§02",
+    "sectionLabel": "Programs",
+    "intro": "Three professional certification programs aligned with USP chapters 795 and 800. Each combines theoretical foundations with supervised laboratory practice.",
+    "nextCohort": "Next cohort",
+    "cohortDate": "January 2026",
+    "hoursLabel": "hours",
+    "items": [
+      {
+        "id": "usp-795",
+        "chapter": "USP 795",
+        "title": "Non-Sterile Compounding Foundations",
+        "description": "Techniques, excipient handling, quality control, and documentation for compounded preparations.",
+        "hours": "40"
+      },
+      {
+        "id": "usp-800",
+        "chapter": "USP 800",
+        "title": "Hazardous Drug Handling",
+        "description": "Occupational risk, protective equipment, ventilation, and containment procedures.",
+        "hours": "32"
+      },
+      {
+        "id": "combinado",
+        "chapter": "USP 795 + 800",
+        "title": "Combined Track",
+        "description": "Full coverage of both chapters plus an integrative advanced-practice module.",
+        "hours": "60"
+      }
+    ],
+    "viewAll": "View full catalogue"
+  },
+  "metodo": {
+    "sectionNumber": "§03",
+    "sectionLabel": "Method",
+    "intro": "Four principles that shape every cohort. We educate so knowledge translates into responsible practice — not decorative certificates.",
+    "tenets": [
+      {
+        "number": "01",
+        "title": "Supervised practice",
+        "body": "Every concept is executed in the lab the same day it's taught. No isolated theory: each cohort ends with a portfolio of individually reviewed preparations."
+      },
+      {
+        "number": "02",
+        "title": "Small cohorts",
+        "body": "Groups capped at twelve per cohort. The instructor knows each participant's progress and adapts depth to the group's level."
+      },
+      {
+        "number": "03",
+        "title": "USP-aligned",
+        "body": "Curriculum built chapter-by-chapter from USP 795 and USP 800. Preparations, equipment, and procedures follow current revisions; regulatory updates are folded into the material."
+      },
+      {
+        "number": "04",
+        "title": "Certification on completion",
+        "body": "Practical + written assessment at the close of each program. Those who pass receive an SCCA professional certificate with accredited hours and issue date."
+      }
+    ]
   }
 }
