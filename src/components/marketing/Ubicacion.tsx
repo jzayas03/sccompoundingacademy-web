@@ -30,7 +30,8 @@ export function Ubicacion() {
       <Container className="py-20 sm:py-24 lg:py-28">
         <Reveal>
           <div className="max-w-3xl">
-            <p className="font-heading text-teal-deep/70 text-xs font-semibold tracking-[0.18em] uppercase sm:text-sm">
+            <p className="font-heading text-teal-deep/70 flex items-center text-xs font-semibold tracking-[0.18em] uppercase sm:text-sm">
+              <span aria-hidden className="bg-chartreuse mr-3 inline-block h-4 w-1 shrink-0 rounded-sm" />
               {t("eyebrow")}
             </p>
             <h2
