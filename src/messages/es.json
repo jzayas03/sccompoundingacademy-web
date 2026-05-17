@@ -6,42 +6,9 @@
     "contact": "Contacto",
     "enroll": "Inscribirme"
   },
-  "hero": {
-    "eyebrow": "Academia de Compounding",
-    "headline": "Tu próxima certificación comienza aquí.",
-    "subhead": "Certificación profesional en USP 795 y USP 800.",
-    "primaryCta": "Ver cursos",
-    "secondaryCta": "Conoce más"
-  },
   "tagline": {
     "line1": "Educamos para formar",
     "line2": "Bienestar y salud."
-  },
-  "featured": {
-    "title": "Cursos destacados",
-    "comingSoon": "Próximamente",
-    "viewAll": "Ver todos los cursos"
-  },
-  "whySCCA": {
-    "title": "Por qué SCCA",
-    "items": {
-      "instructor": {
-        "title": "Instructor certificado",
-        "body": "Décadas de experiencia en compounding farmacéutico."
-      },
-      "cohorts": {
-        "title": "Cohortes pequeñas",
-        "body": "Aprendizaje supervisado, dudas resueltas en tiempo real."
-      },
-      "usp": {
-        "title": "Alineado con USP 795 y USP 800",
-        "body": "Currículo mapeado a los capítulos de la USP."
-      },
-      "certification": {
-        "title": "Certificación al completar",
-        "body": "Recibe tu certificado profesional al finalizar el programa."
-      }
-    }
   },
   "faq": {
     "title": "Preguntas frecuentes",
@@ -71,11 +38,6 @@
         "a": "Sí, hasta 7 días antes del inicio de la cohorte."
       }
     ]
-  },
-  "footerCta": {
-    "headline": "¿Listo para certificarte?",
-    "subhead": "Únete a la próxima cohorte de SCCA.",
-    "button": "Ver cursos"
   },
   "footer": {
     "tagline": "Educamos para formar bienestar y salud.",
@@ -252,5 +214,43 @@
       }
     ],
     "attribution": "Áreas alineadas con la práctica de Santa Cruz Pharma Care, más de 15 años en Bayamón, Puerto Rico."
+  },
+  "galeria": {
+    "sectionNumber": "§04",
+    "sectionLabel": "Galería",
+    "intro": "Tres miradas al trabajo cotidiano: la práctica controlada, el laboratorio de procesos no estériles y el manejo seguro de medicamentos peligrosos.",
+    "items": [
+      {
+        "id": "bench",
+        "caption": "Banco de preparación con balanza analítica.",
+        "src": "/photos/photo-instructor.jpg"
+      },
+      {
+        "id": "mortar",
+        "caption": "Mortero y pestillo — preparación no estéril.",
+        "src": "/photos/photo-mortar.jpg"
+      },
+      {
+        "id": "chemo",
+        "caption": "Cabina de flujo laminar — manejo de medicamentos peligrosos (USP 800).",
+        "src": "/photos/photo-chemo-hood.jpg"
+      }
+    ]
+  },
+  "preguntas": {
+    "sectionNumber": "§05",
+    "sectionLabel": "Preguntas",
+    "intro": "Lo más consultado por farmacéuticos antes de inscribirse. Si tu pregunta no está aquí, escríbenos."
+  },
+  "inscripcion": {
+    "sectionNumber": "§06",
+    "sectionLabel": "Inscripción",
+    "headline": "Para la próxima cohorte",
+    "subheadline": "Plazas limitadas a doce participantes. La cohorte inaugural comienza en enero de 2026.",
+    "cohortLabel": "Cohorte inaugural",
+    "cohortDate": "Enero 2026",
+    "primaryCta": "Inscribirme",
+    "secondaryNote": "¿Preguntas antes de inscribirte?",
+    "secondaryCta": "Escríbenos"
   }
 }

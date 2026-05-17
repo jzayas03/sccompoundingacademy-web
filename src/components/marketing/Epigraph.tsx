@@ -17,9 +17,8 @@ import { Container } from "@/components/ui/Container";
  *   - Giant Cormorant italic tagline in chartreuse, centered
  *   - Small attribution line below, off-white tracking-wide caps
  *
- * Uses the existing `tagline.*` messages (the tagline is the same
- * regardless of presentation; this component just renders it
- * differently from the TaglineBand below).
+ * Uses the existing `tagline.*` messages — the brand tagline lives in
+ * shared messages so future treatments can share the same source.
  */
 export function Epigraph() {
   const t = useTranslations("tagline");
