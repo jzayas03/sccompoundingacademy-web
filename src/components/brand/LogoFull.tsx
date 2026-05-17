@@ -2,28 +2,22 @@ import Image from "next/image";
 import { cn } from "@/lib/cn";
 
 /**
- * Primary horizontal lockup — pixel-perfect render of the brandsheet asset
- * (chartreuse U-mark with bookmark + mortar/pestle inside + off-white serif
- * "Santa Cruz / Compounding / Academy" wordmark on a TRANSPARENT background,
- * intended to sit directly on the teal-deep header/footer surface).
+ * Primary horizontal lockup — chartreuse U-mark with bookmark + mortar/pestle
+ * inside + off-white serif "Santa Cruz / Compounding / Academy" wordmark on a
+ * TRANSPARENT background, intended to sit directly on the teal-deep header
+ * and footer surfaces.
  *
- * Source: `Untitled design.pdf` page 3, extracted at 300 DPI via pdftoppm
- * and trimmed in Sharp; the teal-deep brand card was then stripped to
- * alpha so the lockup blends seamlessly into any teal-deep container —
- * no visible card edge or color-mismatch halo around the logo.
+ * The image is a single PNG (525×160, RGBA) — content was provided by the
+ * brand owner pre-stripped to alpha and tight-trimmed (no transparent
+ * padding around the mark), so it scales cleanly via `object-contain` at
+ * any rendered height without internal whitespace eating the visual size.
  *
- * The image is a single PNG (3646×1566, RGBA) — the wordmark and mark
- * live inside it. We don't render the wordmark as HTML text because the
- * brandsheet positions the letters with very specific kerning + relative
- * sizing that's hard to reproduce in CSS; embedding the rendered lockup
- * keeps the brand identity unambiguous.
- *
- * Sizing: pass `shieldClass` to control the rendered height (e.g. `h-9`
- * in the header, `h-12` in the footer). Width auto-scales via aspect.
+ * Sizing: pass `shieldClass` to control the rendered height (e.g. `h-12`
+ * in the header). Width auto-scales via aspect ratio (~3.28:1).
  */
 export function LogoFull({
   className,
-  shieldClass = "h-9 w-auto",
+  shieldClass = "h-12 w-auto",
   title = "Santa Cruz Compounding Academy",
 }: {
   className?: string;
@@ -35,8 +29,8 @@ export function LogoFull({
       <Image
         src="/brand/logo-full.png"
         alt=""
-        width={3646}
-        height={1566}
+        width={525}
+        height={160}
         priority
         className={cn(shieldClass, "object-contain")}
       />
