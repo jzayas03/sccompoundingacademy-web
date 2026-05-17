@@ -10,6 +10,7 @@ import { Especialidades } from "@/components/marketing/Especialidades";
 import { Galeria } from "@/components/marketing/Galeria";
 import { FaqClean } from "@/components/marketing/FaqClean";
 import { Ubicacion } from "@/components/marketing/Ubicacion";
+import { InstagramFeatured } from "@/components/marketing/InstagramFeatured";
 import { CtaFinal } from "@/components/marketing/CtaFinal";
 
 export async function generateMetadata({
@@ -53,6 +54,7 @@ export default async function LandingPage({ params }: { params: Promise<{ locale
             Galeria        — 3 lab proof photos (kept, simplified)
             FaqClean       — 6-item accordion FAQ (kept content via faq.items[])
             Ubicacion      — address card + embedded Google Maps (kept, restyled)
+            InstagramFeat. — 4-card grid of featured posts from @santacruzpharmacare
             CtaFinal       — closing teal-deep CTA band (anchors the page visually)
           The prior "Apothecary Editorial" components (Atrium, Epigraph,
           Manifiesto, Frontispiece, Cursos TOC, Metodo, Preguntas, Inscripcion)
@@ -66,6 +68,7 @@ export default async function LandingPage({ params }: { params: Promise<{ locale
       <Galeria />
       <FaqClean />
       <Ubicacion />
+      <InstagramFeatured />
       <CtaFinal />
     </>
   );

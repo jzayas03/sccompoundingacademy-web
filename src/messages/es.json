@@ -301,6 +301,37 @@
     "openInMapsLabel": "Abrir en Google Maps",
     "embedQuery": "Farmacia+Santa+Cruz+Calle+Santa+Cruz+Bayamon+PR+00960"
   },
+  "instagramFeatured": {
+    "eyebrow": "Síguenos en Instagram",
+    "heading": "Lo que sucede en el laboratorio.",
+    "intro": "Posts recientes de @santacruzpharmacare —la farmacia afiliada— con preparaciones del día, momentos del banco y novedades de cohorte.",
+    "profileCta": "Ver perfil completo",
+    "profileCtaAria": "Abrir el perfil de @santacruzpharmacare en Instagram",
+    "postCta": "Ver en Instagram",
+    "postLinkAria": "Abrir publicación en Instagram",
+    "items": [
+      {
+        "caption": "Banco de preparación listo para la cohorte del día.",
+        "href": "https://www.instagram.com/santacruzpharmacare/",
+        "src": "/instagram/post-1.jpg"
+      },
+      {
+        "caption": "Trituración manual — control granulométrico para una formulación uniforme.",
+        "href": "https://www.instagram.com/santacruzpharmacare/",
+        "src": "/instagram/post-2.jpg"
+      },
+      {
+        "caption": "Cabina de seguridad biológica · manejo de medicamentos peligrosos USP 〈800〉.",
+        "href": "https://www.instagram.com/santacruzpharmacare/",
+        "src": "/instagram/post-3.jpg"
+      },
+      {
+        "caption": "Materia prima USP/NF + hoja de compounding al cierre de turno.",
+        "href": "https://www.instagram.com/santacruzpharmacare/",
+        "src": "/instagram/post-4.jpg"
+      }
+    ]
+  },
   "ctaFinal": {
     "eyebrow": "Cohorte inaugural · Enero 2026",
     "headline": "Reserva tu plaza para la próxima cohorte.",

@@ -301,6 +301,37 @@
     "openInMapsLabel": "Open in Google Maps",
     "embedQuery": "Farmacia+Santa+Cruz+Calle+Santa+Cruz+Bayamon+PR+00960"
   },
+  "instagramFeatured": {
+    "eyebrow": "Follow us on Instagram",
+    "heading": "What's happening in the laboratory.",
+    "intro": "Recent posts from @santacruzpharmacare —our affiliated pharmacy— with preparations of the day, bench moments, and cohort updates.",
+    "profileCta": "View full profile",
+    "profileCtaAria": "Open @santacruzpharmacare on Instagram",
+    "postCta": "View on Instagram",
+    "postLinkAria": "Open post on Instagram",
+    "items": [
+      {
+        "caption": "Compounding bench ready for the day's cohort.",
+        "href": "https://www.instagram.com/santacruzpharmacare/",
+        "src": "/instagram/post-1.jpg"
+      },
+      {
+        "caption": "Manual trituration — particle-size control for a uniform formulation.",
+        "href": "https://www.instagram.com/santacruzpharmacare/",
+        "src": "/instagram/post-2.jpg"
+      },
+      {
+        "caption": "Biological safety cabinet · hazardous-drug handling under USP 〈800〉.",
+        "href": "https://www.instagram.com/santacruzpharmacare/",
+        "src": "/instagram/post-3.jpg"
+      },
+      {
+        "caption": "USP/NF raw materials and compounding worksheet at end of shift.",
+        "href": "https://www.instagram.com/santacruzpharmacare/",
+        "src": "/instagram/post-4.jpg"
+      }
+    ]
+  },
   "ctaFinal": {
     "eyebrow": "Inaugural cohort · January 2026",
     "headline": "Reserve your seat for the next cohort.",
