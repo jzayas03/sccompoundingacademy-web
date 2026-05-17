@@ -32,7 +32,12 @@ export function Confianza() {
           </h2>
           <ul className="grid grid-cols-1 gap-x-10 gap-y-10 md:grid-cols-3">
             {items.map((item) => (
-              <li key={item.label} className="border-teal-deep border-t-2 pt-6">
+              <li key={item.label}>
+                {/* Chartreuse brand-tab — sits above each credential as a
+                    short accent stripe (12 of width × 3px tall), tying
+                    every item back to the SCCA palette without using a
+                    full-width border. */}
+                <span aria-hidden className="bg-chartreuse mb-4 block h-[3px] w-12 rounded-sm" />
                 <h3 className="font-heading text-teal-deep text-base font-semibold tracking-wide sm:text-lg">
                   {item.label}
                 </h3>

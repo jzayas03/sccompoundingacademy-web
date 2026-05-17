@@ -2,6 +2,7 @@ import { useTranslations } from "next-intl";
 import { Link } from "@/i18n/routing";
 import { Container } from "@/components/ui/Container";
 import { Reveal } from "@/components/ui/Reveal";
+import { LogoShield } from "@/components/brand/LogoShield";
 
 /**
  * CtaFinal — closing call to action.
@@ -24,7 +25,15 @@ export function CtaFinal() {
     >
       <Container className="py-20 sm:py-24 lg:py-28">
         <Reveal className="mx-auto max-w-2xl text-center">
-          <p className="font-heading text-chartreuse text-xs font-semibold tracking-[0.18em] uppercase sm:text-sm">
+          {/* SCCA shield mark — brand seal that closes the page, like a
+              signature at the bottom of a document. The shield carries
+              its own aria-label "SCCA" so screen readers identify the
+              brand once before reading the headline. */}
+          <span className="mb-6 flex justify-center">
+            <LogoShield className="h-14 w-auto" />
+          </span>
+          <p className="font-heading text-chartreuse flex items-center justify-center text-xs font-semibold tracking-[0.18em] uppercase sm:text-sm">
+            <span aria-hidden className="bg-chartreuse mr-3 inline-block h-4 w-1 shrink-0 rounded-sm" />
             {t("eyebrow")}
           </p>
           <h2

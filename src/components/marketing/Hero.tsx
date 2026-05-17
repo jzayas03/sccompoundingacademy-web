@@ -32,7 +32,8 @@ export function Hero() {
       <Container className="grid grid-cols-1 gap-12 py-16 sm:py-20 lg:grid-cols-12 lg:gap-x-12 lg:py-28">
         {/* Text column */}
         <div className="lg:col-span-7 flex flex-col justify-center">
-          <p className="font-heading text-teal-deep/70 text-xs font-semibold tracking-[0.18em] uppercase sm:text-sm">
+          <p className="font-heading text-teal-deep/70 flex items-center text-xs font-semibold tracking-[0.18em] uppercase sm:text-sm">
+            <span aria-hidden className="bg-chartreuse mr-3 inline-block h-4 w-1 shrink-0 rounded-sm" />
             {t("eyebrow")}
           </p>
           <h1
