@@ -8,9 +8,9 @@ import { Frontispiece } from "@/components/marketing/Frontispiece";
 import { Cursos } from "@/components/marketing/Cursos";
 import { Especialidades } from "@/components/marketing/Especialidades";
 import { Metodo } from "@/components/marketing/Metodo";
-import { PatternDivider } from "@/components/marketing/PatternDivider";
-import { FAQ } from "@/components/marketing/FAQ";
-import { FooterCTA } from "@/components/marketing/FooterCTA";
+import { Galeria } from "@/components/marketing/Galeria";
+import { Preguntas } from "@/components/marketing/Preguntas";
+import { Inscripcion } from "@/components/marketing/Inscripcion";
 
 export async function generateMetadata({
   params,
@@ -35,18 +35,19 @@ export default async function LandingPage({ params }: { params: Promise<{ locale
   void locale; // reserved for sections that need per-locale data
   return (
     <>
-      {/* Apothecary Editorial — top-to-bottom:
-            §00    Atrium       (sand cover, stacked tagline)
-            §00.5  Epigraph     (pattern-backed brand tagline pull quote)
-            §01    Manifiesto   (drop-cap journal paragraph + marginalia)
-            §01.5  Frontispiece (full-bleed editorial photograph + caption)
-            §02    Cursos       (table-of-contents catalog with photo header)
-            §02.5  Especialidades (menu of practice areas — sister-pharmacy
-                                  scope: dermatológico, hormonal, pediatría,
-                                  veterinario, BLT, general)
-            §03    Método       (4 numbered tenets in asymmetric layout)
-          Below this we keep the previous-batch sections (FAQ, FooterCTA)
-          until they get converted in the next batch. */}
+      {/* Apothecary Editorial — full editorial composition, top to bottom.
+            §00    Atrium         (sand cover, stacked tagline, chartreuse seal)
+            §00.5  Epigraph       (pattern-backed brand tagline pull quote)
+            §01    Manifiesto     (drop-cap journal paragraph + marginalia)
+            §01.5  Frontispiece   (full-bleed editorial photograph + caption)
+            §02    Cursos         (TOC catalog with workplace photo header)
+            §02.5  Especialidades (6 practice areas — sister-pharmacy scope)
+            §03    Método         (4 numbered tenets, asymmetric layout)
+            §04    Galería        (3-photo editorial grid with captions)
+            §05    Preguntas      (editorial Q&A — replaces accordion FAQ)
+            §06    Inscripción    (letterpress closing CTA — replaces FooterCTA)
+          Old marketing-batch components (PatternDivider, FAQ, FooterCTA)
+          fully retired with this batch. */}
       <Atrium />
       <Epigraph />
       <Manifiesto />
@@ -54,10 +55,9 @@ export default async function LandingPage({ params }: { params: Promise<{ locale
       <Cursos />
       <Especialidades />
       <Metodo />
-      <PatternDivider />
-      <FAQ />
-      <PatternDivider />
-      <FooterCTA />
+      <Galeria />
+      <Preguntas />
+      <Inscripcion />
     </>
   );
 }

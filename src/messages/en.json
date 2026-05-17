@@ -6,42 +6,9 @@
     "contact": "Contact",
     "enroll": "Enroll"
   },
-  "hero": {
-    "eyebrow": "Compounding Academy",
-    "headline": "Your next certification starts here.",
-    "subhead": "Professional certification in USP 795 and USP 800.",
-    "primaryCta": "Browse courses",
-    "secondaryCta": "Learn more"
-  },
   "tagline": {
     "line1": "We educate to build",
     "line2": "Wellness and health."
-  },
-  "featured": {
-    "title": "Featured courses",
-    "comingSoon": "Coming soon",
-    "viewAll": "View all courses"
-  },
-  "whySCCA": {
-    "title": "Why SCCA",
-    "items": {
-      "instructor": {
-        "title": "Certified instructor",
-        "body": "Decades of compounding pharmacy experience."
-      },
-      "cohorts": {
-        "title": "Small cohorts",
-        "body": "Supervised learning with real-time feedback."
-      },
-      "usp": {
-        "title": "Aligned with USP 795 & USP 800",
-        "body": "Curriculum mapped to USP chapter standards."
-      },
-      "certification": {
-        "title": "Certification on completion",
-        "body": "Receive your professional certificate at program completion."
-      }
-    }
   },
   "faq": {
     "title": "Frequently asked questions",
@@ -71,11 +38,6 @@
         "a": "Yes, up to 7 days before the cohort start."
       }
     ]
-  },
-  "footerCta": {
-    "headline": "Ready to certify?",
-    "subhead": "Join SCCA's next cohort.",
-    "button": "Browse courses"
   },
   "footer": {
     "tagline": "We educate to build wellness and health.",
@@ -252,5 +214,43 @@
       }
     ],
     "attribution": "Practice areas aligned with Santa Cruz Pharma Care, 15+ years in Bayamón, Puerto Rico."
+  },
+  "galeria": {
+    "sectionNumber": "§04",
+    "sectionLabel": "Gallery",
+    "intro": "Three views of the daily work: the controlled bench, the non-sterile preparations lab, and the safe handling of hazardous drugs.",
+    "items": [
+      {
+        "id": "bench",
+        "caption": "Compounding bench with analytical balance.",
+        "src": "/photos/photo-instructor.jpg"
+      },
+      {
+        "id": "mortar",
+        "caption": "Mortar and pestle — non-sterile preparation.",
+        "src": "/photos/photo-mortar.jpg"
+      },
+      {
+        "id": "chemo",
+        "caption": "Laminar flow hood — hazardous drug handling (USP 800).",
+        "src": "/photos/photo-chemo-hood.jpg"
+      }
+    ]
+  },
+  "preguntas": {
+    "sectionNumber": "§05",
+    "sectionLabel": "Questions",
+    "intro": "The most-asked questions before pharmacists enroll. If yours isn't here, write to us."
+  },
+  "inscripcion": {
+    "sectionNumber": "§06",
+    "sectionLabel": "Registration",
+    "headline": "For the next cohort",
+    "subheadline": "Seats limited to twelve participants. The inaugural cohort begins January 2026.",
+    "cohortLabel": "Inaugural cohort",
+    "cohortDate": "January 2026",
+    "primaryCta": "Register",
+    "secondaryNote": "Questions before registering?",
+    "secondaryCta": "Contact us"
   }
 }
