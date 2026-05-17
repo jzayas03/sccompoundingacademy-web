@@ -83,7 +83,16 @@
     "legal": "Legal",
     "privacy": "Privacidad",
     "terms": "Términos",
-    "copyright": "© {year} Santa Cruz Compounding Academy. Todos los derechos reservados."
+    "copyright": "© {year} Santa Cruz Compounding Academy. Todos los derechos reservados.",
+    "contactInfoLabel": "Información de contacto",
+    "address": "Bayamón, Puerto Rico",
+    "phone": "787-798-4646",
+    "phoneLabel": "Teléfono",
+    "whatsapp": "787-408-5748",
+    "whatsappLabel": "WhatsApp",
+    "email": "scpcpr@gmail.com",
+    "emailLabel": "Correo",
+    "addressLabel": "Sede"
   },
   "contact": {
     "title": "Contáctanos",
@@ -128,7 +137,7 @@
   "manifiesto": {
     "sectionNumber": "§01",
     "sectionLabel": "Manifiesto",
-    "paragraph": "En Santa Cruz Compounding Academy preparamos a farmacéuticos para una práctica que une la tradición galénica del compounding con los estándares contemporáneos de calidad, seguridad y rigor científico. Nuestro programa, alineado con los capítulos USP 795 y USP 800, ofrece formación práctica y certificación profesional para quienes formulan medicamentos personalizados — desde preparaciones no estériles cotidianas hasta el manejo seguro de medicamentos peligrosos.",
+    "paragraph": "En Santa Cruz Compounding Academy preparamos a farmacéuticos para una práctica que une la tradición galénica del compounding con los estándares contemporáneos de calidad, seguridad y rigor científico. Nuestro programa, alineado con los capítulos USP 795 y USP 800, ofrece formación práctica y certificación profesional para quienes formulan medicamentos personalizados para cada paciente — desde preparaciones no estériles cotidianas hasta el manejo seguro de medicamentos peligrosos. Educamos para que cada preparación sea segura, efectiva y hecha a medida.",
     "marginaliaTerm": "Compounding (n.)",
     "marginaliaDefinition": "La preparación, mezcla, ensamblaje, alteración o etiquetado de medicamentos personalizados para un paciente específico, prescritos por un profesional autorizado.",
     "readingLabel": "Primera lectura"
@@ -200,5 +209,43 @@
     "sectionLabel": "Frontispicio",
     "caption": "Banco de preparación con materia prima USP/NF y hoja de compounding.",
     "alt": "Composición sobre mármol blanco: mortero, balanza analítica, frascos rotulados como Zinc Oxide USP, White Petrolatum USP, PEG 400 USP, Glycerin USP y Methylparaben NF, junto a una hoja de compounding."
+  },
+  "especialidades": {
+    "sectionNumber": "§02.5",
+    "sectionLabel": "Especialidades",
+    "intro": "Áreas de práctica que el programa prepara a sus graduados a ejercer. Cada especialidad aplica los principios de USP 795 y USP 800 a un público y necesidad específica.",
+    "items": [
+      {
+        "id": "dermatologico",
+        "label": "Dermatológico",
+        "body": "Cremas personalizadas para manchas, arrugas y acné — formulación de bases tópicas y manejo de principios activos."
+      },
+      {
+        "id": "hormonal",
+        "label": "Hormonal",
+        "body": "Progesterona, estrógenos y otras hormonas bioidénticas ajustadas a las necesidades específicas de cada paciente."
+      },
+      {
+        "id": "pediatria",
+        "label": "Pediatría",
+        "body": "Medicamentos pediátricos con sabores amigables para niños y dosis ajustadas al peso."
+      },
+      {
+        "id": "veterinario",
+        "label": "Veterinario",
+        "body": "Fórmulas para animales ajustadas según especie, peso y presentación necesaria."
+      },
+      {
+        "id": "blt",
+        "label": "Anestésicos tópicos · BLT",
+        "body": "Fórmulas BLT (benzocaína, lidocaína, tetracaína) para minimizar dolor y maximizar confort en procedimientos."
+      },
+      {
+        "id": "general",
+        "label": "Compounding general",
+        "body": "Personalización de medicamentos según las necesidades únicas de cada paciente, desde formas farmacéuticas alternativas hasta excipientes específicos."
+      }
+    ],
+    "attribution": "Áreas alineadas con la práctica de Santa Cruz Pharma Care, más de 15 años en Bayamón, Puerto Rico."
   }
 }

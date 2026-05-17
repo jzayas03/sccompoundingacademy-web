@@ -83,7 +83,16 @@
     "legal": "Legal",
     "privacy": "Privacy",
     "terms": "Terms",
-    "copyright": "© {year} Santa Cruz Compounding Academy. All rights reserved."
+    "copyright": "© {year} Santa Cruz Compounding Academy. All rights reserved.",
+    "contactInfoLabel": "Contact information",
+    "address": "Bayamón, Puerto Rico",
+    "phone": "787-798-4646",
+    "phoneLabel": "Phone",
+    "whatsapp": "787-408-5748",
+    "whatsappLabel": "WhatsApp",
+    "email": "scpcpr@gmail.com",
+    "emailLabel": "Email",
+    "addressLabel": "Office"
   },
   "contact": {
     "title": "Contact us",
@@ -128,7 +137,7 @@
   "manifiesto": {
     "sectionNumber": "§01",
     "sectionLabel": "Manifesto",
-    "paragraph": "At Santa Cruz Compounding Academy we prepare pharmacists for a practice that joins the galenic tradition of compounding with contemporary standards of quality, safety, and scientific rigor. Our program, aligned with USP chapters 795 and 800, offers practical training and professional certification for those who formulate personalized medicines — from everyday non-sterile preparations to the safe handling of hazardous drugs.",
+    "paragraph": "At Santa Cruz Compounding Academy we prepare pharmacists for a practice that joins the galenic tradition of compounding with contemporary standards of quality, safety, and scientific rigor. Our program, aligned with USP chapters 795 and 800, offers practical training and professional certification for those who formulate personalized medicines for each patient — from everyday non-sterile preparations to the safe handling of hazardous drugs. We educate so every preparation is safe, effective, and made to measure.",
     "marginaliaTerm": "Compounding (n.)",
     "marginaliaDefinition": "The preparation, mixing, assembling, altering, or labeling of customized medications for a specific patient, prescribed by an authorized practitioner.",
     "readingLabel": "First reading"
@@ -200,5 +209,43 @@
     "sectionLabel": "Frontispiece",
     "caption": "Compounding bench with USP/NF materia prima and worksheet.",
     "alt": "Composition on white marble: mortar and pestle, analytical balance, jars labeled Zinc Oxide USP, White Petrolatum USP, PEG 400 USP, Glycerin USP and Methylparaben NF, alongside a compounding worksheet."
+  },
+  "especialidades": {
+    "sectionNumber": "§02.5",
+    "sectionLabel": "Specialties",
+    "intro": "Practice areas the program prepares graduates to enter. Each specialty applies the principles of USP 795 and USP 800 to a specific population and need.",
+    "items": [
+      {
+        "id": "dermatologico",
+        "label": "Dermatological",
+        "body": "Personalized creams for spots, wrinkles, and acne — formulating topical bases and handling active ingredients."
+      },
+      {
+        "id": "hormonal",
+        "label": "Hormonal",
+        "body": "Progesterone, estrogens, and other bioidentical hormones tailored to each patient's specific needs."
+      },
+      {
+        "id": "pediatria",
+        "label": "Pediatric",
+        "body": "Pediatric medications with kid-friendly flavors and weight-adjusted dosing."
+      },
+      {
+        "id": "veterinario",
+        "label": "Veterinary",
+        "body": "Animal formulations adjusted by species, weight, and required presentation."
+      },
+      {
+        "id": "blt",
+        "label": "Topical anesthetics · BLT",
+        "body": "BLT formulas (benzocaine, lidocaine, tetracaine) to minimize pain and maximize comfort in procedures."
+      },
+      {
+        "id": "general",
+        "label": "General compounding",
+        "body": "Personalization of medications for each patient's unique needs — alternative dosage forms and patient-specific excipients."
+      }
+    ],
+    "attribution": "Practice areas aligned with Santa Cruz Pharma Care, 15+ years in Bayamón, Puerto Rico."
   }
 }
