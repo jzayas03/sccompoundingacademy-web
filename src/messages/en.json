@@ -92,7 +92,12 @@
     "whatsappLabel": "WhatsApp",
     "email": "scpcpr@gmail.com",
     "emailLabel": "Email",
-    "addressLabel": "Office"
+    "addressLabel": "Office",
+    "socialLabel": "Follow us",
+    "instagramUrl": "https://www.instagram.com/santacruzpharmacare/",
+    "instagramAria": "Instagram",
+    "facebookUrl": "https://www.facebook.com/santa.cruz.pharma.care/",
+    "facebookAria": "Facebook"
   },
   "contact": {
     "title": "Contact us",

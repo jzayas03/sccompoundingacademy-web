@@ -100,6 +100,55 @@ export function Footer() {
               </span>
             </Link>
           </p>
+
+          {/* Social — Instagram + Facebook of the sister pharmacy.
+              Aria-labels keep the bare icon links screen-reader friendly. */}
+          <div className="mt-6 flex items-center gap-3">
+            <span
+              aria-hidden
+              className="text-off-white/60 text-xs tracking-wide uppercase"
+            >
+              {t("socialLabel")}
+            </span>
+            <a
+              href={t("instagramUrl")}
+              target="_blank"
+              rel="noopener noreferrer"
+              aria-label={t("instagramAria")}
+              className="text-off-white/70 hover:text-chartreuse inline-flex h-8 w-8 items-center justify-center rounded-full transition-colors"
+            >
+              <svg
+                viewBox="0 0 24 24"
+                aria-hidden
+                className="h-5 w-5"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="1.8"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+              >
+                <rect x="3" y="3" width="18" height="18" rx="5" />
+                <circle cx="12" cy="12" r="4" />
+                <circle cx="17.5" cy="6.5" r="1.1" fill="currentColor" stroke="none" />
+              </svg>
+            </a>
+            <a
+              href={t("facebookUrl")}
+              target="_blank"
+              rel="noopener noreferrer"
+              aria-label={t("facebookAria")}
+              className="text-off-white/70 hover:text-chartreuse inline-flex h-8 w-8 items-center justify-center rounded-full transition-colors"
+            >
+              <svg
+                viewBox="0 0 24 24"
+                aria-hidden
+                className="h-5 w-5"
+                fill="currentColor"
+              >
+                <path d="M13.5 21v-7.5h2.6l.4-3.1h-3V8.4c0-.9.3-1.5 1.6-1.5h1.7V4.1A23.6 23.6 0 0 0 14.3 4c-2.5 0-4.2 1.5-4.2 4.3v2.1H7.5v3.1h2.6V21h3.4Z" />
+              </svg>
+            </a>
+          </div>
         </div>
       </Container>
       <div className="bg-teal-deep/90 text-off-white/80 py-4 text-center text-xs">
