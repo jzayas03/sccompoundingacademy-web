@@ -68,7 +68,7 @@ export function Cursos() {
             >
               {t("sectionLabel")}
             </h2>
-            <p className="font-accent text-teal-deep/85 mt-6 text-lg leading-snug italic">
+            <p className="text-teal-deep/85 mt-6 text-base leading-relaxed sm:text-lg">
               {t("intro")}
             </p>
           </header>
@@ -95,7 +95,7 @@ export function Cursos() {
                       <p className="font-heading text-teal-deep/60 group-hover:text-chartreuse/80 text-[0.6875rem] font-semibold tracking-[0.25em] uppercase transition-colors">
                         {row.chapter}
                       </p>
-                      <h3 className="font-accent text-teal-deep group-hover:text-chartreuse mt-1 text-2xl leading-snug font-medium italic transition-colors sm:text-3xl">
+                      <h3 className="font-heading text-teal-deep group-hover:text-chartreuse mt-1 text-2xl leading-snug font-bold tracking-tight transition-colors sm:text-3xl">
                         {row.title}
                       </h3>
                       <p className="text-teal-deep/80 group-hover:text-off-white/85 font-heading mt-2 max-w-2xl text-sm leading-snug transition-colors sm:text-base">

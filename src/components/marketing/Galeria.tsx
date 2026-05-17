@@ -55,7 +55,7 @@ export function Galeria() {
               {t("sectionLabel")}
             </h2>
           </header>
-          <p className="font-accent text-teal-deep/85 text-lg leading-snug italic lg:col-span-7 lg:text-xl">
+          <p className="text-teal-deep/85 text-base leading-relaxed lg:col-span-7 lg:text-lg">
             {t("intro")}
           </p>
         </div>

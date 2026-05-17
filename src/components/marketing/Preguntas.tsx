@@ -47,7 +47,7 @@ export function Preguntas() {
             >
               {t("sectionLabel")}
             </h2>
-            <p className="font-accent text-teal-deep/85 mt-6 text-lg leading-snug italic">
+            <p className="text-teal-deep/85 mt-6 text-base leading-relaxed sm:text-lg">
               {t("intro")}
             </p>
           </header>
@@ -72,7 +72,7 @@ export function Preguntas() {
                       <p className="font-heading text-teal-deep text-sm font-bold tracking-[0.15em] uppercase sm:text-base">
                         {qa.q}
                       </p>
-                      <p className="font-accent text-teal-deep/85 mt-3 text-lg leading-snug italic sm:text-xl">
+                      <p className="text-teal-deep/85 mt-3 text-base leading-relaxed sm:text-lg">
                         {qa.a}
                       </p>
                     </div>
