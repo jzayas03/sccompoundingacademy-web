@@ -47,7 +47,7 @@
     "terms": "Terms",
     "copyright": "© {year} Santa Cruz Compounding Academy. All rights reserved.",
     "contactInfoLabel": "Contact information",
-    "address": "Bayamón, Puerto Rico",
+    "address": "73 Calle Santa Cruz, Suite 101, Bayamón, PR 00960",
     "phone": "787-798-4646",
     "phoneLabel": "Phone",
     "whatsapp": "787-408-5748",
@@ -293,13 +293,15 @@
     "heading": "Campus in Bayamón, Puerto Rico.",
     "intro": "The academy shares a campus with Santa Cruz Pharma Care and operates inside its working laboratory. Minutes from PR-22 and PR-2.",
     "addressLabel": "Office",
-    "addressLine": "Calle Santa Cruz, Barrio Pueblo, Bayamón, PR 00960",
+    "addressLine": "Edificio Médico Santa Cruz · 73 Calle Santa Cruz, Suite 101, Bayamón, PR 00960",
+    "hoursLabel": "Hours",
+    "hoursValue": "Monday to Friday · 7:30 a.m. – 5:00 p.m.",
     "parkingLabel": "Parking",
     "parkingNote": "On-site parking available for cohort participants.",
     "transitLabel": "Access",
     "transitNote": "Minutes from PR-22 and PR-2. Transit coordination available on request.",
     "openInMapsLabel": "Open in Google Maps",
-    "embedQuery": "Farmacia+Santa+Cruz+Calle+Santa+Cruz+Bayamon+PR+00960"
+    "embedQuery": "Edificio+Medico+Santa+Cruz+73+Calle+Santa+Cruz+Bayamon+PR+00960"
   },
   "instagramFeatured": {
     "eyebrow": "Follow us on Instagram",

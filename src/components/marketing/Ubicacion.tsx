@@ -59,6 +59,12 @@ export function Ubicacion() {
                 </div>
                 <div className="border-gray-300 border-t pt-5">
                   <dt className="font-heading text-teal-deep/70 text-xs font-semibold tracking-[0.18em] uppercase">
+                    {t("hoursLabel")}
+                  </dt>
+                  <dd className="text-gray-900 mt-2 text-base sm:text-lg">{t("hoursValue")}</dd>
+                </div>
+                <div className="border-gray-300 border-t pt-5">
+                  <dt className="font-heading text-teal-deep/70 text-xs font-semibold tracking-[0.18em] uppercase">
                     {t("parkingLabel")}
                   </dt>
                   <dd className="text-gray-700 mt-2 text-sm leading-relaxed sm:text-base">
