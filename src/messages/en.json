@@ -93,7 +93,7 @@
     "skipToContent": "Skip to content"
   },
   "hero": {
-    "eyebrow": "Professional certification · USP 〈795〉 · 〈797〉 · 〈800〉 · Bayamón, PR",
+    "eyebrow": "Professional certification · USP 〈795〉 · 〈800〉 · Bayamón, PR",
     "headline": "Practical compounding training for pharmacy professionals.",
     "subheadline": "Structured courses that strengthen technique, compliance, and professional judgment in non-sterile compounding and hazardous-drug handling. A program affiliated with Santa Cruz Pharma Care.",
     "primaryCta": "View courses",
@@ -101,7 +101,7 @@
     "imageAlt": "Compounding bench with analytical balance, mortar, and USP/NF raw materials — Santa Cruz Pharma Care campus in Bayamón, Puerto Rico.",
     "trustItems": [
       "Supervised practice in a working laboratory",
-      "USP 〈795〉 · 〈797〉 · 〈800〉 regulatory framework",
+      "USP 〈795〉 and 〈800〉 regulatory framework",
       "Small cohorts with individual follow-up",
       "Campus in Bayamón, Puerto Rico"
     ]
@@ -119,7 +119,7 @@
       },
       {
         "label": "USP-aligned",
-        "body": "Curriculum built chapter by chapter from the current USP 〈795〉, 〈797〉, and 〈800〉. Regulatory updates are folded into the material between cohorts."
+        "body": "Curriculum built chapter by chapter from the current USP 〈795〉 and 〈800〉. Regulatory updates are folded into the material between cohorts."
       }
     ]
   },

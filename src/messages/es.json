@@ -93,7 +93,7 @@
     "skipToContent": "Saltar al contenido"
   },
   "hero": {
-    "eyebrow": "Certificación profesional · USP 〈795〉 · 〈797〉 · 〈800〉 · Bayamón, PR",
+    "eyebrow": "Certificación profesional · USP 〈795〉 · 〈800〉 · Bayamón, PR",
     "headline": "Formación práctica en compounding para profesionales de farmacia.",
     "subheadline": "Cursos estructurados para fortalecer técnica, cumplimiento y criterio profesional en preparaciones no estériles y manejo de medicamentos peligrosos. Programa afiliado a Santa Cruz Pharma Care.",
     "primaryCta": "Ver cursos",
@@ -101,7 +101,7 @@
     "imageAlt": "Banco de preparación con balanza analítica, mortero y materia prima USP/NF — sede de Santa Cruz Pharma Care en Bayamón, Puerto Rico.",
     "trustItems": [
       "Práctica supervisada en laboratorio activo",
-      "Marco normativo USP 〈795〉 · 〈797〉 · 〈800〉",
+      "Marco normativo USP 〈795〉 y 〈800〉",
       "Cohortes pequeñas con seguimiento individual",
       "Sede en Bayamón, Puerto Rico"
     ]
@@ -119,7 +119,7 @@
       },
       {
         "label": "Alineado con USP",
-        "body": "Currículo construido capítulo por capítulo desde USP 〈795〉, 〈797〉 y 〈800〉 vigentes. Las actualizaciones regulatorias se incorporan al material entre cohortes."
+        "body": "Currículo construido capítulo por capítulo desde USP 〈795〉 y 〈800〉 vigentes. Las actualizaciones regulatorias se incorporan al material entre cohortes."
       }
     ]
   },
