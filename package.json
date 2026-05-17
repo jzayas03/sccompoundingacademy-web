@@ -14,7 +14,8 @@
     "test:watch": "vitest",
     "test:e2e": "playwright test",
     "check:i18n": "node scripts/check-i18n-parity.mjs",
-    "build:assets": "node scripts/build-static-assets.mjs"
+    "build:assets": "node scripts/build-static-assets.mjs",
+    "refresh:ig": "node scripts/refresh-ig-thumbs.mjs"
   },
   "dependencies": {
     "clsx": "^2.1",
