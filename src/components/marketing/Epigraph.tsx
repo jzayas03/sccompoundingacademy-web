@@ -40,7 +40,7 @@ export function Epigraph() {
         />
       </div>
 
-      <Container className="relative py-20 sm:py-28 lg:py-32">
+      <Container className="relative py-20 sm:py-28 lg:py-40">
         <blockquote className="mx-auto max-w-5xl text-center">
           <p className="font-accent text-chartreuse text-4xl leading-[1.05] tracking-tight text-balance italic sm:text-5xl lg:text-6xl xl:text-7xl">
             {t("line1")}{" "}

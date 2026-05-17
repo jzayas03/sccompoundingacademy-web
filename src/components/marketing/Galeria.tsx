@@ -1,6 +1,7 @@
 import Image from "next/image";
 import { useTranslations, useMessages } from "next-intl";
 import { Container } from "@/components/ui/Container";
+import { Reveal } from "@/components/ui/Reveal";
 
 type GalleryItem = { id: string; caption: string; src: string };
 
@@ -41,16 +42,16 @@ export function Galeria() {
       aria-labelledby="galeria-heading"
       className="bg-sand text-teal-deep border-teal-deep/10 relative isolate border-t"
     >
-      <Container className="relative py-16 sm:py-24 lg:py-32">
+      <Container className="relative py-20 sm:py-28 lg:py-40">
         {/* Header — section number + label + italic intro */}
-        <div className="grid gap-10 lg:grid-cols-12 lg:gap-x-12">
+        <Reveal className="grid gap-10 lg:grid-cols-12 lg:gap-x-12">
           <header className="lg:col-span-3">
             <p className="font-heading text-teal-deep/60 text-xs font-medium tracking-[0.25em] uppercase">
               {t("sectionNumber")}
             </p>
             <h2
               id="galeria-heading"
-              className="font-heading text-teal-deep mt-2 text-3xl font-bold tracking-tight sm:text-4xl"
+              className="font-heading text-teal-deep mt-2 text-4xl font-bold tracking-[-0.025em] sm:text-5xl lg:text-6xl"
             >
               {t("sectionLabel")}
             </h2>
@@ -58,10 +59,10 @@ export function Galeria() {
           <p className="text-teal-deep/85 text-base leading-relaxed lg:col-span-7 lg:text-lg">
             {t("intro")}
           </p>
-        </div>
+        </Reveal>
 
         {/* Photo grid — asymmetric */}
-        <ul className="mt-12 grid grid-cols-1 gap-y-12 sm:gap-y-16 lg:mt-20 lg:grid-cols-12 lg:gap-x-8 lg:gap-y-20">
+        <Reveal as="ul" className="mt-12 grid grid-cols-1 gap-y-12 sm:gap-y-16 lg:mt-20 lg:grid-cols-12 lg:gap-x-8 lg:gap-y-20">
           {items.map((it, idx) => (
             <li key={it.id} className={layoutClasses[idx] ?? "lg:col-span-12"}>
               <figure className="m-0">
@@ -85,7 +86,7 @@ export function Galeria() {
               </figure>
             </li>
           ))}
-        </ul>
+        </Reveal>
       </Container>
     </section>
   );

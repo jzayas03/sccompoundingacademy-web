@@ -1,6 +1,7 @@
 import Image from "next/image";
 import { useTranslations } from "next-intl";
 import { Container } from "@/components/ui/Container";
+import { Reveal } from "@/components/ui/Reveal";
 
 /**
  * §01.5 — Frontispicio / Frontispiece.
@@ -29,9 +30,9 @@ export function Frontispiece() {
       aria-labelledby="frontispiece-caption"
       className="bg-sand text-teal-deep border-teal-deep/10 relative isolate border-t"
     >
-      <Container className="relative py-12 sm:py-16 lg:py-20">
+      <Container className="relative py-16 sm:py-24 lg:py-32">
         {/* The photograph — 16:9 frame with subtle border + soft shadow */}
-        <figure className="m-0">
+        <Reveal as="figure" className="m-0">
           <div className="ring-teal-deep/10 shadow-soft relative aspect-[16/9] w-full overflow-hidden rounded-sm ring-1">
             <Image
               src="/photos/photo-frontispiece.jpg"
@@ -55,7 +56,7 @@ export function Frontispiece() {
               {t("caption")}
             </p>
           </figcaption>
-        </figure>
+        </Reveal>
       </Container>
     </section>
   );

@@ -65,7 +65,7 @@ export function Atrium() {
         {/* Main composition — opening line + tagline */}
         <h1
           id="atrium-heading"
-          className="self-center text-4xl leading-[1.02] tracking-tight text-balance sm:text-6xl lg:text-7xl xl:text-8xl"
+          className="self-center text-[clamp(2.5rem,10vw,9rem)] leading-[0.98] tracking-[-0.035em] text-balance"
         >
           <span className="font-heading text-teal-deep block font-extrabold">
             {t("openingLine1")}

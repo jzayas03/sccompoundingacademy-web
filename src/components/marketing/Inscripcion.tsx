@@ -1,6 +1,7 @@
 import { useTranslations } from "next-intl";
 import { Link } from "@/i18n/routing";
 import { Container } from "@/components/ui/Container";
+import { Reveal } from "@/components/ui/Reveal";
 
 /**
  * §06 — Inscripción / Registration.
@@ -25,8 +26,8 @@ export function Inscripcion() {
       aria-labelledby="inscripcion-heading"
       className="bg-sand text-teal-deep border-teal-deep/10 relative isolate border-t"
     >
-      <Container className="relative py-20 sm:py-28 lg:py-36">
-        <div className="grid gap-10 lg:grid-cols-12 lg:gap-x-12">
+      <Container className="relative py-20 sm:py-28 lg:py-40">
+        <Reveal className="grid gap-10 lg:grid-cols-12 lg:gap-x-12">
           {/* Left gutter: §06 / Inscripción */}
           <header className="lg:col-span-3">
             <p className="font-heading text-teal-deep/60 text-xs font-medium tracking-[0.25em] uppercase">
@@ -34,7 +35,7 @@ export function Inscripcion() {
             </p>
             <h2
               id="inscripcion-heading"
-              className="font-heading text-teal-deep mt-2 text-3xl font-bold tracking-tight sm:text-4xl"
+              className="font-heading text-teal-deep mt-2 text-4xl font-bold tracking-[-0.025em] sm:text-5xl lg:text-6xl"
             >
               {t("sectionLabel")}
             </h2>
@@ -53,7 +54,7 @@ export function Inscripcion() {
             </div>
 
             {/* Headline — letterpress invitation */}
-            <h3 className="font-heading text-teal-deep mt-12 max-w-3xl text-4xl leading-tight font-bold tracking-tight sm:mt-16 sm:text-5xl lg:text-6xl">
+            <h3 className="font-heading text-teal-deep mt-12 max-w-3xl text-5xl leading-tight font-bold tracking-[-0.035em] sm:mt-16 sm:text-6xl lg:text-7xl">
               {t("headline")}
             </h3>
             <p className="text-teal-deep/80 font-heading mt-6 max-w-xl text-base sm:text-lg">
@@ -85,7 +86,7 @@ export function Inscripcion() {
               </p>
             </div>
           </div>
-        </div>
+        </Reveal>
       </Container>
     </section>
   );
