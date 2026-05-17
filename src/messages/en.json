@@ -18,24 +18,24 @@
         "a": "Each cohort blends online theoretical sessions with hands-on lab practice at Santa Cruz Pharma Care in Bayamón. The theory component is flexible and asynchronous; the practicum runs in scheduled intensive blocks so practicing professionals can participate without disrupting their routine."
       },
       {
-        "q": "What is USP 795?",
-        "a": "USP 〈795〉 is the chapter of the United States Pharmacopeia that sets the standards for non-sterile compounded preparations —creams, ointments, capsules, oral suspensions and the like. It defines quality controls, beyond-use dating, documentation and facility practices that every pharmacy preparing medications must follow."
+        "q": "Do I receive a certificate?",
+        "a": "Yes. Upon completing every module and passing both the practical and written assessments, you receive a Santa Cruz Compounding Academy professional certificate documenting instruction hours and competencies in USP 〈795〉 and USP 〈800〉. It serves as evidence of continuing education and of audit readiness."
       },
       {
-        "q": "What is USP 800?",
-        "a": "USP 〈800〉 governs the safe handling of hazardous drugs (HDs) —from receiving and storage through preparation, administration and disposal. It covers engineering controls, personal protective equipment, medical surveillance and procedures designed to protect staff, patients and the environment from exposure to these compounds."
+        "q": "What prerequisites do I need?",
+        "a": "For the foundations programs, an active pharmacist license or current studies in pharmacy / pharmacy technology is enough. The USP 〈800〉 module is recommended after foundations or with equivalent experience in non-sterile preparations. If you're unsure, write to us before enrolling."
       },
       {
-        "q": "Do I get a certificate?",
-        "a": "Yes. Upon completing every module and passing the final assessment, you receive a Santa Cruz Compounding Academy professional certificate documenting instruction hours and competencies in USP 795 and USP 800. The certificate serves as evidence of continuing education and audit readiness."
+        "q": "How do I access the course material?",
+        "a": "Once your enrollment is confirmed you receive access to the student portal with the theoretical material, cohort calendar, USP reference reading, and downloadables. The hands-on sessions are scheduled in blocks at the Bayamón campus and announced at least two weeks in advance."
       },
       {
-        "q": "Do you accept credit cards?",
-        "a": "Yes. We process secure credit and debit card payments through Stripe with end-to-end encryption. We also accept ATH Móvil transfers and split-payment plans for cohorts enrolled in advance —coordinate your preferred option at the moment of registration."
+        "q": "Do you have plans for pharmacy teams?",
+        "a": "Yes. For pharmacies that want to train their full team we offer private cohorts — either at our Bayamón campus or, depending on scope, at the client's site. Includes curriculum personalization and a per-participant competency report. Write to us to coordinate."
       },
       {
         "q": "Can I request a refund?",
-        "a": "Yes. We accept full refunds up to seven (7) calendar days before the cohort starts, no questions asked. After that date and before day one you can transfer your seat to another person or to a future cohort at no penalty."
+        "a": "Yes. We accept full refunds up to seven (7) calendar days before the cohort starts, no questions asked. After that date you can transfer your seat to another person or to a future cohort at no penalty."
       }
     ]
   },
@@ -92,95 +92,142 @@
     "languageToggle": "Language",
     "skipToContent": "Skip to content"
   },
-  "atrium": {
-    "edition": "Inaugural Edition · 2026",
-    "openingLine1": "We educate to build",
-    "openingLine2": "wellness and health.",
-    "supportingLine": "Professional certification · USP 795 · USP 800 · Puerto Rico",
-    "primaryLink": "Browse the catalogue",
-    "dateline": "Bayamón · Puerto Rico",
-    "scrollCue": "Manifesto"
+  "hero": {
+    "eyebrow": "Professional certification · USP 〈795〉 · 〈797〉 · 〈800〉 · Bayamón, PR",
+    "headline": "Practical compounding training for pharmacy professionals.",
+    "subheadline": "Structured courses that strengthen technique, compliance, and professional judgment in non-sterile compounding and hazardous-drug handling. A program affiliated with Santa Cruz Pharma Care.",
+    "primaryCta": "View courses",
+    "secondaryCta": "Book a consultation",
+    "imageAlt": "Compounding bench with analytical balance, mortar, and USP/NF raw materials — Santa Cruz Pharma Care campus in Bayamón, Puerto Rico.",
+    "trustItems": [
+      "Supervised practice in a working laboratory",
+      "USP 〈795〉 · 〈797〉 · 〈800〉 regulatory framework",
+      "Small cohorts with individual follow-up",
+      "Campus in Bayamón, Puerto Rico"
+    ]
   },
-  "manifiesto": {
-    "sectionNumber": "§01",
-    "sectionLabel": "Manifesto",
-    "paragraph": "At Santa Cruz Compounding Academy we prepare pharmacists for a practice that joins the galenic tradition of compounding with contemporary standards of quality, safety, and scientific rigor. Our program, aligned with USP chapters 795 and 800, offers practical training and professional certification for those who formulate personalized medicines for each patient — from everyday non-sterile preparations to the safe handling of hazardous drugs. We educate so every preparation is safe, effective, and made to measure.",
-    "marginaliaTerm": "Compounding (n.)",
-    "marginaliaDefinition": "The preparation, mixing, assembling, altering, or labeling of customized medications for a specific patient, prescribed by an authorized practitioner.",
-    "readingLabel": "First reading"
-  },
-  "epigraph": {
-    "attribution": "— SCCA · Inaugural Edition"
-  },
-  "cursos": {
-    "sectionNumber": "§02",
-    "sectionLabel": "Programs",
-    "intro": "Three professional certification programs aligned with USP chapters 795 and 800. Each combines theoretical foundations with supervised laboratory practice.",
-    "nextCohort": "Next cohort",
-    "cohortDate": "January 2026",
-    "hoursLabel": "hours",
+  "confianza": {
+    "srHeading": "Why Santa Cruz Compounding Academy",
     "items": [
       {
-        "id": "usp-795",
-        "chapter": "USP 795",
-        "title": "Non-Sterile Compounding Foundations",
-        "description": "Techniques, excipient handling, quality control, and documentation for compounded preparations.",
-        "hours": "40"
+        "label": "Affiliated program",
+        "body": "Santa Cruz Compounding Academy grew out of Santa Cruz Pharma Care, a Bayamón pharmacy with over fifteen years of active practice in compounded preparations and patient-specific medications."
       },
       {
-        "id": "usp-800",
-        "chapter": "USP 800",
-        "title": "Hazardous Drug Handling",
-        "description": "Occupational risk, protective equipment, ventilation, and containment procedures.",
-        "hours": "32"
+        "label": "Supervised practice",
+        "body": "Cohorts operate in the pharmacy's working laboratory. Every technique is performed the same day it's taught, with individual instructor review and a documented portfolio of preparations."
       },
       {
-        "id": "combinado",
-        "chapter": "USP 795 + 800",
-        "title": "Combined Track",
-        "description": "Full coverage of both chapters plus an integrative advanced-practice module.",
-        "hours": "60"
-      }
-    ],
-    "viewAll": "View full catalogue"
-  },
-  "metodo": {
-    "sectionNumber": "§03",
-    "sectionLabel": "Method",
-    "intro": "Four principles that shape every cohort. We educate so knowledge translates into responsible practice — not decorative certificates.",
-    "tenets": [
-      {
-        "number": "01",
-        "title": "Supervised practice",
-        "body": "Every concept is executed in the lab the same day it's taught. No isolated theory: each cohort ends with a portfolio of individually reviewed preparations."
-      },
-      {
-        "number": "02",
-        "title": "Small cohorts",
-        "body": "Groups capped at twelve per cohort. The instructor knows each participant's progress and adapts depth to the group's level."
-      },
-      {
-        "number": "03",
-        "title": "USP-aligned",
-        "body": "Curriculum built chapter-by-chapter from USP 795 and USP 800. Preparations, equipment, and procedures follow current revisions; regulatory updates are folded into the material."
-      },
-      {
-        "number": "04",
-        "title": "Certification on completion",
-        "body": "Practical + written assessment at the close of each program. Those who pass receive an SCCA professional certificate with accredited hours and issue date."
+        "label": "USP-aligned",
+        "body": "Curriculum built chapter by chapter from the current USP 〈795〉, 〈797〉, and 〈800〉. Regulatory updates are folded into the material between cohorts."
       }
     ]
   },
-  "frontispiece": {
-    "sectionNumber": "§01.5",
-    "sectionLabel": "Frontispiece",
-    "caption": "Compounding bench with USP/NF materia prima and worksheet.",
-    "alt": "Composition on white marble: mortar and pestle, analytical balance, jars labeled Zinc Oxide USP, White Petrolatum USP, PEG 400 USP, Glycerin USP and Methylparaben NF, alongside a compounding worksheet."
+  "cursosGrid": {
+    "eyebrow": "Programs",
+    "heading": "Available courses",
+    "intro": "Three certification programs aligned with USP chapters 〈795〉 and 〈800〉. Each combines theoretical foundations with supervised laboratory practice.",
+    "durationLabel": "Duration",
+    "courseCta": "View course",
+    "courseLinkAria": "View course details",
+    "items": [
+      {
+        "id": "usp-795",
+        "level": "Foundations",
+        "title": "Non-Sterile Compounding — USP 〈795〉",
+        "description": "Preparation techniques, excipient handling, BUD calculation, quality control, and documentation for compounded preparations.",
+        "duration": "40 h"
+      },
+      {
+        "id": "usp-800",
+        "level": "Intermediate",
+        "title": "Hazardous Drug Handling — USP 〈800〉",
+        "description": "Occupational risk, personal protective equipment, engineering controls, and containment and decontamination procedures.",
+        "duration": "32 h"
+      },
+      {
+        "id": "combinado",
+        "level": "Advanced",
+        "title": "Combined USP 〈795〉 + 〈800〉 Program",
+        "description": "Full coverage of both chapters plus an integrative advanced-practice module with real-pharmacy cases.",
+        "duration": "60 h"
+      }
+    ]
+  },
+  "aprenderas": {
+    "eyebrow": "What you'll learn",
+    "heading": "Concrete competencies, not decorative certificates.",
+    "intro": "The program trains six disciplines a pharmacist needs to prepare medications safely, document them rigorously, and stay compliant with current standards.",
+    "items": [
+      {
+        "label": "Preparation technique",
+        "body": "Weighing, trituration, incorporation, and homogenization of non-sterile preparations — particle-size control, uniformity, and final-formulation verification."
+      },
+      {
+        "label": "Documentation and traceability",
+        "body": "Master sheets, batch records, quality control, and labeling per USP 〈795〉 — inspection-ready for Pharmacy Board review."
+      },
+      {
+        "label": "Occupational safety under USP 〈800〉",
+        "body": "Personal protective equipment, engineering controls, medical surveillance, and procedures that protect the team, the patient, and the environment."
+      },
+      {
+        "label": "BUD calculation",
+        "body": "Beyond-Use Dating by preparation category, storage conditions, and dosage form."
+      },
+      {
+        "label": "Excipients and base handling",
+        "body": "Selecting topical and oral bases, physicochemical compatibility, and the stability and preservation of the final preparation."
+      },
+      {
+        "label": "Compliance and audit readiness",
+        "body": "Preparation for regulatory inspections, internal quality audits, and ongoing review of standard operating procedures."
+      }
+    ]
+  },
+  "paraQuienEs": {
+    "eyebrow": "Who it's for",
+    "heading": "Designed for professionals who work with real preparations.",
+    "intro": "We structure the courses for four distinct profiles. Each one enters with a defined professional goal and leaves with documented, immediately applicable competencies.",
+    "items": [
+      {
+        "title": "Licensed pharmacists",
+        "body": "Practicing professionals who want to add compounding to their practice with technical judgment and regulatory grounding — or to deepen competencies they already exercise.",
+        "bullets": [
+          "Accredited and documented continuing education",
+          "Immediately applicable in your pharmacy"
+        ]
+      },
+      {
+        "title": "Pharmacy technicians",
+        "body": "Technical staff assisting preparations who need structured training in procedures, safety, and quality documentation.",
+        "bullets": [
+          "Hands-on training under an instructor",
+          "Per-participant competency report"
+        ]
+      },
+      {
+        "title": "Owners and managers",
+        "body": "Owners and administrators evaluating whether to open or expand a compounding service who need USP compliance from day one.",
+        "bullets": [
+          "Private cohorts for full teams",
+          "Guidance on requirements and equipment"
+        ]
+      },
+      {
+        "title": "Students in transition",
+        "body": "Advanced students and professionals changing fields who want a technical entry into compounding with real mentorship.",
+        "bullets": [
+          "Accessible minimum prerequisites",
+          "Mentorship by practicing pharmacists"
+        ]
+      }
+    ]
   },
   "especialidades": {
-    "sectionNumber": "§02.5",
-    "sectionLabel": "Specialties",
-    "intro": "Practice areas the program prepares graduates to enter. Each specialty applies the principles of USP 795 and USP 800 to a specific population and need.",
+    "eyebrow": "Specialties",
+    "heading": "Practice areas the program covers.",
+    "intro": "The curriculum prepares graduates for the practice areas that Santa Cruz Pharma Care serves every day, applying the principles of USP 〈795〉 and 〈800〉 to each population and need.",
     "items": [
       {
         "id": "dermatologico",
@@ -212,51 +259,39 @@
         "label": "General compounding",
         "body": "Personalization of medications for each patient's unique needs — alternative dosage forms and patient-specific excipients."
       }
-    ],
-    "attribution": "Practice areas aligned with Santa Cruz Pharma Care, 15+ years in Bayamón, Puerto Rico."
+    ]
   },
   "galeria": {
-    "sectionNumber": "§04",
-    "sectionLabel": "Gallery",
-    "intro": "Three views of the daily work: the controlled bench, the non-sterile preparations lab, and the safe handling of hazardous drugs.",
+    "eyebrow": "Laboratory",
+    "heading": "Where each technique is trained.",
+    "intro": "Three views of the campus's daily work: the controlled bench, the non-sterile preparation, and the safety cabinet for hazardous drugs.",
     "items": [
       {
         "id": "bench",
-        "caption": "Compounding bench equipped with an analytical balance and classified raw materials. This is where every component is weighed, measured and documented before formulation begins —the first link in the quality chain that USP 795 teaches.",
+        "caption": "Compounding bench with analytical balance and classified raw materials.",
         "src": "/photos/photo-instructor.jpg"
       },
       {
         "id": "mortar",
-        "caption": "Mortar and pestle in use during a non-sterile preparation. Trituration and manual incorporation remain foundational compounding techniques —students practice the particle-size control that distinguishes a uniform formulation from an inconsistent one.",
+        "caption": "Mortar and pestle in use during a non-sterile preparation.",
         "src": "/photos/photo-mortar.jpg"
       },
       {
         "id": "chemo",
-        "caption": "Biological safety cabinet for hazardous drug handling under USP 800. HEPA filtration, negative pressure and full personal protective equipment —the standard participants train to in order to protect the pharmacist, the patient and the environment.",
+        "caption": "Biological safety cabinet for hazardous drug handling under USP 〈800〉.",
         "src": "/photos/photo-chemo-hood.jpg"
       }
     ]
   },
-  "preguntas": {
-    "sectionNumber": "§05",
-    "sectionLabel": "Questions",
-    "intro": "The most-asked questions before pharmacists enroll. If yours isn't here, write to us."
-  },
-  "inscripcion": {
-    "sectionNumber": "§06",
-    "sectionLabel": "Registration",
-    "headline": "For the next cohort",
-    "subheadline": "Seats limited to twelve participants. The inaugural cohort begins January 2026.",
-    "cohortLabel": "Inaugural cohort",
-    "cohortDate": "January 2026",
-    "primaryCta": "Register",
-    "secondaryNote": "Questions before registering?",
-    "secondaryCta": "Contact us"
+  "faqClean": {
+    "eyebrow": "Frequently asked questions",
+    "heading": "What pharmacists ask before enrolling.",
+    "intro": "If your question isn't here, write to us. We respond within 48 business hours."
   },
   "ubicacion": {
-    "sectionNumber": "§07",
-    "sectionLabel": "Location",
-    "intro": "The academy shares a campus with Santa Cruz Pharma Care in Bayamón, with access to the pharmacy's working laboratory.",
+    "eyebrow": "Location",
+    "heading": "Campus in Bayamón, Puerto Rico.",
+    "intro": "The academy shares a campus with Santa Cruz Pharma Care and operates inside its working laboratory. Minutes from PR-22 and PR-2.",
     "addressLabel": "Office",
     "addressLine": "Calle Santa Cruz, Barrio Pueblo, Bayamón, PR 00960",
     "parkingLabel": "Parking",
@@ -265,5 +300,13 @@
     "transitNote": "Minutes from PR-22 and PR-2. Transit coordination available on request.",
     "openInMapsLabel": "Open in Google Maps",
     "embedQuery": "Farmacia+Santa+Cruz+Calle+Santa+Cruz+Bayamon+PR+00960"
+  },
+  "ctaFinal": {
+    "eyebrow": "Inaugural cohort · January 2026",
+    "headline": "Reserve your seat for the next cohort.",
+    "subheadline": "Seats limited to twelve participants. Enrollment closes when the cohort is full.",
+    "primaryCta": "Reserve a seat",
+    "secondaryNote": "Questions before you decide?",
+    "secondaryCta": "Write to us"
   }
 }

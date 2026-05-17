@@ -8,7 +8,7 @@ import { cn } from "@/lib/cn";
  * intended to sit directly on the teal-deep header/footer surface).
  *
  * Source: `Untitled design.pdf` page 3, extracted at 300 DPI via pdftoppm
- * and trimmed in Sharp; teal-deep (#195561) card was then stripped to
+ * and trimmed in Sharp; the teal-deep brand card was then stripped to
  * alpha so the lockup blends seamlessly into any teal-deep container —
  * no visible card edge or color-mismatch halo around the logo.
  *

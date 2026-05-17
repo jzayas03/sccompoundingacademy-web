@@ -1,17 +1,16 @@
 import type { Metadata } from "next";
 import { setRequestLocale } from "next-intl/server";
 import { pageMetadata } from "@/lib/seo";
-import { Atrium } from "@/components/marketing/Atrium";
-import { Epigraph } from "@/components/marketing/Epigraph";
-import { Manifiesto } from "@/components/marketing/Manifiesto";
-import { Frontispiece } from "@/components/marketing/Frontispiece";
-import { Cursos } from "@/components/marketing/Cursos";
+import { Hero } from "@/components/marketing/Hero";
+import { Confianza } from "@/components/marketing/Confianza";
+import { CursosGrid } from "@/components/marketing/CursosGrid";
+import { Aprenderas } from "@/components/marketing/Aprenderas";
+import { ParaQuienEs } from "@/components/marketing/ParaQuienEs";
 import { Especialidades } from "@/components/marketing/Especialidades";
-import { Metodo } from "@/components/marketing/Metodo";
 import { Galeria } from "@/components/marketing/Galeria";
-import { Preguntas } from "@/components/marketing/Preguntas";
-import { Inscripcion } from "@/components/marketing/Inscripcion";
+import { FaqClean } from "@/components/marketing/FaqClean";
 import { Ubicacion } from "@/components/marketing/Ubicacion";
+import { CtaFinal } from "@/components/marketing/CtaFinal";
 
 export async function generateMetadata({
   params,
@@ -21,13 +20,21 @@ export async function generateMetadata({
   const { locale } = await params;
   const title =
     locale === "es"
-      ? "Santa Cruz Compounding Academy — Certificación USP 795 y USP 800"
-      : "Santa Cruz Compounding Academy — USP 795 & USP 800 Certification";
+      ? "Santa Cruz Compounding Academy — Formación práctica en compounding · USP 795 y USP 800"
+      : "Santa Cruz Compounding Academy — Practical compounding training · USP 795 & USP 800";
   const description =
     locale === "es"
-      ? "Educamos para formar bienestar y salud. Cursos de compounding no estéril y manejo de medicamentos peligrosos."
-      : "We educate to build wellness and health. Non-sterile compounding and hazardous drug handling certification.";
-  return pageMetadata({ locale: locale as "es" | "en", title, description, pathname: "/" });
+      ? "Cursos estructurados de compounding farmacéutico para profesionales en Puerto Rico. Práctica supervisada, alineados con USP 795 y 800. Sede en Bayamón."
+      : "Structured pharmaceutical compounding courses for professionals in Puerto Rico. Supervised practice, aligned with USP 795 and 800. Campus in Bayamón.";
+  return pageMetadata({
+    locale: locale as "es" | "en",
+    title,
+    description,
+    pathname: "/",
+    // Use a real laboratory photograph for OG / Twitter card preview instead
+    // of the locale-specific fallback. 1280×~720 source, fits 1200×630 well.
+    ogImage: "/photos/photo-frontispiece.jpg",
+  });
 }
 
 export default async function LandingPage({ params }: { params: Promise<{ locale: string }> }) {
@@ -36,31 +43,30 @@ export default async function LandingPage({ params }: { params: Promise<{ locale
   void locale; // reserved for sections that need per-locale data
   return (
     <>
-      {/* Apothecary Editorial — full editorial composition, top to bottom.
-            §00    Atrium         (sand cover, stacked tagline, chartreuse seal)
-            §00.5  Epigraph       (pattern-backed brand tagline pull quote)
-            §01    Manifiesto     (drop-cap journal paragraph + marginalia)
-            §01.5  Frontispiece   (full-bleed editorial photograph + caption)
-            §02    Cursos         (TOC catalog with workplace photo header)
-            §02.5  Especialidades (6 practice areas — sister-pharmacy scope)
-            §03    Método         (4 numbered tenets, asymmetric layout)
-            §04    Galería        (3-photo editorial grid with captions)
-            §05    Preguntas      (editorial Q&A — replaces accordion FAQ)
-            §06    Inscripción    (letterpress closing CTA — replaces FooterCTA)
-            §07    Ubicación      (address card + embedded Google Maps)
-          Old marketing-batch components (PatternDivider, FAQ, FooterCTA)
-          fully retired with this batch. */}
-      <Atrium />
-      <Epigraph />
-      <Manifiesto />
-      <Frontispiece />
-      <Cursos />
+      {/* Clean medical-pharma landing — top to bottom:
+            Hero           — eyebrow + display headline + 2 CTAs + trust signals + photo
+            Confianza      — 3 columns of credentials (affiliated · supervised · USP-aligned)
+            CursosGrid     — 3-card programs catalogue (level · title · duration · CTA)
+            Aprenderas     — 6-item learning-outcomes checklist
+            ParaQuienEs    — 4-card audience grid (pharmacists / techs / owners / students)
+            Especialidades — 6 practice areas covered by the program (kept, restyled)
+            Galeria        — 3 lab proof photos (kept, simplified)
+            FaqClean       — 6-item accordion FAQ (kept content via faq.items[])
+            Ubicacion      — address card + embedded Google Maps (kept, restyled)
+            CtaFinal       — closing teal-deep CTA band (anchors the page visually)
+          The prior "Apothecary Editorial" components (Atrium, Epigraph,
+          Manifiesto, Frontispiece, Cursos TOC, Metodo, Preguntas, Inscripcion)
+          have been retired with this batch. */}
+      <Hero />
+      <Confianza />
+      <CursosGrid />
+      <Aprenderas />
+      <ParaQuienEs />
       <Especialidades />
-      <Metodo />
       <Galeria />
-      <Preguntas />
-      <Inscripcion />
+      <FaqClean />
       <Ubicacion />
+      <CtaFinal />
     </>
   );
 }

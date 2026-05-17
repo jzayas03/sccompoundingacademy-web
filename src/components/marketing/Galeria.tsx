@@ -6,21 +6,16 @@ import { Reveal } from "@/components/ui/Reveal";
 type GalleryItem = { id: string; caption: string; src: string };
 
 /**
- * §04 — Galería / Gallery.
+ * Galería — laboratory proof photos.
  *
- * Editorial photo set treated as field notes from the laboratory.
- * Three images in an asymmetric staggered grid (think Aesop's
- * journal-style image arrays, not a uniform 3-up gallery):
+ * Three workplace photos arranged in an asymmetric grid (one lead
+ * landscape + two narrower aspect-4/3 photos side by side). Photos
+ * are proof, not decoration — they show the actual bench, the mortar
+ * & pestle in use, and the hazardous-drug safety cabinet.
  *
- *   - Sand reading surface continues
- *   - Same left-gutter §-number rhythm
- *   - Right column: 3 photographs at varying widths and offsets,
- *     each with an italic Cormorant caption directly below
- *   - On mobile, stacks into a single column with same captions
- *
- * Reuses the three reserved photos from public/photos/ (instructor
- * portrait repurposed as "bench" since the dedicated Instructor section
- * was removed; mortar + chemo hood photos otherwise unused on the page).
+ * Restyled to the medical-clean direction: white surface, gray-300
+ * borders on each frame, captions back to a single short line in
+ * regular slate (no italic Cormorant, no multi-sentence pedagogy).
  */
 export function Galeria() {
   const t = useTranslations("galeria");
@@ -29,58 +24,60 @@ export function Galeria() {
   };
   const items = messages.galeria.items;
 
-  // Asymmetric span pattern: full-width "lead" image, then two narrower
-  // images side-by-side. Mobile-first stacks them all.
   const layoutClasses = [
-    "lg:col-span-12",  // lead image, full row
-    "lg:col-span-7",   // medium image, left
-    "lg:col-span-5",   // narrower image, right
+    "lg:col-span-12", // lead, full row
+    "lg:col-span-7",
+    "lg:col-span-5",
   ];
 
   return (
     <section
       aria-labelledby="galeria-heading"
-      className="bg-sand text-teal-deep border-teal-deep/10 relative isolate border-t"
+      className="bg-white border-gray-300 border-t"
     >
-      <Container className="relative py-20 sm:py-28 lg:py-40">
-        {/* Header — section number + label + italic intro */}
-        <Reveal className="grid gap-10 lg:grid-cols-12 lg:gap-x-12">
-          <header className="lg:col-span-3">
-            <p className="font-heading text-teal-deep/60 text-xs font-medium tracking-[0.25em] uppercase">
-              {t("sectionNumber")}
+      <Container className="py-20 sm:py-24 lg:py-28">
+        <Reveal>
+          <div className="max-w-3xl">
+            <p className="font-heading text-teal-deep/70 text-xs font-semibold tracking-[0.18em] uppercase sm:text-sm">
+              {t("eyebrow")}
             </p>
             <h2
               id="galeria-heading"
-              className="font-heading text-teal-deep mt-2 text-4xl font-bold tracking-[-0.025em] sm:text-5xl lg:text-6xl"
+              className="font-heading text-teal-deep mt-3 text-3xl font-bold tracking-[-0.015em] sm:text-4xl lg:text-5xl"
             >
-              {t("sectionLabel")}
+              {t("heading")}
             </h2>
-          </header>
-          <p className="text-teal-deep/85 text-base leading-relaxed lg:col-span-7 lg:text-lg">
-            {t("intro")}
-          </p>
+            <p className="text-gray-900 mt-5 text-base leading-relaxed sm:text-lg">
+              {t("intro")}
+            </p>
+          </div>
         </Reveal>
 
-        {/* Photo grid — asymmetric */}
-        <Reveal as="ul" className="mt-12 grid grid-cols-1 gap-y-12 sm:gap-y-16 lg:mt-20 lg:grid-cols-12 lg:gap-x-8 lg:gap-y-20">
+        <Reveal
+          as="ul"
+          className="mt-10 grid grid-cols-1 gap-y-10 sm:gap-y-12 lg:mt-14 lg:grid-cols-12 lg:gap-x-6"
+        >
           {items.map((it, idx) => (
             <li key={it.id} className={layoutClasses[idx] ?? "lg:col-span-12"}>
               <figure className="m-0">
                 <div
-                  className={`ring-teal-deep/10 shadow-soft relative w-full overflow-hidden rounded-sm ring-1 ${
+                  className={`border-gray-300 relative w-full overflow-hidden rounded-lg border ${
                     idx === 0 ? "aspect-[21/9]" : "aspect-[4/3]"
                   }`}
                 >
                   <Image
                     src={it.src}
-                    alt=""
-                    aria-hidden
+                    alt={it.caption}
                     fill
-                    sizes={idx === 0 ? "(max-width: 1280px) 100vw, 1280px" : "(max-width: 1024px) 100vw, 50vw"}
+                    sizes={
+                      idx === 0
+                        ? "(max-width: 1280px) 100vw, 1280px"
+                        : "(max-width: 1024px) 100vw, 50vw"
+                    }
                     className="object-cover"
                   />
                 </div>
-                <figcaption className="font-accent text-teal-deep/80 mt-4 max-w-xl text-base leading-relaxed italic sm:text-lg">
+                <figcaption className="text-gray-700 mt-3 max-w-2xl text-sm leading-snug sm:text-base">
                   {it.caption}
                 </figcaption>
               </figure>
