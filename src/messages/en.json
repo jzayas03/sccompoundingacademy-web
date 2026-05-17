@@ -15,27 +15,27 @@
     "items": [
       {
         "q": "How are courses delivered?",
-        "a": "Online or in person, depending on the cohort."
+        "a": "Each cohort blends online theoretical sessions with hands-on lab practice at Santa Cruz Pharma Care in Bayamón. The theory component is flexible and asynchronous; the practicum runs in scheduled intensive blocks so practicing professionals can participate without disrupting their routine."
       },
       {
         "q": "What is USP 795?",
-        "a": "The USP chapter that defines non-sterile compounding practice."
+        "a": "USP 〈795〉 is the chapter of the United States Pharmacopeia that sets the standards for non-sterile compounded preparations —creams, ointments, capsules, oral suspensions and the like. It defines quality controls, beyond-use dating, documentation and facility practices that every pharmacy preparing medications must follow."
       },
       {
         "q": "What is USP 800?",
-        "a": "The USP chapter on safe handling of hazardous drugs."
+        "a": "USP 〈800〉 governs the safe handling of hazardous drugs (HDs) —from receiving and storage through preparation, administration and disposal. It covers engineering controls, personal protective equipment, medical surveillance and procedures designed to protect staff, patients and the environment from exposure to these compounds."
       },
       {
         "q": "Do I get a certificate?",
-        "a": "Yes — an SCCA professional certificate on completion."
+        "a": "Yes. Upon completing every module and passing the final assessment, you receive a Santa Cruz Compounding Academy professional certificate documenting instruction hours and competencies in USP 795 and USP 800. The certificate serves as evidence of continuing education and audit readiness."
       },
       {
         "q": "Do you accept credit cards?",
-        "a": "Yes — secure card payment via Stripe."
+        "a": "Yes. We process secure credit and debit card payments through Stripe with end-to-end encryption. We also accept ATH Móvil transfers and split-payment plans for cohorts enrolled in advance —coordinate your preferred option at the moment of registration."
       },
       {
         "q": "Can I request a refund?",
-        "a": "Yes, up to 7 days before the cohort start."
+        "a": "Yes. We accept full refunds up to seven (7) calendar days before the cohort starts, no questions asked. After that date and before day one you can transfer your seat to another person or to a future cohort at no penalty."
       }
     ]
   },
@@ -222,17 +222,17 @@
     "items": [
       {
         "id": "bench",
-        "caption": "Compounding bench with analytical balance.",
+        "caption": "Compounding bench equipped with an analytical balance and classified raw materials. This is where every component is weighed, measured and documented before formulation begins —the first link in the quality chain that USP 795 teaches.",
         "src": "/photos/photo-instructor.jpg"
       },
       {
         "id": "mortar",
-        "caption": "Mortar and pestle — non-sterile preparation.",
+        "caption": "Mortar and pestle in use during a non-sterile preparation. Trituration and manual incorporation remain foundational compounding techniques —students practice the particle-size control that distinguishes a uniform formulation from an inconsistent one.",
         "src": "/photos/photo-mortar.jpg"
       },
       {
         "id": "chemo",
-        "caption": "Laminar flow hood — hazardous drug handling (USP 800).",
+        "caption": "Biological safety cabinet for hazardous drug handling under USP 800. HEPA filtration, negative pressure and full personal protective equipment —the standard participants train to in order to protect the pharmacist, the patient and the environment.",
         "src": "/photos/photo-chemo-hood.jpg"
       }
     ]

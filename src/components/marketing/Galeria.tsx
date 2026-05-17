@@ -80,7 +80,7 @@ export function Galeria() {
                     className="object-cover"
                   />
                 </div>
-                <figcaption className="font-accent text-teal-deep/80 mt-4 max-w-xl text-base leading-snug italic sm:text-lg">
+                <figcaption className="font-accent text-teal-deep/80 mt-4 max-w-xl text-base leading-relaxed italic sm:text-lg">
                   {it.caption}
                 </figcaption>
               </figure>

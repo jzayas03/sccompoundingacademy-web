@@ -15,27 +15,27 @@
     "items": [
       {
         "q": "¿Cómo se imparten los cursos?",
-        "a": "En línea o presencial, según la cohorte."
+        "a": "Cada cohorte combina sesiones teóricas en línea con prácticas presenciales en el laboratorio de Santa Cruz Pharma Care en Bayamón. El componente teórico se cursa de forma flexible y asincrónica; las prácticas se calendarizan en bloques intensivos para que profesionales en ejercicio puedan participar sin interrumpir su rutina."
       },
       {
         "q": "¿Qué es USP 795?",
-        "a": "El capítulo de la USP que define la práctica de compounding no estéril."
+        "a": "USP 〈795〉 es el capítulo de la United States Pharmacopeia que establece los estándares para preparaciones magistrales no estériles —cremas, ungüentos, cápsulas, suspensiones orales y similares. Define controles de calidad, fechas límite de uso, documentación y prácticas de instalaciones que toda farmacia que prepara medicamentos debe seguir."
       },
       {
         "q": "¿Qué es USP 800?",
-        "a": "El capítulo de la USP sobre manejo seguro de medicamentos peligrosos."
+        "a": "USP 〈800〉 regula el manejo seguro de medicamentos peligrosos (HD) —desde la recepción y almacenamiento hasta la preparación, administración y disposición. Cubre controles de ingeniería, equipo de protección personal, vigilancia médica y procedimientos para proteger al personal, los pacientes y el ambiente de la exposición a estos compuestos."
       },
       {
         "q": "¿Recibo certificación?",
-        "a": "Sí — un certificado de SCCA al completar el programa."
+        "a": "Sí. Al completar todos los módulos y aprobar la evaluación final, recibes un certificado profesional de Santa Cruz Compounding Academy que documenta horas de instrucción y competencias adquiridas en USP 795 y USP 800. El certificado sirve como evidencia de educación continua y de preparación para auditorías de calidad."
       },
       {
         "q": "¿Aceptan tarjeta de crédito?",
-        "a": "Sí — pago seguro con tarjeta vía Stripe."
+        "a": "Sí. Procesamos pagos seguros con tarjeta de crédito o débito a través de Stripe, con cifrado de extremo a extremo. También aceptamos transferencias ATH Móvil y planes de pago divididos para cohortes inscritas con anticipación; coordina la opción contigo al momento de la inscripción."
       },
       {
         "q": "¿Puedo solicitar reembolso?",
-        "a": "Sí, hasta 7 días antes del inicio de la cohorte."
+        "a": "Sí. Aceptamos reembolsos completos hasta siete (7) días naturales antes del inicio de la cohorte, sin preguntas. Después de esa fecha y antes del primer día puedes transferir tu plaza a otra persona o a una cohorte futura sin penalidad."
       }
     ]
   },
@@ -222,17 +222,17 @@
     "items": [
       {
         "id": "bench",
-        "caption": "Banco de preparación con balanza analítica.",
+        "caption": "Banco de preparación equipado con balanza analítica y materia prima clasificada. Es el espacio donde se pesa, se mide y se documenta cada componente antes de comenzar la formulación —el primer eslabón de la cadena de calidad que enseña USP 795.",
         "src": "/photos/photo-instructor.jpg"
       },
       {
         "id": "mortar",
-        "caption": "Mortero y pestillo — preparación no estéril.",
+        "caption": "Mortero y pestillo en uso durante una preparación no estéril. La triturada y la incorporación manual siguen siendo técnicas fundamentales del compounding —los estudiantes practican el control granulométrico que distingue una formulación uniforme de una inconsistente.",
         "src": "/photos/photo-mortar.jpg"
       },
       {
         "id": "chemo",
-        "caption": "Cabina de flujo laminar — manejo de medicamentos peligrosos (USP 800).",
+        "caption": "Cabina de seguridad biológica para el manejo de medicamentos peligrosos bajo USP 800. Filtración HEPA, presión negativa y equipo de protección personal completo —el estándar al que se entrenan los participantes para proteger al farmacéutico, al paciente y al ambiente.",
         "src": "/photos/photo-chemo-hood.jpg"
       }
     ]
