@@ -1,19 +1,26 @@
-import { LogoShield } from "./LogoShield";
+import Image from "next/image";
 import { cn } from "@/lib/cn";
 
 /**
- * Horizontal lockup for dark backgrounds (the primary brand lockup from the
- * Compounding Academy Brandsheet): chartreuse shield + off-white serif
- * wordmark stacked "Santa Cruz / Compounding / Academy".
+ * Primary horizontal lockup — pixel-perfect render of the brandsheet asset
+ * (chartreuse U-mark with bookmark + mortar/pestle inside + off-white serif
+ * "Santa Cruz / Compounding / Academy" wordmark on a teal-deep card).
  *
- * Typography per brandsheet:
- *   - The whole wordmark is in `font-accent` (Khmer MN → Cormorant Garamond)
- *   - "Santa Cruz" small (about 1/3 the size of the lower lines)
- *   - "Compounding" and "Academy" large, same size, stacked tightly
+ * Source: `Untitled design.pdf` page 3, extracted at 300 DPI via pdftoppm
+ * and trimmed in Sharp.
+ *
+ * The image is a single PNG (3646×1566) — the wordmark and mark live
+ * inside it. We don't render the wordmark as HTML text because the
+ * brandsheet positions the letters with very specific kerning + relative
+ * sizing that's hard to reproduce in CSS; embedding the rendered lockup
+ * keeps the brand identity unambiguous.
+ *
+ * Sizing: pass `shieldClass` to control the rendered height (e.g. `h-9`
+ * in the header, `h-12` in the footer). Width auto-scales via aspect.
  */
 export function LogoFull({
   className,
-  shieldClass,
+  shieldClass = "h-9 w-auto",
   title = "Santa Cruz Compounding Academy",
 }: {
   className?: string;
@@ -21,21 +28,15 @@ export function LogoFull({
   title?: string;
 }) {
   return (
-    <div
-      className={cn("text-chartreuse inline-flex items-center gap-3", className)}
-      aria-label={title}
-      role="img"
-    >
-      <LogoShield className={cn("h-12 w-auto", shieldClass)} title="" />
-      {/* Per the brandsheet, the wordmark total height roughly matches the
-          shield. Default base 14px sized for the 36-48px shield range used
-          across header and footer. Tight leading keeps the three lines
-          stacked compactly. Override via `wordmarkClass` if needed. */}
-      <span className="font-accent text-off-white block text-sm leading-[0.95] sm:text-base">
-        <span className="block text-[0.55em] font-normal tracking-wide">Santa Cruz</span>
-        <span className="block font-medium">Compounding</span>
-        <span className="block font-medium">Academy</span>
-      </span>
-    </div>
+    <span className={cn("inline-flex items-center", className)} aria-label={title} role="img">
+      <Image
+        src="/brand/logo-full.png"
+        alt=""
+        width={3646}
+        height={1566}
+        priority
+        className={cn(shieldClass, "object-contain")}
+      />
+    </span>
   );
 }

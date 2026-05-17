@@ -1,36 +1,12 @@
-import { LogoShield } from "./LogoShield";
-import { cn } from "@/lib/cn";
+import { LogoFull } from "./LogoFull";
 
 /**
- * Horizontal lockup for light backgrounds: teal-deep shield + teal-deep
- * serif wordmark. Mirrors LogoFull's typography exactly, with the colors
- * inverted for legibility on sand/off-white surfaces.
+ * Kept as a thin alias of LogoFull so existing call sites keep working.
+ *
+ * Historical context: the original implementation rendered different
+ * colors for dark vs light backgrounds. The brandsheet provides one
+ * canonical lockup with the teal-deep card baked in, so light/dark
+ * variants are no longer meaningful — the same asset works on every
+ * surface in the design system.
  */
-export function LogoFullInverse({
-  className,
-  shieldClass,
-  title = "Santa Cruz Compounding Academy",
-}: {
-  className?: string;
-  shieldClass?: string;
-  title?: string;
-}) {
-  return (
-    <div
-      className={cn("text-teal-deep inline-flex items-center gap-3", className)}
-      aria-label={title}
-      role="img"
-    >
-      <LogoShield
-        className={cn("h-12 w-auto", shieldClass)}
-        title=""
-        inkColor="var(--color-chartreuse)"
-      />
-      <span className="font-accent text-teal-deep block text-sm leading-[0.95] sm:text-base">
-        <span className="block text-[0.55em] font-normal tracking-wide">Santa Cruz</span>
-        <span className="block font-medium">Compounding</span>
-        <span className="block font-medium">Academy</span>
-      </span>
-    </div>
-  );
-}
+export const LogoFullInverse = LogoFull;
