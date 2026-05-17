@@ -4,6 +4,7 @@ import { pageMetadata } from "@/lib/seo";
 import { Atrium } from "@/components/marketing/Atrium";
 import { Epigraph } from "@/components/marketing/Epigraph";
 import { Manifiesto } from "@/components/marketing/Manifiesto";
+import { Frontispiece } from "@/components/marketing/Frontispiece";
 import { Cursos } from "@/components/marketing/Cursos";
 import { Metodo } from "@/components/marketing/Metodo";
 import { InstructorSection } from "@/components/marketing/InstructorSection";
@@ -35,17 +36,19 @@ export default async function LandingPage({ params }: { params: Promise<{ locale
   return (
     <>
       {/* Apothecary Editorial — top-to-bottom:
-            §00   Atrium      (sand cover, stacked tagline)
-            §00.5 Epigraph    (pattern-backed brand tagline pull quote)
-            §01   Manifiesto  (drop-cap journal paragraph + marginalia)
-            §02   Cursos      (table-of-contents catalog with hours + cohort)
-            §03   Método      (4 numbered tenets in asymmetric layout)
-          Below this we keep the previous-batch sections (Instructor,
-          PatternDivider, FAQ, FooterCTA) until they get converted in the
-          next batch. */}
+            §00    Atrium       (sand cover, stacked tagline)
+            §00.5  Epigraph     (pattern-backed brand tagline pull quote)
+            §01    Manifiesto   (drop-cap journal paragraph + marginalia)
+            §01.5  Frontispiece (full-bleed editorial photograph + caption)
+            §02    Cursos       (table-of-contents catalog with photo header)
+            §03    Método       (4 numbered tenets in asymmetric layout)
+          Below this we keep the previous-batch sections (Instructor [now
+          with real portrait], FAQ, FooterCTA) until they get converted in
+          the next batch. */}
       <Atrium />
       <Epigraph />
       <Manifiesto />
+      <Frontispiece />
       <Cursos />
       <Metodo />
       <PatternDivider />

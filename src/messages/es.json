@@ -198,5 +198,11 @@
         "body": "Evaluación práctica + escrita al cierre de cada programa. Quienes aprueban reciben un certificado profesional de SCCA con horas acreditadas y fecha de emisión."
       }
     ]
+  },
+  "frontispiece": {
+    "sectionNumber": "§01.5",
+    "sectionLabel": "Frontispicio",
+    "caption": "Banco de preparación con materia prima USP/NF y hoja de compounding.",
+    "alt": "Composición sobre mármol blanco: mortero, balanza analítica, frascos rotulados como Zinc Oxide USP, White Petrolatum USP, PEG 400 USP, Glycerin USP y Methylparaben NF, junto a una hoja de compounding."
   }
 }

@@ -198,5 +198,11 @@
         "body": "Practical + written assessment at the close of each program. Those who pass receive an SCCA professional certificate with accredited hours and issue date."
       }
     ]
+  },
+  "frontispiece": {
+    "sectionNumber": "§01.5",
+    "sectionLabel": "Frontispiece",
+    "caption": "Compounding bench with USP/NF materia prima and worksheet.",
+    "alt": "Composition on white marble: mortar and pestle, analytical balance, jars labeled Zinc Oxide USP, White Petrolatum USP, PEG 400 USP, Glycerin USP and Methylparaben NF, alongside a compounding worksheet."
   }
 }
