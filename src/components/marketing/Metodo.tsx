@@ -57,7 +57,7 @@ export function Metodo() {
             </h2>
           </header>
 
-          <p className="font-accent text-teal-deep/85 text-lg leading-snug italic lg:col-span-7 lg:text-xl">
+          <p className="text-teal-deep/85 text-base leading-relaxed lg:col-span-7 lg:text-lg">
             {t("intro")}
           </p>
         </div>
@@ -85,7 +85,7 @@ export function Metodo() {
                   <h3 className="font-heading text-teal-deep text-xs font-bold tracking-[0.25em] uppercase sm:text-sm">
                     {tenet.title}
                   </h3>
-                  <p className="font-accent text-teal-deep mt-3 text-lg leading-[1.55] sm:text-xl lg:text-2xl">
+                  <p className="text-teal-deep mt-3 text-base leading-relaxed sm:text-lg">
                     {tenet.body}
                   </p>
                 </div>

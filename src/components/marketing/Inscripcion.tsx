@@ -53,7 +53,7 @@ export function Inscripcion() {
             </div>
 
             {/* Headline — letterpress invitation */}
-            <h3 className="font-accent text-teal-deep mt-12 max-w-3xl text-4xl leading-tight italic sm:mt-16 sm:text-5xl lg:text-6xl">
+            <h3 className="font-heading text-teal-deep mt-12 max-w-3xl text-4xl leading-tight font-bold tracking-tight sm:mt-16 sm:text-5xl lg:text-6xl">
               {t("headline")}
             </h3>
             <p className="text-teal-deep/80 font-heading mt-6 max-w-xl text-base sm:text-lg">

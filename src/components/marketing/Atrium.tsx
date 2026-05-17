@@ -51,7 +51,7 @@ export function Atrium() {
         />
       </div>
 
-      <Container className="relative grid min-h-[calc(100vh-4rem)] grid-rows-[auto_1fr_auto] gap-12 py-12 sm:py-16 lg:py-24">
+      <Container className="relative grid min-h-[calc(100vh-5rem)] grid-rows-[auto_1fr_auto] gap-12 py-12 sm:py-16 lg:py-24">
         {/* Front-matter row: edition + dateline, split across the line */}
         <div className="flex items-center justify-between gap-4">
           <p className="font-heading text-teal-deep/70 text-xs font-medium tracking-[0.2em] uppercase sm:text-sm">

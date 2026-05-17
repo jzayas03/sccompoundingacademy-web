@@ -46,7 +46,7 @@ export function Especialidades() {
             >
               {t("sectionLabel")}
             </h2>
-            <p className="font-accent text-teal-deep/85 mt-6 text-lg leading-snug italic">
+            <p className="text-teal-deep/85 mt-6 text-base leading-relaxed sm:text-lg">
               {t("intro")}
             </p>
           </header>
@@ -59,7 +59,7 @@ export function Especialidades() {
                   <p className="font-heading text-teal-deep text-xs font-bold tracking-[0.25em] uppercase sm:text-sm">
                     {it.label}
                   </p>
-                  <p className="font-accent text-teal-deep mt-3 text-lg leading-snug italic sm:text-xl">
+                  <p className="text-teal-deep mt-3 text-base leading-relaxed sm:text-lg">
                     {it.body}
                   </p>
                 </li>

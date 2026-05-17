@@ -51,7 +51,7 @@ export function Manifiesto() {
 
           {/* Center column: drop-cap paragraph in Cormorant + closing ornament */}
           <div className="lg:col-span-7">
-            <p className="font-accent text-teal-deep text-xl leading-[1.55] sm:text-2xl lg:text-[1.625rem]">
+            <p className="text-teal-deep text-base leading-relaxed sm:text-lg lg:text-xl">
               <span
                 aria-hidden
                 className="font-accent text-teal-deep float-left mt-[0.18em] mr-3 text-[5.5em] leading-[0.85] font-medium italic sm:mr-4"
