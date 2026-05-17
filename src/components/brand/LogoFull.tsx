@@ -4,13 +4,16 @@ import { cn } from "@/lib/cn";
 /**
  * Primary horizontal lockup — pixel-perfect render of the brandsheet asset
  * (chartreuse U-mark with bookmark + mortar/pestle inside + off-white serif
- * "Santa Cruz / Compounding / Academy" wordmark on a teal-deep card).
+ * "Santa Cruz / Compounding / Academy" wordmark on a TRANSPARENT background,
+ * intended to sit directly on the teal-deep header/footer surface).
  *
  * Source: `Untitled design.pdf` page 3, extracted at 300 DPI via pdftoppm
- * and trimmed in Sharp.
+ * and trimmed in Sharp; teal-deep (#195561) card was then stripped to
+ * alpha so the lockup blends seamlessly into any teal-deep container —
+ * no visible card edge or color-mismatch halo around the logo.
  *
- * The image is a single PNG (3646×1566) — the wordmark and mark live
- * inside it. We don't render the wordmark as HTML text because the
+ * The image is a single PNG (3646×1566, RGBA) — the wordmark and mark
+ * live inside it. We don't render the wordmark as HTML text because the
  * brandsheet positions the letters with very specific kerning + relative
  * sizing that's hard to reproduce in CSS; embedding the rendered lockup
  * keeps the brand identity unambiguous.
