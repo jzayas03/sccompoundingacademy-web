@@ -1,0 +1,59 @@
+# Monthly cron that calls IG's `refresh_access_token` endpoint to extend
+# the long-lived token's life by another 60 days, then writes the new
+# token back to the IG_LONG_LIVED_TOKEN secret via the GitHub API.
+#
+# IG long-lived tokens expire 60 days after issuance. By refreshing on the
+# 1st of each month (~30 days into the token's life) we always stay well
+# ahead of the expiry. If a refresh fails, the existing token continues
+# to work until its actual expiry, giving us 30 days to investigate.
+#
+# Required GitHub Secrets:
+#   IG_LONG_LIVED_TOKEN  — the current token (will be read + replaced)
+#   GH_PAT_REFRESH_IG    — fine-grained Personal Access Token with
+#                          'Secrets: read/write' permission on this repo.
+#                          The default GITHUB_TOKEN cannot write secrets.
+
+name: Refresh Instagram token
+
+on:
+  schedule:
+    # 03:00 UTC on the 1st of each month (low-traffic hour, off-peak).
+    - cron: "0 3 1 * *"
+  workflow_dispatch:
+
+permissions:
+  contents: read # only needs read for the source; secrets API uses PAT
+
+concurrency:
+  group: refresh-ig-token
+  cancel-in-progress: false
+
+jobs:
+  refresh-token:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - name: Check out repo
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 1
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 9
+          run_install: false
+
+      - name: Install deps
+        run: pnpm install --frozen-lockfile --prefer-offline
+
+      - name: Refresh long-lived token + update GitHub Secret
+        env:
+          IG_LONG_LIVED_TOKEN: ${{ secrets.IG_LONG_LIVED_TOKEN }}
+          GH_PAT_REFRESH_IG: ${{ secrets.GH_PAT_REFRESH_IG }}
+        run: pnpm refresh:ig:token
