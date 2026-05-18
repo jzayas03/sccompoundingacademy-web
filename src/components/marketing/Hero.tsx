@@ -93,8 +93,14 @@ export function Hero() {
           </ul>
         </div>
 
-        {/* Photograph column — proof not decoration */}
-        <div className="lg:col-span-5 lg:order-last order-first lg:flex lg:items-center">
+        {/* Photograph column — proof not decoration. No `order-*` classes
+            so the natural DOM order applies at every breakpoint: text
+            column first, photo column second. On mobile that stacks
+            text → photo (so the first viewport communicates "what is
+            this" before showing a lab photo without context). On lg+
+            the grid puts text on the left (col-span-7) and photo on
+            the right (col-span-5). */}
+        <div className="lg:col-span-5 lg:flex lg:items-center">
           <div className="border-gray-300 relative aspect-[4/5] w-full overflow-hidden rounded-lg border sm:aspect-[16/10] lg:aspect-[4/5]">
             <Image
               src="/photos/photo-frontispiece.jpg"
