@@ -243,16 +243,16 @@
   },
   "hero": {
     "eyebrow": "Professional certification · USP 〈795〉 · 〈800〉 · Bayamón, PR",
-    "headline": "Practical compounding training for pharmacy professionals.",
-    "subheadline": "Structured courses that strengthen technique, compliance, and professional judgment in non-sterile compounding and hazardous-drug handling. A program affiliated with Santa Cruz Pharma Care.",
+    "headline": "Hands-on compounding training, inside a working laboratory.",
+    "subheadline": "In-person courses in Bayamón for pharmacists and pharmacy technicians, with supervised practice and a curriculum aligned to USP 〈795〉 and USP 〈800〉. A program affiliated with Santa Cruz Pharma Care.",
     "primaryCta": "View courses",
     "secondaryCta": "Book a consultation",
     "imageAlt": "Compounding bench with analytical balance, mortar, and USP/NF raw materials — Santa Cruz Pharma Care campus in Bayamón, Puerto Rico.",
     "trustItems": [
-      "Supervised practice in a working laboratory",
-      "USP 〈795〉 and 〈800〉 regulatory framework",
-      "Small cohorts with individual follow-up",
-      "Campus in Bayamón, Puerto Rico"
+      "Working laboratory",
+      "USP 〈795〉 / 〈800〉",
+      "Small cohorts",
+      "Bayamón, Puerto Rico"
     ]
   },
   "confianza": {
@@ -277,6 +277,7 @@
     "heading": "Available courses",
     "intro": "Three certification programs aligned with USP chapters 〈795〉 and 〈800〉. Each combines theoretical foundations with supervised laboratory practice.",
     "durationLabel": "Duration",
+    "nextCohortLabel": "Next cohort",
     "courseCta": "View course",
     "courseLinkAria": "View course details",
     "items": [
@@ -305,7 +306,7 @@
   },
   "aprenderas": {
     "eyebrow": "What you'll learn",
-    "heading": "Concrete competencies, not decorative certificates.",
+    "heading": "Competencies you practice, document, and can have reviewed.",
     "intro": "The program trains six disciplines a pharmacist needs to prepare medications safely, document them rigorously, and stay compliant with current standards.",
     "items": [
       {

@@ -243,16 +243,16 @@
   },
   "hero": {
     "eyebrow": "Certificación profesional · USP 〈795〉 · 〈800〉 · Bayamón, PR",
-    "headline": "Formación práctica en compounding para profesionales de farmacia.",
-    "subheadline": "Cursos estructurados para fortalecer técnica, cumplimiento y criterio profesional en preparaciones no estériles y manejo de medicamentos peligrosos. Programa afiliado a Santa Cruz Pharma Care.",
+    "headline": "Entrenamiento práctico en compounding, dentro de un laboratorio activo.",
+    "subheadline": "Cursos presenciales en Bayamón para farmacéuticos y técnicos de farmacia, con práctica supervisada y currículo alineado a USP 〈795〉 y USP 〈800〉. Programa afiliado a Santa Cruz Pharma Care.",
     "primaryCta": "Ver cursos",
     "secondaryCta": "Agendar orientación",
     "imageAlt": "Banco de preparación con balanza analítica, mortero y materia prima USP/NF — sede de Santa Cruz Pharma Care en Bayamón, Puerto Rico.",
     "trustItems": [
-      "Práctica supervisada en laboratorio activo",
-      "Marco normativo USP 〈795〉 y 〈800〉",
-      "Cohortes pequeñas con seguimiento individual",
-      "Sede en Bayamón, Puerto Rico"
+      "Laboratorio activo",
+      "USP 〈795〉 / 〈800〉",
+      "Cohortes pequeñas",
+      "Bayamón, Puerto Rico"
     ]
   },
   "confianza": {
@@ -277,6 +277,7 @@
     "heading": "Cursos disponibles",
     "intro": "Tres programas de certificación alineados con los capítulos USP 〈795〉 y 〈800〉. Cada uno combina fundamentos teóricos con práctica supervisada en laboratorio.",
     "durationLabel": "Duración",
+    "nextCohortLabel": "Próxima cohorte",
     "courseCta": "Ver curso",
     "courseLinkAria": "Ver detalles del curso",
     "items": [
@@ -305,7 +306,7 @@
   },
   "aprenderas": {
     "eyebrow": "Qué aprenderás",
-    "heading": "Competencias concretas, no certificados decorativos.",
+    "heading": "Competencias que se practican, se documentan y se pueden revisar.",
     "intro": "El programa entrena seis disciplinas que un farmacéutico necesita para preparar medicamentos de forma segura, documentada y conforme con las normas vigentes.",
     "items": [
       {

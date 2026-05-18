@@ -30,6 +30,9 @@ export type Course = {
   level: "fundamentos" | "intermedio" | "avanzado";
   /** Total instruction hours, for the card footer and confirmation email. */
   hours: number;
+  /** USP chapter alignment label, surfaced as scannable metadata in cards
+   * (next to the level eyebrow) instead of being buried inside the title. */
+  uspLabel: string;
 };
 
 export type Cohort = {
@@ -63,6 +66,7 @@ export const COURSES: readonly Course[] = [
     priceUsdCents: 100_000, // placeholder $1,000 — owner to confirm
     level: "fundamentos",
     hours: 40,
+    uspLabel: "USP 〈795〉",
   },
   {
     id: "usp-800",
@@ -71,6 +75,7 @@ export const COURSES: readonly Course[] = [
     priceUsdCents: 80_000, // placeholder $800
     level: "intermedio",
     hours: 32,
+    uspLabel: "USP 〈800〉",
   },
   {
     id: "combinado",
@@ -79,6 +84,7 @@ export const COURSES: readonly Course[] = [
     priceUsdCents: 150_000, // placeholder $1,500
     level: "avanzado",
     hours: 60,
+    uspLabel: "USP 〈795〉 + 〈800〉",
   },
 ] as const;
 

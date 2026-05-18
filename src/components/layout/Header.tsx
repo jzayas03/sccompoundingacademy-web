@@ -2,6 +2,7 @@
 import { useTranslations } from "next-intl";
 import { Link } from "@/i18n/routing";
 import { LogoFull } from "@/components/brand";
+import { LogoShield } from "@/components/brand/LogoShield";
 import { Button } from "@/components/ui/Button";
 import { Container } from "@/components/ui/Container";
 import { LocaleSwitch } from "@/components/ui/LocaleSwitch";
@@ -16,8 +17,15 @@ export function Header({ locale }: { locale: "es" | "en" }) {
   return (
     <header className="bg-teal-deep sticky top-0 z-50">
       <Container className="flex h-20 items-center justify-between gap-4">
-        <Link href="/" className="flex items-center">
-          <LogoFull shieldClass="h-12 w-auto" />
+        {/* Logo: compact shield on mobile (< sm) so the locale switch
+            + enroll CTA have room without crushing the wordmark; full
+            horizontal lockup at sm+ where there's space for both the
+            mark and the wordmark to read at full size. aria-label on
+            the wrapper Link gives screen-reader users the full brand
+            name even when only the shield renders. */}
+        <Link href="/" className="flex items-center" aria-label="Santa Cruz Compounding Academy">
+          <LogoShield className="h-10 w-auto sm:hidden" />
+          <LogoFull shieldClass="h-12 w-auto" className="hidden sm:inline-flex" />
         </Link>
         <nav className="text-off-white hidden items-center gap-6 text-sm font-semibold sm:flex">
           <Link href="/" className="hover:text-chartreuse">
