@@ -30,20 +30,24 @@ export function LegalPage({ doc }: { doc: "privacy" | "terms" | "refund" }) {
   const t = useTranslations(`legal.${doc}`);
   const messages = useMessages() as unknown as { legal: Record<string, LegalDoc> };
   const sections = messages.legal[doc]?.sections ?? [];
+  // Render the chartreuse draft-notice chip only when the i18n string is
+  // non-empty. Once the attorney signs off the final wording, the string
+  // in `legal.{doc}.draftNotice` is emptied and the chip disappears — no
+  // template edit needed. To re-trigger the chip for a future review
+  // cycle, just set the string again in messages/*.json.
+  const draftNotice = t("draftNotice");
 
   return (
     <section className="bg-white">
       <Container className="max-w-3xl py-16 sm:py-20 lg:py-24">
-        {/* Draft notice — amber-style chartreuse band so reviewers can't
-            miss it. Remove once a PR lawyer has signed off on the final
-            wording (change the i18n string to empty + hide via condition,
-            or delete this <p> entirely). */}
-        <p
-          role="note"
-          className="border-chartreuse text-teal-deep font-heading bg-chartreuse/30 mb-10 inline-block rounded-md border px-3 py-1.5 text-xs font-semibold tracking-wide uppercase"
-        >
-          {t("draftNotice")}
-        </p>
+        {draftNotice && (
+          <p
+            role="note"
+            className="border-chartreuse text-teal-deep font-heading bg-chartreuse/30 mb-10 inline-block rounded-md border px-3 py-1.5 text-xs font-semibold tracking-wide uppercase"
+          >
+            {draftNotice}
+          </p>
+        )}
 
         <h1 className="font-heading text-teal-deep text-3xl font-bold tracking-[-0.015em] sm:text-4xl lg:text-5xl">
           {t("title")}
