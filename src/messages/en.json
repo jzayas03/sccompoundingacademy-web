@@ -483,6 +483,55 @@
       }
     ]
   },
+  "cohortes": {
+    "2026-q1-usp-795": {
+      "label": "January 2026 cohort · Jan 12 – Feb 20"
+    },
+    "2026-q1-usp-800": {
+      "label": "February 2026 cohort · Feb 23 – Mar 27"
+    },
+    "2026-q1-combinado": {
+      "label": "January 2026 cohort · Jan 12 – Mar 27"
+    }
+  },
+  "inscripcion": {
+    "eyebrow": "Enrollment",
+    "title": "Reserve your seat in the next cohort.",
+    "intro": "Complete your details, accept the terms, and proceed to secure payment via Stripe. You'll receive immediate email confirmation with the logistics information.",
+    "optional": "optional",
+    "noCohortsAvailable": "No open cohorts — write to us",
+    "fields": {
+      "curso": "Course",
+      "cohorte": "Cohort",
+      "nombre": "Full name",
+      "email": "Email address",
+      "telefono": "Phone",
+      "licencia": "Pharmacy license number",
+      "notas": "Notes or questions"
+    },
+    "acceptanceLabel": "I have read and accept the <terms>Terms and Conditions</terms>, the <privacy>Privacy Policy</privacy>, and the <refund>Refund Policy</refund>.",
+    "summary": {
+      "total": "Total to pay"
+    },
+    "submit": "Pay and enroll",
+    "submitting": "Processing…",
+    "errors": {
+      "generic": "We couldn't process your enrollment. Please try again.",
+      "network": "Connection problem. Check your internet and try again."
+    },
+    "success": {
+      "title": "Enrollment confirmed",
+      "body": "Your payment was processed correctly and your cohort seat is confirmed. We've sent you an email with all the logistics details (campus, schedule, what to bring). If you don't see it in the next few minutes, check your spam folder.",
+      "ctaHome": "Back to home",
+      "supportNote": "Questions? Write to us at"
+    },
+    "cancelled": {
+      "title": "Payment cancelled",
+      "body": "The charge was not completed and your seat was not reserved. You can try again whenever you're ready or write to us if you had any problem during the process.",
+      "ctaRetry": "Try again",
+      "ctaContact": "Contact us"
+    }
+  },
   "ctaFinal": {
     "eyebrow": "Inaugural cohort · January 2026",
     "headline": "Reserve your seat for the next cohort.",

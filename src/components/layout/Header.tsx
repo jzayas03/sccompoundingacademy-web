@@ -32,7 +32,7 @@ export function Header({ locale }: { locale: "es" | "en" }) {
         </nav>
         <div className="flex items-center gap-3">
           <LocaleSwitch currentLocale={locale} />
-          <Link href="/cursos">
+          <Link href="/inscripcion">
             <Button variant="primary" size="md">
               {t("enroll")}
             </Button>
