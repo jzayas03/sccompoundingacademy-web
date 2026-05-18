@@ -81,8 +81,11 @@ export function CursosGrid() {
                       {t("durationLabel")}{" "}
                       <span className="text-gray-900 font-semibold">{course.duration}</span>
                     </p>
+                    {/* Per-card CTA goes directly to the inscription form
+                        with the course pre-selected via query param. Single
+                        click from catalogue → form → payment. */}
                     <Link
-                      href="/cursos"
+                      href={{ pathname: "/inscripcion", query: { course: course.id } }}
                       className="font-heading text-teal-deep group-hover:text-teal inline-flex items-center gap-1 text-sm font-semibold transition-colors"
                       aria-label={`${t("courseLinkAria")}: ${course.title}`}
                     >

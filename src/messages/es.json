@@ -483,6 +483,55 @@
       }
     ]
   },
+  "cohortes": {
+    "2026-q1-usp-795": {
+      "label": "Cohorte enero 2026 · 12 ene – 20 feb"
+    },
+    "2026-q1-usp-800": {
+      "label": "Cohorte febrero 2026 · 23 feb – 27 mar"
+    },
+    "2026-q1-combinado": {
+      "label": "Cohorte enero 2026 · 12 ene – 27 mar"
+    }
+  },
+  "inscripcion": {
+    "eyebrow": "Inscripción",
+    "title": "Reserva tu plaza para la próxima cohorte.",
+    "intro": "Completa tus datos, acepta los términos y procede al pago seguro vía Stripe. Recibirás confirmación inmediata por correo con la información logística.",
+    "optional": "opcional",
+    "noCohortsAvailable": "Sin cohortes abiertas — escríbenos",
+    "fields": {
+      "curso": "Curso",
+      "cohorte": "Cohorte",
+      "nombre": "Nombre completo",
+      "email": "Correo electrónico",
+      "telefono": "Teléfono",
+      "licencia": "Número de licencia farmacéutica",
+      "notas": "Notas o preguntas"
+    },
+    "acceptanceLabel": "He leído y acepto los <terms>Términos y Condiciones</terms>, la <privacy>Política de Privacidad</privacy> y la <refund>Política de Reembolsos</refund>.",
+    "summary": {
+      "total": "Total a pagar"
+    },
+    "submit": "Pagar e inscribirme",
+    "submitting": "Procesando…",
+    "errors": {
+      "generic": "No pudimos procesar tu inscripción. Intenta nuevamente.",
+      "network": "Problema de conexión. Verifica tu internet e intenta de nuevo."
+    },
+    "success": {
+      "title": "Inscripción confirmada",
+      "body": "Tu pago se procesó correctamente y tu cupo en la cohorte está confirmado. Te enviamos un correo con todos los detalles logísticos (sede, horario, qué traer). Si no lo ves en los próximos minutos, revisa la carpeta de spam.",
+      "ctaHome": "Volver al inicio",
+      "supportNote": "¿Preguntas? Escríbenos a"
+    },
+    "cancelled": {
+      "title": "Pago cancelado",
+      "body": "No se completó el cobro y tu cupo no fue reservado. Puedes volver a intentarlo cuando quieras o escribirnos si tuviste algún problema durante el proceso.",
+      "ctaRetry": "Intentar de nuevo",
+      "ctaContact": "Contactarnos"
+    }
+  },
   "ctaFinal": {
     "eyebrow": "Cohorte inaugural · Enero 2026",
     "headline": "Reserva tu plaza para la próxima cohorte.",
