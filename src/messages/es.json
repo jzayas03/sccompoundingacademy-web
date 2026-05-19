@@ -14,8 +14,8 @@
     "title": "Preguntas frecuentes",
     "items": [
       {
-        "q": "¿Cómo se imparten los cursos?",
-        "a": "Cada cohorte combina sesiones teóricas en línea con prácticas presenciales en el laboratorio de Santa Cruz Pharma Care en Bayamón. El componente teórico se cursa de forma flexible y asincrónica; las prácticas se calendarizan en bloques intensivos para que profesionales en ejercicio puedan participar sin interrumpir su rutina."
+        "q": "¿Cómo se imparte el curso?",
+        "a": "El curso es 100 % presencial en el laboratorio de Santa Cruz Pharma Care en Bayamón. Tres días consecutivos de seis horas cada uno (18 horas en total), con teoría y práctica supervisada el mismo día. Cada día corresponde a un módulo: regulación + cápsulas; supositorios, líquidos orales y dermatología; hormonales tópicos y casos especiales."
       },
       {
         "q": "¿Recibo certificado al finalizar?",
@@ -23,7 +23,7 @@
       },
       {
         "q": "¿Qué requisitos previos necesito?",
-        "a": "Para los programas de fundamentos basta con licencia activa de farmacéutico o estudios en curso en farmacia o tecnología farmacéutica. El módulo de USP 〈800〉 se recomienda después de fundamentos o con experiencia equivalente en preparaciones no estériles. Si tienes dudas, escríbenos antes de inscribirte."
+        "a": "Necesitas licencia activa de farmacéutico o estatus de técnico/estudiante en farmacia o tecnología farmacéutica. El curso cubre USP 〈795〉 y 〈800〉 en una sola cohorte; no hay prerrequisitos modulares. Si tienes dudas, escríbenos antes de inscribirte."
       },
       {
         "q": "¿Cómo accedo al material del curso?",
@@ -49,11 +49,11 @@
     "copyright": "© {year} Santa Cruz Compounding Academy. Todos los derechos reservados.",
     "contactInfoLabel": "Información de contacto",
     "address": "73 Calle Santa Cruz, Suite 101, Bayamón, PR 00960",
-    "phone": "787-798-4646",
+    "phone": "787-254-8329",
     "phoneLabel": "Teléfono",
-    "whatsapp": "787-408-5748",
+    "whatsapp": "787-254-8329",
     "whatsappLabel": "WhatsApp",
-    "email": "scpcpr@gmail.com",
+    "email": "info@sccompoundingacademy.com",
     "emailLabel": "Correo",
     "addressLabel": "Sede",
     "socialLabel": "Síguenos",
@@ -112,15 +112,15 @@
         },
         {
           "heading": "7. Tus derechos",
-          "body": "Tienes los siguientes derechos respecto a tu información personal: (a) acceso — solicitar copia de los datos que tenemos sobre ti; (b) rectificación — corregir información inexacta o incompleta; (c) eliminación — solicitar borrado, salvo cuando la ley o un litigio activo requiera retención; (d) limitación — pedir que restrinjamos el procesamiento en circunstancias específicas; (e) portabilidad — recibir tus datos en formato estructurado y legible; (f) oposición — objetar el procesamiento basado en intereses operativos.\n\nPara ejercer cualquiera de estos derechos, escríbenos a scpcpr@gmail.com identificando claramente tu solicitud y tu identidad. Respondemos en un plazo máximo de treinta (30) días naturales. No cobramos por estas solicitudes salvo cuando sean manifiestamente infundadas o excesivamente repetitivas.\n\nResidentes de California: si eres residente del Estado de California, puedes tener derechos adicionales bajo la California Consumer Privacy Act (CCPA), incluyendo el derecho a saber qué información recopilamos sobre ti y el derecho a opt-out de la venta de datos. SCCA no vende información personal en el sentido del CCPA. Para ejercer derechos CCPA, escríbenos a la misma dirección.\n\nReclamos: si consideras que el tratamiento de tus datos por SCCA infringe la legislación aplicable, puedes presentar un reclamo ante el Departamento de Asuntos del Consumidor de Puerto Rico (DACO)."
+          "body": "Tienes los siguientes derechos respecto a tu información personal: (a) acceso — solicitar copia de los datos que tenemos sobre ti; (b) rectificación — corregir información inexacta o incompleta; (c) eliminación — solicitar borrado, salvo cuando la ley o un litigio activo requiera retención; (d) limitación — pedir que restrinjamos el procesamiento en circunstancias específicas; (e) portabilidad — recibir tus datos en formato estructurado y legible; (f) oposición — objetar el procesamiento basado en intereses operativos.\n\nPara ejercer cualquiera de estos derechos, escríbenos a info@sccompoundingacademy.com identificando claramente tu solicitud y tu identidad. Respondemos en un plazo máximo de treinta (30) días naturales. No cobramos por estas solicitudes salvo cuando sean manifiestamente infundadas o excesivamente repetitivas.\n\nResidentes de California: si eres residente del Estado de California, puedes tener derechos adicionales bajo la California Consumer Privacy Act (CCPA), incluyendo el derecho a saber qué información recopilamos sobre ti y el derecho a opt-out de la venta de datos. SCCA no vende información personal en el sentido del CCPA. Para ejercer derechos CCPA, escríbenos a la misma dirección.\n\nReclamos: si consideras que el tratamiento de tus datos por SCCA infringe la legislación aplicable, puedes presentar un reclamo ante el Departamento de Asuntos del Consumidor de Puerto Rico (DACO)."
         },
         {
           "heading": "8. Seguridad",
-          "body": "Implementamos medidas técnicas y organizativas razonables para proteger tu información: cifrado TLS en tránsito, control de acceso por roles a nuestros sistemas, y selección de proveedores con estándares de seguridad reconocidos (PCI-DSS para procesamiento de pagos, SOC 2 Type II para infraestructura y almacenamiento). Sin embargo, ningún sistema en internet es 100 % seguro; si detectas o sospechas de un incidente de seguridad, repórtalo inmediatamente a scpcpr@gmail.com.\n\nNotificación de incidentes (Ley 111-2005 de Puerto Rico): en caso de una brecha de seguridad que comprometa información personal de residentes de Puerto Rico, notificaremos a los afectados y al Departamento de Asuntos del Consumidor (DACO) en los plazos y forma establecidos por la Ley Núm. 111 de 7 de septiembre de 2005 ('Ley de Información al Ciudadano y Protección de su Información Personal'), incluyendo la naturaleza del incidente, los tipos de datos involucrados y las medidas correctivas adoptadas o recomendadas."
+          "body": "Implementamos medidas técnicas y organizativas razonables para proteger tu información: cifrado TLS en tránsito, control de acceso por roles a nuestros sistemas, y selección de proveedores con estándares de seguridad reconocidos (PCI-DSS para procesamiento de pagos, SOC 2 Type II para infraestructura y almacenamiento). Sin embargo, ningún sistema en internet es 100 % seguro; si detectas o sospechas de un incidente de seguridad, repórtalo inmediatamente a info@sccompoundingacademy.com.\n\nNotificación de incidentes (Ley 111-2005 de Puerto Rico): en caso de una brecha de seguridad que comprometa información personal de residentes de Puerto Rico, notificaremos a los afectados y al Departamento de Asuntos del Consumidor (DACO) en los plazos y forma establecidos por la Ley Núm. 111 de 7 de septiembre de 2005 ('Ley de Información al Ciudadano y Protección de su Información Personal'), incluyendo la naturaleza del incidente, los tipos de datos involucrados y las medidas correctivas adoptadas o recomendadas."
         },
         {
           "heading": "9. Menores de edad",
-          "body": "El Sitio y los programas educativos de SCCA están dirigidos exclusivamente a personas de dieciocho (18) años o más. No aceptamos inscripciones ni recopilamos intencionalmente información personal de menores de edad. Si descubrimos que hemos recibido información de un menor, la eliminaremos sin demora y cancelaremos cualquier inscripción asociada. Si tienes razones para creer que un menor nos ha proporcionado datos personales, contáctanos a scpcpr@gmail.com."
+          "body": "El Sitio y los programas educativos de SCCA están dirigidos exclusivamente a personas de dieciocho (18) años o más. No aceptamos inscripciones ni recopilamos intencionalmente información personal de menores de edad. Si descubrimos que hemos recibido información de un menor, la eliminaremos sin demora y cancelaremos cualquier inscripción asociada. Si tienes razones para creer que un menor nos ha proporcionado datos personales, contáctanos a info@sccompoundingacademy.com."
         },
         {
           "heading": "10. Transferencias internacionales",
@@ -132,7 +132,7 @@
         },
         {
           "heading": "12. Contacto",
-          "body": "Para preguntas, solicitudes o reclamos sobre esta Política de Privacidad o el tratamiento de tus datos personales:\n\nSanta Cruz Compounding Academy, LLC\nEdificio Médico Santa Cruz, 73 Calle Santa Cruz, Suite 101\nBayamón, Puerto Rico 00960\nCorreo: scpcpr@gmail.com\nTeléfono: 787-798-4646"
+          "body": "Para preguntas, solicitudes o reclamos sobre esta Política de Privacidad o el tratamiento de tus datos personales:\n\nSanta Cruz Compounding Academy, LLC\nEdificio Médico Santa Cruz, 73 Calle Santa Cruz, Suite 101\nBayamón, Puerto Rico 00960\nCorreo: info@sccompoundingacademy.com\nTeléfono: 787-254-8329"
         }
       ]
     },
@@ -160,7 +160,7 @@
         },
         {
           "heading": "5. Obligaciones del estudiante",
-          "body": "Al inscribirte aceptas: (a) asistir a las sesiones presenciales según el calendario publicado del cohorte; (b) cumplir con las normas de seguridad del laboratorio, incluyendo uso correcto del equipo de protección personal proporcionado o requerido bajo USP 〈800〉; (c) no fotografiar, grabar ni difundir material instruccional, procedimientos, o trabajos de otros estudiantes sin autorización expresa por escrito de SCCA y de las personas involucradas; (d) comportarte de manera respetuosa con instructores, personal y compañeros de cohorte; (e) abstenerte de cualquier conducta que ponga en riesgo la integridad física propia o ajena, las instalaciones o el material; (f) proveer información veraz y mantenerla actualizada durante el cohorte; y (g) autorizar a SCCA a tomar fotografías o videos del entorno del cohorte para fines educativos, documentales o de marketing institucional, en el entendido de que (i) SCCA hará esfuerzos razonables para anonimizar imágenes identificables a solicitud del estudiante, y (ii) podrás solicitar exclusión por escrito antes del cohorte o al inicio del mismo enviando un correo a scpcpr@gmail.com.\n\nEl incumplimiento de las obligaciones (a) a (f) puede resultar en la expulsión del cohorte sin derecho a reembolso, a discreción razonable de SCCA y previa notificación cuando sea practicable."
+          "body": "Al inscribirte aceptas: (a) asistir a las sesiones presenciales según el calendario publicado del cohorte; (b) cumplir con las normas de seguridad del laboratorio, incluyendo uso correcto del equipo de protección personal proporcionado o requerido bajo USP 〈800〉; (c) no fotografiar, grabar ni difundir material instruccional, procedimientos, o trabajos de otros estudiantes sin autorización expresa por escrito de SCCA y de las personas involucradas; (d) comportarte de manera respetuosa con instructores, personal y compañeros de cohorte; (e) abstenerte de cualquier conducta que ponga en riesgo la integridad física propia o ajena, las instalaciones o el material; (f) proveer información veraz y mantenerla actualizada durante el cohorte; y (g) autorizar a SCCA a tomar fotografías o videos del entorno del cohorte para fines educativos, documentales o de marketing institucional, en el entendido de que (i) SCCA hará esfuerzos razonables para anonimizar imágenes identificables a solicitud del estudiante, y (ii) podrás solicitar exclusión por escrito antes del cohorte o al inicio del mismo enviando un correo a info@sccompoundingacademy.com.\n\nEl incumplimiento de las obligaciones (a) a (f) puede resultar en la expulsión del cohorte sin derecho a reembolso, a discreción razonable de SCCA y previa notificación cuando sea practicable."
         },
         {
           "heading": "6. Propiedad intelectual",
@@ -204,11 +204,11 @@
         },
         {
           "heading": "16. Cesión, notificaciones y acuerdo integral",
-          "body": "Cesión: el estudiante no podrá ceder, transferir ni delegar sus derechos u obligaciones bajo estos Términos, salvo mediante el procedimiento establecido en la Política de Reembolsos para transferencia de plaza. SCCA podrá ceder estos Términos a una entidad sucesora resultante de reorganización societaria, fusión, adquisición, o venta sustancial de activos, con notificación previa razonable a estudiantes activos.\n\nNotificaciones: las notificaciones bajo estos Términos se considerarán válidamente cursadas cuando se envíen por correo electrónico: a SCCA, a scpcpr@gmail.com; al estudiante, a la dirección de correo electrónico provista al momento de la inscripción. Es responsabilidad del estudiante mantener actualizada su información de contacto durante el cohorte.\n\nAcuerdo integral: estos Términos, junto con la Política de Privacidad, la Política de Reembolsos, y los datos específicos del cohorte confirmados al momento de inscripción, constituyen el acuerdo integral entre el estudiante y SCCA respecto a la materia objeto del mismo, y sustituyen cualquier acuerdo, promesa o entendimiento previo (oral o escrito) sobre dicha materia. Ninguna modificación a estos Términos será válida salvo que conste por escrito y sea publicada en el Sitio conforme a la Sección 11.\n\nNo renuncia: el hecho de que cualquiera de las partes no exija el cumplimiento estricto de una disposición no constituirá renuncia a su derecho de exigir dicho cumplimiento posteriormente."
+          "body": "Cesión: el estudiante no podrá ceder, transferir ni delegar sus derechos u obligaciones bajo estos Términos, salvo mediante el procedimiento establecido en la Política de Reembolsos para transferencia de plaza. SCCA podrá ceder estos Términos a una entidad sucesora resultante de reorganización societaria, fusión, adquisición, o venta sustancial de activos, con notificación previa razonable a estudiantes activos.\n\nNotificaciones: las notificaciones bajo estos Términos se considerarán válidamente cursadas cuando se envíen por correo electrónico: a SCCA, a info@sccompoundingacademy.com; al estudiante, a la dirección de correo electrónico provista al momento de la inscripción. Es responsabilidad del estudiante mantener actualizada su información de contacto durante el cohorte.\n\nAcuerdo integral: estos Términos, junto con la Política de Privacidad, la Política de Reembolsos, y los datos específicos del cohorte confirmados al momento de inscripción, constituyen el acuerdo integral entre el estudiante y SCCA respecto a la materia objeto del mismo, y sustituyen cualquier acuerdo, promesa o entendimiento previo (oral o escrito) sobre dicha materia. Ninguna modificación a estos Términos será válida salvo que conste por escrito y sea publicada en el Sitio conforme a la Sección 11.\n\nNo renuncia: el hecho de que cualquiera de las partes no exija el cumplimiento estricto de una disposición no constituirá renuncia a su derecho de exigir dicho cumplimiento posteriormente."
         },
         {
           "heading": "17. Contacto",
-          "body": "Para preguntas o aclaraciones sobre estos Términos:\n\nSanta Cruz Compounding Academy, LLC\nEdificio Médico Santa Cruz, 73 Calle Santa Cruz, Suite 101\nBayamón, Puerto Rico 00960\nCorreo: scpcpr@gmail.com\nTeléfono: 787-798-4646"
+          "body": "Para preguntas o aclaraciones sobre estos Términos:\n\nSanta Cruz Compounding Academy, LLC\nEdificio Médico Santa Cruz, 73 Calle Santa Cruz, Suite 101\nBayamón, Puerto Rico 00960\nCorreo: info@sccompoundingacademy.com\nTeléfono: 787-254-8329"
         }
       ]
     },
@@ -224,7 +224,7 @@
         },
         {
           "heading": "2. Transferencia de plaza (entre 7 días y el primer día de cohorte)",
-          "body": "Si tu solicitud llega entre siete (7) días naturales antes del inicio y antes del primer día de cohorte, ya no procesamos reembolso monetario, pero puedes elegir una de estas dos opciones, sin penalidad:\n\nTransferir tu plaza a otra persona elegible. La persona designada debe (i) cumplir con los mismos requisitos de elegibilidad del programa, (ii) aceptar expresamente y por escrito los Términos y Condiciones y la Política de Privacidad de SCCA antes de iniciar el cohorte, y (iii) confirmar su asistencia al menos veinticuatro (24) horas antes del primer día. Los datos de inscripción se actualizan a nombre de la nueva persona y el certificado, en su caso, se emite a su nombre al finalizar el cohorte.\n\nTransferir tu plaza a una cohorte futura del mismo programa dentro de los próximos doce (12) meses. Si la nueva cohorte tiene un precio distinto, se ajusta la diferencia (a tu favor o se factura aparte).\n\nPara solicitar transferencia escríbenos a scpcpr@gmail.com con tu nombre, fecha de cohorte original, y la opción elegida (incluyendo nombre y correo de la persona designada, si aplica)."
+          "body": "Si tu solicitud llega entre siete (7) días naturales antes del inicio y antes del primer día de cohorte, ya no procesamos reembolso monetario, pero puedes elegir una de estas dos opciones, sin penalidad:\n\nTransferir tu plaza a otra persona elegible. La persona designada debe (i) cumplir con los mismos requisitos de elegibilidad del programa, (ii) aceptar expresamente y por escrito los Términos y Condiciones y la Política de Privacidad de SCCA antes de iniciar el cohorte, y (iii) confirmar su asistencia al menos veinticuatro (24) horas antes del primer día. Los datos de inscripción se actualizan a nombre de la nueva persona y el certificado, en su caso, se emite a su nombre al finalizar el cohorte.\n\nTransferir tu plaza a una cohorte futura del mismo programa dentro de los próximos doce (12) meses. Si la nueva cohorte tiene un precio distinto, se ajusta la diferencia (a tu favor o se factura aparte).\n\nPara solicitar transferencia escríbenos a info@sccompoundingacademy.com con tu nombre, fecha de cohorte original, y la opción elegida (incluyendo nombre y correo de la persona designada, si aplica)."
         },
         {
           "heading": "3. Después del inicio de la cohorte",
@@ -236,7 +236,7 @@
         },
         {
           "heading": "5. Cómo solicitar un reembolso o transferencia",
-          "body": "Toda solicitud debe enviarse por correo electrónico a scpcpr@gmail.com, incluyendo: (a) tu nombre completo, (b) correo con el que te inscribiste, (c) curso y fecha de cohorte, (d) tipo de solicitud (reembolso, transferencia a persona, transferencia a cohorte), y (e) cuando aplique, documentación de soporte.\n\nConfirmamos recibo de tu solicitud dentro de las cuarenta y ocho (48) horas hábiles siguientes y resolvemos dentro de los diez (10) días hábiles posteriores."
+          "body": "Toda solicitud debe enviarse por correo electrónico a info@sccompoundingacademy.com, incluyendo: (a) tu nombre completo, (b) correo con el que te inscribiste, (c) curso y fecha de cohorte, (d) tipo de solicitud (reembolso, transferencia a persona, transferencia a cohorte), y (e) cuando aplique, documentación de soporte.\n\nConfirmamos recibo de tu solicitud dentro de las cuarenta y ocho (48) horas hábiles siguientes y resolvemos dentro de los diez (10) días hábiles posteriores."
         },
         {
           "heading": "6. Casos no cubiertos por esta política",
@@ -244,7 +244,7 @@
         },
         {
           "heading": "7. Contacto",
-          "body": "Para preguntas sobre esta política o para iniciar una solicitud:\n\nSanta Cruz Compounding Academy, LLC\nEdificio Médico Santa Cruz, 73 Calle Santa Cruz, Suite 101\nBayamón, Puerto Rico 00960\nCorreo: scpcpr@gmail.com\nTeléfono: 787-798-4646"
+          "body": "Para preguntas sobre esta política o para iniciar una solicitud:\n\nSanta Cruz Compounding Academy, LLC\nEdificio Médico Santa Cruz, 73 Calle Santa Cruz, Suite 101\nBayamón, Puerto Rico 00960\nCorreo: info@sccompoundingacademy.com\nTeléfono: 787-254-8329"
         }
       ]
     }
@@ -256,7 +256,7 @@
   "hero": {
     "eyebrow": "Certificación profesional · USP 〈795〉 · 〈800〉 · Bayamón, PR",
     "headline": "Entrenamiento práctico en compounding, dentro de un laboratorio activo.",
-    "subheadline": "Cursos presenciales en Bayamón para farmacéuticos y técnicos de farmacia, con práctica supervisada y currículo alineado a USP 〈795〉 y USP 〈800〉. Programa afiliado a Santa Cruz Pharma Care.",
+    "subheadline": "Curso presencial de 18 horas (3 días · 6 horas/día) en Bayamón para farmacéuticos y técnicos de farmacia, con práctica supervisada y currículo alineado a USP 〈795〉 y USP 〈800〉. Programa afiliado a Santa Cruz Pharma Care.",
     "primaryCta": "Ver cursos",
     "secondaryCta": "Agendar orientación",
     "imageAlt": "Banco de preparación con balanza analítica, mortero y materia prima USP/NF — sede de Santa Cruz Pharma Care en Bayamón, Puerto Rico.",
@@ -285,36 +285,56 @@
     ]
   },
   "cursosGrid": {
-    "eyebrow": "Programas",
-    "heading": "Cursos disponibles",
-    "intro": "Tres programas de certificación alineados con los capítulos USP 〈795〉 y 〈800〉. Cada uno combina fundamentos teóricos con práctica supervisada en laboratorio.",
+    "eyebrow": "Programa",
+    "heading": "Curso disponible",
+    "intro": "Un programa integrado de 18 horas presenciales (3 días · 6 hrs/día) que cubre USP 〈795〉 y 〈800〉 a través de tres módulos consecutivos. Teoría y práctica supervisada el mismo día, en el laboratorio activo de Santa Cruz Pharma Care.",
     "durationLabel": "Duración",
     "nextCohortLabel": "Próxima cohorte",
-    "courseCta": "Ver curso",
-    "courseLinkAria": "Ver detalles del curso",
+    "courseCta": "Inscribirme",
+    "courseLinkAria": "Ir a la inscripción del curso",
+    "modulesLabel": "Módulos",
     "items": [
       {
-        "id": "usp-795",
+        "id": "basic-compounding",
         "level": "Fundamentos",
-        "title": "Compounding No Estéril — USP 〈795〉",
-        "description": "Técnicas de preparación, manejo de excipientes, cálculo de BUD, control de calidad y documentación para preparaciones magistrales.",
-        "duration": "40 h"
-      },
-      {
-        "id": "usp-800",
-        "level": "Intermedio",
-        "title": "Manejo de Medicamentos Peligrosos — USP 〈800〉",
-        "description": "Riesgo ocupacional, equipo de protección personal, controles de ingeniería y procedimientos de contención y descontaminación.",
-        "duration": "32 h"
-      },
-      {
-        "id": "combinado",
-        "level": "Avanzado",
-        "title": "Programa Combinado USP 〈795〉 + 〈800〉",
-        "description": "Cobertura completa de ambos capítulos más un módulo integrador de práctica avanzada con casos de farmacia real.",
-        "duration": "60 h"
+        "title": "Compounding No Estéril Básico — Farmacéuticos y Técnicos",
+        "description": "Curso integrado de 18 horas presenciales para farmacéuticos y técnicos. Cubre fundamentos regulatorios (USP 〈795〉, 〈800〉, Ley de Farmacia de PR, DQSA), formulación y casos clínicos por especialidad.",
+        "duration": "18 h · 3 días",
+        "modules": [
+          {
+            "id": "modulo-1",
+            "day": "Día 1 · 6 hrs",
+            "title": "Fundamentos regulatorios y cápsulas",
+            "summary": "USP 〈795〉 y 〈800〉, alcance del manejo de hazardous drugs, NIOSH, PPE, Ley de Farmacia de PR, DQSA y categoría 503B; formulación de cápsulas, BUD y packing statistics."
+          },
+          {
+            "id": "modulo-2",
+            "day": "Día 2 · 6 hrs",
+            "title": "Supositorios, líquidos orales y dermatología",
+            "summary": "BUD y formulación de supositorios, suspensiones orales con cálculos de dispensación, condiciones tópicas (acné, psoriasis, melasma, alopecia) y casos pediátricos."
+          },
+          {
+            "id": "modulo-3",
+            "day": "Día 3 · 6 hrs",
+            "title": "Hormonales tópicos, veterinaria y regulación",
+            "summary": "BHRT (Bi-est, testosterona), sistema Topi-Click, penetration enhancers, excepciones de shortage y excipiente alérgico, distinción 503A/503B y compounding veterinario."
+          }
+        ]
       }
     ]
+  },
+  "instructor": {
+    "eyebrow": "Instructor",
+    "heading": "Lcdo. Jorge L. Reyes Quiñones",
+    "title": "Farmacéutico · Director del programa",
+    "bio": "Farmacéutico licenciado en Puerto Rico con práctica activa en compounding magistral. Diseña y dicta el currículo de la academia con foco en la aplicación regulatoria, la seguridad ocupacional y los casos clínicos que se presentan en una farmacia real. Biografía detallada y foto profesional próximamente.",
+    "credentialsLabel": "Credenciales",
+    "credentials": [
+      "Farmacéutico licenciado en Puerto Rico",
+      "Práctica activa en compounding no estéril",
+      "Director clínico de Santa Cruz Pharma Care"
+    ],
+    "photoPlaceholderLabel": "Foto profesional próximamente"
   },
   "aprenderas": {
     "eyebrow": "Qué aprenderás",
@@ -497,14 +517,8 @@
     ]
   },
   "cohortes": {
-    "2026-q1-usp-795": {
-      "label": "Cohorte enero 2026 · 12 ene – 20 feb"
-    },
-    "2026-q1-usp-800": {
-      "label": "Cohorte febrero 2026 · 23 feb – 27 mar"
-    },
-    "2026-q1-combinado": {
-      "label": "Cohorte enero 2026 · 12 ene – 27 mar"
+    "2026-q1-basic": {
+      "label": "Cohorte enero 2026 · 15–17 ene"
     }
   },
   "inscripcion": {

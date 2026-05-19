@@ -1,9 +1,11 @@
 import type { Metadata } from "next";
 import { setRequestLocale } from "next-intl/server";
 import { pageMetadata } from "@/lib/seo";
+import { homepageJsonLd } from "@/lib/structuredData";
 import { Hero } from "@/components/marketing/Hero";
 import { Confianza } from "@/components/marketing/Confianza";
 import { CursosGrid } from "@/components/marketing/CursosGrid";
+import { Instructor } from "@/components/marketing/Instructor";
 import { Aprenderas } from "@/components/marketing/Aprenderas";
 import { ParaQuienEs } from "@/components/marketing/ParaQuienEs";
 import { Especialidades } from "@/components/marketing/Especialidades";
@@ -41,13 +43,20 @@ export async function generateMetadata({
 export default async function LandingPage({ params }: { params: Promise<{ locale: string }> }) {
   const { locale } = await params;
   setRequestLocale(locale);
-  void locale; // reserved for sections that need per-locale data
+  const jsonLd = homepageJsonLd(locale as "es" | "en");
   return (
     <>
+      {/* SEO: Organization + LocalBusiness + Course graph. Server-rendered
+          so Google reads it on initial crawl without executing JS. */}
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+      />
       {/* Clean medical-pharma landing — top to bottom:
             Hero           — eyebrow + display headline + 2 CTAs + trust signals + photo
             Confianza      — 3 columns of credentials (affiliated · supervised · USP-aligned)
-            CursosGrid     — 3-card programs catalogue (level · title · duration · CTA)
+            CursosGrid     — single-course detail with 3-module breakdown
+            Instructor     — course director (Lcdo. Jorge L. Reyes) bio + credentials
             Aprenderas     — 6-item learning-outcomes checklist
             ParaQuienEs    — 4-card audience grid (pharmacists / techs / owners / students)
             Especialidades — 6 practice areas covered by the program (kept, restyled)
@@ -62,6 +71,7 @@ export default async function LandingPage({ params }: { params: Promise<{ locale
       <Hero />
       <Confianza />
       <CursosGrid />
+      <Instructor />
       <Aprenderas />
       <ParaQuienEs />
       <Especialidades />

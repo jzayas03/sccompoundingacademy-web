@@ -4,31 +4,38 @@ import { Container } from "@/components/ui/Container";
 import { Reveal } from "@/components/ui/Reveal";
 import { getCourseById, getCohortsForCourse, type CourseId } from "@/lib/courses";
 
+type ModuleItem = {
+  id: string;
+  day: string;
+  title: string;
+  summary: string;
+};
+
 type CourseItem = {
   id: string;
   level: string;
   title: string;
   description: string;
   duration: string;
+  modules: ModuleItem[];
 };
 
 /**
- * CursosGrid — programs catalogue as a sober 3-card grid.
+ * CursosGrid — single-course detail section.
  *
- * Each card carries scannable, factual metadata at a glance:
- *   - Level eyebrow · USP chapter alignment (inline, top of card)
- *   - Course title (clean, without USP-suffix duplication)
- *   - 2-line description
- *   - Footer row: duration + next-cohort month + 'Ver curso →' link
+ * The catalogue collapsed from three programs to a single 18-hour course
+ * organised in three on-site modules (one per day). The component still
+ * lives inside a `<ul>` so the markup stays semantically tidy and so the
+ * card-driven layout is preserved if the catalogue ever grows again.
  *
- * Cohort dates and USP labels come from `lib/courses.ts` (single source
- * of truth for catalogue data). The i18n strings own the localised
- * display copy (title, description, eyebrow labels) keyed by course id.
+ * Each course renders:
+ *   - Eyebrow with level · USP chapter alignment
+ *   - Title + 2-line description
+ *   - Modules list (day badge + title + summary)
+ *   - Footer with duration + next cohort + Enroll CTA
  *
- * Visual restraint:
- *   - White card surface on white section bg, separated by 1px gray-300 border
- *   - Chartreuse hover stripe on the top edge for on-brand interactivity
- *   - No extra shadows, no scale tricks — info density carries the weight
+ * Cohort dates and USP labels come from `lib/courses.ts` (catalogue
+ * truth). i18n owns the localised copy keyed by course id.
  */
 export function CursosGrid() {
   const t = useTranslations("cursosGrid");
@@ -36,9 +43,6 @@ export function CursosGrid() {
   const messages = useMessages() as unknown as { cursosGrid: { items: CourseItem[] } };
   const items = messages.cursosGrid.items;
 
-  // Format cohort start as "month year" in the user's locale (es-PR or
-  // en-US). Returns null for courses without an open cohort — the card
-  // omits the cohort row entirely in that case.
   function nextCohortLabel(courseId: string): string | null {
     const course = getCourseById(courseId);
     if (!course) return null;
@@ -75,23 +79,17 @@ export function CursosGrid() {
           </div>
         </Reveal>
 
-        <Reveal as="ul" className="mt-12 grid grid-cols-1 gap-6 sm:gap-8 md:grid-cols-2 lg:mt-16 lg:grid-cols-3">
+        <Reveal as="ul" className="mt-12 grid grid-cols-1 gap-6 sm:gap-8 lg:mt-16">
           {items.map((course) => {
             const courseData = getCourseById(course.id);
             const cohortMonth = nextCohortLabel(course.id);
             return (
               <li key={course.id} className="h-full">
-                <article className="border-gray-300 group relative flex h-full flex-col overflow-hidden rounded-lg border bg-white p-6 sm:p-7">
-                  {/* Brand-accent hover stripe — chartreuse rule slides in
-                      along the top edge to signal interactivity on-brand
-                      rather than greying the border. */}
+                <article className="border-gray-300 group relative flex h-full flex-col overflow-hidden rounded-lg border bg-white p-6 sm:p-8 lg:p-10">
                   <span
                     aria-hidden
                     className="bg-chartreuse absolute inset-x-0 top-0 h-0.5 origin-left scale-x-0 transition-transform duration-300 ease-out group-hover:scale-x-100"
                   />
-                  {/* Eyebrow row: level + USP chapter as inline metadata so
-                      both are scannable above the title without duplicating
-                      USP inside it. */}
                   <p className="font-heading text-teal-deep flex flex-wrap items-center gap-x-2 gap-y-1 text-xs font-semibold tracking-[0.18em] uppercase">
                     <span>{course.level}</span>
                     {courseData?.uspLabel && (
@@ -101,19 +99,42 @@ export function CursosGrid() {
                       </>
                     )}
                   </p>
-                  <h3 className="font-heading text-gray-900 mt-3 text-xl font-semibold leading-snug sm:text-2xl">
+                  <h3 className="font-heading text-gray-900 mt-3 text-2xl font-semibold leading-snug sm:text-3xl">
                     {course.title}
                   </h3>
                   <p className="text-gray-700 mt-3 text-sm leading-relaxed sm:text-base">
                     {course.description}
                   </p>
-                  <div className="mt-auto pt-6">
-                    {/* Footer row: duration on the left, next-cohort tag
-                        stacked above the CTA on the right. Cohort omitted
-                        if no open cohorts exist (the data lives in
-                        lib/courses.ts; the form is the source of truth). */}
+
+                  {course.modules?.length > 0 && (
+                    <div className="mt-8">
+                      <p className="font-heading text-teal-deep text-xs font-semibold tracking-[0.18em] uppercase">
+                        {t("modulesLabel")}
+                      </p>
+                      <ol className="mt-4 grid gap-4 sm:grid-cols-3">
+                        {course.modules.map((mod) => (
+                          <li
+                            key={mod.id}
+                            className="border-gray-300 flex h-full flex-col rounded-md border bg-white p-4 sm:p-5"
+                          >
+                            <p className="font-heading text-teal-deep/80 text-xs font-semibold tracking-wide uppercase">
+                              {mod.day}
+                            </p>
+                            <p className="font-heading text-gray-900 mt-2 text-base font-semibold leading-snug">
+                              {mod.title}
+                            </p>
+                            <p className="text-gray-700 mt-2 text-sm leading-relaxed">
+                              {mod.summary}
+                            </p>
+                          </li>
+                        ))}
+                      </ol>
+                    </div>
+                  )}
+
+                  <div className="mt-auto pt-8">
                     <div className="border-gray-300 border-t pt-4">
-                      <div className="flex items-end justify-between gap-3">
+                      <div className="flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
                         <div>
                           <p className="text-gray-700 font-heading text-xs font-medium tracking-wide uppercase">
                             {t("durationLabel")}{" "}
@@ -128,8 +149,6 @@ export function CursosGrid() {
                             </p>
                           )}
                         </div>
-                        {/* Per-card CTA goes directly to the inscription form
-                            with the course pre-selected via query param. */}
                         <Link
                           href={{ pathname: "/inscripcion", query: { course: course.id } }}
                           className="font-heading text-teal-deep group-hover:text-teal inline-flex shrink-0 items-center gap-1 text-sm font-semibold transition-colors"

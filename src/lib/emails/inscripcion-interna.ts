@@ -1,7 +1,8 @@
 /**
- * Internal notification email — fires to scpcpr@gmail.com whenever a new
- * enrollment completes payment. Plain text, no styling — meant for ops
- * triage, not branding.
+ * Internal notification email — fires to the operational inbox (env
+ * `EMAIL_REPLY_TO`, default `info@sccompoundingacademy.com`) whenever a
+ * new enrollment completes payment. Plain text, no styling — meant for
+ * ops triage, not branding.
  */
 type InternalParams = {
   nombre: string;

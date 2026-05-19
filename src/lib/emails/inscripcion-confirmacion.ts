@@ -27,7 +27,7 @@ type ConfirmationParams = {
 const c = brand.colors;
 const SEDE = "Edificio Médico Santa Cruz · 73 Calle Santa Cruz, Suite 101, Bayamón, PR 00960";
 const HORARIO = "Lunes a Viernes · 7:30 a.m. – 5:00 p.m.";
-const SUPPORT_EMAIL = "scpcpr@gmail.com";
+const SUPPORT_EMAIL = "info@sccompoundingacademy.com";
 
 export function buildConfirmationEmail(p: ConfirmationParams): {
   subject: string;
