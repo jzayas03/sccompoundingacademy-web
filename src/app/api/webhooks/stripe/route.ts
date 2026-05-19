@@ -16,7 +16,7 @@ export const runtime = "nodejs";
  * InscripcionRecord from session metadata + payment data, fans out to
  *
  *   1. Resend → student confirmation email (HTML + plain text)
- *   2. Resend → internal notification email to scpcpr@gmail.com
+ *   2. Resend → internal notification email to info@sccompoundingacademy.com
  *   3. Airtable → row in `Inscripciones` table
  *
  * Any single sub-step failing is logged but does NOT cause the webhook
@@ -27,14 +27,22 @@ export const runtime = "nodejs";
  *
  * Signature verification with STRIPE_WEBHOOK_SECRET is mandatory —
  * without it, anyone with the public URL can forge a 'paid' event.
+ *
+ * Sender/reply addresses are env-driven so production can rotate them
+ * without code changes:
+ *   - EMAIL_FROM      e.g. "Santa Cruz Compounding Academy <noreply@sccompoundingacademy.com>"
+ *   - EMAIL_REPLY_TO  e.g. "info@sccompoundingacademy.com"
+ * Both default to the branded production values; the prior RESEND_FROM
+ * env var is honoured as a fallback during the transition.
  */
 
-const INTERNAL_RECIPIENT = "scpcpr@gmail.com";
+const INTERNAL_RECIPIENT =
+  process.env.EMAIL_REPLY_TO ?? "info@sccompoundingacademy.com";
 const FROM_ADDRESS =
-  // Once Resend sender domain is verified on sccompoundingacademy.com,
-  // switch this to inscripciones@sccompoundingacademy.com. Until then
-  // Resend's sandbox address works for testing.
-  process.env.RESEND_FROM ?? "Santa Cruz Compounding Academy <onboarding@resend.dev>";
+  process.env.EMAIL_FROM ??
+  process.env.RESEND_FROM ??
+  "Santa Cruz Compounding Academy <noreply@sccompoundingacademy.com>";
+const REPLY_TO = process.env.EMAIL_REPLY_TO ?? "info@sccompoundingacademy.com";
 
 function getResend(): Resend | null {
   const key = process.env.RESEND_API_KEY;
@@ -140,6 +148,7 @@ export async function POST(req: Request) {
       await resend.emails.send({
         from: FROM_ADDRESS,
         to: session.customer_email,
+        replyTo: REPLY_TO,
         subject: conf.subject,
         html: conf.html,
         text: conf.text,
@@ -166,6 +175,7 @@ export async function POST(req: Request) {
       await resend.emails.send({
         from: FROM_ADDRESS,
         to: INTERNAL_RECIPIENT,
+        replyTo: record.email || REPLY_TO,
         subject: internal.subject,
         html: internal.html,
         text: internal.text,

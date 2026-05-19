@@ -61,10 +61,10 @@ function SuccessPage() {
         <p className="text-gray-700 mt-12 text-sm">
           {t("supportNote")}{" "}
           <a
-            href="mailto:scpcpr@gmail.com"
+            href="mailto:info@sccompoundingacademy.com"
             className="text-teal-deep hover:text-teal underline underline-offset-2"
           >
-            scpcpr@gmail.com
+            info@sccompoundingacademy.com
           </a>
         </p>
       </Container>

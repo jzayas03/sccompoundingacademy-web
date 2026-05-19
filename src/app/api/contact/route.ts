@@ -39,8 +39,11 @@ export async function POST(req: Request) {
   }
 
   const apiKey = process.env.RESEND_API_KEY;
-  const inbox = process.env.CONTACT_INBOX_EMAIL;
-  const from = process.env.CONTACT_FROM_EMAIL;
+  // Prefer the unified EMAIL_FROM / EMAIL_REPLY_TO env vars (also used by
+  // the Stripe webhook). Fall back to the original CONTACT_* names so
+  // existing deployments keep working during the transition.
+  const inbox = process.env.EMAIL_REPLY_TO ?? process.env.CONTACT_INBOX_EMAIL;
+  const from = process.env.EMAIL_FROM ?? process.env.CONTACT_FROM_EMAIL;
   if (!apiKey || !inbox || !from) {
     return Response.json({ error: "server_misconfigured" }, { status: 500 });
   }
