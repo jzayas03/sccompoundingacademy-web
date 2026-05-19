@@ -1,6 +1,6 @@
 import { useTranslations } from "next-intl";
 import { Link } from "@/i18n/routing";
-import { LogoFull } from "@/components/brand";
+import { LogoFullInverse } from "@/components/brand";
 import { auth } from "@/lib/auth";
 import { logoutAction } from "@/app/[locale]/(portal)/portal/actions";
 
@@ -38,7 +38,7 @@ function GlassNavView({ isSignedIn }: { isSignedIn: boolean }) {
           className="flex items-center"
           aria-label={t("homeAria")}
         >
-          <LogoFull shieldClass="h-10 w-auto" />
+          <LogoFullInverse shieldClass="h-10 w-auto" />
         </Link>
 
         <div className="flex items-center gap-3">
