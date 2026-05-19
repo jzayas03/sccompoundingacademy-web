@@ -35,7 +35,7 @@ const InscripcionSchema = z.object({
   licencia: z.string().trim().max(60).optional().or(z.literal("")),
   curso_id: z.string().trim().min(1),
   cohorte_id: z.string().trim().min(1),
-  tier: z.enum(["pharmacist", "student"]),
+  tier: z.enum(["profesional", "student"]),
   notas: z.string().trim().max(1000).optional().or(z.literal("")),
   acepto_terminos: z.literal(true, {
     errorMap: () => ({ message: "Debes aceptar los Términos, Privacidad y Reembolsos." }),

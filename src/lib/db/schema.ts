@@ -29,7 +29,17 @@ import type { AdapterAccountType } from "next-auth/adapters";
  * conflicts because the existing columns are stable.
  */
 
-export const tierEnum = pgEnum("tier", ["pharmacist", "student"]);
+/**
+ * Pricing tier enum. Active values used by application code:
+ *   - "profesional" — RPh pharmacists + licensed pharmacy technicians
+ *   - "student"     — non-licensed students (pre-PharmD / tech program)
+ *
+ * "pharmacist" is retained as a legacy value so existing rows from the
+ * pre-rename schema (pre-2026-05-19) continue to parse cleanly. Drop it
+ * in a future migration once the DB has no remaining `tier='pharmacist'`
+ * rows.
+ */
+export const tierEnum = pgEnum("tier", ["pharmacist", "profesional", "student"]);
 
 export const users = pgTable("user", {
   id: text("id")

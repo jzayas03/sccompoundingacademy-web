@@ -70,9 +70,7 @@ export function Footer() {
               </dt>
               <dd>
                 <a
-                  href={`https://wa.me/1${t("whatsapp").replace(/-/g, "")}`}
-                  target="_blank"
-                  rel="noopener noreferrer"
+                  href={`tel:+1${t("whatsapp").replace(/-/g, "")}`}
                   className="hover:text-chartreuse"
                 >
                   {t("whatsapp")}

@@ -25,10 +25,10 @@ export function homepageJsonLd(locale: "es" | "en"): Record<string, unknown> {
 
   const address = {
     "@type": "PostalAddress",
-    streetAddress: "Edificio Médico Santa Cruz, 73 Calle Santa Cruz, Suite 101",
+    streetAddress: "73 Santa Cruz Medical Building, Suite 201",
     addressLocality: "Bayamón",
     addressRegion: "PR",
-    postalCode: "00960",
+    postalCode: "00961",
     addressCountry: "PR",
   };
 
@@ -52,7 +52,23 @@ export function homepageJsonLd(locale: "es" | "en"): Record<string, unknown> {
         url: siteUrl,
         logo: `${siteUrl}/brand/logo-full.png`,
         email: "info@sccompoundingacademy.com",
-        telephone: "+1-787-254-8329",
+        telephone: "+1-787-798-4646",
+        // Schema.org permits multiple `telephone` values for org-level
+        // representations of multiple lines.
+        contactPoint: [
+          {
+            "@type": "ContactPoint",
+            telephone: "+1-787-798-4646",
+            contactType: "customer service",
+            availableLanguage: ["Spanish", "English"],
+          },
+          {
+            "@type": "ContactPoint",
+            telephone: "+1-787-408-5775",
+            contactType: "customer service",
+            availableLanguage: ["Spanish", "English"],
+          },
+        ],
         address,
         sameAs: [
           "https://www.instagram.com/santacruzpharmacare/",
@@ -64,7 +80,7 @@ export function homepageJsonLd(locale: "es" | "en"): Record<string, unknown> {
         "@id": `${siteUrl}/#localbusiness`,
         name: "Santa Cruz Compounding Academy",
         url: siteUrl,
-        telephone: "+1-787-254-8329",
+        telephone: "+1-787-798-4646",
         email: "info@sccompoundingacademy.com",
         address,
         openingHoursSpecification: {
@@ -86,8 +102,8 @@ export function homepageJsonLd(locale: "es" | "en"): Record<string, unknown> {
         ...(course.acpe && {
           educationalCredentialAwarded:
             locale === "es"
-              ? `Crédito CE (${course.acpe.contactHours} horas de contacto / ${course.acpe.ceus} CEUs) bajo patrocinio del ${course.acpe.provider} — ACPE Provider ${course.acpe.providerNumber}`
-              : `CE credit (${course.acpe.contactHours} contact hours / ${course.acpe.ceus} CEUs) under sponsorship of ${course.acpe.provider} — ACPE Provider ${course.acpe.providerNumber}`,
+              ? `Crédito CE (${course.acpe.contactHours} horas de contacto / ${course.acpe.ceus} CEUs · ${course.acpe.classification}) bajo patrocinio del ${course.acpe.provider} — ACPE Provider ${course.acpe.providerNumber}`
+              : `CE credit (${course.acpe.contactHours} contact hours / ${course.acpe.ceus} CEUs · ${course.acpe.classification}) under sponsorship of ${course.acpe.provider} — ACPE Provider ${course.acpe.providerNumber}`,
           numberOfCredits: {
             "@type": "QuantitativeValue",
             value: course.acpe.ceus,

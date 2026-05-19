@@ -120,12 +120,17 @@ export async function POST(req: Request) {
   // Derive tier from metadata, with a Stripe-coupon-based fallback for the
   // manual student-discount workflow: when the owner issues a Coupon code
   // worth ~$1,855 to a verified student, the Checkout amount drops to ~$495
-  // even though the Price ID is the pharmacist one. We treat that as a
+  // even though the Price ID is the professional one. We treat that as a
   // student tier so downstream (Airtable, future portal DB) sees the truth.
-  const metadataTier = md.tier === "student" ? "student" : md.tier === "pharmacist" ? "pharmacist" : null;
+  const metadataTier =
+    md.tier === "student"
+      ? "student"
+      : md.tier === "profesional"
+        ? "profesional"
+        : null;
   const hasDiscount = (session.total_details?.amount_discount ?? 0) > 0;
-  const tier: "pharmacist" | "student" =
-    metadataTier ?? (hasDiscount ? "student" : "pharmacist");
+  const tier: "profesional" | "student" =
+    metadataTier ?? (hasDiscount ? "student" : "profesional");
 
   // Auth.js normalises emails to lowercase before inserting users on
   // sign-in (via Email provider's `normalizeIdentifier`). We must match
