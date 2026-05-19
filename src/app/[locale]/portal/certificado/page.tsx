@@ -210,6 +210,20 @@ function CertPanel({
           {t("verificationHintBody")}
         </p>
       </GlassCard>
+
+      {/* Reviews entry — surfaces only after the student is eligible so
+          they have something to review. Goes through /portal/reseñas
+          which handles the already-submitted state on its own. */}
+      {eligible && (
+        <p className="mt-8 text-center text-sm">
+          <Link
+            href="/portal/reseñas"
+            className="text-teal-deep hover:text-teal underline underline-offset-2"
+          >
+            {t("reviewLinkLabel")} →
+          </Link>
+        </p>
+      )}
     </Container>
   );
 }

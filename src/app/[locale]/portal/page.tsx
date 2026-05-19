@@ -138,24 +138,48 @@ function Dashboard({
 
       {/* Certificate-ready banner — shows once a paid student has passed
           all three post-tests. Sits above the module strip so the unlock
-          is the first thing the user notices on their next visit. */}
+          is the first thing the user notices on their next visit. The
+          paired "leave a review" card lands directly below; clicking it
+          goes to /portal/reseñas which gracefully handles the
+          already-submitted state. */}
       {isPaid && certEligible && (
-        <GlassCard interactive={false} className="mt-10 p-6 sm:p-8">
-          <p className="font-heading text-teal-deep text-xs font-semibold tracking-[0.18em] uppercase">
-            {t("certReadyTitle")}
-          </p>
-          <p className="text-gray-900 mt-3 text-base leading-relaxed">
-            {t("certReadyBody")}
-          </p>
-          <div className="mt-6">
-            <Link
-              href="/portal/certificado"
-              className="bg-chartreuse text-teal-deep ring-teal-deep/15 shadow-soft hover:bg-chartreuse/95 hover:shadow-lift focus-visible:ring-chartreuse font-heading inline-flex h-12 items-center rounded-md px-6 text-sm font-semibold ring-1 transition-[color,background-color,box-shadow,transform] duration-200 ease-out focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-offset-white focus-visible:outline-none sm:text-base motion-safe:hover:-translate-y-px"
-            >
-              {t("certReadyCta")} →
-            </Link>
-          </div>
-        </GlassCard>
+        <div className="mt-10 space-y-4">
+          <GlassCard interactive={false} className="p-6 sm:p-8">
+            <p className="font-heading text-teal-deep text-xs font-semibold tracking-[0.18em] uppercase">
+              {t("certReadyTitle")}
+            </p>
+            <p className="text-gray-900 mt-3 text-base leading-relaxed">
+              {t("certReadyBody")}
+            </p>
+            <div className="mt-6">
+              <Link
+                href="/portal/certificado"
+                className="bg-chartreuse text-teal-deep ring-teal-deep/15 shadow-soft hover:bg-chartreuse/95 hover:shadow-lift focus-visible:ring-chartreuse font-heading inline-flex h-12 items-center rounded-md px-6 text-sm font-semibold ring-1 transition-[color,background-color,box-shadow,transform] duration-200 ease-out focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-offset-white focus-visible:outline-none sm:text-base motion-safe:hover:-translate-y-px"
+              >
+                {t("certReadyCta")} →
+              </Link>
+            </div>
+          </GlassCard>
+
+          <GlassCard interactive={false} className="p-5 sm:p-6">
+            <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+              <div>
+                <p className="font-heading text-teal-deep text-xs font-semibold tracking-[0.18em] uppercase">
+                  {t("reviewPromptTitle")}
+                </p>
+                <p className="text-gray-900 mt-2 text-sm leading-relaxed">
+                  {t("reviewPromptBody")}
+                </p>
+              </div>
+              <Link
+                href="/portal/reseñas"
+                className="border-teal-deep text-teal-deep hover:bg-teal-deep hover:text-off-white font-heading inline-flex h-10 shrink-0 items-center justify-center rounded-md border px-4 text-sm font-semibold transition-colors"
+              >
+                {t("reviewPromptCta")} →
+              </Link>
+            </div>
+          </GlassCard>
+        </div>
       )}
 
       {/* Module strip — locked decorative cards until `paidAt` is set, then

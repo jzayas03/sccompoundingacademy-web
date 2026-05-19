@@ -645,7 +645,10 @@
       "certReadyBody": "Completaste los 3 post-tests con score sobre el umbral. Descargá tu certificado oficial de participación.",
       "certReadyCta": "Ir al certificado",
       "certPendingTitle": "Avanzá hacia tu certificado",
-      "certPendingBody": "Completá los 3 post-tests para desbloquear tu certificado de participación."
+      "certPendingBody": "Completá los 3 post-tests para desbloquear tu certificado de participación.",
+      "reviewPromptTitle": "Compartí tu opinión",
+      "reviewPromptBody": "Tu feedback nos ayuda a mejorar el curso para futuras cohortes.",
+      "reviewPromptCta": "Dejar reseña"
     },
     "module": {
       "eyebrow": "Módulo",
@@ -687,7 +690,35 @@
       "checklistCtaResults": "Ver resultados",
       "verificationHintTitle": "Verificación pública",
       "verificationHintBody": "Cada certificado tiene un número único en formato SCCA-{YYYY}-{NNN}, verificable en cualquier momento desde sccompoundingacademy.com/verificar.",
+      "reviewLinkLabel": "Compartí tu feedback del curso",
       "backToDashboard": "Volver al portal"
+    },
+    "reviews": {
+      "eyebrow": "Tu opinión",
+      "title": "Reseña del curso",
+      "subtitle": "Tu feedback nos ayuda a mejorar para futuras cohortes. Las reseñas se recopilan privadamente — no se muestran públicamente sin tu consentimiento.",
+      "overallRatingLabel": "¿Qué tan satisfecho estás con el curso en general?",
+      "moduleRatingsLabel": "Calificá cada módulo individualmente",
+      "moduleRatingHint": "1 estrella = muy mal · 5 estrellas = excelente",
+      "bestLabel": "¿Qué fue lo mejor del curso?",
+      "improveLabel": "¿Qué mejorarías?",
+      "bestPlaceholder": "Opcional. Lo que más te aportó, anécdotas, momentos clave…",
+      "improvePlaceholder": "Opcional. Áreas a fortalecer, sugerencias específicas…",
+      "optional": "opcional",
+      "consentLabel": "Permito que SCCA use mi reseña (citada con mi nombre) en materiales de marketing público.",
+      "submitButton": "Enviar reseña",
+      "submitting": "Enviando…",
+      "submitError": "No pudimos enviar tu reseña. Intentá nuevamente.",
+      "successTitle": "¡Gracias por tu feedback!",
+      "successBody": "Tu reseña quedó registrada. Tu certificado de participación está listo para descarga.",
+      "successCta": "Ir al certificado",
+      "alreadySubmittedTitle": "Ya enviaste tu reseña",
+      "alreadySubmittedBody": "Recibimos tu feedback. Gracias por tomarte el tiempo.",
+      "lockedTitle": "Disponible al completar el curso",
+      "lockedBody": "Podrás dejar tu reseña una vez aprobados los 3 post-tests.",
+      "backToDashboard": "Volver al portal",
+      "starAria": "{stars} estrellas",
+      "moduleStarAria": "{stars} estrellas para {module}"
     },
     "postTestResults": {
       "eyebrow": "Post-test · Resultados",
