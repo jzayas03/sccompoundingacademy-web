@@ -83,6 +83,17 @@ export function homepageJsonLd(locale: "es" | "en"): Record<string, unknown> {
         inLanguage: locale === "es" ? "es-PR" : "en-US",
         educationalLevel: locale === "es" ? "Educación continua profesional" : "Continuing professional education",
         timeRequired: `PT${course.hours}H`,
+        ...(course.acpe && {
+          educationalCredentialAwarded:
+            locale === "es"
+              ? `Crédito CE (${course.acpe.contactHours} horas de contacto / ${course.acpe.ceus} CEUs) bajo patrocinio del ${course.acpe.provider} — ACPE Provider ${course.acpe.providerNumber}`
+              : `CE credit (${course.acpe.contactHours} contact hours / ${course.acpe.ceus} CEUs) under sponsorship of ${course.acpe.provider} — ACPE Provider ${course.acpe.providerNumber}`,
+          numberOfCredits: {
+            "@type": "QuantitativeValue",
+            value: course.acpe.ceus,
+            unitText: "CEUs",
+          },
+        }),
         hasCourseInstance: {
           "@type": "CourseInstance",
           courseMode: "In-person",

@@ -109,6 +109,16 @@ export async function POST(req: Request) {
   const cohorteFechaFin = cohort.endDate;
   const montoFormatted = formatPrice(amountPaid);
 
+  // Derive tier from metadata, with a Stripe-coupon-based fallback for the
+  // manual student-discount workflow: when the owner issues a Coupon code
+  // worth ~$1,855 to a verified student, the Checkout amount drops to ~$495
+  // even though the Price ID is the pharmacist one. We treat that as a
+  // student tier so downstream (Airtable, future portal DB) sees the truth.
+  const metadataTier = md.tier === "student" ? "student" : md.tier === "pharmacist" ? "pharmacist" : null;
+  const hasDiscount = (session.total_details?.amount_discount ?? 0) > 0;
+  const tier: "pharmacist" | "student" =
+    metadataTier ?? (hasDiscount ? "student" : "pharmacist");
+
   const record: InscripcionRecord = {
     nombre: md.nombre ?? "",
     email: session.customer_email ?? "",
@@ -116,6 +126,7 @@ export async function POST(req: Request) {
     licencia: md.licencia || undefined,
     curso_id: course.id,
     cohorte_id: cohort.id,
+    tier,
     stripe_session_id: session.id,
     stripe_payment_intent: String(session.payment_intent ?? ""),
     monto_pagado_usd_cents: amountPaid,

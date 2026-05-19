@@ -172,7 +172,7 @@
         },
         {
           "heading": "8. Certification",
-          "body": "Upon completing all sessions of a program and passing the required assessments, you will receive a certificate of completion issued by SCCA. The certificate documents: (a) your name, (b) the completed program, (c) hours of in-person instruction, (d) competencies assessed, and (e) date of issuance.\n\nNo CE accreditation: as of the date of these Terms, SCCA is not an accredited continuing education (CE) provider with the Puerto Rico Board of Pharmacy nor with the Accreditation Council for Pharmacy Education (ACPE) in the United States. The SCCA certificate documents participation and competencies acquired, but its acceptance as accredited CE hours depends exclusively on each employer, regulatory board, or receiving institution. SCCA does not guarantee such acceptance.\n\nIf SCCA obtains formal CE accreditation in the future, it will be expressly indicated in the cohort description at the time of enrollment."
+          "body": "Upon completing all sessions of a program and passing the required assessments, you will receive a certificate of completion issued by SCCA. The certificate documents: (a) your name, (b) the completed program, (c) hours of in-person instruction, (d) competencies assessed, and (e) date of issuance.\n\nSponsored CE accreditation: Specific SCCA cohorts are offered as accredited Continuing Education activities under the sponsorship of the Colegio de Farmacéuticos de Puerto Rico (ACPE Provider 0151). When a cohort is offered under this sponsorship, the cohort description and the issued certificate state so expressly, including the recognized contact hours and CEUs (18 contact hours / 1.8 CEUs for the current curriculum).\n\nSCCA, as an independent entity, is not an accredited provider with ACPE nor with the Puerto Rico Board of Pharmacy. CE recognition of any given cohort comes from the sponsoring provider (Colegio de Farmacéuticos PR), not from SCCA. For cohorts without explicit sponsorship, the certificate documents participation, but its acceptance as accredited CE hours depends on the student's employer, regulatory board, or receiving institution."
         },
         {
           "heading": "9. Limitation of liability",
@@ -293,6 +293,11 @@
     "courseCta": "Enroll",
     "courseLinkAria": "Go to course enrollment",
     "modulesLabel": "Modules",
+    "priceLabel": "Investment",
+    "pricePharmacistLabel": "Pharmacist",
+    "priceStudentLabel": "Student",
+    "ceLabel": "CE Credit",
+    "ceBody": "{contactHours} contact hours · {ceus} CEUs · ACPE Provider {providerNumber} via {provider}",
     "items": [
       {
         "id": "basic-compounding",
@@ -325,16 +330,16 @@
   },
   "instructor": {
     "eyebrow": "Instructor",
-    "heading": "Jorge L. Reyes Quiñones, R.Ph.",
-    "title": "Pharmacist · Program director",
-    "bio": "Licensed pharmacist in Puerto Rico with active practice in compounded preparations. He designs and teaches the academy's curriculum with a focus on regulatory application, occupational safety, and the clinical cases that show up in a working pharmacy. Detailed bio and professional photo coming soon.",
+    "heading": "Jorge L. Reyes Quiñones, RPh",
+    "title": "Chief Pharmacist and owner · Santa Cruz Pharma Care",
+    "bio": "Jorge L. Reyes Quiñones, RPh — Chief Pharmacist and owner of Santa Cruz Pharma Care. After more than a decade practicing pharmaceutical compounding, he founded Santa Cruz Compounding Academy with one clear goal: to teach the same clinical quality he practices every day in his laboratory, distilled into an intensive 3-day course that prepares pharmacists and technicians for modern USP standards.",
     "credentialsLabel": "Credentials",
     "credentials": [
-      "Licensed pharmacist in Puerto Rico",
-      "Active practice in non-sterile compounding",
-      "Clinical director at Santa Cruz Pharma Care"
+      "RPh — Licensed pharmacist in Puerto Rico",
+      "Chief Pharmacist and owner, Santa Cruz Pharma Care",
+      "Founder and curriculum director, Santa Cruz Compounding Academy"
     ],
-    "photoPlaceholderLabel": "Professional photo coming soon"
+    "photoAlt": "Jorge L. Reyes Quiñones, RPh — professional portrait"
   },
   "aprenderas": {
     "eyebrow": "What you'll learn",
@@ -530,11 +535,22 @@
     "fields": {
       "curso": "Course",
       "cohorte": "Cohort",
+      "tier": "Enrollment type",
       "nombre": "Full name",
       "email": "Email address",
       "telefono": "Phone",
       "licencia": "Pharmacy license number",
       "notas": "Notes or questions"
+    },
+    "tiers": {
+      "pharmacist": {
+        "label": "Pharmacist",
+        "note": "Professional rate. Includes certificate and CE hours."
+      },
+      "student": {
+        "label": "Student",
+        "note": "For pharmacy technician trainees and pharmacy students with a valid Student ID. If you don't have an institutional email, write to us for manual verification."
+      }
     },
     "acceptanceLabel": "I have read and accept the <terms>Terms and Conditions</terms>, the <privacy>Privacy Policy</privacy>, and the <refund>Refund Policy</refund>.",
     "summary": {
