@@ -2,16 +2,7 @@
 import { useState, useMemo } from "react";
 import { useTranslations } from "next-intl";
 import { Link } from "@/i18n/routing";
-import {
-  COURSES,
-  COHORTS,
-  DEFAULT_TIER,
-  formatPrice,
-  getPricingByTier,
-  type Cohort,
-  type Course,
-  type Tier,
-} from "@/lib/courses";
+import { COURSES, COHORTS, DEFAULT_TIER, type Tier } from "@/lib/courses";
 
 type Props = {
   locale: "es" | "en";
@@ -63,11 +54,8 @@ export function InscripcionForm({ locale, preselectedCourseId, docsVersion }: Pr
   const [accepted, setAccepted] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
-  const selectedCourse: Course | undefined = COURSES.find((c) => c.id === courseId);
-  const selectedCohort: Cohort | undefined = COHORTS.find((c) => c.id === cohorteId);
-  const selectedPricing = selectedCourse
-    ? getPricingByTier(selectedCourse, tier)
-    : undefined;
+  const selectedCourse = COURSES.find((c) => c.id === courseId);
+
 
   async function onSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
@@ -141,11 +129,7 @@ export function InscripcionForm({ locale, preselectedCourseId, docsVersion }: Pr
                 <span className="font-heading text-teal-deep text-xs font-semibold tracking-[0.18em] uppercase">
                   {t(`tiers.${p.tier}.label`)}
                 </span>
-                <span className="font-heading text-gray-900 mt-1 text-xl font-semibold">
-                  {formatPrice(p.priceUsdCents)}
-                  <span className="text-gray-700 ml-1 text-xs font-normal tracking-wide uppercase">USD</span>
-                </span>
-                <span className="text-gray-700 mt-1 text-xs leading-relaxed">
+                <span className="text-gray-700 mt-2 text-xs leading-relaxed">
                   {t(`tiers.${p.tier}.note`)}
                 </span>
               </button>
@@ -167,11 +151,9 @@ export function InscripcionForm({ locale, preselectedCourseId, docsVersion }: Pr
           >
             {COURSES.map((c) => {
               const item = tCourses.raw(`${COURSES.indexOf(c)}.title`) as string;
-              const defaultPrice = getPricingByTier(c, DEFAULT_TIER);
               return (
                 <option key={c.id} value={c.id}>
                   {item}
-                  {defaultPrice ? ` — ${formatPrice(defaultPrice.priceUsdCents)}` : ""}
                 </option>
               );
             })}
@@ -293,21 +275,8 @@ export function InscripcionForm({ locale, preselectedCourseId, docsVersion }: Pr
         </label>
       </div>
 
-      {/* Summary + submit */}
-      <div className="border-gray-300 flex flex-col gap-4 border-t pt-6 sm:flex-row sm:items-center sm:justify-between">
-        <p className="text-gray-700 text-sm">
-          {selectedCourse && selectedCohort && selectedPricing && (
-            <>
-              {t("summary.total")}:{" "}
-              <span className="text-gray-900 font-heading font-semibold">
-                {formatPrice(selectedPricing.priceUsdCents)} USD
-              </span>
-              <span className="text-gray-700 ml-2 text-xs">
-                ({t(`tiers.${tier}.label`)})
-              </span>
-            </>
-          )}
-        </p>
+      {/* Submit — final price is rendered by Stripe Checkout, not in our UI. */}
+      <div className="border-gray-300 flex flex-col gap-4 border-t pt-6 sm:flex-row sm:items-center sm:justify-end">
         <button
           type="submit"
           disabled={!accepted || submitting || !cohorteId}

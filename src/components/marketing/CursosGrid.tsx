@@ -5,7 +5,6 @@ import { Reveal } from "@/components/ui/Reveal";
 import {
   getCourseById,
   getCohortsForCourse,
-  formatPrice,
   type CourseId,
 } from "@/lib/courses";
 
@@ -172,43 +171,19 @@ export function CursosGrid() {
                     </div>
                   )}
 
-                  {courseData && (
-                    <div className="border-gray-300 mt-6 grid grid-cols-1 gap-6 border-t pt-6 sm:grid-cols-2">
-                      <div>
-                        <p className="font-heading text-teal-deep text-xs font-semibold tracking-[0.18em] uppercase">
-                          {t("priceLabel")}
-                        </p>
-                        <dl className="mt-3 space-y-2">
-                          {courseData.pricing.map((p) => (
-                            <div key={p.tier} className="flex items-baseline justify-between gap-3 text-sm">
-                              <dt className="text-gray-700 font-heading uppercase tracking-wide text-xs">
-                                {t(p.tier === "profesional" ? "pricePharmacistLabel" : "priceStudentLabel")}
-                              </dt>
-                              <dd className="font-heading text-gray-900 font-semibold">
-                                {formatPrice(p.priceUsdCents)}
-                                <span className="text-gray-700 ml-1 text-[10px] font-normal tracking-wide uppercase">
-                                  USD
-                                </span>
-                              </dd>
-                            </div>
-                          ))}
-                        </dl>
-                      </div>
-                      {courseData.acpe && (
-                        <div>
-                          <p className="font-heading text-teal-deep text-xs font-semibold tracking-[0.18em] uppercase">
-                            {t("ceLabel")}
-                          </p>
-                          <p className="text-gray-900 mt-3 text-sm leading-relaxed">
-                            {t("ceBody", {
-                              contactHours: courseData.acpe.contactHours,
-                              ceus: courseData.acpe.ceus,
-                              providerNumber: courseData.acpe.providerNumber,
-                              provider: courseData.acpe.provider,
-                            })}
-                          </p>
-                        </div>
-                      )}
+                  {courseData?.acpe && (
+                    <div className="border-gray-300 mt-6 border-t pt-6">
+                      <p className="font-heading text-teal-deep text-xs font-semibold tracking-[0.18em] uppercase">
+                        {t("ceLabel")}
+                      </p>
+                      <p className="text-gray-900 mt-3 text-sm leading-relaxed">
+                        {t("ceBody", {
+                          contactHours: courseData.acpe.contactHours,
+                          ceus: courseData.acpe.ceus,
+                          providerNumber: courseData.acpe.providerNumber,
+                          provider: courseData.acpe.provider,
+                        })}
+                      </p>
                     </div>
                   )}
 
