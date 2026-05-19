@@ -68,8 +68,10 @@ export default authCheck((req) => {
 
 export const config = {
   matcher: [
-    // Locale-prefixed pages (excludes /api, /_next, /_vercel, static files).
-    "/((?!api|_next|_vercel|.*\\..*).*)",
+    // Locale-prefixed pages. Excludes /api, /_next, /_vercel, /verificar
+    // (public certificate verification — keeps the cert URL clean of any
+    // locale prefix), and any path with a file extension.
+    "/((?!api|_next|_vercel|verificar|.*\\..*).*)",
     // Module PDFs — extension match so the previous pattern misses them.
     "/modulos/:path*",
   ],

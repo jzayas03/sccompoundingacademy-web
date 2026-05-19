@@ -597,6 +597,16 @@
     "secondaryNote": "Questions before you decide?",
     "secondaryCta": "Write to us"
   },
+  "verificar": {
+    "eyebrow": "Certificate verification",
+    "validTitle": "Valid certificate",
+    "validBody": "Issued to {name} on {date}.",
+    "invalidTitle": "Certificate not found",
+    "invalidBody": "The number {certNo} does not match a certificate issued by Santa Cruz Compounding Academy.",
+    "courseTitle": "Basic Non-Sterile Compounding for Pharmacists & Pharmacy Technicians",
+    "courseSubtitle": "18 contact hours · 1.8 CEUs · Knowledge-based, Level 1 · ACPE Provider 0151",
+    "backToHome": "Back to sccompoundingacademy.com"
+  },
   "portal": {
     "login": {
       "eyebrow": "Student portal",
@@ -630,7 +640,12 @@
       "lockedBadge": "Locked",
       "openBadge": "Available",
       "moduleAria": "Module {n} — locked, requires enrollment payment",
-      "moduleOpenAria": "Open module {n}"
+      "moduleOpenAria": "Open module {n}",
+      "certReadyTitle": "Your certificate is ready!",
+      "certReadyBody": "You passed all three module post-tests. Download your official participation certificate.",
+      "certReadyCta": "Go to my certificate",
+      "certPendingTitle": "Progressing toward your certificate",
+      "certPendingBody": "Pass all three module post-tests to unlock your participation certificate."
     },
     "module": {
       "eyebrow": "Module",
@@ -656,6 +671,23 @@
       "pendingTitle": "Post-test pending",
       "pendingBody": "The question bank for this module has not been produced yet. We'll let you know when it's ready.",
       "backToModule": "Back to module"
+    },
+    "cert": {
+      "eyebrow": "Certificate",
+      "title": "Participation certificate",
+      "readyTitle": "Your certificate is ready",
+      "readyBody": "You passed all three post-tests above the threshold. Download your official participation certificate — publicly verifiable.",
+      "downloadCta": "Download certificate (PDF)",
+      "lockedTitle": "Not quite there yet",
+      "lockedBody": "Your certificate unlocks once all three post-tests are passed. Current status:",
+      "checklistTitle": "Module status",
+      "checklistPassed": "Passed",
+      "checklistPending": "Pending",
+      "checklistCtaTake": "Take post-test",
+      "checklistCtaResults": "View results",
+      "verificationHintTitle": "Public verification",
+      "verificationHintBody": "Every certificate carries a unique SCCA-{YYYY}-{NNN} number, verifiable any time at sccompoundingacademy.com/verificar.",
+      "backToDashboard": "Back to portal"
     },
     "postTestResults": {
       "eyebrow": "Post-test · Results",

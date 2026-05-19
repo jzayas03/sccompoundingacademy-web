@@ -9,6 +9,7 @@ import { Link } from "@/i18n/routing";
 import { auth } from "@/lib/auth";
 import { db } from "@/lib/db";
 import { users, type User } from "@/lib/db/schema";
+import { isEligibleForCertificate } from "@/lib/certificates";
 import { logoutAction } from "./actions";
 
 export const metadata: Metadata = {
@@ -57,10 +58,32 @@ export default async function PortalDashboardPage({
     redirect(`/${locale}/portal/login`);
   }
 
-  return <Dashboard user={user} sessionEmail={session.user.email} />;
+  // Cert eligibility surfaces a top-of-dashboard CTA when all three
+  // post-tests are passed — same query the certificate page runs, just
+  // pulled up one level so paid students notice the unlock without
+  // hunting for the cert tab.
+  const certEligible = user.paidAt
+    ? (await isEligibleForCertificate(user.id)).eligible
+    : false;
+
+  return (
+    <Dashboard
+      user={user}
+      sessionEmail={session.user.email}
+      certEligible={certEligible}
+    />
+  );
 }
 
-function Dashboard({ user, sessionEmail }: { user: User; sessionEmail: string }) {
+function Dashboard({
+  user,
+  sessionEmail,
+  certEligible,
+}: {
+  user: User;
+  sessionEmail: string;
+  certEligible: boolean;
+}) {
   const t = useTranslations("portal.dashboard");
   const messages = useMessages() as unknown as CursosGridMessages;
   const modules = messages.cursosGrid.items[0]?.modules ?? [];
@@ -108,6 +131,28 @@ function Dashboard({ user, sessionEmail }: { user: User; sessionEmail: string })
               className="bg-chartreuse text-teal-deep ring-teal-deep/15 shadow-soft hover:bg-chartreuse/95 hover:shadow-lift focus-visible:ring-chartreuse font-heading inline-flex h-12 items-center rounded-md px-6 text-sm font-semibold ring-1 transition-[color,background-color,box-shadow,transform] duration-200 ease-out focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-offset-white focus-visible:outline-none sm:text-base motion-safe:hover:-translate-y-px"
             >
               {t("paymentCta")} →
+            </Link>
+          </div>
+        </GlassCard>
+      )}
+
+      {/* Certificate-ready banner — shows once a paid student has passed
+          all three post-tests. Sits above the module strip so the unlock
+          is the first thing the user notices on their next visit. */}
+      {isPaid && certEligible && (
+        <GlassCard interactive={false} className="mt-10 p-6 sm:p-8">
+          <p className="font-heading text-teal-deep text-xs font-semibold tracking-[0.18em] uppercase">
+            {t("certReadyTitle")}
+          </p>
+          <p className="text-gray-900 mt-3 text-base leading-relaxed">
+            {t("certReadyBody")}
+          </p>
+          <div className="mt-6">
+            <Link
+              href="/portal/certificado"
+              className="bg-chartreuse text-teal-deep ring-teal-deep/15 shadow-soft hover:bg-chartreuse/95 hover:shadow-lift focus-visible:ring-chartreuse font-heading inline-flex h-12 items-center rounded-md px-6 text-sm font-semibold ring-1 transition-[color,background-color,box-shadow,transform] duration-200 ease-out focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-offset-white focus-visible:outline-none sm:text-base motion-safe:hover:-translate-y-px"
+            >
+              {t("certReadyCta")} →
             </Link>
           </div>
         </GlassCard>

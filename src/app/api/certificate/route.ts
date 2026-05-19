@@ -1,0 +1,89 @@
+import { NextResponse } from "next/server";
+import { eq } from "drizzle-orm";
+import { auth } from "@/lib/auth";
+import { db } from "@/lib/db";
+import { users } from "@/lib/db/schema";
+import {
+  getOrCreateCertificate,
+  isEligibleForCertificate,
+} from "@/lib/certificates";
+import { renderCertificatePdf } from "@/lib/certificates/render";
+import { getSiteUrl } from "@/lib/siteUrl";
+
+export const runtime = "nodejs";
+
+/**
+ * GET /api/certificate — download the signed-in student's certificate.
+ *
+ * Phase A scope is self-service only (a student downloads their own
+ * cert), so there is no `[userId]` param — the user is identified by
+ * the auth session. A future admin route can read `[userId]` from URL
+ * once an admin namespace exists.
+ *
+ * Server-side flow:
+ *   1. Auth: requires a valid Auth.js session. Anonymous → 401.
+ *   2. DB lookup: pull the `users` row by email, surface 401 if absent.
+ *   3. Paid gate: `users.paidAt` must be set (PR 4 enforces this on
+ *      the portal navigation; we re-check here so a direct API hit
+ *      cannot bypass it).
+ *   4. Eligibility: all three module post-tests must show at least
+ *      one passing attempt.
+ *   5. Cert allocation: `getOrCreateCertificate` is idempotent — first
+ *      download mints a new `SCCA-{YYYY}-{NNN}` row, every subsequent
+ *      download reuses it.
+ *   6. PDF: generated on-the-fly via `pdf-lib`. Re-downloads regenerate
+ *      the bytes; certificate identity is the DB row, not the PDF file.
+ */
+export async function GET() {
+  const session = await auth();
+  if (!session?.user?.email) {
+    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+  }
+
+  const [user] = await db
+    .select()
+    .from(users)
+    .where(eq(users.email, session.user.email))
+    .limit(1);
+  if (!user) {
+    return NextResponse.json({ error: "User not found" }, { status: 401 });
+  }
+  if (!user.paidAt) {
+    return NextResponse.json(
+      { error: "Payment required to download certificate." },
+      { status: 402 },
+    );
+  }
+
+  const eligibility = await isEligibleForCertificate(user.id);
+  if (!eligibility.eligible) {
+    return NextResponse.json(
+      {
+        error: "All three module post-tests must be passed first.",
+        passedModules: eligibility.passedModules,
+      },
+      { status: 409 },
+    );
+  }
+
+  const { cert } = await getOrCreateCertificate(user.id);
+
+  const siteUrl = getSiteUrl();
+  const verificationUrl = `${siteUrl}/verificar/${cert.certNo}`;
+
+  const pdfBytes = await renderCertificatePdf({
+    certNo: cert.certNo,
+    studentName: user.name?.trim() || session.user.email,
+    issuedAt: cert.issuedAt,
+    verificationUrl,
+  });
+
+  return new NextResponse(new Uint8Array(pdfBytes), {
+    status: 200,
+    headers: {
+      "content-type": "application/pdf",
+      "content-disposition": `attachment; filename="${cert.certNo}.pdf"`,
+      "cache-control": "private, no-store",
+    },
+  });
+}
