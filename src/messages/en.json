@@ -645,7 +645,10 @@
       "certReadyBody": "You passed all three module post-tests. Download your official participation certificate.",
       "certReadyCta": "Go to my certificate",
       "certPendingTitle": "Progressing toward your certificate",
-      "certPendingBody": "Pass all three module post-tests to unlock your participation certificate."
+      "certPendingBody": "Pass all three module post-tests to unlock your participation certificate.",
+      "reviewPromptTitle": "Share your feedback",
+      "reviewPromptBody": "Your feedback helps us improve the course for future cohorts.",
+      "reviewPromptCta": "Leave a review"
     },
     "module": {
       "eyebrow": "Module",
@@ -687,7 +690,35 @@
       "checklistCtaResults": "View results",
       "verificationHintTitle": "Public verification",
       "verificationHintBody": "Every certificate carries a unique SCCA-{YYYY}-{NNN} number, verifiable any time at sccompoundingacademy.com/verificar.",
+      "reviewLinkLabel": "Share your course feedback",
       "backToDashboard": "Back to portal"
+    },
+    "reviews": {
+      "eyebrow": "Your feedback",
+      "title": "Course review",
+      "subtitle": "Your feedback helps us improve for future cohorts. Reviews are collected privately — never displayed publicly without your consent.",
+      "overallRatingLabel": "How satisfied are you with the course overall?",
+      "moduleRatingsLabel": "Rate each module individually",
+      "moduleRatingHint": "1 star = very poor · 5 stars = excellent",
+      "bestLabel": "What was the best part of the course?",
+      "improveLabel": "What would you improve?",
+      "bestPlaceholder": "Optional. What stuck with you, key moments, anecdotes…",
+      "improvePlaceholder": "Optional. Areas to strengthen, specific suggestions…",
+      "optional": "optional",
+      "consentLabel": "I allow SCCA to use my review (quoted with my name) in public marketing materials.",
+      "submitButton": "Submit review",
+      "submitting": "Submitting…",
+      "submitError": "We couldn't submit your review. Please try again.",
+      "successTitle": "Thanks for your feedback!",
+      "successBody": "Your review is on file. Your participation certificate is ready for download.",
+      "successCta": "Go to certificate",
+      "alreadySubmittedTitle": "Review already submitted",
+      "alreadySubmittedBody": "We received your feedback — thank you for taking the time.",
+      "lockedTitle": "Available once you complete the course",
+      "lockedBody": "You'll be able to leave a review after passing the 3 post-tests.",
+      "backToDashboard": "Back to portal",
+      "starAria": "{stars} stars",
+      "moduleStarAria": "{stars} stars for {module}"
     },
     "postTestResults": {
       "eyebrow": "Post-test · Results",
