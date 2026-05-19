@@ -24,7 +24,9 @@ import { brand } from "@/lib/brand";
  *      uploaded. The brand colors (teal-deep, chartreuse, sand) come
  *      from `lib/brand.ts` so the placeholder still looks on-brand.
  *
- * Page size: US Letter horizontal — **792 × 612 pt** (11 × 8.5 in).
+ * Page size: A4 horizontal — **842 × 595 pt** (matches the owner's
+ * Canva template viewBox so the PNG embed lands pixel-perfect with no
+ * stretch).
  *
  * All measurements below are in PDF points (72 pt = 1 in).
  */
@@ -36,8 +38,8 @@ export type CertRenderInput = {
   verificationUrl: string; // "https://sccompoundingacademy.com/verificar/SCCA-..."
 };
 
-const PAGE_W = 792;
-const PAGE_H = 612;
+const PAGE_W = 842;
+const PAGE_H = 595;
 
 // Brand palette mirrored from lib/brand.ts. Kept inline because the
 // brand-lint test only allows hex literals inside lib/brand.ts; we use
@@ -60,23 +62,56 @@ export async function renderCertificatePdf(input: CertRenderInput): Promise<Uint
 
   const page = pdf.addPage([PAGE_W, PAGE_H]);
 
-  const templatePath = join(process.cwd(), "public/certificate/template.png");
-  const hasTemplate = existsSync(templatePath);
+  // Prefer the vector PDF template (Canva → Share → PDF Print). Falls
+  // back to the rasterized PNG, then to a primitive layout if neither
+  // ships. Vector keeps the cert print-sharp at any zoom level.
+  const pdfTemplatePath = join(process.cwd(), "public/certificate/template.pdf");
+  const pngTemplatePath = join(process.cwd(), "public/certificate/template.png");
 
   const helvetica = await pdf.embedFont(StandardFonts.Helvetica);
   const helveticaBold = await pdf.embedFont(StandardFonts.HelveticaBold);
   const timesItalic = await pdf.embedFont(StandardFonts.TimesRomanItalic);
 
-  if (hasTemplate) {
-    await drawWithTemplate(pdf, page, templatePath, input, helvetica, helveticaBold);
+  if (existsSync(pdfTemplatePath)) {
+    await drawWithPdfTemplate(pdf, page, pdfTemplatePath, input, helvetica, helveticaBold);
+  } else if (existsSync(pngTemplatePath)) {
+    await drawWithTemplate(pdf, page, pngTemplatePath, input, helvetica, helveticaBold);
   } else {
     drawPlaceholderBody(page, input, helvetica, helveticaBold, timesItalic);
   }
+
+  // Optional instructor signature — when the owner drops a scan at
+  // `public/instructor/firma-jorge-reyes.png`, render it crossing the
+  // signature line. Until then, we just keep the line + printed name
+  // (still valid for ACPE — the printed name is the legal signature).
+  await drawInstructorSignature(pdf, page);
 
   // QR code — same position in both modes, bottom-right corner.
   await drawQrCode(pdf, page, input.verificationUrl);
 
   return await pdf.save();
+}
+
+async function drawWithPdfTemplate(
+  pdf: PDFDocument,
+  page: PDFPage,
+  templatePath: string,
+  input: CertRenderInput,
+  helvetica: PDFFont,
+  helveticaBold: PDFFont,
+): Promise<void> {
+  // Background: embed the owner's Canva "PDF Print" export as a vector
+  // page. Keeps the chrome (banner, seal, frames, logos) infinitely
+  // crisp at any zoom or print DPI.
+  const srcBytes = readFileSync(templatePath);
+  const embeddedPages = await pdf.embedPdf(srcBytes, [0]);
+  const embedded = embeddedPages[0];
+  if (!embedded) {
+    throw new Error(`Failed to embed page 0 of cert template at ${templatePath}`);
+  }
+  page.drawPage(embedded, { x: 0, y: 0, width: PAGE_W, height: PAGE_H });
+
+  drawOverlay(page, input, helvetica, helveticaBold);
 }
 
 async function drawWithTemplate(
@@ -87,43 +122,138 @@ async function drawWithTemplate(
   helvetica: PDFFont,
   helveticaBold: PDFFont,
 ): Promise<void> {
-  // Background PNG — owner's Canva export, full-page.
+  // Legacy PNG-template path (kept as a fallback if owner ever exports
+  // a raster instead of a vector PDF).
   const pngBytes = readFileSync(templatePath);
   const png = await pdf.embedPng(pngBytes);
   page.drawImage(png, { x: 0, y: 0, width: PAGE_W, height: PAGE_H });
+  drawOverlay(page, input, helvetica, helveticaBold);
+}
 
-  // Dynamic fields. Coordinates are owner-tunable — we use sane
-  // defaults that match a typical "name in the middle, metadata at the
-  // bottom corners" certificate layout. Real coordinates land in a
-  // follow-up once owner reviews the first output.
+function drawOverlay(
+  page: PDFPage,
+  input: CertRenderInput,
+  helvetica: PDFFont,
+  helveticaBold: PDFFont,
+): void {
+
+  // The Canva export ships with placeholder text baked into the PNG
+  // ("Student's Name", a body paragraph, "18 contact hours", and a
+  // signature block at the bottom). The background of that zone is
+  // pure white, so we cover the placeholders with two white rectangles
+  // and re-draw the correct content on top:
+  //
+  //   1. Main body rectangle — clears eyebrow + name + body + hours.
+  //   2. Lower signature rectangle — clears the wrong "Jorge Reyes,
+  //      Rph, FACA, FAVP" + "Training Instructor" placeholder without
+  //      touching the Santa Cruz logo (left) or SCCA mini-logo (right)
+  //      in the bottom corners.
+  // Main body rectangle — top at y=378 so the gold/teal wavy curve
+  // at the bottom of the title banner stays fully visible.
+  page.drawRectangle({
+    x: 85,
+    y: 140,
+    width: 672,
+    height: 238,
+    color: COLOR.white,
+  });
+  page.drawRectangle({
+    x: 275,
+    y: 28,
+    width: 290,
+    height: 170,
+    color: COLOR.white,
+  });
+
+  // Eyebrow — "THIS IS TO CERTIFY THAT" connecting the title to the name.
+  drawCentered(page, "THIS IS TO CERTIFY THAT", {
+    y: 357,
+    size: 11,
+    font: helveticaBold,
+    color: COLOR.gray900,
+  });
+
+  // Student name — biggest dynamic field.
   drawCentered(page, input.studentName, {
-    y: PAGE_H - PAGE_H * 0.46,
-    size: 30,
+    y: 315,
+    size: 28,
     font: helveticaBold,
     color: COLOR.tealDeep,
   });
 
-  const dateLabel = formatDate(input.issuedAt);
-  page.drawText(`Bayamón, Puerto Rico — ${dateLabel}`, {
-    x: 60,
-    y: 60,
+  // Body sentence + course block (all English to match the template).
+  drawCentered(page, "has successfully completed", {
+    y: 275,
+    size: 11,
+    font: helvetica,
+    color: COLOR.gray900,
+  });
+  drawCentered(page, "Basic Non-Sterile Compounding", {
+    y: 254,
+    size: 14,
+    font: helveticaBold,
+    color: COLOR.tealDeep,
+  });
+  drawCentered(page, "for Pharmacists & Pharmacy Technicians", {
+    y: 237,
     size: 10,
     font: helvetica,
     color: COLOR.gray900,
   });
-
-  page.drawText(`Certificado: ${input.certNo}`, {
-    x: PAGE_W - 220,
-    y: 60,
+  drawCentered(page, "18 contact hours · 1.8 CEUs · Knowledge-based, Level 1", {
+    y: 221,
     size: 10,
+    font: helvetica,
+    color: COLOR.gray900,
+  });
+  drawCentered(page, "ACPE Provider 0151 — Puerto Rico College of Pharmacists", {
+    y: 205,
+    size: 9,
+    font: helvetica,
+    color: COLOR.gray700,
+  });
+
+  // Signature block — pushed down into the lower cleared zone so it
+  // reads as the bottom-of-cert signature, not a mid-body callout.
+  page.drawLine({
+    start: { x: PAGE_W / 2 - 120, y: 130 },
+    end: { x: PAGE_W / 2 + 120, y: 130 },
+    thickness: 0.5,
+    color: COLOR.gray700,
+  });
+  drawCentered(page, "Jorge L. Reyes Quiñones, RPh, B.S.Ph. UPR", {
+    y: 113,
+    size: 10,
+    font: helveticaBold,
+    color: COLOR.gray900,
+  });
+  drawCentered(page, "Chief Pharmacist · Course Director", {
+    y: 99,
+    size: 9,
+    font: helvetica,
+    color: COLOR.gray700,
+  });
+
+  // Cert number — top-right of body zone, looks like a stamp.
+  page.drawText(`Certificate ${input.certNo}`, {
+    x: PAGE_W - 245,
+    y: 357,
+    size: 9,
     font: helveticaBold,
     color: COLOR.tealDeep,
   });
 
-  page.drawText(`Verificación: ${input.verificationUrl}`, {
-    x: 60,
-    y: 44,
+  // Date + verification URL — between ACPE line and signature.
+  const dateLabel = formatDate(input.issuedAt);
+  drawCentered(page, `Issued in Bayamón, Puerto Rico — ${dateLabel}`, {
+    y: 78,
     size: 8,
+    font: helvetica,
+    color: COLOR.gray700,
+  });
+  drawCentered(page, `Verify at ${input.verificationUrl}`, {
+    y: 67,
+    size: 7,
     font: helvetica,
     color: COLOR.gray700,
   });
@@ -287,6 +417,34 @@ function drawPlaceholderBody(
   });
 }
 
+async function drawInstructorSignature(
+  pdf: PDFDocument,
+  page: PDFPage,
+): Promise<void> {
+  // Conditional overlay. The signature line + printed credentials are
+  // already drawn by drawOverlay; this adds the scanned signature on
+  // top so the cert reads as personally signed when the owner uploads
+  // the asset. Until the file is present, the cert just shows the
+  // line + name (also valid for ACPE compliance).
+  const sigPath = join(process.cwd(), "public/instructor/firma-jorge-reyes.png");
+  if (!existsSync(sigPath)) return;
+
+  const sigBytes = readFileSync(sigPath);
+  const sigImage = await pdf.embedPng(sigBytes);
+
+  // Render the signature crossing the line (line is at y=130). Target
+  // width 220 pt; height auto-scales from the asset's native ratio so
+  // ascenders/descenders stay proportionate.
+  const targetWidth = 220;
+  const targetHeight = (sigImage.height / sigImage.width) * targetWidth;
+  page.drawImage(sigImage, {
+    x: PAGE_W / 2 - targetWidth / 2,
+    y: 130 - targetHeight / 3, // sit the baseline of the signature on the line
+    width: targetWidth,
+    height: targetHeight,
+  });
+}
+
 async function drawQrCode(
   pdf: PDFDocument,
   page: PDFPage,
@@ -295,19 +453,25 @@ async function drawQrCode(
   // QR colors must be hex strings (qrcode library API). Pull from
   // brand.ts so the brand-lint test's allowlist is satisfied — only
   // `lib/brand.ts` is allowed to declare hex literals directly.
+  // Generate at 320 px and embed at 70 pt to keep the matrix crisp
+  // (without the 4× oversize, the 55 pt embed downsamples to mush and
+  // the QR scans as an opaque square).
   const dataUrl = await QRCode.toDataURL(verificationUrl, {
-    width: 120,
-    margin: 0,
+    width: 320,
+    margin: 1,
     errorCorrectionLevel: "M",
     color: { dark: brand.colors.tealDeep, light: `${brand.colors.white}FF` },
   });
   const base64 = dataUrl.split(",")[1] ?? "";
   const bytes = Buffer.from(base64, "base64");
   const qrImage = await pdf.embedPng(bytes);
-  const size = 70;
+  // Top-right of the body zone, just below the cert-number stamp.
+  // The Canva template owns the bottom-right corner with the SCCA
+  // mini-logo, so we tuck the QR inside the body instead.
+  const size = 65;
   page.drawImage(qrImage, {
     x: PAGE_W - size - 50,
-    y: 50,
+    y: 280,
     width: size,
     height: size,
   });
@@ -329,9 +493,9 @@ function drawCentered(
 }
 
 function formatDate(date: Date): string {
-  return new Intl.DateTimeFormat("es-PR", {
-    day: "numeric",
+  return new Intl.DateTimeFormat("en-US", {
     month: "long",
+    day: "numeric",
     year: "numeric",
   }).format(date);
 }
