@@ -48,11 +48,11 @@
     "refund": "Reembolsos",
     "copyright": "© {year} Santa Cruz Compounding Academy. Todos los derechos reservados.",
     "contactInfoLabel": "Información de contacto",
-    "address": "73 Calle Santa Cruz, Suite 101, Bayamón, PR 00960",
-    "phone": "787-254-8329",
+    "address": "73 Santa Cruz Medical Building, Suite 201, Bayamón, PR 00961",
+    "phone": "787-798-4646",
     "phoneLabel": "Teléfono",
-    "whatsapp": "787-254-8329",
-    "whatsappLabel": "WhatsApp",
+    "whatsapp": "787-408-5775",
+    "whatsappLabel": "Secundario",
     "email": "info@sccompoundingacademy.com",
     "emailLabel": "Correo",
     "addressLabel": "Sede",
@@ -132,7 +132,7 @@
         },
         {
           "heading": "12. Contacto",
-          "body": "Para preguntas, solicitudes o reclamos sobre esta Política de Privacidad o el tratamiento de tus datos personales:\n\nSanta Cruz Compounding Academy, LLC\nEdificio Médico Santa Cruz, 73 Calle Santa Cruz, Suite 101\nBayamón, Puerto Rico 00960\nCorreo: info@sccompoundingacademy.com\nTeléfono: 787-254-8329"
+          "body": "Para preguntas, solicitudes o reclamos sobre esta Política de Privacidad o el tratamiento de tus datos personales:\n\nSanta Cruz Compounding Academy, LLC\n73 Santa Cruz Medical Building, Suite 201\nBayamón, Puerto Rico 00961\nCorreo: info@sccompoundingacademy.com\nTeléfono principal: 787-798-4646\nTeléfono secundario: 787-408-5775"
         }
       ]
     },
@@ -208,7 +208,7 @@
         },
         {
           "heading": "17. Contacto",
-          "body": "Para preguntas o aclaraciones sobre estos Términos:\n\nSanta Cruz Compounding Academy, LLC\nEdificio Médico Santa Cruz, 73 Calle Santa Cruz, Suite 101\nBayamón, Puerto Rico 00960\nCorreo: info@sccompoundingacademy.com\nTeléfono: 787-254-8329"
+          "body": "Para preguntas o aclaraciones sobre estos Términos:\n\nSanta Cruz Compounding Academy, LLC\n73 Santa Cruz Medical Building, Suite 201\nBayamón, Puerto Rico 00961\nCorreo: info@sccompoundingacademy.com\nTeléfono principal: 787-798-4646\nTeléfono secundario: 787-408-5775"
         }
       ]
     },
@@ -244,7 +244,7 @@
         },
         {
           "heading": "7. Contacto",
-          "body": "Para preguntas sobre esta política o para iniciar una solicitud:\n\nSanta Cruz Compounding Academy, LLC\nEdificio Médico Santa Cruz, 73 Calle Santa Cruz, Suite 101\nBayamón, Puerto Rico 00960\nCorreo: info@sccompoundingacademy.com\nTeléfono: 787-254-8329"
+          "body": "Para preguntas sobre esta política o para iniciar una solicitud:\n\nSanta Cruz Compounding Academy, LLC\n73 Santa Cruz Medical Building, Suite 201\nBayamón, Puerto Rico 00961\nCorreo: info@sccompoundingacademy.com\nTeléfono principal: 787-798-4646\nTeléfono secundario: 787-408-5775"
         }
       ]
     }
@@ -254,7 +254,8 @@
     "skipToContent": "Saltar al contenido"
   },
   "hero": {
-    "eyebrow": "Certificación profesional · USP 〈795〉 · 〈800〉 · Bayamón, PR",
+    "slogan": "Educamos para formar bienestar y salud",
+    "eyebrow": "Certificación profesional · ACPE 0151 · 18 hrs · Bayamón, PR",
     "headline": "Entrenamiento práctico en compounding, dentro de un laboratorio activo.",
     "subheadline": "Curso presencial de 18 horas (3 días · 6 horas/día) en Bayamón para farmacéuticos y técnicos de farmacia, con práctica supervisada y currículo alineado a USP 〈795〉 y USP 〈800〉. Programa afiliado a Santa Cruz Pharma Care.",
     "primaryCta": "Ver cursos",
@@ -294,10 +295,17 @@
     "courseLinkAria": "Ir a la inscripción del curso",
     "modulesLabel": "Módulos",
     "priceLabel": "Inversión",
-    "pricePharmacistLabel": "Farmacéutico",
+    "pricePharmacistLabel": "Profesional",
     "priceStudentLabel": "Estudiante",
     "ceLabel": "Crédito CE",
-    "ceBody": "{contactHours} horas de contacto · {ceus} CEUs · ACPE Provider {providerNumber} vía {provider}",
+    "ceBody": "{contactHours} horas de contacto · {ceus} CEUs · Knowledge-based, Level 1 · ACPE Provider {providerNumber} vía {provider}",
+    "includesLabel": "Incluye",
+    "includesItems": [
+      "Taller práctico supervisado",
+      "Grupos pequeños",
+      "Materiales incluidos",
+      "Almuerzo incluido"
+    ],
     "items": [
       {
         "id": "basic-compounding",
@@ -310,13 +318,13 @@
             "id": "modulo-1",
             "day": "Día 1 · 6 hrs",
             "title": "Fundamentos regulatorios y cápsulas",
-            "summary": "USP 〈795〉 y 〈800〉, alcance del manejo de hazardous drugs, NIOSH, PPE, Ley de Farmacia de PR, DQSA y categoría 503B; formulación de cápsulas, BUD y packing statistics."
+            "summary": "USP 〈795〉 y 〈800〉, alcance del manejo de hazardous drugs, NIOSH, PPE, Ley de Farmacia de PR, DQSA y categoría 503B; cálculo de BUD y packing statistics, con laboratorio práctico de 100 cápsulas slow release."
           },
           {
             "id": "modulo-2",
             "day": "Día 2 · 6 hrs",
             "title": "Supositorios, líquidos orales y dermatología",
-            "summary": "BUD y formulación de supositorios, suspensiones orales con cálculos de dispensación, condiciones tópicas (acné, psoriasis, melasma, alopecia) y casos pediátricos."
+            "summary": "BUD y formulación de supositorios, suspensiones orales con cálculos de dispensación, condiciones tópicas (acné, psoriasis, melasma, alopecia), casos pediátricos y preparaciones para manejo del dolor (cremas analgésicas y combinaciones)."
           },
           {
             "id": "modulo-3",
@@ -332,15 +340,15 @@
     "eyebrow": "Instructor",
     "heading": "Lcdo. Jorge L. Reyes Quiñones, RPh",
     "title": "Chief Pharmacist y propietario · Santa Cruz Pharma Care",
-    "bio": "Lcdo. Jorge L. Reyes Quiñones, RPh — Chief Pharmacist y propietario de Santa Cruz Pharma Care. Farmacéutico licenciado en Puerto Rico desde 1980 (Licenciatura 2979) con más de 45 años de práctica profesional y formación especializada en compounding por el Professional Compounding Centers of America (PCCA) y USP Convention. Fundó Santa Cruz Compounding Academy con un objetivo claro: enseñar la misma calidad clínica que practica todos los días en su laboratorio, traducida a un curso intensivo de 3 días que prepara a farmacéuticos y técnicos para los estándares USP modernos.",
+    "bio": "Lcdo. Jorge L. Reyes Quiñones, RPh — Chief Pharmacist y propietario de Santa Cruz Pharma Care. Farmacéutico licenciado en Puerto Rico desde 1980 con más de 45 años de práctica profesional, formación especializada en compounding por PCCA y USP Convention, y reconocimientos como Preceptor of the Year 2025 (Creighton University) y un premio epónimo «Jorge L. Reyes Award» en Nova Southeastern University. Fundador del primer programa académico de Técnico de Farmacia en Puerto Rico (Ana G. Méndez, 1985–88).",
     "credentialsLabel": "Credenciales y formación",
     "credentials": [
-      "Farmacéutico licenciado en Puerto Rico desde 1980 (Lic. 2979); estudios de Pharm.D. en Wayne State University School of Pharmacy",
+      "B.S.Ph. — Escuela de Farmacia, Universidad de Puerto Rico, Recinto de Río Piedras (1969–1972); Licencia PR No. 2979, emitida 30 de julio de 1980",
       "Comprehensive Compounding Course — Professional Compounding Centers of America (PCCA)",
       "Certificación USP 〈795〉 + 〈797〉 — USP Convention Global Education and Training Program",
       "Compounding clínico avanzado — University of Florida College of Pharmacy (Hormone Restoration Therapy, Pain Management); Basic Veterinary Compounding — American College of Apothecaries",
       "Premio Emeterio Betances por contribución a la educación en compounding no estéril; premio epónimo «Jorge L. Reyes Award» en Nova Southeastern University para excelencia en rotación de compounding",
-      "Preceptor of the Year 2025 — Creighton University School of Pharmacy; Clinical Affiliate Assistant Professor, Nova Southeastern University; fundador del primer programa académico de Técnico de Farmacia en Puerto Rico (Ana G. Méndez, 1985–88)"
+      "Preceptor of the Year 2025 — Creighton University School of Pharmacy; Clinical Affiliate Assistant Professor, Nova Southeastern University; Fellow del American College of Veterinary Pharmacists"
     ],
     "photoAlt": "Lcdo. Jorge L. Reyes Quiñones, RPh — retrato profesional"
   },
@@ -483,7 +491,7 @@
     "heading": "Sede en Bayamón, Puerto Rico.",
     "intro": "La academia comparte sede con Santa Cruz Pharma Care y opera dentro de su laboratorio activo. A minutos de la PR-22 y la PR-2.",
     "addressLabel": "Sede",
-    "addressLine": "Edificio Médico Santa Cruz · 73 Calle Santa Cruz, Suite 101, Bayamón, PR 00960",
+    "addressLine": "73 Santa Cruz Medical Building, Suite 201, Bayamón, PR 00961",
     "hoursLabel": "Horario",
     "hoursValue": "Lunes a Viernes · 7:30 a.m. – 5:00 p.m.",
     "parkingLabel": "Estacionamiento",
@@ -491,7 +499,7 @@
     "transitLabel": "Acceso",
     "transitNote": "A minutos de la PR-22 y PR-2. Coordinación con servicios de transporte disponible.",
     "openInMapsLabel": "Abrir en Google Maps",
-    "embedQuery": "Edificio+Medico+Santa+Cruz+73+Calle+Santa+Cruz+Bayamon+PR+00960"
+    "embedQuery": "73+Santa+Cruz+Medical+Building+Suite+201+Bayamon+PR+00961"
   },
   "instagramFeatured": {
     "eyebrow": "Síguenos en Instagram",
@@ -546,13 +554,13 @@
       "notas": "Notas o preguntas"
     },
     "tiers": {
-      "pharmacist": {
-        "label": "Farmacéutico",
-        "note": "Tarifa profesional. Incluye certificado y horas de CE."
+      "profesional": {
+        "label": "Profesional",
+        "note": "Tarifa para farmacéuticos (RPh) activos y técnicos de farmacia licenciados. Incluye certificado y horas de CE."
       },
       "student": {
         "label": "Estudiante",
-        "note": "Para técnicos en formación y estudiantes de farmacia con Student ID válido. Si no usas email institucional, escríbenos para verificación manual."
+        "note": "Solo estudiantes no licenciados (pre-PharmD o en programa de técnico). Requiere email institucional. Si no usas email institucional, escríbenos para verificación manual del Student ID."
       }
     },
     "acceptanceLabel": "He leído y acepto los <terms>Términos y Condiciones</terms>, la <privacy>Política de Privacidad</privacy> y la <refund>Política de Reembolsos</refund>.",

@@ -28,7 +28,7 @@ export type InscripcionRecord = {
   cohorte_id: string;
   /** Pricing tier the student paid under — needed for downstream
    * reconciliation between Stripe Price IDs and the portal's `users.tier`. */
-  tier: "pharmacist" | "student";
+  tier: "profesional" | "student";
   // Payment
   stripe_session_id: string;
   stripe_payment_intent: string;

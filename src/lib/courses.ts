@@ -12,9 +12,13 @@
  * SCCA offers a single integrated course — "Basic Compounding No Estéril"
  * — split into three on-site modules (one per day). Two pricing tiers
  * share the same Stripe Product:
- *   - pharmacist: $2,350 (default)
- *   - student:    $495 (gated via institutional email allowlist or
- *                 Stripe coupon issued manually after Student-ID review)
+ *   - profesional: $2,350 (default) — covers both RPh pharmacists and
+ *                  licensed pharmacy technicians (per the brochure
+ *                  audience, 2026-05-19)
+ *   - student:     $495 (gated via institutional email allowlist or
+ *                  Stripe coupon issued manually after Student-ID review)
+ *                  — only for non-licensed students (pre-PharmD / tech
+ *                  program enrollees)
  *
  * Stripe Price IDs live in env vars so we never commit them. The
  * webhook handler uses `course_id` + the resolved tier (looked up from
@@ -28,7 +32,7 @@
 
 export type CourseId = "basic-compounding";
 
-export type Tier = "pharmacist" | "student";
+export type Tier = "profesional" | "student";
 
 export type Pricing = {
   tier: Tier;
@@ -48,6 +52,8 @@ export type AcpeAccreditation = {
   contactHours: number;
   /** Continuing Education Units (1 CEU = 10 contact hours). */
   ceus: number;
+  /** ACPE activity classification — e.g. "Knowledge-based, Level 1". */
+  classification: string;
 };
 
 export type Course = {
@@ -104,8 +110,8 @@ export const COURSES: readonly Course[] = [
     uspLabel: "USP 〈795〉 + 〈800〉",
     pricing: [
       {
-        tier: "pharmacist",
-        stripePriceEnvKey: "STRIPE_PRICE_ID_PHARMACIST",
+        tier: "profesional",
+        stripePriceEnvKey: "STRIPE_PRICE_ID_PROFESIONAL",
         priceUsdCents: 235_000,
       },
       {
@@ -119,6 +125,7 @@ export const COURSES: readonly Course[] = [
       providerNumber: "0151",
       contactHours: 18,
       ceus: 1.8,
+      classification: "Knowledge-based, Level 1",
     },
   },
 ] as const;
@@ -155,8 +162,9 @@ export function getPricingByTier(course: Course, tier: Tier): Pricing | undefine
   return course.pricing.find((p) => p.tier === tier);
 }
 
-/** Default tier shown selected in the inscription form. */
-export const DEFAULT_TIER: Tier = "pharmacist";
+/** Default tier shown selected in the inscription form. Covers RPh
+ *  pharmacists and licensed pharmacy technicians. */
+export const DEFAULT_TIER: Tier = "profesional";
 
 /** Format USD cents as a display string (e.g. 100000 → "$1,000"). */
 export function formatPrice(usdCents: number): string {

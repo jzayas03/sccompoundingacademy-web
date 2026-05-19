@@ -48,11 +48,11 @@
     "refund": "Refunds",
     "copyright": "© {year} Santa Cruz Compounding Academy. All rights reserved.",
     "contactInfoLabel": "Contact information",
-    "address": "73 Calle Santa Cruz, Suite 101, Bayamón, PR 00960",
-    "phone": "787-254-8329",
+    "address": "73 Santa Cruz Medical Building, Suite 201, Bayamón, PR 00961",
+    "phone": "787-798-4646",
     "phoneLabel": "Phone",
-    "whatsapp": "787-254-8329",
-    "whatsappLabel": "WhatsApp",
+    "whatsapp": "787-408-5775",
+    "whatsappLabel": "Secondary",
     "email": "info@sccompoundingacademy.com",
     "emailLabel": "Email",
     "addressLabel": "Office",
@@ -132,7 +132,7 @@
         },
         {
           "heading": "12. Contact",
-          "body": "For questions, requests, or complaints about this Privacy Policy or the treatment of your personal data:\n\nSanta Cruz Compounding Academy, LLC\nEdificio Médico Santa Cruz, 73 Calle Santa Cruz, Suite 101\nBayamón, Puerto Rico 00960\nEmail: info@sccompoundingacademy.com\nPhone: 787-254-8329"
+          "body": "For questions, requests, or complaints about this Privacy Policy or the treatment of your personal data:\n\nSanta Cruz Compounding Academy, LLC\n73 Santa Cruz Medical Building, Suite 201\nBayamón, Puerto Rico 00961\nEmail: info@sccompoundingacademy.com\nPhone (primary): 787-798-4646\nPhone (secondary): 787-408-5775"
         }
       ]
     },
@@ -208,7 +208,7 @@
         },
         {
           "heading": "17. Contact",
-          "body": "For questions or clarifications about these Terms:\n\nSanta Cruz Compounding Academy, LLC\nEdificio Médico Santa Cruz, 73 Calle Santa Cruz, Suite 101\nBayamón, Puerto Rico 00960\nEmail: info@sccompoundingacademy.com\nPhone: 787-254-8329"
+          "body": "For questions or clarifications about these Terms:\n\nSanta Cruz Compounding Academy, LLC\n73 Santa Cruz Medical Building, Suite 201\nBayamón, Puerto Rico 00961\nEmail: info@sccompoundingacademy.com\nPhone (primary): 787-798-4646\nPhone (secondary): 787-408-5775"
         }
       ]
     },
@@ -244,7 +244,7 @@
         },
         {
           "heading": "7. Contact",
-          "body": "For questions about this policy or to initiate a request:\n\nSanta Cruz Compounding Academy, LLC\nEdificio Médico Santa Cruz, 73 Calle Santa Cruz, Suite 101\nBayamón, Puerto Rico 00960\nEmail: info@sccompoundingacademy.com\nPhone: 787-254-8329"
+          "body": "For questions about this policy or to initiate a request:\n\nSanta Cruz Compounding Academy, LLC\n73 Santa Cruz Medical Building, Suite 201\nBayamón, Puerto Rico 00961\nEmail: info@sccompoundingacademy.com\nPhone (primary): 787-798-4646\nPhone (secondary): 787-408-5775"
         }
       ]
     }
@@ -254,7 +254,8 @@
     "skipToContent": "Skip to content"
   },
   "hero": {
-    "eyebrow": "Professional certification · USP 〈795〉 · 〈800〉 · Bayamón, PR",
+    "slogan": "We educate to build wellness and health",
+    "eyebrow": "Professional certification · ACPE 0151 · 18 hrs · Bayamón, PR",
     "headline": "Hands-on compounding training, inside a working laboratory.",
     "subheadline": "18-hour in-person course (3 days · 6 hours/day) in Bayamón for pharmacists and pharmacy technicians, with supervised practice and a curriculum aligned to USP 〈795〉 and USP 〈800〉. A program affiliated with Santa Cruz Pharma Care.",
     "primaryCta": "View courses",
@@ -294,10 +295,17 @@
     "courseLinkAria": "Go to course enrollment",
     "modulesLabel": "Modules",
     "priceLabel": "Investment",
-    "pricePharmacistLabel": "Pharmacist",
+    "pricePharmacistLabel": "Professional",
     "priceStudentLabel": "Student",
     "ceLabel": "CE Credit",
-    "ceBody": "{contactHours} contact hours · {ceus} CEUs · ACPE Provider {providerNumber} via {provider}",
+    "ceBody": "{contactHours} contact hours · {ceus} CEUs · Knowledge-based, Level 1 · ACPE Provider {providerNumber} via {provider}",
+    "includesLabel": "Includes",
+    "includesItems": [
+      "Supervised hands-on workshop",
+      "Small-group format",
+      "Materials provided",
+      "Lunch included"
+    ],
     "items": [
       {
         "id": "basic-compounding",
@@ -310,13 +318,13 @@
             "id": "modulo-1",
             "day": "Day 1 · 6 hrs",
             "title": "Regulatory foundations and capsules",
-            "summary": "USP 〈795〉 and 〈800〉, scope of hazardous-drug handling, NIOSH, PPE, PR Pharmacy Act, DQSA and the 503B Outsourcing Facility category; capsule formulation, BUD, and packing statistics."
+            "summary": "USP 〈795〉 and 〈800〉, scope of hazardous-drug handling, NIOSH, PPE, PR Pharmacy Act, DQSA and the 503B Outsourcing Facility category; BUD and packing-statistics math, with a hands-on slow-release capsule lab of 100 units."
           },
           {
             "id": "modulo-2",
             "day": "Day 2 · 6 hrs",
             "title": "Suppositories, oral liquids, and dermatology",
-            "summary": "Suppository BUD and formulation, oral suspensions with dispensing math, topical conditions (acne, psoriasis, melasma, alopecia), and pediatric cases."
+            "summary": "Suppository BUD and formulation, oral suspensions with dispensing math, topical conditions (acne, psoriasis, melasma, alopecia), pediatric cases, and pain-management preparations (analgesic creams and combinations)."
           },
           {
             "id": "modulo-3",
@@ -332,15 +340,15 @@
     "eyebrow": "Instructor",
     "heading": "Jorge L. Reyes Quiñones, RPh",
     "title": "Chief Pharmacist and owner · Santa Cruz Pharma Care",
-    "bio": "Jorge L. Reyes Quiñones, RPh — Chief Pharmacist and owner of Santa Cruz Pharma Care. Licensed pharmacist in Puerto Rico since 1980 (License No. 2979) with more than 45 years of professional practice and specialized compounding training through the Professional Compounding Centers of America (PCCA) and the USP Convention. He founded Santa Cruz Compounding Academy with one clear goal: to teach the same clinical quality he practices every day in his laboratory, distilled into an intensive 3-day course that prepares pharmacists and technicians for modern USP standards.",
+    "bio": "Jorge L. Reyes Quiñones, RPh — Chief Pharmacist and owner of Santa Cruz Pharma Care. Licensed pharmacist in Puerto Rico since 1980 with more than 45 years of professional practice, specialized compounding training through PCCA and the USP Convention, and recognitions including Preceptor of the Year 2025 (Creighton University) and the eponymous \"Jorge L. Reyes Award\" at Nova Southeastern University. Founder of Puerto Rico's first academic Pharmacy Technician program (Ana G. Méndez, 1985–88).",
     "credentialsLabel": "Credentials and training",
     "credentials": [
-      "Licensed pharmacist in Puerto Rico since 1980 (License No. 2979); Pharm.D. studies at Wayne State University School of Pharmacy",
+      "B.S.Ph. — School of Pharmacy, University of Puerto Rico, Río Piedras campus (1969–1972); PR License No. 2979, issued July 30, 1980",
       "Comprehensive Compounding Course — Professional Compounding Centers of America (PCCA)",
       "USP 〈795〉 + 〈797〉 certification — USP Convention Global Education and Training Program",
       "Advanced clinical compounding — University of Florida College of Pharmacy (Hormone Restoration Therapy, Pain Management); Basic Veterinary Compounding — American College of Apothecaries",
       "Emeterio Betances Award for contribution to non-sterile compounding education; eponymous \"Jorge L. Reyes Award\" at Nova Southeastern University for excellence in the compounding rotation",
-      "Preceptor of the Year 2025 — Creighton University School of Pharmacy; Clinical Affiliate Assistant Professor, Nova Southeastern University; founder of Puerto Rico's first academic Pharmacy Technician program (Ana G. Méndez, 1985–88)"
+      "Preceptor of the Year 2025 — Creighton University School of Pharmacy; Clinical Affiliate Assistant Professor, Nova Southeastern University; Fellow of the American College of Veterinary Pharmacists"
     ],
     "photoAlt": "Jorge L. Reyes Quiñones, RPh — professional portrait"
   },
@@ -483,7 +491,7 @@
     "heading": "Campus in Bayamón, Puerto Rico.",
     "intro": "The academy shares a campus with Santa Cruz Pharma Care and operates inside its working laboratory. Minutes from PR-22 and PR-2.",
     "addressLabel": "Office",
-    "addressLine": "Edificio Médico Santa Cruz · 73 Calle Santa Cruz, Suite 101, Bayamón, PR 00960",
+    "addressLine": "73 Santa Cruz Medical Building, Suite 201, Bayamón, PR 00961",
     "hoursLabel": "Hours",
     "hoursValue": "Monday to Friday · 7:30 a.m. – 5:00 p.m.",
     "parkingLabel": "Parking",
@@ -491,7 +499,7 @@
     "transitLabel": "Access",
     "transitNote": "Minutes from PR-22 and PR-2. Transit coordination available on request.",
     "openInMapsLabel": "Open in Google Maps",
-    "embedQuery": "Edificio+Medico+Santa+Cruz+73+Calle+Santa+Cruz+Bayamon+PR+00960"
+    "embedQuery": "73+Santa+Cruz+Medical+Building+Suite+201+Bayamon+PR+00961"
   },
   "instagramFeatured": {
     "eyebrow": "Follow us on Instagram",
@@ -546,13 +554,13 @@
       "notas": "Notes or questions"
     },
     "tiers": {
-      "pharmacist": {
-        "label": "Pharmacist",
-        "note": "Professional rate. Includes certificate and CE hours."
+      "profesional": {
+        "label": "Professional",
+        "note": "Rate for active pharmacists (RPh) and licensed pharmacy technicians. Includes certificate and CE hours."
       },
       "student": {
         "label": "Student",
-        "note": "For pharmacy technician trainees and pharmacy students with a valid Student ID. If you don't have an institutional email, write to us for manual verification."
+        "note": "Only for non-licensed students (pre-PharmD or in a pharmacy technician program). Requires institutional email. If you don't have one, write to us for manual Student ID verification."
       }
     },
     "acceptanceLabel": "I have read and accept the <terms>Terms and Conditions</terms>, the <privacy>Privacy Policy</privacy>, and the <refund>Refund Policy</refund>.",

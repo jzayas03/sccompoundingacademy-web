@@ -114,11 +114,13 @@ export function InscripcionForm({ locale, preselectedCourseId, docsVersion }: Pr
 
   return (
     <form noValidate onSubmit={onSubmit} className="space-y-6">
-      {/* Tier selector — 2 cards (Pharmacist default, Student discounted).
-          Student tier eligibility (institutional email match or
-          owner-issued Stripe coupon) lives in the portal Phase A; for
-          the landing-page MVP we trust the client choice and capture it
-          in Stripe session metadata so the webhook can persist it. */}
+      {/* Tier selector — 2 cards (Profesional default, Student discounted).
+          Profesional covers RPh pharmacists + licensed pharmacy techs;
+          Student is gated to non-licensed pharmacy students. Eligibility
+          checks (institutional email match or owner-issued Stripe coupon)
+          live in the portal Phase A; for the landing-page MVP we trust
+          the client choice and capture it in Stripe session metadata so
+          the webhook can persist it. */}
       <div>
         <p className={labelCls}>{t("fields.tier")}</p>
         <div className="mt-2 grid grid-cols-1 gap-3 sm:grid-cols-2">

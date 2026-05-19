@@ -45,8 +45,11 @@ type CourseItem = {
 export function CursosGrid() {
   const t = useTranslations("cursosGrid");
   const locale = useLocale();
-  const messages = useMessages() as unknown as { cursosGrid: { items: CourseItem[] } };
+  const messages = useMessages() as unknown as {
+    cursosGrid: { items: CourseItem[]; includesItems: string[] };
+  };
   const items = messages.cursosGrid.items;
+  const includesItems = messages.cursosGrid.includesItems;
 
   function nextCohortLabel(courseId: string): string | null {
     const course = getCourseById(courseId);
@@ -137,8 +140,40 @@ export function CursosGrid() {
                     </div>
                   )}
 
+                  {/* Inclusiones — chartreuse-check selling points just
+                      above the price/CE block. Two-column on sm+ to keep
+                      the card height contained. */}
+                  {includesItems?.length > 0 && (
+                    <div className="border-gray-300 mt-8 border-t pt-6">
+                      <p className="font-heading text-teal-deep text-xs font-semibold tracking-[0.18em] uppercase">
+                        {t("includesLabel")}
+                      </p>
+                      <ul className="mt-3 grid grid-cols-1 gap-2 sm:grid-cols-2">
+                        {includesItems.map((item) => (
+                          <li key={item} className="flex items-start gap-2 text-sm">
+                            <svg
+                              aria-hidden
+                              viewBox="0 0 20 20"
+                              fill="none"
+                              className="text-teal-deep mt-0.5 h-4 w-4 shrink-0"
+                            >
+                              <path
+                                d="M4 10.5l3.5 3.5L16 6"
+                                stroke="currentColor"
+                                strokeWidth="2"
+                                strokeLinecap="round"
+                                strokeLinejoin="round"
+                              />
+                            </svg>
+                            <span className="text-gray-900">{item}</span>
+                          </li>
+                        ))}
+                      </ul>
+                    </div>
+                  )}
+
                   {courseData && (
-                    <div className="border-gray-300 mt-8 grid grid-cols-1 gap-6 border-t pt-6 sm:grid-cols-2">
+                    <div className="border-gray-300 mt-6 grid grid-cols-1 gap-6 border-t pt-6 sm:grid-cols-2">
                       <div>
                         <p className="font-heading text-teal-deep text-xs font-semibold tracking-[0.18em] uppercase">
                           {t("priceLabel")}
@@ -147,7 +182,7 @@ export function CursosGrid() {
                           {courseData.pricing.map((p) => (
                             <div key={p.tier} className="flex items-baseline justify-between gap-3 text-sm">
                               <dt className="text-gray-700 font-heading uppercase tracking-wide text-xs">
-                                {t(p.tier === "pharmacist" ? "pricePharmacistLabel" : "priceStudentLabel")}
+                                {t(p.tier === "profesional" ? "pricePharmacistLabel" : "priceStudentLabel")}
                               </dt>
                               <dd className="font-heading text-gray-900 font-semibold">
                                 {formatPrice(p.priceUsdCents)}
