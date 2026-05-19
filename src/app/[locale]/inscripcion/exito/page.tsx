@@ -49,7 +49,27 @@ function SuccessPage() {
         </h1>
         <p className="text-gray-900 mt-5 text-base leading-relaxed sm:text-lg">{t("body")}</p>
 
-        <div className="mt-10 flex flex-col items-center justify-center gap-3 sm:flex-row sm:gap-4">
+        {/* Portal access nudge — surfaces the magic-link sign-in path now
+            that the Stripe webhook upserts the user row + sets paidAt.
+            Sized as a primary CTA above the secondary "back to home" link
+            because driving people into the portal is the priority once
+            payment clears. */}
+        <div className="border-gray-300 mx-auto mt-10 max-w-xl rounded-lg border bg-white p-6 text-left sm:p-7">
+          <p className="font-heading text-teal-deep text-xs font-semibold tracking-[0.18em] uppercase">
+            {t("portalTitle")}
+          </p>
+          <p className="text-gray-900 mt-3 text-sm leading-relaxed sm:text-base">
+            {t("portalBody")}
+          </p>
+          <Link
+            href="/portal/login"
+            className="bg-chartreuse text-teal-deep ring-teal-deep/15 shadow-soft hover:bg-chartreuse/95 hover:shadow-lift focus-visible:ring-chartreuse font-heading mt-5 inline-flex h-12 items-center rounded-md px-6 text-sm font-semibold ring-1 transition-[color,background-color,box-shadow,transform] duration-200 ease-out focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-offset-white focus-visible:outline-none sm:text-base motion-safe:hover:-translate-y-px"
+          >
+            {t("portalCta")} →
+          </Link>
+        </div>
+
+        <div className="mt-8 flex flex-col items-center justify-center gap-3 sm:flex-row sm:gap-4">
           <Link
             href="/"
             className="border-teal-deep text-teal-deep bg-white shadow-soft hover:bg-teal-deep hover:text-off-white hover:shadow-lift focus-visible:ring-chartreuse font-heading inline-flex h-12 items-center justify-center rounded-md border-2 px-6 text-sm font-semibold transition-[color,background-color,box-shadow,transform] duration-200 ease-out focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-offset-white focus-visible:outline-none motion-safe:hover:-translate-y-px"

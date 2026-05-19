@@ -6,6 +6,8 @@ import { recordInscripcion, type InscripcionRecord } from "@/lib/airtable";
 import { buildConfirmationEmail } from "@/lib/emails/inscripcion-confirmacion";
 import { buildInternalEmail } from "@/lib/emails/inscripcion-interna";
 import { getCourseById, getCohortById, formatPrice } from "@/lib/courses";
+import { db } from "@/lib/db";
+import { users } from "@/lib/db/schema";
 
 export const runtime = "nodejs";
 
@@ -15,15 +17,21 @@ export const runtime = "nodejs";
  * Handles `checkout.session.completed` events: builds the canonical
  * InscripcionRecord from session metadata + payment data, fans out to
  *
- *   1. Resend → student confirmation email (HTML + plain text)
- *   2. Resend → internal notification email to info@sccompoundingacademy.com
- *   3. Airtable → row in `Inscripciones` table
+ *   1. Postgres `users` upsert  → sets paidAt / tier / stripeCustomerId
+ *                                  so the portal dashboard unlocks
+ *   2. Airtable                  → row in `Inscripciones` (operational
+ *                                  triage view for the owner)
+ *   3. Resend → student confirmation email (HTML + plain text)
+ *   4. Resend → internal notification email to info@sccompoundingacademy.com
  *
  * Any single sub-step failing is logged but does NOT cause the webhook
  * to return non-200; Stripe retries indefinitely on non-2xx, which
- * would re-send emails and create duplicate Airtable rows. The webhook
- * is idempotent by design — Stripe's at-least-once delivery is the
- * source of truth, and our consumers tolerate replays.
+ * would re-send emails and create duplicate rows. The webhook is
+ * idempotent by design — Stripe's at-least-once delivery is the
+ * source of truth, and our consumers tolerate replays:
+ *   - Drizzle `onConflictDoUpdate` makes the user upsert replay-safe
+ *   - Airtable inserts can dedupe by `stripe_session_id` in the base
+ *   - Email sends would dupe on replay; that is the acceptable cost
  *
  * Signature verification with STRIPE_WEBHOOK_SECRET is mandatory —
  * without it, anyone with the public URL can forge a 'paid' event.
@@ -119,9 +127,19 @@ export async function POST(req: Request) {
   const tier: "pharmacist" | "student" =
     metadataTier ?? (hasDiscount ? "student" : "pharmacist");
 
+  // Auth.js normalises emails to lowercase before inserting users on
+  // sign-in (via Email provider's `normalizeIdentifier`). We must match
+  // that here so the upsert hits the right row regardless of how the
+  // student typed their email into the Stripe checkout form.
+  const email = (session.customer_email ?? "").trim().toLowerCase();
+  const stripeCustomerId =
+    typeof session.customer === "string"
+      ? session.customer
+      : session.customer?.id ?? null;
+
   const record: InscripcionRecord = {
     nombre: md.nombre ?? "",
-    email: session.customer_email ?? "",
+    email,
     telefono: md.telefono ?? "",
     licencia: md.licencia || undefined,
     curso_id: course.id,
@@ -140,11 +158,45 @@ export async function POST(req: Request) {
     locale,
   };
 
-  // Persist to Airtable (graceful: returns null if not configured).
+  // 1) Portal DB — upsert the user row so the dashboard reflects payment
+  //    immediately on the student's next visit. ON CONFLICT (email) DO
+  //    UPDATE so we cleanly handle both "paid before signing in" and
+  //    "signed in before paying" sequences without losing data. Wrapped
+  //    in try/catch so an outage of the DB does not block Airtable +
+  //    confirmation emails — the source of truth at this point is
+  //    Stripe, and the webhook is idempotent so a replay heals the DB.
+  if (email) {
+    try {
+      await db
+        .insert(users)
+        .values({
+          email,
+          name: record.nombre || null,
+          tier,
+          paidAt: new Date(),
+          stripeCustomerId,
+          cohortId: cohort.id,
+        })
+        .onConflictDoUpdate({
+          target: users.email,
+          set: {
+            name: record.nombre || undefined,
+            tier,
+            paidAt: new Date(),
+            stripeCustomerId,
+            cohortId: cohort.id,
+          },
+        });
+    } catch (err) {
+      console.error("[stripe-webhook] users upsert failed", err);
+    }
+  }
+
+  // 2) Airtable (graceful: returns null if not configured).
   await recordInscripcion(record);
 
   const resend = getResend();
-  if (resend && session.customer_email) {
+  if (resend && email) {
     const conf = buildConfirmationEmail({
       nombre: record.nombre,
       cursoTitulo,
@@ -158,7 +210,7 @@ export async function POST(req: Request) {
     try {
       await resend.emails.send({
         from: FROM_ADDRESS,
-        to: session.customer_email,
+        to: email,
         replyTo: REPLY_TO,
         subject: conf.subject,
         html: conf.html,

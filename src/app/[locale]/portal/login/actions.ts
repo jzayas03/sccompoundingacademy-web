@@ -26,7 +26,13 @@ export async function signInWithEmailAction(
   _prevState: LoginState,
   formData: FormData,
 ): Promise<LoginState> {
-  const email = String(formData.get("email") ?? "").trim();
+  // Auth.js's Resend provider (via the underlying Email provider's
+  // `normalizeIdentifier`) already trims + lowercases the identifier
+  // before insert. We mirror that here so the value we pass back to
+  // the client (for error messaging) matches what gets persisted, and
+  // so any future opt-out of normalizeIdentifier wouldn't silently
+  // create case-mismatched user rows.
+  const email = String(formData.get("email") ?? "").trim().toLowerCase();
   if (!email) {
     return { error: "missing" };
   }

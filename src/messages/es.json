@@ -568,6 +568,9 @@
     "success": {
       "title": "Inscripción confirmada",
       "body": "Tu pago se procesó correctamente y tu cupo en la cohorte está confirmado. Te enviamos un correo con todos los detalles logísticos (sede, horario, qué traer). Si no lo ves en los próximos minutos, revisa la carpeta de spam.",
+      "portalTitle": "Tu acceso al portal está listo",
+      "portalBody": "Iniciá sesión con el mismo email con el que te inscribiste para revisar tu plan de estudios y descargar el material cuando esté disponible.",
+      "portalCta": "Entrar al portal",
       "ctaHome": "Volver al inicio",
       "supportNote": "¿Preguntas? Escríbenos a"
     },

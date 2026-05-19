@@ -568,6 +568,9 @@
     "success": {
       "title": "Enrollment confirmed",
       "body": "Your payment was processed correctly and your cohort seat is confirmed. We've sent you an email with all the logistics details (campus, schedule, what to bring). If you don't see it in the next few minutes, check your spam folder.",
+      "portalTitle": "Your portal access is ready",
+      "portalBody": "Sign in with the same email you used to enroll to review your study plan and download materials as they become available.",
+      "portalCta": "Sign in to the portal",
       "ctaHome": "Back to home",
       "supportNote": "Questions? Write to us at"
     },
