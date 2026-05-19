@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 import { z } from "zod";
 import { stripe } from "@/lib/stripe";
 import { getCourseById, getCohortById } from "@/lib/courses";
+import { getSiteUrl } from "@/lib/siteUrl";
 
 export const runtime = "nodejs";
 
@@ -85,12 +86,10 @@ export async function POST(req: Request) {
   }
 
   // Build the URLs Stripe redirects to after the user completes/cancels
-  // checkout. Use request origin so dev / preview / prod all work without
-  // env-var coupling.
-  const origin =
-    process.env.NEXT_PUBLIC_SITE_URL ??
-    req.headers.get("origin") ??
-    `https://${req.headers.get("host") ?? "localhost:3000"}`;
+  // checkout. `getSiteUrl()` rejects misconfigured `.vercel.app` env
+  // values so users always land back on the canonical custom domain;
+  // dev still gets localhost via `NODE_ENV`.
+  const origin = getSiteUrl();
   const successUrl = `${origin}/${data.locale}/inscripcion/exito?session_id={CHECKOUT_SESSION_ID}`;
   const cancelUrl = `${origin}/${data.locale}/inscripcion/cancelada`;
 

@@ -1,7 +1,6 @@
 import type { MetadataRoute } from "next";
 import { routing } from "@/i18n/routing";
-
-const BASE = process.env.NEXT_PUBLIC_SITE_URL ?? "http://localhost:3000";
+import { getSiteUrl } from "@/lib/siteUrl";
 
 const PATHS: Record<string, { es: string; en: string }> = {
   home: { es: "/es", en: "/en" },
@@ -12,15 +11,16 @@ const PATHS: Record<string, { es: string; en: string }> = {
 };
 
 export default function sitemap(): MetadataRoute.Sitemap {
+  const base = getSiteUrl();
   const entries: MetadataRoute.Sitemap = [];
   const lastModified = new Date();
   for (const paths of Object.values(PATHS)) {
     for (const locale of routing.locales) {
       entries.push({
-        url: `${BASE}${paths[locale]}`,
+        url: `${base}${paths[locale]}`,
         lastModified,
         alternates: {
-          languages: Object.fromEntries(routing.locales.map((l) => [l, `${BASE}${paths[l]}`])),
+          languages: Object.fromEntries(routing.locales.map((l) => [l, `${base}${paths[l]}`])),
         },
       });
     }
