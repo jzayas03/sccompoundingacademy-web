@@ -633,7 +633,39 @@
       "pdfMissingBody": "The material for this module is still being produced. We'll email you when it's available for download.",
       "downloadCta": "Download PDF",
       "postTestCta": "Go to post-test",
-      "postTestPendingHint": "The module post-test will be available in the next portal update."
+      "postTestPendingHint": "The question bank for this module has not been produced yet."
+    },
+    "postTest": {
+      "eyebrow": "Post-test",
+      "title": "Module post-test",
+      "introBody": "{total} questions. You need at least {threshold} correct to pass the module. You can retake it as many times as needed.",
+      "questionLabel": "Question {current} of {total}",
+      "previousButton": "Previous",
+      "nextButton": "Next",
+      "submitButton": "Submit answers",
+      "submittingButton": "Submitting…",
+      "submitDisabledHint": "Answer every question to submit.",
+      "pendingTitle": "Post-test pending",
+      "pendingBody": "The question bank for this module has not been produced yet. We'll let you know when it's ready.",
+      "backToModule": "Back to module"
+    },
+    "postTestResults": {
+      "eyebrow": "Post-test · Results",
+      "title": "Results",
+      "scoreLabel": "Correct",
+      "percentageLabel": "Percentage",
+      "passedTitle": "You passed the module!",
+      "passedBody": "Your result is above the passing threshold ({threshold}).",
+      "notPassedTitle": "You didn't reach the passing threshold",
+      "notPassedBody": "You need at least {threshold} to pass. Retake the post-test as many times as needed — only your most recent passing attempt counts toward the certificate.",
+      "showExplanationsToggle": "Show correct answers",
+      "hideExplanationsToggle": "Hide correct answers",
+      "yourAnswerLabel": "Your answer",
+      "correctAnswerLabel": "Correct answer",
+      "noAnswerSelected": "(unanswered)",
+      "retryButton": "Retry",
+      "backToModule": "Back to module",
+      "noAttemptFound": "You haven't completed this post-test yet."
     }
   }
 }

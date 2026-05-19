@@ -11,6 +11,7 @@ import { Link } from "@/i18n/routing";
 import { auth } from "@/lib/auth";
 import { db } from "@/lib/db";
 import { users } from "@/lib/db/schema";
+import { getQuiz, type ModuleQuizId } from "@/lib/quizzes";
 
 export const metadata: Metadata = {
   title: "Módulo · SCCA Portal",
@@ -87,7 +88,17 @@ export default async function ModulePage({
   const pdfAbsolutePath = join(process.cwd(), "public", "modulos", `dia-${day}.pdf`);
   const pdfExists = existsSync(pdfAbsolutePath);
 
-  return <ModuleView id={id as ModuleId} day={day} pdfHref={pdfHref} pdfExists={pdfExists} />;
+  const hasQuiz = getQuiz(id as ModuleQuizId).length > 0;
+
+  return (
+    <ModuleView
+      id={id as ModuleId}
+      day={day}
+      pdfHref={pdfHref}
+      pdfExists={pdfExists}
+      hasQuiz={hasQuiz}
+    />
+  );
 }
 
 function ModuleView({
@@ -95,11 +106,13 @@ function ModuleView({
   day,
   pdfHref,
   pdfExists,
+  hasQuiz,
 }: {
   id: ModuleId;
   day: number;
   pdfHref: string;
   pdfExists: boolean;
+  hasQuiz: boolean;
 }) {
   const t = useTranslations("portal.module");
   const messages = useMessages() as unknown as CursosGridMessages;
@@ -174,15 +187,29 @@ function ModuleView({
             {t("downloadCta")} ↓
           </a>
         )}
-        <button
-          type="button"
-          disabled
-          className="bg-chartreuse/40 text-teal-deep/70 ring-teal-deep/15 font-heading inline-flex h-12 cursor-not-allowed items-center justify-center rounded-md px-6 text-sm font-semibold ring-1"
-          aria-disabled
-        >
-          {t("postTestCta")}
-        </button>
-        <p className="text-gray-700 text-xs italic">{t("postTestPendingHint")}</p>
+        {hasQuiz ? (
+          <Link
+            href={{
+              pathname: "/portal/modulos/[id]/post-test",
+              params: { id },
+            }}
+            className="bg-chartreuse text-teal-deep ring-teal-deep/15 shadow-soft hover:bg-chartreuse/95 hover:shadow-lift focus-visible:ring-chartreuse font-heading inline-flex h-12 items-center justify-center rounded-md px-6 text-sm font-semibold ring-1 transition-[color,background-color,box-shadow,transform] duration-200 ease-out focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-offset-white focus-visible:outline-none sm:text-base motion-safe:hover:-translate-y-px"
+          >
+            {t("postTestCta")} →
+          </Link>
+        ) : (
+          <>
+            <button
+              type="button"
+              disabled
+              className="bg-chartreuse/40 text-teal-deep/70 ring-teal-deep/15 font-heading inline-flex h-12 cursor-not-allowed items-center justify-center rounded-md px-6 text-sm font-semibold ring-1"
+              aria-disabled
+            >
+              {t("postTestCta")}
+            </button>
+            <p className="text-gray-700 text-xs italic">{t("postTestPendingHint")}</p>
+          </>
+        )}
       </div>
     </Container>
   );

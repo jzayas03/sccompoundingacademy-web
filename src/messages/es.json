@@ -633,7 +633,39 @@
       "pdfMissingBody": "El material de este módulo aún se está produciendo. Te avisaremos por correo cuando esté disponible para descarga.",
       "downloadCta": "Descargar PDF",
       "postTestCta": "Ir al post-test",
-      "postTestPendingHint": "El post-test del módulo estará disponible en la próxima actualización del portal."
+      "postTestPendingHint": "El banco de preguntas para este módulo aún no ha sido producido."
+    },
+    "postTest": {
+      "eyebrow": "Post-test",
+      "title": "Post-test del módulo",
+      "introBody": "Tenés {total} preguntas. Necesitás acertar al menos {threshold} para aprobar el módulo. Podés reintentarlo las veces que necesites.",
+      "questionLabel": "Pregunta {current} de {total}",
+      "previousButton": "Anterior",
+      "nextButton": "Siguiente",
+      "submitButton": "Enviar respuestas",
+      "submittingButton": "Enviando…",
+      "submitDisabledHint": "Respondé todas las preguntas para poder enviar.",
+      "pendingTitle": "Post-test pendiente",
+      "pendingBody": "El banco de preguntas para este módulo aún no ha sido producido. Te avisaremos cuando esté listo.",
+      "backToModule": "Volver al módulo"
+    },
+    "postTestResults": {
+      "eyebrow": "Post-test · Resultados",
+      "title": "Resultados",
+      "scoreLabel": "Aciertos",
+      "percentageLabel": "Porcentaje",
+      "passedTitle": "¡Aprobaste el módulo!",
+      "passedBody": "Tu resultado supera el umbral de aprobación ({threshold}).",
+      "notPassedTitle": "Aún no alcanzaste el umbral",
+      "notPassedBody": "Necesitás al menos {threshold} para aprobar. Podés reintentar las veces que necesites — solo el último intento aprobado cuenta para el certificado.",
+      "showExplanationsToggle": "Mostrar respuestas correctas",
+      "hideExplanationsToggle": "Ocultar respuestas correctas",
+      "yourAnswerLabel": "Tu respuesta",
+      "correctAnswerLabel": "Respuesta correcta",
+      "noAnswerSelected": "(sin responder)",
+      "retryButton": "Reintentar",
+      "backToModule": "Volver al módulo",
+      "noAttemptFound": "Todavía no has completado este post-test."
     }
   }
 }
