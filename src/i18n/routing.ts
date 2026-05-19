@@ -26,6 +26,7 @@ export const routing = defineRouting({
     "/portal/modulos/[id]/post-test": "/portal/modulos/[id]/post-test",
     "/portal/modulos/[id]/post-test/resultados":
       "/portal/modulos/[id]/post-test/resultados",
+    "/portal/certificado": "/portal/certificado",
   },
 });
 
