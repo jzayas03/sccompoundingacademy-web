@@ -113,9 +113,10 @@ function Dashboard({ user, sessionEmail }: { user: User; sessionEmail: string })
         </GlassCard>
       )}
 
-      {/* Module strip — always rendered, every card locked in PR 2. The
-          unlock-on-paid behaviour comes in PR 4 when the middleware gates
-          /portal/modulos/[id] and the gating logic moves into the cards. */}
+      {/* Module strip — locked decorative cards until `paidAt` is set, then
+          each card becomes a Link into /portal/modulos/[id]. Middleware
+          still does the redirect-to-login pass; the module page itself
+          re-checks paidAt as defense in depth. */}
       <section aria-labelledby="modules-heading" className="mt-12">
         <div className="flex items-end justify-between">
           <h2
@@ -124,45 +125,74 @@ function Dashboard({ user, sessionEmail }: { user: User; sessionEmail: string })
           >
             {t("modulesTitle")}
           </h2>
-          <p className="text-gray-700 text-xs italic">{t("modulesLockedHint")}</p>
+          <p className="text-gray-700 text-xs italic">
+            {isPaid ? t("modulesUnlockedHint") : t("modulesLockedHint")}
+          </p>
         </div>
 
         <ul className="mt-6 grid grid-cols-1 gap-4 md:grid-cols-3">
           {modules.map((mod, idx) => (
             <li key={mod.id}>
-              <GlassCard
-                interactive={false}
-                aria-label={t("moduleAria", { n: idx + 1 })}
-                className="relative flex h-full flex-col p-5 opacity-70"
-              >
-                <p className="font-heading text-teal-deep/80 text-xs font-semibold tracking-wide uppercase">
-                  {mod.day}
-                </p>
-                <p className="font-heading text-gray-900 mt-2 text-base font-semibold leading-snug">
-                  {mod.title}
-                </p>
-                <p className="text-gray-700 mt-3 text-sm leading-relaxed">
-                  {mod.summary}
-                </p>
-                {/* Locked badge — top-right corner of the card. */}
-                <span className="bg-gray-300 text-gray-900 absolute right-3 top-3 inline-flex items-center gap-1 rounded-full px-2 py-1 text-[10px] font-semibold tracking-wide uppercase">
-                  <svg
-                    aria-hidden
-                    viewBox="0 0 16 16"
-                    fill="none"
-                    className="h-3 w-3"
+              {isPaid ? (
+                <Link
+                  href={{ pathname: "/portal/modulos/[id]", params: { id: mod.id } }}
+                  aria-label={t("moduleOpenAria", { n: idx + 1 })}
+                  className="block h-full"
+                >
+                  <GlassCard
+                    interactive
+                    className="relative flex h-full flex-col p-5"
                   >
-                    <path
-                      d="M4 7V5a4 4 0 018 0v2m-9 0h10v7H3V7z"
-                      stroke="currentColor"
-                      strokeWidth="1.5"
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                    />
-                  </svg>
-                  {t("lockedBadge")}
-                </span>
-              </GlassCard>
+                    <p className="font-heading text-teal-deep/80 text-xs font-semibold tracking-wide uppercase">
+                      {mod.day}
+                    </p>
+                    <p className="font-heading text-gray-900 mt-2 text-base font-semibold leading-snug">
+                      {mod.title}
+                    </p>
+                    <p className="text-gray-700 mt-3 text-sm leading-relaxed">
+                      {mod.summary}
+                    </p>
+                    {/* Available badge — chartreuse accent. */}
+                    <span className="bg-chartreuse text-teal-deep absolute right-3 top-3 inline-flex items-center gap-1 rounded-full px-2 py-1 text-[10px] font-semibold tracking-wide uppercase">
+                      {t("openBadge")} →
+                    </span>
+                  </GlassCard>
+                </Link>
+              ) : (
+                <GlassCard
+                  interactive={false}
+                  aria-label={t("moduleAria", { n: idx + 1 })}
+                  className="relative flex h-full flex-col p-5 opacity-70"
+                >
+                  <p className="font-heading text-teal-deep/80 text-xs font-semibold tracking-wide uppercase">
+                    {mod.day}
+                  </p>
+                  <p className="font-heading text-gray-900 mt-2 text-base font-semibold leading-snug">
+                    {mod.title}
+                  </p>
+                  <p className="text-gray-700 mt-3 text-sm leading-relaxed">
+                    {mod.summary}
+                  </p>
+                  {/* Locked badge — gray, matches the disabled look. */}
+                  <span className="bg-gray-300 text-gray-900 absolute right-3 top-3 inline-flex items-center gap-1 rounded-full px-2 py-1 text-[10px] font-semibold tracking-wide uppercase">
+                    <svg
+                      aria-hidden
+                      viewBox="0 0 16 16"
+                      fill="none"
+                      className="h-3 w-3"
+                    >
+                      <path
+                        d="M4 7V5a4 4 0 018 0v2m-9 0h10v7H3V7z"
+                        stroke="currentColor"
+                        strokeWidth="1.5"
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                      />
+                    </svg>
+                    {t("lockedBadge")}
+                  </span>
+                </GlassCard>
+              )}
             </li>
           ))}
         </ul>

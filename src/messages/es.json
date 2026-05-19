@@ -618,8 +618,22 @@
       "paymentCta": "Ir a la inscripción",
       "modulesTitle": "Módulos del curso",
       "modulesLockedHint": "Se desbloquean al confirmar el pago.",
+      "modulesUnlockedHint": "Hacé click en cualquier módulo para abrir el material.",
       "lockedBadge": "Bloqueado",
-      "moduleAria": "Módulo {n} — bloqueado, requiere pago de inscripción"
+      "openBadge": "Disponible",
+      "moduleAria": "Módulo {n} — bloqueado, requiere pago de inscripción",
+      "moduleOpenAria": "Abrir el módulo {n}"
+    },
+    "module": {
+      "eyebrow": "Módulo",
+      "backToDashboard": "Volver al portal",
+      "viewerTitle": "Material del módulo",
+      "viewerFallback": "Tu navegador no puede mostrar el PDF acá. Descargá el archivo para verlo.",
+      "pdfMissingTitle": "PDF próximamente",
+      "pdfMissingBody": "El material de este módulo aún se está produciendo. Te avisaremos por correo cuando esté disponible para descarga.",
+      "downloadCta": "Descargar PDF",
+      "postTestCta": "Ir al post-test",
+      "postTestPendingHint": "El post-test del módulo estará disponible en la próxima actualización del portal."
     }
   }
 }

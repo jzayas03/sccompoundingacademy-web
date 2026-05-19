@@ -22,6 +22,7 @@ export const routing = defineRouting({
     "/portal": "/portal",
     "/portal/login": "/portal/login",
     "/portal/verify": "/portal/verify",
+    "/portal/modulos/[id]": "/portal/modulos/[id]",
   },
 });
 
