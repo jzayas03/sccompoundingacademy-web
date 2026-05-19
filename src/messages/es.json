@@ -585,5 +585,38 @@
     "primaryCta": "Reservar plaza",
     "secondaryNote": "¿Tienes preguntas antes de decidir?",
     "secondaryCta": "Escríbenos"
+  },
+  "portal": {
+    "login": {
+      "eyebrow": "Portal del estudiante",
+      "title": "Entrá al portal",
+      "subtitle": "Te enviamos un enlace al correo — sin contraseñas. El enlace expira en 24 horas y es de un solo uso.",
+      "emailLabel": "Correo electrónico",
+      "emailPlaceholder": "tu@email.com",
+      "submit": "Enviar enlace",
+      "submitting": "Enviando…",
+      "errorBody": "No pudimos enviar el enlace. Verifica el correo o intenta de nuevo en unos minutos.",
+      "backToHome": "Volver al inicio"
+    },
+    "verify": {
+      "eyebrow": "Portal del estudiante",
+      "title": "Revisa tu correo",
+      "body": "Te enviamos un enlace para entrar al portal. Hacé click en el enlace dentro del correo para iniciar sesión.",
+      "hint": "¿No lo encuentras? Revisa la carpeta de spam o promociones.",
+      "tryAgain": "Pedir un nuevo enlace"
+    },
+    "dashboard": {
+      "eyebrow": "Portal del estudiante",
+      "greeting": "Hola, {name}",
+      "fallbackName": "estudiante",
+      "logout": "Cerrar sesión",
+      "paymentPendingTitle": "Inscripción pendiente de pago",
+      "paymentPendingBody": "Para desbloquear el contenido del curso, completa el pago de inscripción. Una vez confirmado, los tres módulos quedan disponibles inmediatamente.",
+      "paymentCta": "Ir a la inscripción",
+      "modulesTitle": "Módulos del curso",
+      "modulesLockedHint": "Se desbloquean al confirmar el pago.",
+      "lockedBadge": "Bloqueado",
+      "moduleAria": "Módulo {n} — bloqueado, requiere pago de inscripción"
+    }
   }
 }
