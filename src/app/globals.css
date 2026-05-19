@@ -64,3 +64,34 @@
     color: var(--color-teal-deep);
   }
 }
+
+/* Glassmorphism — medium intensity. Tokens mirror `glass` in src/lib/brand.ts.
+   Used by the student-portal namespace (`/[locale]/portal/...`) and reusable
+   via the `<GlassCard />` and `<MeshBackground />` components.
+
+   Browser support: Safari ≤14 lacked `backdrop-filter` — we keep the explicit
+   `-webkit-backdrop-filter` line so iOS Safari 13+ degrades gracefully. */
+@layer components {
+  .glass-card {
+    background: rgba(255, 255, 255, 0.08);
+    -webkit-backdrop-filter: blur(20px);
+    backdrop-filter: blur(20px);
+    border: 1px solid rgba(255, 255, 255, 0.18);
+    box-shadow: 0 8px 32px rgba(25, 85, 97, 0.12);
+  }
+  .glass-card-hover:hover,
+  .glass-card-hover:focus-visible {
+    background: rgba(255, 255, 255, 0.12);
+    border-color: rgba(233, 234, 138, 0.4);
+  }
+  .glass-nav {
+    background: rgba(245, 246, 247, 0.7);
+    -webkit-backdrop-filter: blur(16px);
+    backdrop-filter: blur(16px);
+  }
+  .glass-modal {
+    background: rgba(245, 246, 247, 0.85);
+    -webkit-backdrop-filter: blur(24px);
+    backdrop-filter: blur(24px);
+  }
+}
