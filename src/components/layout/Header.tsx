@@ -40,6 +40,16 @@ export function Header({ locale }: { locale: "es" | "en" }) {
         </nav>
         <div className="flex items-center gap-3">
           <LocaleSwitch currentLocale={locale} />
+          {/* Portal entry point — text link (not a button) so it stays
+              visually subordinate to the Inscribirme primary CTA.
+              Middleware routes anonymous visitors to the magic-link
+              login page; signed-in students land on the dashboard. */}
+          <Link
+            href="/portal"
+            className="text-off-white hover:text-chartreuse hidden text-sm font-semibold sm:inline"
+          >
+            {t("signIn")}
+          </Link>
           <Link href="/inscripcion">
             <Button variant="primary" size="md">
               {t("enroll")}
