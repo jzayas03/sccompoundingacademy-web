@@ -41,6 +41,7 @@
     "zod": "^3.23"
   },
   "devDependencies": {
+    "@axe-core/playwright": "^4.11.3",
     "@playwright/test": "^1.49",
     "@tailwindcss/postcss": "^4",
     "@testing-library/jest-dom": "^6",
