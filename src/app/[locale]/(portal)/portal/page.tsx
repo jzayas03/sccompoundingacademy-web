@@ -10,7 +10,7 @@ import { auth } from "@/lib/auth";
 import { db } from "@/lib/db";
 import { users, type User } from "@/lib/db/schema";
 import { isEligibleForCertificate } from "@/lib/certificates";
-import { logoutAction } from "./actions";
+import { InstructorHero } from "@/components/portal/InstructorHero";
 
 export const metadata: Metadata = {
   title: "Portal · SCCA",
@@ -91,30 +91,26 @@ function Dashboard({
   const isPaid = Boolean(user.paidAt);
 
   return (
-    <Container className="max-w-4xl py-16 sm:py-20 lg:py-24">
-      {/* Header row: greeting + logout. */}
-      <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
-        <div>
-          <p className="font-heading text-teal-deep/80 flex items-center text-xs font-semibold tracking-[0.18em] uppercase">
-            <span
-              aria-hidden
-              className="bg-chartreuse mr-3 inline-block h-4 w-1 shrink-0 rounded-sm"
-            />
-            {t("eyebrow")}
-          </p>
-          <h1 className="font-heading text-teal-deep mt-3 text-3xl font-bold tracking-[-0.015em] sm:text-4xl">
-            {t("greeting", { name: displayName })}
-          </h1>
-        </div>
-        <form action={logoutAction}>
-          <button
-            type="submit"
-            className="border-teal-deep text-teal-deep hover:bg-teal-deep hover:text-off-white font-heading inline-flex h-10 items-center rounded-md border px-4 text-sm font-semibold transition-colors"
-          >
-            {t("logout")}
-          </button>
-        </form>
+    <Container className="max-w-4xl py-12 sm:py-16 lg:py-20">
+      {/* Header row — `Salir` lives in the GlassNav above, so the
+          dashboard owns just the eyebrow + greeting block. */}
+      <div>
+        <p className="font-heading text-teal-deep/80 flex items-center text-xs font-semibold tracking-[0.18em] uppercase">
+          <span
+            aria-hidden
+            className="bg-chartreuse mr-3 inline-block h-4 w-1 shrink-0 rounded-sm"
+          />
+          {t("eyebrow")}
+        </p>
+        <h1 className="font-heading text-teal-deep mt-3 text-3xl font-bold tracking-[-0.015em] sm:text-4xl">
+          {t("greeting", { name: displayName })}
+        </h1>
       </div>
+
+      {/* Instructor hero — compact glass card right under the greeting
+          so paid students see the human anchor for the course before
+          the payment + cert + module banners. */}
+      <InstructorHero />
 
       {/* Payment-pending alert — primary CTA when the user has not paid yet. */}
       {!isPaid && (
