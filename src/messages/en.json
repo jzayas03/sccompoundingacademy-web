@@ -618,8 +618,22 @@
       "paymentCta": "Go to enrollment",
       "modulesTitle": "Course modules",
       "modulesLockedHint": "Unlocked once payment is confirmed.",
+      "modulesUnlockedHint": "Click any module to open the material.",
       "lockedBadge": "Locked",
-      "moduleAria": "Module {n} — locked, requires enrollment payment"
+      "openBadge": "Available",
+      "moduleAria": "Module {n} — locked, requires enrollment payment",
+      "moduleOpenAria": "Open module {n}"
+    },
+    "module": {
+      "eyebrow": "Module",
+      "backToDashboard": "Back to portal",
+      "viewerTitle": "Module material",
+      "viewerFallback": "Your browser can't show the PDF here. Download the file to view it.",
+      "pdfMissingTitle": "PDF coming soon",
+      "pdfMissingBody": "The material for this module is still being produced. We'll email you when it's available for download.",
+      "downloadCta": "Download PDF",
+      "postTestCta": "Go to post-test",
+      "postTestPendingHint": "The module post-test will be available in the next portal update."
     }
   }
 }
