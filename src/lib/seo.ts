@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { routing } from "@/i18n/routing";
+import { getSiteUrl } from "@/lib/siteUrl";
 
 type Args = {
   locale: "es" | "en";
@@ -9,9 +10,8 @@ type Args = {
   ogImage?: string;
 };
 
-const BASE_URL = process.env.NEXT_PUBLIC_SITE_URL ?? "http://localhost:3000";
-
 export function pageMetadata({ locale, title, description, pathname, ogImage }: Args): Metadata {
+  const BASE_URL = getSiteUrl();
   const url = `${BASE_URL}/${locale}${pathname === "/" ? "" : pathname}`;
   const altLocales = routing.locales.filter((l) => l !== locale);
   const og = ogImage ?? `/og-image-${locale}.png`;

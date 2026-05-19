@@ -1,4 +1,5 @@
 import { COURSES, COHORTS } from "@/lib/courses";
+import { getSiteUrl } from "@/lib/siteUrl";
 
 /**
  * Build the JSON-LD graph injected on the homepage for SEO.
@@ -18,8 +19,7 @@ import { COURSES, COHORTS } from "@/lib/courses";
  * accredited and surfaces it on Terms §8.
  */
 export function homepageJsonLd(locale: "es" | "en"): Record<string, unknown> {
-  const siteUrl =
-    process.env.NEXT_PUBLIC_SITE_URL?.replace(/\/$/, "") ?? "https://sccompoundingacademy.com";
+  const siteUrl = getSiteUrl();
   const course = COURSES[0]!;
   const cohort = COHORTS[0]!;
 
