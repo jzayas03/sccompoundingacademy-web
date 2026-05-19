@@ -58,4 +58,31 @@ export const brand = {
   },
 } as const;
 
+// Glassmorphism — medium intensity. Mirrors the CSS utilities defined in
+// `src/app/globals.css` under @layer components (.glass-card, .glass-nav,
+// .glass-modal, .glass-card-hover). Kept here as a TS reference so the
+// values have a single source of truth alongside the rest of the brand
+// tokens; components apply them via the Tailwind utility classes rather
+// than reading these constants at render time.
+export const glass = {
+  card: {
+    background: "rgba(255, 255, 255, 0.08)",
+    backdropFilter: "blur(20px)",
+    border: "1px solid rgba(255, 255, 255, 0.18)",
+    boxShadow: "0 8px 32px rgba(25, 85, 97, 0.12)",
+  },
+  cardHover: {
+    background: "rgba(255, 255, 255, 0.12)",
+    border: "1px solid rgba(233, 234, 138, 0.4)",
+  },
+  nav: {
+    background: "rgba(245, 246, 247, 0.7)",
+    backdropFilter: "blur(16px)",
+  },
+  modal: {
+    background: "rgba(245, 246, 247, 0.85)",
+    backdropFilter: "blur(24px)",
+  },
+} as const;
+
 export type BrandTokens = typeof brand;
