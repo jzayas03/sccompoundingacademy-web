@@ -693,6 +693,11 @@
       "reviewLinkLabel": "Share your course feedback",
       "backToDashboard": "Back to portal"
     },
+    "nav": {
+      "logout": "Sign out",
+      "backToHome": "Back to site",
+      "homeAria": "SCCA portal home"
+    },
     "reviews": {
       "eyebrow": "Your feedback",
       "title": "Course review",

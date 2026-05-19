@@ -3,10 +3,23 @@ import { NextIntlClientProvider } from "next-intl";
 import { getMessages, setRequestLocale } from "next-intl/server";
 import { routing } from "@/i18n/routing";
 import { heading, accent } from "@/app/fonts";
-import { Header } from "@/components/layout/Header";
-import { Footer } from "@/components/layout/Footer";
 import { SkipLink } from "@/components/layout/SkipLink";
 
+/**
+ * Root locale layout — owns the `<html>` + `<body>` + i18n context.
+ *
+ * Header + Footer used to live here, but PR 8 split the locale tree
+ * into two route groups so the marketing surfaces and the portal can
+ * carry their own chrome without one bleeding into the other:
+ *
+ *   - `[locale]/(marketing)/layout.tsx` — Header + Footer (landing + cursos
+ *     + contacto + inscripcion + legal docs)
+ *   - `[locale]/(portal)/portal/layout.tsx` — GlassNav + MeshBackground
+ *     (everything under /[locale]/portal/*)
+ *
+ * Anything genuinely global — locale provider, skip-link, font CSS vars —
+ * still lives here so both groups inherit it.
+ */
 export function generateStaticParams() {
   return routing.locales.map((locale) => ({ locale }));
 }
@@ -27,9 +40,7 @@ export default async function LocaleLayout({
       <body>
         <NextIntlClientProvider messages={messages} locale={locale}>
           <SkipLink />
-          <Header locale={locale as "es" | "en"} />
-          <main id="content">{children}</main>
-          <Footer />
+          {children}
         </NextIntlClientProvider>
       </body>
     </html>
