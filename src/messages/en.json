@@ -585,5 +585,38 @@
     "primaryCta": "Reserve a seat",
     "secondaryNote": "Questions before you decide?",
     "secondaryCta": "Write to us"
+  },
+  "portal": {
+    "login": {
+      "eyebrow": "Student portal",
+      "title": "Sign in to the portal",
+      "subtitle": "We'll email you a one-time sign-in link — no passwords. The link expires in 24 hours.",
+      "emailLabel": "Email address",
+      "emailPlaceholder": "you@email.com",
+      "submit": "Send link",
+      "submitting": "Sending…",
+      "errorBody": "We couldn't send the link. Double-check the address or try again in a few minutes.",
+      "backToHome": "Back to home"
+    },
+    "verify": {
+      "eyebrow": "Student portal",
+      "title": "Check your email",
+      "body": "We've sent you a sign-in link. Click the link inside the email to enter the portal.",
+      "hint": "Don't see it? Check your spam or promotions folder.",
+      "tryAgain": "Request a new link"
+    },
+    "dashboard": {
+      "eyebrow": "Student portal",
+      "greeting": "Hi, {name}",
+      "fallbackName": "student",
+      "logout": "Sign out",
+      "paymentPendingTitle": "Enrollment payment pending",
+      "paymentPendingBody": "To unlock the course content, complete your enrollment payment. The three modules become available immediately after confirmation.",
+      "paymentCta": "Go to enrollment",
+      "modulesTitle": "Course modules",
+      "modulesLockedHint": "Unlocked once payment is confirmed.",
+      "lockedBadge": "Locked",
+      "moduleAria": "Module {n} — locked, requires enrollment payment"
+    }
   }
 }

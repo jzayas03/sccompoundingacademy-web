@@ -16,6 +16,12 @@ export const routing = defineRouting({
     "/legal/privacidad": { es: "/legal/privacidad", en: "/legal/privacy" },
     "/legal/terminos": { es: "/legal/terminos", en: "/legal/terms" },
     "/legal/reembolso": { es: "/legal/reembolso", en: "/legal/refund" },
+    // Student portal — same URL in both locales (Phase A is ES-only, but
+    // the routes still resolve under the locale prefix so the next-intl
+    // middleware can hand them off to the page tree).
+    "/portal": "/portal",
+    "/portal/login": "/portal/login",
+    "/portal/verify": "/portal/verify",
   },
 });
 
