@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
 import { z } from "zod";
 import { stripe } from "@/lib/stripe";
-import { getCourseById, getCohortById } from "@/lib/courses";
+import { getCourseById, getCohortById, getPricingByTier } from "@/lib/courses";
 import { getSiteUrl } from "@/lib/siteUrl";
 
 export const runtime = "nodejs";
@@ -18,6 +18,14 @@ export const runtime = "nodejs";
  * persists to Airtable only after `checkout.session.completed` fires.
  * This guarantees Airtable rows correspond 1:1 to paid enrollments,
  * never to abandoned-checkout intents.
+ *
+ * Tier selection ("pharmacist" $2,350 vs "student" $495): the client
+ * sends `tier`, this route resolves the corresponding Stripe Price ID
+ * via the course catalogue. Tier-eligibility checks (institutional
+ * email allowlist for the student tier) live in Phase A of the portal
+ * PR; for landing-page MVP the form trusts the client choice and the
+ * tier travels through to the webhook so it can be persisted on
+ * `users.tier` once the portal DB exists.
  */
 
 const InscripcionSchema = z.object({
@@ -27,6 +35,7 @@ const InscripcionSchema = z.object({
   licencia: z.string().trim().max(60).optional().or(z.literal("")),
   curso_id: z.string().trim().min(1),
   cohorte_id: z.string().trim().min(1),
+  tier: z.enum(["pharmacist", "student"]),
   notas: z.string().trim().max(1000).optional().or(z.literal("")),
   acepto_terminos: z.literal(true, {
     errorMap: () => ({ message: "Debes aceptar los Términos, Privacidad y Reembolsos." }),
@@ -74,10 +83,14 @@ export async function POST(req: Request) {
   const userAgent = req.headers.get("user-agent") ?? "unknown";
   const acceptedAt = new Date().toISOString();
 
-  const stripePriceId = process.env[course.stripePriceEnvKey];
+  const pricing = getPricingByTier(course, data.tier);
+  if (!pricing) {
+    return NextResponse.json({ error: "Tier de precio inválido." }, { status: 400 });
+  }
+  const stripePriceId = process.env[pricing.stripePriceEnvKey];
   if (!stripePriceId) {
     console.error(
-      `[inscripcion] Missing env var ${course.stripePriceEnvKey} — Stripe Price ID not configured for ${course.id}`,
+      `[inscripcion] Missing env var ${pricing.stripePriceEnvKey} — Stripe Price ID not configured for ${course.id}/${data.tier}`,
     );
     return NextResponse.json(
       { error: "Servicio de cobro no configurado. Por favor escríbenos." },
@@ -106,6 +119,7 @@ export async function POST(req: Request) {
         licencia: data.licencia ?? "",
         curso_id: data.curso_id,
         cohorte_id: data.cohorte_id,
+        tier: data.tier,
         notas: (data.notas ?? "").slice(0, 480),
         acepto_terminos: "true",
         acepto_timestamp: acceptedAt,

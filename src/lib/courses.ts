@@ -6,31 +6,54 @@
  * identical across locales and must be referenceable from server code
  * (API route, webhook handler) where i18n is not in scope.
  *
- * i18n still owns the *display strings* — course title, module titles,
- * descriptions — keyed by the course `id` (see `messages/*.json →
- * cursosGrid.items[]`). This file owns the *facts*.
+ * i18n owns the *display strings* — course title, module titles,
+ * descriptions, tier labels — keyed by ids. This file owns the *facts*.
  *
- * SCCA currently offers a single integrated course — "Basic Compounding
- * No Estéril" — split into three on-site modules (one per day). The
- * earlier 3-course catalogue (USP 795 / 800 / Combinado) was retired
- * when the owner confirmed a unified 18-hour curriculum.
+ * SCCA offers a single integrated course — "Basic Compounding No Estéril"
+ * — split into three on-site modules (one per day). Two pricing tiers
+ * share the same Stripe Product:
+ *   - pharmacist: $2,350 (default)
+ *   - student:    $495 (gated via institutional email allowlist or
+ *                 Stripe coupon issued manually after Student-ID review)
  *
- * Stripe Price ID lives in env var so we never commit it. The webhook
- * handler uses `course_id` from session metadata to look up the
- * corresponding course here.
+ * Stripe Price IDs live in env vars so we never commit them. The
+ * webhook handler uses `course_id` + the resolved tier (looked up from
+ * the Price ID that fired) to mark `users.tier` in the DB.
+ *
+ * ACPE accreditation: the cohort runs under the Colegio de Farmacéuticos
+ * de Puerto Rico's ACPE Provider 0151 sponsorship. Each cohort is
+ * registered with the Colegio individually; the metadata below is used
+ * to surface CE credit info on the landing page and certificate.
  */
 
 export type CourseId = "basic-compounding";
 
-export type Course = {
-  id: CourseId;
-  /** URL slug — used in /cursos/[slug] and ?course=slug query params. */
-  slug: string;
+export type Tier = "pharmacist" | "student";
+
+export type Pricing = {
+  tier: Tier;
   /** Stripe Price ID, read from env at request time. */
   stripePriceEnvKey: string;
   /** Display amount in USD cents — what we show users. Stripe is source
    * of truth at checkout; this is for the UI label only. */
   priceUsdCents: number;
+};
+
+export type AcpeAccreditation = {
+  /** Sponsoring ACPE-accredited provider organization. */
+  provider: string;
+  /** ACPE Provider number (e.g. "0151"). */
+  providerNumber: string;
+  /** Contact hours of instruction. */
+  contactHours: number;
+  /** Continuing Education Units (1 CEU = 10 contact hours). */
+  ceus: number;
+};
+
+export type Course = {
+  id: CourseId;
+  /** URL slug — used in /cursos/[slug] and ?course=slug query params. */
+  slug: string;
   /** Programme depth marker — also displayed as the card eyebrow. */
   level: "fundamentos";
   /** Total instruction hours, for the card footer and confirmation email. */
@@ -42,6 +65,10 @@ export type Course = {
   /** USP chapter alignment label, surfaced as scannable metadata in the
    * card eyebrow. */
   uspLabel: string;
+  /** Pricing tiers — same Stripe Product, multiple Stripe Prices. */
+  pricing: readonly Pricing[];
+  /** CE accreditation metadata, when the cohort is sponsored. */
+  acpe?: AcpeAccreditation;
 };
 
 export type Cohort = {
@@ -63,21 +90,36 @@ export type Cohort = {
 };
 
 /**
- * Catalogue. Edit price here once the owner confirms final pricing; edit
- * cohort dates when new cohorts open. The price below is a placeholder —
- * Stripe is the source of truth at checkout.
+ * Catalogue. Prices below are the owner-confirmed values (2026-05-19);
+ * Stripe is still the source of truth at checkout.
  */
 export const COURSES: readonly Course[] = [
   {
     id: "basic-compounding",
     slug: "basic-compounding",
-    stripePriceEnvKey: "STRIPE_PRICE_BASIC_COMPOUNDING",
-    priceUsdCents: 100_000, // placeholder $1,000 — owner to confirm
     level: "fundamentos",
     hours: 18,
     days: 3,
     hoursPerDay: 6,
     uspLabel: "USP 〈795〉 + 〈800〉",
+    pricing: [
+      {
+        tier: "pharmacist",
+        stripePriceEnvKey: "STRIPE_PRICE_ID_PHARMACIST",
+        priceUsdCents: 235_000,
+      },
+      {
+        tier: "student",
+        stripePriceEnvKey: "STRIPE_PRICE_ID_STUDENT",
+        priceUsdCents: 49_500,
+      },
+    ],
+    acpe: {
+      provider: "Colegio de Farmacéuticos de Puerto Rico",
+      providerNumber: "0151",
+      contactHours: 18,
+      ceus: 1.8,
+    },
   },
 ] as const;
 
@@ -108,6 +150,13 @@ export function getCohortById(id: string): Cohort | undefined {
 export function getCohortsForCourse(courseId: CourseId): readonly Cohort[] {
   return COHORTS.filter((c) => c.courseId === courseId && c.openForEnrollment);
 }
+
+export function getPricingByTier(course: Course, tier: Tier): Pricing | undefined {
+  return course.pricing.find((p) => p.tier === tier);
+}
+
+/** Default tier shown selected in the inscription form. */
+export const DEFAULT_TIER: Tier = "pharmacist";
 
 /** Format USD cents as a display string (e.g. 100000 → "$1,000"). */
 export function formatPrice(usdCents: number): string {

@@ -1,3 +1,4 @@
+import Image from "next/image";
 import { useTranslations, useMessages } from "next-intl";
 import { Container } from "@/components/ui/Container";
 import { Reveal } from "@/components/ui/Reveal";
@@ -11,11 +12,10 @@ type InstructorMessages = {
 /**
  * Instructor — single-column section introducing the course director.
  *
- * The bio and credentials live in `messages/{es,en}.json → instructor`.
- * The professional photo is intentionally a tokenised placeholder until
- * the owner provides the asset (issue #TBD) — once the file is dropped
- * into `/public/photos/` and the path is wired into the i18n payload, the
- * placeholder block here is the only change needed in the markup.
+ * Bio + credentials live in `messages/{es,en}.json → instructor`.
+ * Portrait is at `public/instructor/jorge-reyes.jpg` (owner-provided,
+ * 2026-05-19). The photo is server-loaded via next/image so the LCP
+ * candidate stays optimized (Vercel serves AVIF/WebP automatically).
  */
 export function Instructor() {
   const t = useTranslations("instructor");
@@ -44,27 +44,17 @@ export function Instructor() {
         </Reveal>
 
         <Reveal className="mt-10 grid grid-cols-1 gap-8 md:grid-cols-3 md:gap-10">
-          {/* Photo placeholder — replace this block with <Image src=... /> when
-              the owner-provided portrait is added to /public/photos/. */}
           <div className="md:col-span-1">
-            <div className="border-gray-300 bg-sand text-teal-deep/60 flex aspect-[3/4] w-full items-center justify-center rounded-lg border">
-              <svg
-                aria-hidden
-                viewBox="0 0 64 64"
-                className="h-16 w-16"
-                fill="none"
-                stroke="currentColor"
-                strokeWidth="1.5"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-              >
-                <circle cx="32" cy="24" r="10" />
-                <path d="M12 56c2-10 11-16 20-16s18 6 20 16" />
-              </svg>
+            <div className="border-gray-300 relative aspect-[3/4] w-full overflow-hidden rounded-lg border bg-sand">
+              <Image
+                src="/instructor/jorge-reyes.jpg"
+                alt={t("photoAlt")}
+                fill
+                sizes="(min-width: 768px) 33vw, 100vw"
+                className="object-cover"
+                priority={false}
+              />
             </div>
-            <p className="text-gray-700 mt-3 text-center text-xs italic">
-              {t("photoPlaceholderLabel")}
-            </p>
           </div>
 
           <div className="md:col-span-2">
