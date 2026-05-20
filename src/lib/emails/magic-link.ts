@@ -18,6 +18,10 @@ type MagicLinkParams = {
 };
 
 const c = brand.colors;
+// Absolute URL — email clients cannot resolve relative paths. Always
+// the canonical production domain so the asset loads regardless of
+// which deployment dispatched the mail.
+const LOGO_URL = "https://www.sccompoundingacademy.com/brand/logo-email.png";
 
 export function buildMagicLinkEmail(p: MagicLinkParams): {
   subject: string;
@@ -72,7 +76,8 @@ Bayamón, Puerto Rico
           <table role="presentation" cellpadding="0" cellspacing="0" border="0" width="600" style="max-width:600px;background:${c.white};border-radius:12px;overflow:hidden;">
 
             <tr>
-              <td style="background:${c.tealDeep};padding:28px 32px;text-align:left;">
+              <td style="background:${c.tealDeep};padding:26px 32px;text-align:left;">
+                <img src="${LOGO_URL}" alt="Santa Cruz Compounding Academy" width="150" style="display:block;border:0;outline:none;margin:0 0 14px;" />
                 <p style="margin:0;color:${c.chartreuse};font-size:11px;font-weight:600;letter-spacing:0.18em;text-transform:uppercase;">
                   ${es ? "Acceso al portal" : "Portal sign-in"}
                 </p>

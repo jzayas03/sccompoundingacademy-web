@@ -28,6 +28,10 @@ const c = brand.colors;
 const SEDE = "73 Santa Cruz Medical Building, Suite 201, Bayamón, PR 00961";
 const HORARIO = "Lunes a Viernes · 7:30 a.m. – 5:00 p.m.";
 const SUPPORT_EMAIL = "info@sccompoundingacademy.com";
+// Absolute URL — email clients cannot resolve relative paths. Always
+// the canonical production domain so the asset loads even when the
+// mail is dispatched from a preview deployment.
+const LOGO_URL = "https://www.sccompoundingacademy.com/brand/logo-email.png";
 
 export function buildConfirmationEmail(p: ConfirmationParams): {
   subject: string;
@@ -55,7 +59,9 @@ Horario administrativo: ${HORARIO}
 Qué traer al primer día:
   - Identificación con foto
   - Bolígrafo y libreta
-  - Bata blanca (si la tienes; si no, te facilitamos una el primer día)
+  - Computadora portátil
+
+El equipo de protección personal (PPE) se provee en las facilidades — no necesitas traer bata blanca.
 
 ${p.receiptUrl ? `Recibo de pago: ${p.receiptUrl}\n\n` : ""}Cualquier pregunta antes del inicio, escríbenos a ${SUPPORT_EMAIL}.
 
@@ -77,7 +83,9 @@ Office hours: ${HORARIO}
 What to bring on day one:
   - Photo ID
   - Pen and notebook
-  - Lab coat (if you have one; otherwise we provide one on day one)
+  - Laptop computer
+
+Personal protective equipment (PPE) is provided on-site — you don't need to bring a lab coat.
 
 ${p.receiptUrl ? `Payment receipt: ${p.receiptUrl}\n\n` : ""}For any questions before the start, write to ${SUPPORT_EMAIL}.
 
@@ -100,7 +108,8 @@ Bayamón, Puerto Rico
 
             <!-- Header band -->
             <tr>
-              <td style="background:${c.tealDeep};padding:28px 32px;text-align:left;">
+              <td style="background:${c.tealDeep};padding:26px 32px;text-align:left;">
+                <img src="${LOGO_URL}" alt="Santa Cruz Compounding Academy" width="150" style="display:block;border:0;outline:none;margin:0 0 14px;" />
                 <p style="margin:0;color:${c.chartreuse};font-size:11px;font-weight:600;letter-spacing:0.18em;text-transform:uppercase;">
                   ${es ? "Confirmación de inscripción" : "Enrollment confirmation"}
                 </p>
@@ -162,8 +171,15 @@ Bayamón, Puerto Rico
                 <ul style="margin:0;padding-left:20px;font-size:15px;line-height:1.6;">
                   <li>${es ? "Identificación con foto" : "Photo ID"}</li>
                   <li>${es ? "Bolígrafo y libreta" : "Pen and notebook"}</li>
-                  <li>${es ? "Bata blanca (si la tienes; si no, te facilitamos una)" : "Lab coat (if you have one; otherwise we provide one)"}</li>
+                  <li>${es ? "Computadora portátil" : "Laptop computer"}</li>
                 </ul>
+                <p style="margin:12px 0 0;font-size:13px;line-height:1.6;color:${c.gray[700]};">
+                  ${
+                    es
+                      ? "El equipo de protección personal (PPE) se provee en las facilidades — no necesitas traer bata blanca."
+                      : "Personal protective equipment (PPE) is provided on-site — you don't need to bring a lab coat."
+                  }
+                </p>
 
                 ${
                   p.receiptUrl
