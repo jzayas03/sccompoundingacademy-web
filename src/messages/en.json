@@ -738,6 +738,14 @@
       "retryButton": "Retry",
       "backToModule": "Back to module",
       "noAttemptFound": "You haven't completed this post-test yet."
+    },
+    "preTest": {
+      "eyebrow": "Pre-test",
+      "title": "Module pre-test",
+      "introBody": "Before starting the module, complete this diagnostic pre-test of {total} questions. It is not graded and does not affect your certificate — it measures your starting point. Answer as best you can; submitting it unlocks the module content.",
+      "pendingTitle": "Pre-test pending",
+      "pendingBody": "The question bank for this module has not been produced yet. We will let you know when it is ready.",
+      "backToDashboard": "Back to dashboard"
     }
   }
 }

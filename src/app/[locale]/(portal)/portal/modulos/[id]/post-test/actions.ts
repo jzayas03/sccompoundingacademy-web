@@ -66,6 +66,7 @@ export async function submitQuizAction(args: {
   await db.insert(quizAttempts).values({
     userId: user.id,
     moduleId: moduleQuizIdToInt(moduleId),
+    phase: "post",
     submittedAt: new Date(),
     answers,
     score,

@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import { notFound, redirect } from "next/navigation";
-import { eq } from "drizzle-orm";
+import { and, eq } from "drizzle-orm";
 import { useMessages, useTranslations } from "next-intl";
 import { setRequestLocale } from "next-intl/server";
 import { Container } from "@/components/ui/Container";
@@ -8,34 +8,39 @@ import { GlassCard } from "@/components/glass/GlassCard";
 import { Link } from "@/i18n/routing";
 import { auth } from "@/lib/auth";
 import { db } from "@/lib/db";
-import { users } from "@/lib/db/schema";
-import {
-  getQuiz,
-  getPassingThreshold,
-  sanitizeQuiz,
-  type ModuleQuizId,
-} from "@/lib/quizzes";
+import { users, quizAttempts } from "@/lib/db/schema";
+import { getQuiz, sanitizeQuiz, type ModuleQuizId } from "@/lib/quizzes";
 import { QuizForm } from "@/components/portal/QuizForm";
-import { submitQuizAction } from "./actions";
+import { submitPreTestAction } from "./actions";
 
 export const metadata: Metadata = {
-  title: "Post-test · SCCA Portal",
+  title: "Pre-test · SCCA Portal",
   robots: { index: false, follow: false },
 };
 
 const MODULE_IDS = ["modulo-1", "modulo-2", "modulo-3"] as const;
 
-type ModuleI18n = {
-  id: string;
-  day: string;
-  title: string;
-  summary: string;
-};
+type ModuleI18n = { id: string; day: string; title: string; summary: string };
 type CursosGridMessages = {
   cursosGrid: { items: Array<{ modules: ModuleI18n[] }> };
 };
 
-export default async function PostTestPage({
+function moduleQuizIdToInt(id: ModuleQuizId): number {
+  if (id === "modulo-1") return 1;
+  if (id === "modulo-2") return 2;
+  return 3;
+}
+
+/**
+ * `/[locale]/portal/modulos/[id]/pre-test` — diagnostic pre-test taken
+ * before the module content unlocks.
+ *
+ * The pre-test is one-shot: if the student already has a `phase: "pre"`
+ * attempt for this module, we bounce straight to the module page so
+ * they cannot retake it (and so the module-page gate, which checks the
+ * same condition, does not ping-pong them back here).
+ */
+export default async function PreTestPage({
   params,
 }: {
   params: Promise<{ locale: string; id: string }>;
@@ -57,49 +62,57 @@ export default async function PostTestPage({
   if (!user) redirect(`/${locale}/portal/login`);
   if (!user.paidAt) redirect(`/${locale}/portal`);
 
+  // One-shot: already completed → straight to the module content.
+  const [existing] = await db
+    .select({ id: quizAttempts.id })
+    .from(quizAttempts)
+    .where(
+      and(
+        eq(quizAttempts.userId, user.id),
+        eq(quizAttempts.moduleId, moduleQuizIdToInt(moduleId)),
+        eq(quizAttempts.phase, "pre"),
+      ),
+    )
+    .limit(1);
+  if (existing) redirect(`/${locale}/portal/modulos/${moduleId}`);
+
   const questions = getQuiz(moduleId);
-  const threshold = getPassingThreshold();
 
   return (
-    <PostTestPanel
+    <PreTestPanel
       locale={locale as "es" | "en"}
       moduleId={moduleId}
       questions={questions}
-      threshold={threshold}
     />
   );
 }
 
-function PostTestPanel({
+function PreTestPanel({
   locale,
   moduleId,
   questions,
-  threshold,
 }: {
   locale: "es" | "en";
   moduleId: ModuleQuizId;
   questions: ReturnType<typeof getQuiz>;
-  threshold: number;
 }) {
-  const t = useTranslations("portal.postTest");
-  // Pull the module display name from the same catalogue the landing
-  // and portal dashboard render — keeps copy in sync without a separate
-  // portal-side i18n branch for module titles.
+  const t = useTranslations("portal.preTest");
   const messages = useMessages() as unknown as CursosGridMessages;
-  const moduleData = messages.cursosGrid.items[0]?.modules.find((m) => m.id === moduleId);
+  const moduleData = messages.cursosGrid.items[0]?.modules.find(
+    (m) => m.id === moduleId,
+  );
 
   const isEmpty = questions.length === 0;
   const sanitized = sanitizeQuiz(questions);
-  const thresholdLabel = `${Math.round(threshold * 100)}%`;
 
   return (
     <Container className="max-w-3xl py-12 sm:py-16 lg:py-20">
       <p className="text-sm">
         <Link
-          href={{ pathname: "/portal/modulos/[id]", params: { id: moduleId } }}
+          href="/portal"
           className="text-teal-deep hover:text-teal underline underline-offset-2"
         >
-          ← {t("backToModule")}
+          ← {t("backToDashboard")}
         </Link>
       </p>
 
@@ -131,7 +144,7 @@ function PostTestPanel({
         <>
           <GlassCard className="mt-10 p-6 sm:p-8">
             <p className="text-gray-900 text-sm leading-relaxed sm:text-base">
-              {t("introBody", { total: questions.length, threshold: thresholdLabel })}
+              {t("introBody", { total: questions.length })}
             </p>
           </GlassCard>
 
@@ -140,7 +153,7 @@ function PostTestPanel({
               locale={locale}
               moduleId={moduleId}
               questions={sanitized}
-              submitAction={submitQuizAction}
+              submitAction={submitPreTestAction}
             />
           </GlassCard>
         </>
