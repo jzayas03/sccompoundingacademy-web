@@ -2,6 +2,7 @@ import { useTranslations } from "next-intl";
 import { Link } from "@/i18n/routing";
 import { LogoFullInverse } from "@/components/brand";
 import { auth } from "@/lib/auth";
+import { isAdminEmail } from "@/lib/admin";
 import { logoutAction } from "@/app/[locale]/(portal)/portal/actions";
 
 /**
@@ -25,10 +26,17 @@ import { logoutAction } from "@/app/[locale]/(portal)/portal/actions";
 export async function GlassNav() {
   const session = await auth();
   const isSignedIn = Boolean(session?.user?.email);
-  return <GlassNavView isSignedIn={isSignedIn} />;
+  const isAdmin = isAdminEmail(session?.user?.email);
+  return <GlassNavView isSignedIn={isSignedIn} isAdmin={isAdmin} />;
 }
 
-function GlassNavView({ isSignedIn }: { isSignedIn: boolean }) {
+function GlassNavView({
+  isSignedIn,
+  isAdmin,
+}: {
+  isSignedIn: boolean;
+  isAdmin: boolean;
+}) {
   const t = useTranslations("portal.nav");
   return (
     <header className="glass-nav sticky top-0 z-50 w-full">
@@ -42,6 +50,14 @@ function GlassNavView({ isSignedIn }: { isSignedIn: boolean }) {
         </Link>
 
         <div className="flex items-center gap-3">
+          {isAdmin ? (
+            <Link
+              href="/portal/admin"
+              className="text-teal-deep hover:text-teal font-heading text-sm font-semibold"
+            >
+              Admin
+            </Link>
+          ) : null}
           {isSignedIn ? (
             <form action={logoutAction}>
               <button
