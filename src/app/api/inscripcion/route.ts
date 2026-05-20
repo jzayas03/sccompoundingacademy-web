@@ -56,8 +56,16 @@ export async function POST(req: Request) {
 
   const parsed = InscripcionSchema.safeParse(body);
   if (!parsed.success) {
+    // User-facing sentence (consistent with every other error in this
+    // route). `issues` keeps the flattened Zod detail for debugging —
+    // the client ignores it. The raw "validation" code used to leak
+    // straight to the form's error banner.
     return NextResponse.json(
-      { error: "validation", issues: parsed.error.flatten() },
+      {
+        error:
+          "Revisa los datos del formulario — hay un campo incompleto o con formato inválido (por ejemplo el correo electrónico).",
+        issues: parsed.error.flatten(),
+      },
       { status: 400 },
     );
   }
