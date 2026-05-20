@@ -136,13 +136,13 @@ page.drawLine({
   color: COLOR.gray700,
 });
 drawCentered("Jorge L. Reyes Quiñones, RPh, B.S.Ph. UPR", {
-  y: 113,
+  y: 104,
   size: 10,
   font: helveticaBold,
   color: COLOR.gray900,
 });
 drawCentered("Chief Pharmacist · Course Director", {
-  y: 99,
+  y: 90,
   size: 9,
   font: helvetica,
   color: COLOR.gray700,
@@ -189,6 +189,20 @@ page.drawImage(qrImg, {
   width: qrSize,
   height: qrSize,
 });
+
+// Instructor signature — mirrors drawInstructorSignature in render.ts.
+const SIG = join(process.cwd(), "public/instructor/firma-jorge-reyes.png");
+if (existsSync(SIG)) {
+  const sigImg = await pdf.embedPng(readFileSync(SIG));
+  const sigWidth = 140;
+  const sigHeight = (sigImg.height / sigImg.width) * sigWidth;
+  page.drawImage(sigImg, {
+    x: PAGE_W / 2 - sigWidth / 2,
+    y: 130,
+    width: sigWidth,
+    height: sigHeight,
+  });
+}
 
 writeFileSync("sample-certificate.pdf", await pdf.save());
 console.log("Wrote ./sample-certificate.pdf");

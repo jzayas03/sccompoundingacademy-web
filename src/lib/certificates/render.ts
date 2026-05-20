@@ -222,13 +222,13 @@ function drawOverlay(
     color: COLOR.gray700,
   });
   drawCentered(page, "Jorge L. Reyes Quiñones, RPh, B.S.Ph. UPR", {
-    y: 113,
+    y: 104,
     size: 10,
     font: helveticaBold,
     color: COLOR.gray900,
   });
   drawCentered(page, "Chief Pharmacist · Course Director", {
-    y: 99,
+    y: 90,
     size: 9,
     font: helvetica,
     color: COLOR.gray700,
@@ -432,14 +432,14 @@ async function drawInstructorSignature(
   const sigBytes = readFileSync(sigPath);
   const sigImage = await pdf.embedPng(sigBytes);
 
-  // Render the signature crossing the line (line is at y=130). Target
-  // width 220 pt; height auto-scales from the asset's native ratio so
-  // ascenders/descenders stay proportionate.
-  const targetWidth = 220;
+  // Render the signature resting on the line (line is at y=130).
+  // Compact target width (140 pt) with the bottom edge on the line so
+  // the signature stays clear of the printed instructor name at y=104.
+  const targetWidth = 140;
   const targetHeight = (sigImage.height / sigImage.width) * targetWidth;
   page.drawImage(sigImage, {
     x: PAGE_W / 2 - targetWidth / 2,
-    y: 130 - targetHeight / 3, // sit the baseline of the signature on the line
+    y: 130,
     width: targetWidth,
     height: targetHeight,
   });
