@@ -3,27 +3,41 @@
 import { useMemo, useState, useTransition } from "react";
 import { useTranslations } from "next-intl";
 import type { SanitizedQuestion, ModuleQuizId } from "@/lib/quizzes";
-import { submitQuizAction } from "./actions";
+
+/**
+ * Shared one-question-at-a-time quiz form for both the module pre-test
+ * and post-test.
+ *
+ * The only thing that differs between the two flows is what happens on
+ * submit, so the server action is injected as the `submitAction` prop:
+ * the post-test passes its scoring/pass-fail action, the pre-test
+ * passes its diagnostic action. Everything else — stepper navigation,
+ * the answer map, the "all answered" submit gate, the redirect handling
+ * — is identical.
+ *
+ * Button/label copy stays under the `portal.postTest` i18n namespace
+ * (the strings are generic — "previous", "next", "submit") so the
+ * pre-test does not need a parallel set of keys.
+ */
+export type QuizSubmitAction = (args: {
+  locale: "es" | "en";
+  moduleId: ModuleQuizId;
+  answers: Record<string, string>;
+}) => Promise<void>;
 
 type QuizFormProps = {
   locale: "es" | "en";
   moduleId: ModuleQuizId;
   questions: readonly SanitizedQuestion[];
+  submitAction: QuizSubmitAction;
 };
 
-/**
- * One-question-at-a-time post-test form.
- *
- * State is local to the component — answers live in a `Record<id,
- * letter>` map, navigation is `current` index, submission is gated via
- * `useTransition` so the spinner stays in sync with the server action.
- *
- * Submit is disabled until every question has an answer. The server
- * action handles redirect on success; we re-throw to keep React happy
- * with the redirect "error" but surface anything else as inline
- * feedback rather than swallowing it.
- */
-export function QuizForm({ locale, moduleId, questions }: QuizFormProps) {
+export function QuizForm({
+  locale,
+  moduleId,
+  questions,
+  submitAction,
+}: QuizFormProps) {
   const t = useTranslations("portal.postTest");
 
   const [current, setCurrent] = useState(0);
@@ -55,10 +69,9 @@ export function QuizForm({ locale, moduleId, questions }: QuizFormProps) {
     setError(null);
     startTransition(async () => {
       try {
-        await submitQuizAction({ locale, moduleId, answers });
+        await submitAction({ locale, moduleId, answers });
       } catch (err) {
         // Next.js redirect errors are intentional — let them bubble.
-        // Anything else surfaces as inline error text.
         if (err instanceof Error && err.message.includes("NEXT_REDIRECT")) {
           throw err;
         }
@@ -85,9 +98,6 @@ export function QuizForm({ locale, moduleId, questions }: QuizFormProps) {
         {question.prompt}
       </h2>
 
-      {/* Options as radios (re-styled). One name per question id so
-          unselecting happens automatically when the user picks a new
-          letter. */}
       <fieldset className="mt-6 space-y-3">
         <legend className="sr-only">{question.prompt}</legend>
         {question.options.map((opt) => {

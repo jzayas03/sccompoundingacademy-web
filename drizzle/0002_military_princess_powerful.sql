@@ -1,0 +1,1 @@
+ALTER TABLE "quiz_attempts" ADD COLUMN "phase" text DEFAULT 'post' NOT NULL;

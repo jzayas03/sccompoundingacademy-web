@@ -2,7 +2,7 @@ import { existsSync } from "node:fs";
 import { join } from "node:path";
 import type { Metadata } from "next";
 import { notFound, redirect } from "next/navigation";
-import { eq } from "drizzle-orm";
+import { and, eq } from "drizzle-orm";
 import { useTranslations, useMessages } from "next-intl";
 import { setRequestLocale } from "next-intl/server";
 import { Container } from "@/components/ui/Container";
@@ -10,7 +10,7 @@ import { GlassCard } from "@/components/glass/GlassCard";
 import { Link } from "@/i18n/routing";
 import { auth } from "@/lib/auth";
 import { db } from "@/lib/db";
-import { users } from "@/lib/db/schema";
+import { users, quizAttempts } from "@/lib/db/schema";
 import { getQuiz, type ModuleQuizId } from "@/lib/quizzes";
 
 export const metadata: Metadata = {
@@ -84,11 +84,31 @@ export default async function ModulePage({
   if (!user) redirect(`/${locale}/portal/login`);
   if (!user.paidAt) redirect(`/${locale}/portal`);
 
+  const hasQuiz = getQuiz(id as ModuleQuizId).length > 0;
+
+  // Pre-test gate: the diagnostic pre-test must be completed before the
+  // module content unlocks. `quizAttempts.moduleId` is the integer day
+  // (1/2/3), which equals `day` here. Skipped when the module has no
+  // quiz at all — otherwise the student would be stranded on a pre-test
+  // page that has no questions to submit.
+  if (hasQuiz) {
+    const [preDone] = await db
+      .select({ id: quizAttempts.id })
+      .from(quizAttempts)
+      .where(
+        and(
+          eq(quizAttempts.userId, user.id),
+          eq(quizAttempts.moduleId, day),
+          eq(quizAttempts.phase, "pre"),
+        ),
+      )
+      .limit(1);
+    if (!preDone) redirect(`/${locale}/portal/modulos/${id}/pre-test`);
+  }
+
   const pdfHref = `/modulos/dia-${day}.pdf`;
   const pdfAbsolutePath = join(process.cwd(), "public", "modulos", `dia-${day}.pdf`);
   const pdfExists = existsSync(pdfAbsolutePath);
-
-  const hasQuiz = getQuiz(id as ModuleQuizId).length > 0;
 
   return (
     <ModuleView

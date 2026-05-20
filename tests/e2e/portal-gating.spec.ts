@@ -18,6 +18,7 @@ test.describe("Portal middleware gating", () => {
     "/es/portal/certificado",
     "/es/portal/rese%C3%B1as",
     "/es/portal/modulos/modulo-1",
+    "/es/portal/modulos/modulo-1/pre-test",
     "/es/portal/modulos/modulo-1/post-test",
     "/es/portal/modulos/modulo-1/post-test/resultados",
     // Direct PDF requests are gated separately by the second matcher entry.

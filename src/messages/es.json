@@ -744,6 +744,14 @@
       "retryButton": "Reintentar",
       "backToModule": "Volver al módulo",
       "noAttemptFound": "Todavía no has completado este post-test."
+    },
+    "preTest": {
+      "eyebrow": "Pre-test",
+      "title": "Pre-test del módulo",
+      "introBody": "Antes de comenzar el módulo, completá este pre-test diagnóstico de {total} preguntas. No es calificado y no afecta tu certificado — mide tu punto de partida. Respondé lo mejor que puedas; al enviarlo se abre el contenido del módulo.",
+      "pendingTitle": "Pre-test pendiente",
+      "pendingBody": "El banco de preguntas para este módulo aún no ha sido producido. Te avisaremos cuando esté listo.",
+      "backToDashboard": "Volver al panel"
     }
   }
 }

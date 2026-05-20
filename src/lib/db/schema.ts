@@ -125,6 +125,11 @@ export const quizAttempts = pgTable("quiz_attempts", {
    * `QUIZ_PASSING_THRESHOLD` env var (default 0.70). */
   percentage: numeric("percentage", { precision: 3, scale: 2 }),
   passed: boolean("passed"),
+  /** "pre" (diagnostic, taken before the module) or "post" (graded,
+   * counts toward certificate eligibility). Defaults to "post" so rows
+   * written before this column existed — all of which were post-tests —
+   * are interpreted correctly. */
+  phase: text("phase").notNull().default("post"),
 });
 
 export const certificates = pgTable("certificates", {

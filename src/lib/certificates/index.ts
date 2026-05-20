@@ -44,6 +44,9 @@ export async function isEligibleForCertificate(
           eq(quizAttempts.userId, userId),
           eq(quizAttempts.moduleId, m),
           eq(quizAttempts.passed, true),
+          // Only the graded post-test counts toward the certificate —
+          // a passing diagnostic pre-test must never qualify a student.
+          eq(quizAttempts.phase, "post"),
         ),
       )
       .limit(1);

@@ -15,6 +15,13 @@
       "when": 1779211418490,
       "tag": "0001_tired_wilson_fisk",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1779317209915,
+      "tag": "0002_military_princess_powerful",
+      "breakpoints": true
     }
   ]
 }
