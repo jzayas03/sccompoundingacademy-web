@@ -36,7 +36,7 @@
       },
       {
         "q": "¿Puedo solicitar reembolso?",
-        "a": "Sí. Aceptamos reembolsos completos hasta siete (7) días naturales antes del inicio de la cohorte, sin preguntas. Después de esa fecha puedes transferir tu plaza a otra persona o a una cohorte futura sin penalidad."
+        "a": "Sí. Reembolso del 100 % si solicitas con 30 días naturales o más de antelación al inicio de la cohorte; 50 % si solicitas entre 14 y 30 días antes; sin reembolso monetario con menos de 14 días o una vez iniciada. En cualquier momento antes del primer día también puedes transferir tu plaza —a otra persona o a una cohorte futura— sin penalidad, conservando el valor completo. Detalles en la Política de Reembolsos."
       }
     ]
   },
@@ -139,7 +139,7 @@
     },
     "terms": {
       "title": "Términos y Condiciones",
-      "lastUpdated": "Última actualización: 18 de mayo de 2026",
+      "lastUpdated": "Última actualización: 20 de mayo de 2026",
       "draftNotice": "",
       "intro": "Estos Términos y Condiciones (\"Términos\") regulan el acceso al sitio sccompoundingacademy.com y la inscripción en los programas educativos ofrecidos por Santa Cruz Compounding Academy, LLC (\"SCCA\", \"nosotros\"). Al inscribirte en cualquier curso o usar el Sitio aceptas estos Términos en su totalidad. Si no estás de acuerdo, abstente de inscribirte o usar el Sitio.",
       "sections": [
@@ -157,7 +157,7 @@
         },
         {
           "heading": "4. Política de reembolso",
-          "body": "Nuestra política de reembolso completa está disponible en la página de Política de Reembolsos. En resumen: aceptamos reembolsos completos hasta siete (7) días naturales antes del inicio de la cohorte; después de ese plazo y antes del primer día puedes transferir tu plaza a otra persona o a una cohorte futura sin penalidad. No se otorgan reembolsos una vez iniciada la cohorte, salvo en casos excepcionales documentados (ver Política de Reembolsos)."
+          "body": "Nuestra política de reembolso completa está disponible en la página de Política de Reembolsos. En resumen: con treinta (30) días naturales o más de antelación al inicio de la cohorte, reembolso del cien por ciento (100 %); entre catorce (14) y treinta (30) días, reembolso del cincuenta por ciento (50 %); con menos de catorce (14) días o una vez iniciada la cohorte, no se otorga reembolso monetario. En todos los casos, antes del primer día puedes transferir tu plaza —a otra persona o a una cohorte futura— sin penalidad, conservando el valor completo (ver Política de Reembolsos)."
         },
         {
           "heading": "5. Obligaciones del estudiante",
@@ -215,36 +215,40 @@
     },
     "refund": {
       "title": "Política de Reembolsos",
-      "lastUpdated": "Última actualización: 18 de mayo de 2026",
+      "lastUpdated": "Última actualización: 20 de mayo de 2026",
       "draftNotice": "",
       "intro": "Sabemos que las circunstancias cambian. Esta política define cuándo puedes solicitar un reembolso de tu inscripción, cómo transferir tu plaza si no puedes asistir, y los plazos aplicables. Forma parte integral de los Términos y Condiciones de SCCA.",
       "sections": [
         {
-          "heading": "1. Reembolso completo (hasta 7 días antes del inicio)",
-          "body": "Si solicitas tu reembolso con al menos siete (7) días naturales de antelación al primer día programado de tu cohorte, te devolvemos el cien por ciento (100 %) del monto pagado, incluyendo cualquier impuesto IVU efectivamente cobrado, sin preguntas y sin penalidad.\n\nEl reembolso se procesa por el mismo método con el que pagaste (típicamente devolución a la tarjeta original). SCCA emite la instrucción de reembolso a Stripe dentro de los cinco (5) días hábiles siguientes a la aprobación de la solicitud; el tiempo efectivo en que aparece en tu estado de cuenta depende de Stripe y del banco emisor, típicamente entre cinco (5) y diez (10) días hábiles adicionales."
+          "heading": "1. Reembolso del 100 % (30 días naturales o más antes del inicio)",
+          "body": "Si solicitas tu reembolso con treinta (30) días naturales o más de antelación al primer día programado de tu cohorte, te devolvemos el cien por ciento (100 %) del monto pagado, incluyendo cualquier impuesto IVU efectivamente cobrado, sin penalidad.\n\nEl reembolso se procesa por el mismo método con el que pagaste (típicamente devolución a la tarjeta original). SCCA emite la instrucción de reembolso a Stripe dentro de los cinco (5) días hábiles siguientes a la aprobación de la solicitud; el tiempo efectivo en que aparece en tu estado de cuenta depende de Stripe y del banco emisor, típicamente entre cinco (5) y diez (10) días hábiles adicionales.\n\nComo alternativa al reembolso monetario, puedes transferir tu plaza sin penalidad (ver la sección 4)."
         },
         {
-          "heading": "2. Transferencia de plaza (entre 7 días y el primer día de cohorte)",
-          "body": "Si tu solicitud llega entre siete (7) días naturales antes del inicio y antes del primer día de cohorte, ya no procesamos reembolso monetario, pero puedes elegir una de estas dos opciones, sin penalidad:\n\nTransferir tu plaza a otra persona elegible. La persona designada debe (i) cumplir con los mismos requisitos de elegibilidad del programa, (ii) aceptar expresamente y por escrito los Términos y Condiciones y la Política de Privacidad de SCCA antes de iniciar el cohorte, y (iii) confirmar su asistencia al menos veinticuatro (24) horas antes del primer día. Los datos de inscripción se actualizan a nombre de la nueva persona y el certificado, en su caso, se emite a su nombre al finalizar el cohorte.\n\nTransferir tu plaza a una cohorte futura del mismo programa dentro de los próximos doce (12) meses. Si la nueva cohorte tiene un precio distinto, se ajusta la diferencia (a tu favor o se factura aparte).\n\nPara solicitar transferencia escríbenos a info@sccompoundingacademy.com con tu nombre, fecha de cohorte original, y la opción elegida (incluyendo nombre y correo de la persona designada, si aplica)."
+          "heading": "2. Reembolso del 50 % (entre 14 y 30 días naturales antes del inicio)",
+          "body": "Si tu solicitud llega con menos de treinta (30) días naturales pero con al menos catorce (14) días naturales de antelación al primer día de cohorte, te devolvemos el cincuenta por ciento (50 %) del monto pagado. La porción no reembolsada cubre los costos de materiales, reserva de plaza y preparación logística ya comprometidos para tu participación.\n\nEl reembolso parcial se procesa por el mismo método de pago original, dentro de los mismos plazos descritos en la sección 1.\n\nComo alternativa al reembolso parcial, puedes transferir tu plaza sin penalidad (ver la sección 4); la transferencia preserva el cien por ciento (100 %) del valor de tu inscripción."
         },
         {
-          "heading": "3. Después del inicio de la cohorte",
-          "body": "Una vez iniciada la cohorte (primer día de sesión presencial), no se otorgan reembolsos monetarios. Sin embargo, en casos excepcionales debidamente documentados —enfermedad grave, emergencia familiar, situación de fuerza mayor— evaluaremos caso por caso la posibilidad de transferir tu plaza restante a una cohorte futura del mismo programa.\n\nLas solicitudes de transferencia post-inicio deben acompañarse de documentación de soporte (certificado médico, orden de despacho, etc.) y serán evaluadas dentro de los diez (10) días hábiles siguientes a su recepción. La decisión queda a discreción razonable de SCCA."
+          "heading": "3. Sin reembolso monetario (menos de 14 días antes del inicio o después de iniciada la cohorte)",
+          "body": "Las solicitudes recibidas con menos de catorce (14) días naturales de antelación al primer día de cohorte, así como las recibidas una vez iniciada la cohorte, no son elegibles para reembolso monetario (cero por ciento, 0 %). En esa ventana los costos de materiales y operación ya están comprometidos.\n\nNo obstante, conservas la opción de transferir tu plaza sin penalidad (ver la sección 4), lo que preserva el valor completo de tu inscripción.\n\nEn casos excepcionales debidamente documentados —enfermedad grave, emergencia familiar, situación de fuerza mayor— evaluaremos caso por caso la posibilidad de transferir tu plaza restante a una cohorte futura del mismo programa. Estas solicitudes deben acompañarse de documentación de soporte (certificado médico, orden de despacho, etc.) y serán evaluadas dentro de los diez (10) días hábiles siguientes a su recepción. La decisión queda a discreción razonable de SCCA."
         },
         {
-          "heading": "4. Cancelaciones por parte de SCCA",
+          "heading": "4. Transferencia de plaza (alternativa al reembolso)",
+          "body": "En cualquier momento antes del primer día de cohorte puedes transferir tu plaza, sin penalidad, en lugar de solicitar un reembolso monetario. La transferencia preserva el cien por ciento (100 %) del valor pagado y es especialmente útil cuando tu solicitud cae en una ventana de reembolso parcial o sin reembolso.\n\nTienes dos opciones:\n\nTransferir tu plaza a otra persona elegible. La persona designada debe (i) cumplir con los mismos requisitos de elegibilidad del programa, (ii) aceptar expresamente y por escrito los Términos y Condiciones y la Política de Privacidad de SCCA antes de iniciar la cohorte, y (iii) confirmar su asistencia al menos veinticuatro (24) horas antes del primer día. Los datos de inscripción se actualizan a nombre de la nueva persona y el certificado, en su caso, se emite a su nombre al finalizar la cohorte.\n\nTransferir tu plaza a una cohorte futura del mismo programa dentro de los próximos doce (12) meses. Si la nueva cohorte tiene un precio distinto, se ajusta la diferencia (a tu favor o se factura aparte).\n\nPara solicitar una transferencia escríbenos a info@sccompoundingacademy.com con tu nombre, fecha de cohorte original, y la opción elegida (incluyendo nombre y correo de la persona designada, si aplica)."
+        },
+        {
+          "heading": "5. Cancelaciones por parte de SCCA",
           "body": "Si por razones operativas, regulatorias o de fuerza mayor SCCA cancela una cohorte antes de su inicio, ofrecemos al estudiante inscrito dos opciones, a su elección:\n\nReembolso completo del monto pagado, procesado en un plazo no mayor a diez (10) días hábiles desde la notificación de cancelación.\n\nTransferencia automática y prioritaria a la siguiente cohorte programada del mismo programa, sin costo adicional ni penalidad.\n\nSi la cancelación ocurre después del inicio de la cohorte por causas atribuibles a SCCA, se reembolsará la porción proporcional al material no impartido, o se ofrecerá completar el programa en una cohorte posterior."
         },
         {
-          "heading": "5. Cómo solicitar un reembolso o transferencia",
+          "heading": "6. Cómo solicitar un reembolso o transferencia",
           "body": "Toda solicitud debe enviarse por correo electrónico a info@sccompoundingacademy.com, incluyendo: (a) tu nombre completo, (b) correo con el que te inscribiste, (c) curso y fecha de cohorte, (d) tipo de solicitud (reembolso, transferencia a persona, transferencia a cohorte), y (e) cuando aplique, documentación de soporte.\n\nConfirmamos recibo de tu solicitud dentro de las cuarenta y ocho (48) horas hábiles siguientes y resolvemos dentro de los diez (10) días hábiles posteriores."
         },
         {
-          "heading": "6. Casos no cubiertos por esta política",
+          "heading": "7. Casos no cubiertos por esta política",
           "body": "Esta política no aplica a, ni cubre: (a) cargos por servicios opcionales, materiales adicionales o equipo adquirido por separado; (b) inscripciones a eventos especiales (workshops puntuales, seminarios) cuya política individual se publica en su página de inscripción; (c) ausencias parciales del estudiante por causas propias sin notificación previa; (d) cargos del banco emisor (conversión de moneda, transacción internacional, intermediación), que son responsabilidad exclusiva del estudiante; ni (e) reembolsos parciales por sesiones individuales del cohorte una vez iniciado el programa.\n\nContracargos (chargebacks): si el estudiante inicia un contracargo ante su banco emisor sin antes contactar a SCCA y agotar el procedimiento de esta política, SCCA presentará la documentación correspondiente al banco emisor para impugnar el contracargo y se reserva el derecho de reclamar al estudiante los costos administrativos asociados, sin perjuicio de las acciones legales aplicables.\n\nEn cualquier escenario no contemplado expresamente en esta política, SCCA evaluará la situación de buena fe priorizando una resolución justa para ambas partes."
         },
         {
-          "heading": "7. Contacto",
+          "heading": "8. Contacto",
           "body": "Para preguntas sobre esta política o para iniciar una solicitud:\n\nSanta Cruz Compounding Academy, LLC\n73 Santa Cruz Medical Building, Suite 201\nBayamón, Puerto Rico 00961\nCorreo: info@sccompoundingacademy.com\nTeléfono principal: 787-408-5775\nTeléfono secundario: 787-798-4646"
         }
       ]
@@ -416,10 +420,7 @@
       {
         "title": "Estudiantes en transición",
         "body": "Estudiantes avanzados y profesionales cambiando de área que buscan una entrada técnica al compounding con mentoría real.",
-        "bullets": [
-          "Prerrequisitos mínimos accesibles",
-          "Mentoría con farmacéuticos en ejercicio"
-        ]
+        "bullets": ["Prerrequisitos mínimos accesibles", "Mentoría con farmacéuticos en ejercicio"]
       }
     ]
   },
