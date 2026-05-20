@@ -46,11 +46,18 @@ const POST_COUNT = Number(process.env.IG_POST_COUNT ?? "4");
 const GRAPH_VERSION = process.env.IG_GRAPH_VERSION ?? "v23.0";
 
 if (!TOKEN || !IG_USER_ID) {
-  console.error(
-    "[fetch-ig-feed] Missing required env vars IG_LONG_LIVED_TOKEN and/or IG_BUSINESS_USER_ID.\n" +
-      "Add them as GitHub Secrets (Settings → Secrets and variables → Actions).",
+  // Graceful skip rather than a hard failure. The Instagram feed is a
+  // nice-to-have decorative section; when the Graph API credentials
+  // are not configured the landing page just shows the last committed
+  // feed. Exiting 0 keeps the scheduled `refresh-ig.yml` workflow green
+  // (it will simply detect no changes) instead of emailing a failure
+  // every 6 hours. Set IG_LONG_LIVED_TOKEN + IG_BUSINESS_USER_ID as
+  // GitHub Secrets to enable the live refresh.
+  console.warn(
+    "[fetch-ig-feed] IG_LONG_LIVED_TOKEN / IG_BUSINESS_USER_ID not set — " +
+      "skipping Instagram refresh (feed stays at its last committed state).",
   );
-  process.exit(1);
+  process.exit(0);
 }
 
 const GRAPH = `https://graph.facebook.com/${GRAPH_VERSION}`;
