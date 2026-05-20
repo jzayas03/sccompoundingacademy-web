@@ -28,6 +28,7 @@ export const routing = defineRouting({
       "/portal/modulos/[id]/post-test/resultados",
     "/portal/certificado": "/portal/certificado",
     "/portal/reseñas": "/portal/reseñas",
+    "/portal/admin": "/portal/admin",
   },
 });
 

@@ -14,6 +14,7 @@ import { test, expect } from "@playwright/test";
 test.describe("Portal middleware gating", () => {
   const GATED_ROUTES = [
     "/es/portal",
+    "/es/portal/admin",
     "/es/portal/certificado",
     "/es/portal/rese%C3%B1as",
     "/es/portal/modulos/modulo-1",
