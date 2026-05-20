@@ -31,10 +31,14 @@ const PAT = process.env.GH_PAT_REFRESH_IG;
 const REPO = process.env.GITHUB_REPOSITORY;
 
 if (!TOKEN || !PAT || !REPO) {
-  console.error(
-    "[refresh-ig-token] Missing required env vars. Need: IG_LONG_LIVED_TOKEN, GH_PAT_REFRESH_IG, GITHUB_REPOSITORY",
+  // Graceful skip — see the matching rationale in fetch-ig-feed.mjs.
+  // With no token to refresh, exit 0 so the monthly refresh-ig-token.yml
+  // workflow stays green instead of emailing a failure.
+  console.warn(
+    "[refresh-ig-token] IG_LONG_LIVED_TOKEN / GH_PAT_REFRESH_IG / GITHUB_REPOSITORY " +
+      "not all set — skipping token refresh.",
   );
-  process.exit(1);
+  process.exit(0);
 }
 
 // ── 1. Ask IG to extend the token ─────────────────────────────────────────
