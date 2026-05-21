@@ -543,7 +543,9 @@
       "telefono": "Phone",
       "licencia": "Pharmacy license number",
       "notas": "Notes or questions",
-      "tipoProfesional": "Are you a pharmacist or pharmacy technician?"
+      "tipoProfesional": "What is your profession?",
+      "otraProfesion": "Specify your profession",
+      "otraProfesionTexto": "Write your profession"
     },
     "tiers": {
       "profesional": {
@@ -582,7 +584,14 @@
     },
     "tiposProfesional": {
       "farmaceutico": "Pharmacist",
-      "tecnico": "Pharmacy technician"
+      "tecnico": "Pharmacy technician",
+      "otro": "Other"
+    },
+    "otrasProfesiones": {
+      "medico": "Physician",
+      "enfermero": "Nurse",
+      "dentista": "Dentist",
+      "otro": "Other (specify)"
     }
   },
   "ctaFinal": {

@@ -9,6 +9,7 @@ import { db } from "@/lib/db";
 import { users, reviews, certificates } from "@/lib/db/schema";
 import { isAdminEmail } from "@/lib/admin";
 import { listCohorts, formatCohortLabel, type Cohort } from "@/lib/cohorts";
+import { professionLabel } from "@/lib/professions";
 import { Link } from "@/i18n/routing";
 
 export const metadata: Metadata = {
@@ -42,12 +43,6 @@ function cohortLabel(cohortId: string | null, byId: Map<string, Cohort>): string
   const c = byId.get(cohortId);
   if (!c) return cohortId;
   return formatCohortLabel(c, "es");
-}
-
-function ftLabel(value: string | null): string {
-  if (value === "farmaceutico") return "Farmacéutico";
-  if (value === "tecnico") return "Técnico";
-  return "—";
 }
 
 export default async function AdminPage({
@@ -163,7 +158,7 @@ export default async function AdminPage({
               <tr className="text-teal-deep/70 border-gray-300 border-b text-xs uppercase tracking-wide">
                 <th className="py-2 pr-4 font-semibold">Nombre</th>
                 <th className="py-2 pr-4 font-semibold">Email</th>
-                <th className="py-2 pr-4 font-semibold">F/T</th>
+                <th className="py-2 pr-4 font-semibold">Profesión</th>
                 <th className="py-2 pr-4 font-semibold">Licencia</th>
                 <th className="py-2 pr-4 font-semibold">Celular</th>
                 <th className="py-2 pr-4 font-semibold">Tier</th>
@@ -176,7 +171,7 @@ export default async function AdminPage({
                 <tr key={r.email} className="border-gray-300/60 border-b last:border-0">
                   <td className="py-2 pr-4 text-gray-900">{r.name ?? "—"}</td>
                   <td className="py-2 pr-4 text-gray-700">{r.email}</td>
-                  <td className="py-2 pr-4 text-gray-700">{ftLabel(r.professionalType)}</td>
+                  <td className="py-2 pr-4 text-gray-700">{professionLabel(r.professionalType) || "—"}</td>
                   <td className="py-2 pr-4 text-gray-700">{r.license ?? "—"}</td>
                   <td className="py-2 pr-4 text-gray-700">{r.phone ?? "—"}</td>
                   <td className="py-2 pr-4 text-gray-700">{r.tier ?? "—"}</td>

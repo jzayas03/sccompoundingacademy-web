@@ -172,14 +172,12 @@ export async function POST(req: Request) {
   //    confirmation emails — the source of truth at this point is
   //    Stripe, and the webhook is idempotent so a replay heals the DB.
   if (email) {
-    // ACPE-registry fields. `professionalType` is only set for the
+    // ACPE-registry fields. `professionalType` holds the enrollee's
+    // profession (farmaceutico / tecnico / a code / free text) for the
     // profesional tier; the student tier leaves it null.
     const phone = record.telefono || null;
     const license = record.licencia || null;
-    const professionalType =
-      md.tipo_profesional === "farmaceutico" || md.tipo_profesional === "tecnico"
-        ? md.tipo_profesional
-        : null;
+    const professionalType = md.tipo_profesional?.trim() || null;
     try {
       await db
         .insert(users)

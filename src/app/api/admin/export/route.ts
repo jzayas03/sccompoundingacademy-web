@@ -4,6 +4,7 @@ import { auth } from "@/lib/auth";
 import { db } from "@/lib/db";
 import { users } from "@/lib/db/schema";
 import { isAdminEmail } from "@/lib/admin";
+import { professionLabel } from "@/lib/professions";
 
 export const runtime = "nodejs";
 
@@ -44,18 +45,15 @@ export async function GET() {
     .orderBy(desc(users.paidAt));
 
   // Column order mirrors the ACPE "Registro de Educación Continua"
-  // form (Nombre · F/T · Licencia · Email · Celular), with tier /
+  // form (Nombre · Profesión · Licencia · Email · Celular), with tier /
   // payment / cohort appended for the owner's own bookkeeping.
-  const ftLabel = (v: string | null) =>
-    v === "farmaceutico" ? "Farmacéutico" : v === "tecnico" ? "Técnico" : "";
-
   const rows = [
-    ["Nombre", "Farmacéutico/Técnico", "Licencia", "Email", "Celular", "Tier", "Pago", "Cohorte"],
+    ["Nombre", "Profesión", "Licencia", "Email", "Celular", "Tier", "Pago", "Cohorte"],
   ];
   for (const r of roster) {
     rows.push([
       r.name ?? "",
-      ftLabel(r.professionalType),
+      professionLabel(r.professionalType),
       r.license ?? "",
       r.email,
       r.phone ?? "",
