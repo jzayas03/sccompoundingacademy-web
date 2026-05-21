@@ -1,10 +1,14 @@
 /**
- * SCCA course catalogue — single source of truth for course + cohort data.
+ * SCCA course catalogue — single source of truth for course data.
  *
- * Why TS constants (vs i18n): pricing, dates, Stripe Price IDs, and seat
- * caps are operational data, not translatable copy. They must stay
- * identical across locales and must be referenceable from server code
- * (API route, webhook handler) where i18n is not in scope.
+ * Cohort scheduling is NOT here: cohorts live in the database (`cohorts`
+ * table) so the owner can add and edit them from the admin panel without
+ * a code change. See `lib/cohorts.ts`.
+ *
+ * Why TS constants (vs i18n): pricing, Stripe Price IDs, and seat caps
+ * are operational data, not translatable copy. They must stay identical
+ * across locales and must be referenceable from server code (API route,
+ * webhook handler) where i18n is not in scope.
  *
  * i18n owns the *display strings* — course title, module titles,
  * descriptions, tier labels — keyed by ids. This file owns the *facts*.
@@ -77,24 +81,6 @@ export type Course = {
   acpe?: AcpeAccreditation;
 };
 
-export type Cohort = {
-  id: string;
-  /** Course this cohort runs. */
-  courseId: CourseId;
-  /** Display label rendered in the form select (in the user's locale via
-   * i18n lookup `cohortes.{id}.label`). */
-  i18nKey: string;
-  /** ISO date of first session (used in confirmation email + Airtable). */
-  startDate: string;
-  /** ISO date of last session. */
-  endDate: string;
-  /** Maximum participants — when reached, the cohort closes for new sales. */
-  capacity: number;
-  /** Toggle to hide cohorts that filled or were cancelled without
-   * deleting their record (so completed-cohort references survive). */
-  openForEnrollment: boolean;
-};
-
 /**
  * Catalogue. Prices below are the owner-confirmed values (2026-05-19);
  * Stripe is still the source of truth at checkout.
@@ -130,32 +116,12 @@ export const COURSES: readonly Course[] = [
   },
 ] as const;
 
-export const COHORTS: readonly Cohort[] = [
-  {
-    id: "2026-q1-basic",
-    courseId: "basic-compounding",
-    i18nKey: "2026-q1-basic",
-    startDate: "2026-01-15",
-    endDate: "2026-01-17",
-    capacity: 12,
-    openForEnrollment: true,
-  },
-] as const;
-
 export function getCourseBySlug(slug: string): Course | undefined {
   return COURSES.find((c) => c.slug === slug);
 }
 
 export function getCourseById(id: string): Course | undefined {
   return COURSES.find((c) => c.id === id);
-}
-
-export function getCohortById(id: string): Cohort | undefined {
-  return COHORTS.find((c) => c.id === id);
-}
-
-export function getCohortsForCourse(courseId: CourseId): readonly Cohort[] {
-  return COHORTS.filter((c) => c.courseId === courseId && c.openForEnrollment);
 }
 
 export function getPricingByTier(course: Course, tier: Tier): Pricing | undefined {

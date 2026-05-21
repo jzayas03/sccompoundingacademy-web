@@ -108,8 +108,14 @@ export const verificationTokens = pgTable(
 );
 
 export const cohorts = pgTable("cohorts", {
-  id: text("id").primaryKey(),
-  name: text("name").notNull(),
+  id: text("id")
+    .primaryKey()
+    .$defaultFn(() => crypto.randomUUID()),
+  /** Catalogue course id (see `lib/courses.ts`) this cohort runs. */
+  courseId: text("course_id").notNull(),
+  /** Optional internal label for the owner's own reference. Students
+   * never see it — their cohort label is derived from the dates. */
+  name: text("name"),
   startDate: date("start_date", { mode: "date" }).notNull(),
   endDate: date("end_date", { mode: "date" }).notNull(),
   capacity: integer("capacity").notNull(),

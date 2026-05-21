@@ -2,7 +2,11 @@ import type { Metadata } from "next";
 import { setRequestLocale } from "next-intl/server";
 import { useTranslations, useMessages } from "next-intl";
 import { Container } from "@/components/ui/Container";
-import { InscripcionForm } from "@/components/marketing/inscripcion/InscripcionForm";
+import {
+  InscripcionForm,
+  type CohortOption,
+} from "@/components/marketing/inscripcion/InscripcionForm";
+import { listOpenCohorts, formatCohortLabel } from "@/lib/cohorts";
 
 export async function generateMetadata({
   params,
@@ -33,15 +37,30 @@ export default async function Page({
   const { locale } = await params;
   const { course } = await searchParams;
   setRequestLocale(locale);
-  return <InscripcionPage locale={locale as "es" | "en"} preselectedCourseSlug={course} />;
+  const loc = locale as "es" | "en";
+
+  // Cohorts live in the DB so the owner can edit them from the admin
+  // panel; format each label here (server-side) in the page locale.
+  const openCohorts = await listOpenCohorts();
+  const cohorts: CohortOption[] = openCohorts.map((c) => ({
+    id: c.id,
+    courseId: c.courseId,
+    label: formatCohortLabel(c, loc),
+  }));
+
+  return (
+    <InscripcionPage locale={loc} preselectedCourseSlug={course} cohorts={cohorts} />
+  );
 }
 
 function InscripcionPage({
   locale,
   preselectedCourseSlug,
+  cohorts,
 }: {
   locale: "es" | "en";
   preselectedCourseSlug?: string;
+  cohorts: CohortOption[];
 }) {
   const t = useTranslations("inscripcion");
   // Pull the version stamp of legal docs the user is accepting — same
@@ -70,6 +89,7 @@ function InscripcionPage({
           <InscripcionForm
             locale={locale}
             preselectedCourseId={preselectedCourseSlug}
+            cohorts={cohorts}
             docsVersion={docsVersion}
           />
         </div>

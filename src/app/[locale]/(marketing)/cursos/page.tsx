@@ -1,5 +1,6 @@
 import { setRequestLocale } from "next-intl/server";
-import { CursosGrid } from "@/components/marketing/CursosGrid";
+import { CursosGrid, type CohortBrief } from "@/components/marketing/CursosGrid";
+import { listOpenCohortsSafe } from "@/lib/cohorts";
 
 /**
  * /cursos (es) and /courses (en) — full catalogue page.
@@ -15,5 +16,12 @@ import { CursosGrid } from "@/components/marketing/CursosGrid";
 export default async function Page({ params }: { params: Promise<{ locale: string }> }) {
   const { locale } = await params;
   setRequestLocale(locale);
-  return <CursosGrid />;
+  // Cohorts come from the DB; `listOpenCohortsSafe` degrades to [] if the
+  // query fails (see the landing page for the rationale).
+  const openCohorts = await listOpenCohortsSafe();
+  const cohortsForGrid: CohortBrief[] = openCohorts.map((c) => ({
+    courseId: c.courseId,
+    startDate: c.startDate.toISOString().slice(0, 10),
+  }));
+  return <CursosGrid openCohorts={cohortsForGrid} />;
 }
