@@ -55,6 +55,24 @@ export async function getCohort(id: string): Promise<Cohort | undefined> {
   return row;
 }
 
+/**
+ * Like `listOpenCohorts`, but never throws — returns `[]` on any failure.
+ *
+ * Use this from statically-prerendered marketing pages. A local `next
+ * build` without DATABASE_URL, or a Vercel preview whose Neon branch
+ * predates the latest migration, would otherwise crash the whole build
+ * at prerender. Degrading to "no cohort shown" is the right trade-off
+ * there; production has the migrated DB and renders real data.
+ */
+export async function listOpenCohortsSafe(courseId?: string): Promise<Cohort[]> {
+  try {
+    return await listOpenCohorts(courseId);
+  } catch (err) {
+    console.warn("[cohorts] listOpenCohortsSafe — query failed, rendering without cohorts", err);
+    return [];
+  }
+}
+
 /** Insert a cohort. `id` is left to the schema's UUID default. */
 export async function createCohort(input: CohortInput): Promise<void> {
   await db.insert(cohorts).values(input);

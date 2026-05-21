@@ -1,6 +1,6 @@
 import { setRequestLocale } from "next-intl/server";
 import { CursosGrid, type CohortBrief } from "@/components/marketing/CursosGrid";
-import { listOpenCohorts } from "@/lib/cohorts";
+import { listOpenCohortsSafe } from "@/lib/cohorts";
 
 /**
  * /cursos (es) and /courses (en) — full catalogue page.
@@ -16,9 +16,9 @@ import { listOpenCohorts } from "@/lib/cohorts";
 export default async function Page({ params }: { params: Promise<{ locale: string }> }) {
   const { locale } = await params;
   setRequestLocale(locale);
-  // Cohorts come from the DB; the guard keeps local `next build` green
-  // when DATABASE_URL is unset (see the landing page for the rationale).
-  const openCohorts = process.env.DATABASE_URL ? await listOpenCohorts() : [];
+  // Cohorts come from the DB; `listOpenCohortsSafe` degrades to [] if the
+  // query fails (see the landing page for the rationale).
+  const openCohorts = await listOpenCohortsSafe();
   const cohortsForGrid: CohortBrief[] = openCohorts.map((c) => ({
     courseId: c.courseId,
     startDate: c.startDate.toISOString().slice(0, 10),

@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import { setRequestLocale } from "next-intl/server";
 import { pageMetadata } from "@/lib/seo";
 import { homepageJsonLd } from "@/lib/structuredData";
-import { listOpenCohorts } from "@/lib/cohorts";
+import { listOpenCohortsSafe } from "@/lib/cohorts";
 import { Hero } from "@/components/marketing/Hero";
 import { Confianza } from "@/components/marketing/Confianza";
 import { CursosGrid, type CohortBrief } from "@/components/marketing/CursosGrid";
@@ -45,10 +45,11 @@ export default async function LandingPage({ params }: { params: Promise<{ locale
   const { locale } = await params;
   setRequestLocale(locale);
 
-  // Cohorts live in the DB. The DATABASE_URL guard keeps `next build`
-  // working when the var is absent (local builds); Vercel builds have it
-  // set and bake in real data, and admin cohort edits revalidate this page.
-  const openCohorts = process.env.DATABASE_URL ? await listOpenCohorts() : [];
+  // Cohorts live in the DB. `listOpenCohortsSafe` never throws — a local
+  // build without DATABASE_URL, or a preview deploy whose Neon branch
+  // predates the latest migration, just renders without cohort data.
+  // Production has the migrated DB; admin cohort edits revalidate this page.
+  const openCohorts = await listOpenCohortsSafe();
   const cohortsForGrid: CohortBrief[] = openCohorts.map((c) => ({
     courseId: c.courseId,
     startDate: c.startDate.toISOString().slice(0, 10),
