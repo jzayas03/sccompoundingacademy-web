@@ -64,17 +64,36 @@ export function InscripcionForm({
   }
 
   const [tier, setTier] = useState<Tier>(DEFAULT_TIER);
-  // Farmacéutico vs Técnico — required for the profesional tier (the
-  // ACPE registry distinguishes them), not asked for the student tier.
+  // Profession — captured for the profesional tier. Farmacéutico/Técnico
+  // feed the ACPE registry; "otro" lets non-pharmacy professionals
+  // self-identify without changing the price (they stay on the $2,350
+  // profesional tier — the $495 student price is students-only).
   const [tipoProfesional, setTipoProfesional] = useState<
-    "farmaceutico" | "tecnico" | ""
+    "farmaceutico" | "tecnico" | "otro" | ""
   >("");
+  // When tipoProfesional === "otro": `otraProfesion` is a code from the
+  // `otrasProfesiones` list, or "otro" → the free text in `otraProfesionTexto`.
+  const [otraProfesion, setOtraProfesion] = useState<string>("");
+  const [otraProfesionTexto, setOtraProfesionTexto] = useState<string>("");
   const [submitting, setSubmitting] = useState(false);
   const [accepted, setAccepted] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
   const selectedCourse = COURSES.find((c) => c.id === courseId);
 
+  // Profession value sent to the server: a known code (farmaceutico /
+  // tecnico / medico / …) or the free text typed under "Otro". Empty for
+  // the student tier (not asked) or until a choice is made.
+  const profesion =
+    tier !== "profesional"
+      ? ""
+      : tipoProfesional === "farmaceutico" || tipoProfesional === "tecnico"
+        ? tipoProfesional
+        : tipoProfesional === "otro"
+          ? otraProfesion === "otro"
+            ? otraProfesionTexto.trim()
+            : otraProfesion
+          : "";
 
   async function onSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
@@ -89,7 +108,7 @@ export function InscripcionForm({
       curso_id: courseId,
       cohorte_id: cohorteId,
       tier,
-      tipo_profesional: tier === "profesional" ? tipoProfesional : "",
+      tipo_profesional: profesion,
       notas: String(fd.get("notas") ?? ""),
       acepto_terminos: accepted,
       acepto_version_docs: docsVersion,
@@ -158,14 +177,15 @@ export function InscripcionForm({
         </div>
       </div>
 
-      {/* Farmacéutico / Técnico — only for the profesional tier. The
-          ACPE "Registro de Educación Continua" records the two
-          separately, so we capture it at enrollment. */}
+      {/* Profession — only for the profesional tier. Farmacéutico/Técnico
+          feed the ACPE "Registro de Educación Continua"; "Otro" lets
+          non-pharmacy professionals self-identify. All stay on the
+          profesional ($2,350) tier — it does not unlock the student price. */}
       {tier === "profesional" && (
         <div>
           <p className={labelCls}>{t("fields.tipoProfesional")}</p>
-          <div className="mt-2 grid grid-cols-1 gap-3 sm:grid-cols-2">
-            {(["farmaceutico", "tecnico"] as const).map((tp) => {
+          <div className="mt-2 grid grid-cols-1 gap-3 sm:grid-cols-3">
+            {(["farmaceutico", "tecnico", "otro"] as const).map((tp) => {
               const isActive = tipoProfesional === tp;
               return (
                 <button
@@ -184,6 +204,40 @@ export function InscripcionForm({
               );
             })}
           </div>
+
+          {tipoProfesional === "otro" && (
+            <div className="mt-3 grid grid-cols-1 gap-4 sm:grid-cols-2">
+              <label className="block">
+                <span className={labelCls}>{t("fields.otraProfesion")}</span>
+                <select
+                  value={otraProfesion}
+                  onChange={(e) => setOtraProfesion(e.target.value)}
+                  className={inputCls}
+                >
+                  <option value="" disabled>
+                    —
+                  </option>
+                  {(["medico", "enfermero", "dentista", "otro"] as const).map((op) => (
+                    <option key={op} value={op}>
+                      {t(`otrasProfesiones.${op}`)}
+                    </option>
+                  ))}
+                </select>
+              </label>
+              {otraProfesion === "otro" && (
+                <label className="block">
+                  <span className={labelCls}>{t("fields.otraProfesionTexto")}</span>
+                  <input
+                    type="text"
+                    value={otraProfesionTexto}
+                    onChange={(e) => setOtraProfesionTexto(e.target.value)}
+                    maxLength={80}
+                    className={inputCls}
+                  />
+                </label>
+              )}
+            </div>
+          )}
         </div>
       )}
 
@@ -332,7 +386,7 @@ export function InscripcionForm({
             !accepted ||
             submitting ||
             !cohorteId ||
-            (tier === "profesional" && !tipoProfesional)
+            (tier === "profesional" && !profesion)
           }
           className="bg-chartreuse text-teal-deep ring-teal-deep/15 shadow-soft hover:bg-chartreuse/95 hover:shadow-lift focus-visible:ring-chartreuse font-heading inline-flex h-12 items-center justify-center rounded-md px-6 text-sm font-semibold ring-1 transition-[color,background-color,box-shadow,transform] duration-200 ease-out focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-offset-white focus-visible:outline-none disabled:cursor-not-allowed disabled:opacity-50 sm:h-14 sm:px-7 sm:text-base motion-safe:hover:-translate-y-px"
         >

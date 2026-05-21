@@ -549,7 +549,9 @@
       "telefono": "Teléfono",
       "licencia": "Número de licencia farmacéutica",
       "notas": "Notas o preguntas",
-      "tipoProfesional": "¿Eres farmacéutico o técnico de farmacia?"
+      "tipoProfesional": "¿Cuál es tu profesión?",
+      "otraProfesion": "Especifica tu profesión",
+      "otraProfesionTexto": "Escribe tu profesión"
     },
     "tiers": {
       "profesional": {
@@ -588,7 +590,14 @@
     },
     "tiposProfesional": {
       "farmaceutico": "Farmacéutico",
-      "tecnico": "Técnico de farmacia"
+      "tecnico": "Técnico de farmacia",
+      "otro": "Otro"
+    },
+    "otrasProfesiones": {
+      "medico": "Médico/a",
+      "enfermero": "Enfermero/a",
+      "dentista": "Dentista",
+      "otro": "Otra (especificar)"
     }
   },
   "ctaFinal": {

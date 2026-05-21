@@ -37,11 +37,10 @@ const InscripcionSchema = z.object({
   curso_id: z.string().trim().min(1),
   cohorte_id: z.string().trim().min(1),
   tier: z.enum(["profesional", "student"]),
-  // Farmacéutico vs Técnico de Farmacia — only meaningful for the
-  // profesional tier (the ACPE registry distinguishes the two). The
-  // form sends it for profesional and omits it for student; the server
-  // accepts either so a student enrollment is not rejected.
-  tipo_profesional: z.enum(["farmaceutico", "tecnico"]).optional().or(z.literal("")),
+  // Profession captured for the profesional tier — "farmaceutico" /
+  // "tecnico" (ACPE registry), a profession code (medico/…), or the free
+  // text typed under "Otro". Free-form string; empty for the student tier.
+  tipo_profesional: z.string().trim().max(80).optional().or(z.literal("")),
   notas: z.string().trim().max(1000).optional().or(z.literal("")),
   acepto_terminos: z.literal(true, {
     errorMap: () => ({ message: "Debes aceptar los Términos, Privacidad y Reembolsos." }),
