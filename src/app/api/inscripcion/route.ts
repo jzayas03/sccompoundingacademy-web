@@ -36,6 +36,11 @@ const InscripcionSchema = z.object({
   curso_id: z.string().trim().min(1),
   cohorte_id: z.string().trim().min(1),
   tier: z.enum(["profesional", "student"]),
+  // Farmacéutico vs Técnico de Farmacia — only meaningful for the
+  // profesional tier (the ACPE registry distinguishes the two). The
+  // form sends it for profesional and omits it for student; the server
+  // accepts either so a student enrollment is not rejected.
+  tipo_profesional: z.enum(["farmaceutico", "tecnico"]).optional().or(z.literal("")),
   notas: z.string().trim().max(1000).optional().or(z.literal("")),
   acepto_terminos: z.literal(true, {
     errorMap: () => ({ message: "Debes aceptar los Términos, Privacidad y Reembolsos." }),
@@ -128,6 +133,7 @@ export async function POST(req: Request) {
         curso_id: data.curso_id,
         cohorte_id: data.cohorte_id,
         tier: data.tier,
+        tipo_profesional: data.tipo_profesional ?? "",
         notas: (data.notas ?? "").slice(0, 480),
         acepto_terminos: "true",
         acepto_timestamp: acceptedAt,

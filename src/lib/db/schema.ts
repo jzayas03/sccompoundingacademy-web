@@ -55,6 +55,15 @@ export const users = pgTable("user", {
   paidAt: timestamp("paid_at", { mode: "date" }),
   stripeCustomerId: text("stripe_customer_id"),
   cohortId: text("cohort_id"),
+  // Captured at inscription, persisted from the Stripe webhook. Feed the
+  // ACPE "Registro de Educación Continua" export. All nullable: rows
+  // created before these columns existed, and student-tier enrollees
+  // (who are not licensed professionals), have no values.
+  phone: text("phone"),
+  license: text("license"),
+  /** "farmaceutico" | "tecnico" — only meaningful for the profesional
+   * tier; null for student-tier enrollees. */
+  professionalType: text("professional_type"),
   createdAt: timestamp("created_at", { mode: "date" }).defaultNow().notNull(),
 });
 

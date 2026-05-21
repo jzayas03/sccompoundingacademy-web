@@ -43,6 +43,12 @@ function cohortLabel(cohortId: string | null): string {
   return `${cohortId} (${c.startDate} → ${c.endDate})`;
 }
 
+function ftLabel(value: string | null): string {
+  if (value === "farmaceutico") return "Farmacéutico";
+  if (value === "tecnico") return "Técnico";
+  return "—";
+}
+
 export default async function AdminPage({
   params,
 }: {
@@ -64,6 +70,9 @@ export default async function AdminPage({
       name: users.name,
       email: users.email,
       tier: users.tier,
+      professionalType: users.professionalType,
+      license: users.license,
+      phone: users.phone,
       paidAt: users.paidAt,
       cohortId: users.cohortId,
     })
@@ -140,6 +149,9 @@ export default async function AdminPage({
               <tr className="text-teal-deep/70 border-gray-300 border-b text-xs uppercase tracking-wide">
                 <th className="py-2 pr-4 font-semibold">Nombre</th>
                 <th className="py-2 pr-4 font-semibold">Email</th>
+                <th className="py-2 pr-4 font-semibold">F/T</th>
+                <th className="py-2 pr-4 font-semibold">Licencia</th>
+                <th className="py-2 pr-4 font-semibold">Celular</th>
                 <th className="py-2 pr-4 font-semibold">Tier</th>
                 <th className="py-2 pr-4 font-semibold">Pago</th>
                 <th className="py-2 font-semibold">Cohorte</th>
@@ -150,6 +162,9 @@ export default async function AdminPage({
                 <tr key={r.email} className="border-gray-300/60 border-b last:border-0">
                   <td className="py-2 pr-4 text-gray-900">{r.name ?? "—"}</td>
                   <td className="py-2 pr-4 text-gray-700">{r.email}</td>
+                  <td className="py-2 pr-4 text-gray-700">{ftLabel(r.professionalType)}</td>
+                  <td className="py-2 pr-4 text-gray-700">{r.license ?? "—"}</td>
+                  <td className="py-2 pr-4 text-gray-700">{r.phone ?? "—"}</td>
                   <td className="py-2 pr-4 text-gray-700">{r.tier ?? "—"}</td>
                   <td className="py-2 pr-4 text-gray-700">{fmtDate(r.paidAt)}</td>
                   <td className="py-2 text-gray-700">{cohortLabel(r.cohortId)}</td>
