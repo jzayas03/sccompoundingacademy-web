@@ -6,12 +6,12 @@ import { and, eq } from "drizzle-orm";
 import { useTranslations, useMessages } from "next-intl";
 import { setRequestLocale } from "next-intl/server";
 import { Container } from "@/components/ui/Container";
-import { GlassCard } from "@/components/glass/GlassCard";
 import { Link } from "@/i18n/routing";
 import { auth } from "@/lib/auth";
 import { db } from "@/lib/db";
 import { users, quizAttempts } from "@/lib/db/schema";
 import { getQuiz, type ModuleQuizId } from "@/lib/quizzes";
+import { ModulePdfViewer } from "@/components/portal/ModulePdfViewer";
 
 export const metadata: Metadata = {
   title: "Módulo · SCCA Portal",
@@ -106,16 +106,23 @@ export default async function ModulePage({
     if (!preDone) redirect(`/${locale}/portal/modulos/${id}/pre-test`);
   }
 
-  const pdfHref = `/modulos/dia-${day}.pdf`;
-  const pdfAbsolutePath = join(process.cwd(), "public", "modulos", `dia-${day}.pdf`);
-  const pdfExists = existsSync(pdfAbsolutePath);
+  // Module material lives at public/modulos/dia-{n}.pdf (Spanish) and,
+  // once the owner produces them, dia-{n}-en.pdf (English). The viewer
+  // shows a language toggle only when both files are present.
+  const modulosDir = join(process.cwd(), "public", "modulos");
+  const esPdfHref = existsSync(join(modulosDir, `dia-${day}.pdf`))
+    ? `/modulos/dia-${day}.pdf`
+    : null;
+  const enPdfHref = existsSync(join(modulosDir, `dia-${day}-en.pdf`))
+    ? `/modulos/dia-${day}-en.pdf`
+    : null;
 
   return (
     <ModuleView
       id={id as ModuleId}
       day={day}
-      pdfHref={pdfHref}
-      pdfExists={pdfExists}
+      esPdfHref={esPdfHref}
+      enPdfHref={enPdfHref}
       hasQuiz={hasQuiz}
     />
   );
@@ -124,14 +131,14 @@ export default async function ModulePage({
 function ModuleView({
   id,
   day,
-  pdfHref,
-  pdfExists,
+  esPdfHref,
+  enPdfHref,
   hasQuiz,
 }: {
   id: ModuleId;
   day: number;
-  pdfHref: string;
-  pdfExists: boolean;
+  esPdfHref: string | null;
+  enPdfHref: string | null;
   hasQuiz: boolean;
 }) {
   const t = useTranslations("portal.module");
@@ -166,31 +173,10 @@ function ModuleView({
         )}
       </div>
 
-      {/* Viewer — switches to a "coming soon" GlassCard until the owner
-          uploads the Gamma-produced PDF to public/modulos/dia-{n}.pdf. */}
+      {/* Viewer — the ES/EN toggle, the PDF object, the download button,
+          and the "coming soon" fallback all live in ModulePdfViewer. */}
       <section aria-label={t("viewerTitle")} className="mt-10">
-        {pdfExists ? (
-          <GlassCard className="overflow-hidden p-0">
-            <object
-              data={pdfHref}
-              type="application/pdf"
-              className="block h-[70vh] w-full"
-            >
-              <p className="text-gray-900 p-6 text-sm">
-                {t("viewerFallback")}
-              </p>
-            </object>
-          </GlassCard>
-        ) : (
-          <GlassCard className="p-8 sm:p-10">
-            <p className="font-heading text-teal-deep text-xs font-semibold tracking-[0.18em] uppercase">
-              {t("pdfMissingTitle")}
-            </p>
-            <p className="text-gray-900 mt-3 text-base leading-relaxed">
-              {t("pdfMissingBody")}
-            </p>
-          </GlassCard>
-        )}
+        <ModulePdfViewer esPdfHref={esPdfHref} enPdfHref={enPdfHref} />
       </section>
 
       {/* Action row — download + post-test link.
@@ -198,15 +184,6 @@ function ModuleView({
           once the quiz engine ships; until then the button is rendered
           disabled with an explanatory hint. */}
       <div className="mt-8 flex flex-col gap-4 sm:flex-row sm:items-center">
-        {pdfExists && (
-          <a
-            href={pdfHref}
-            download
-            className="border-teal-deep text-teal-deep bg-white shadow-soft hover:bg-teal-deep hover:text-off-white hover:shadow-lift focus-visible:ring-chartreuse font-heading inline-flex h-12 items-center justify-center rounded-md border-2 px-6 text-sm font-semibold transition-[color,background-color,box-shadow,transform] duration-200 ease-out focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-offset-white focus-visible:outline-none motion-safe:hover:-translate-y-px"
-          >
-            {t("downloadCta")} ↓
-          </a>
-        )}
         {hasQuiz ? (
           <Link
             href={{
