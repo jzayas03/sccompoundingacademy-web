@@ -2,9 +2,10 @@ import type { Metadata } from "next";
 import { setRequestLocale } from "next-intl/server";
 import { pageMetadata } from "@/lib/seo";
 import { homepageJsonLd } from "@/lib/structuredData";
+import { listOpenCohorts } from "@/lib/cohorts";
 import { Hero } from "@/components/marketing/Hero";
 import { Confianza } from "@/components/marketing/Confianza";
-import { CursosGrid } from "@/components/marketing/CursosGrid";
+import { CursosGrid, type CohortBrief } from "@/components/marketing/CursosGrid";
 import { Instructor } from "@/components/marketing/Instructor";
 import { Aprenderas } from "@/components/marketing/Aprenderas";
 import { ParaQuienEs } from "@/components/marketing/ParaQuienEs";
@@ -43,7 +44,25 @@ export async function generateMetadata({
 export default async function LandingPage({ params }: { params: Promise<{ locale: string }> }) {
   const { locale } = await params;
   setRequestLocale(locale);
-  const jsonLd = homepageJsonLd(locale as "es" | "en");
+
+  // Cohorts live in the DB. The DATABASE_URL guard keeps `next build`
+  // working when the var is absent (local builds); Vercel builds have it
+  // set and bake in real data, and admin cohort edits revalidate this page.
+  const openCohorts = process.env.DATABASE_URL ? await listOpenCohorts() : [];
+  const cohortsForGrid: CohortBrief[] = openCohorts.map((c) => ({
+    courseId: c.courseId,
+    startDate: c.startDate.toISOString().slice(0, 10),
+  }));
+  const next = openCohorts[0];
+  const jsonLd = homepageJsonLd(
+    locale as "es" | "en",
+    next
+      ? {
+          startDate: next.startDate.toISOString().slice(0, 10),
+          endDate: next.endDate.toISOString().slice(0, 10),
+        }
+      : null,
+  );
   return (
     <>
       {/* SEO: Organization + LocalBusiness + Course graph. Server-rendered
@@ -70,7 +89,7 @@ export default async function LandingPage({ params }: { params: Promise<{ locale
           have been retired with this batch. */}
       <Hero />
       <Confianza />
-      <CursosGrid />
+      <CursosGrid openCohorts={cohortsForGrid} />
       <Instructor />
       <Aprenderas />
       <ParaQuienEs />

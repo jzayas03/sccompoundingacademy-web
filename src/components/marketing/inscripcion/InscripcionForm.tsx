@@ -2,12 +2,22 @@
 import { useState, useMemo } from "react";
 import { useTranslations } from "next-intl";
 import { Link } from "@/i18n/routing";
-import { COURSES, COHORTS, DEFAULT_TIER, type Tier } from "@/lib/courses";
+import { COURSES, DEFAULT_TIER, type Tier } from "@/lib/courses";
+
+/** One open cohort, with its label already formatted server-side in the
+ * page's locale (cohort data lives in the DB — see `lib/cohorts.ts`). */
+export type CohortOption = {
+  id: string;
+  courseId: string;
+  label: string;
+};
 
 type Props = {
   locale: "es" | "en";
   /** Course pre-selected via ?course=slug query param (optional). */
   preselectedCourseId?: string;
+  /** Open cohorts fetched from the DB by the server page. */
+  cohorts: CohortOption[];
   /** Version stamp of the legal docs the user is accepting — typically the
    * "Last updated" date of the docs at form-render time. Forwarded to the
    * server so the audit trail records *which* version was accepted. */
@@ -25,10 +35,14 @@ type Props = {
  * Server-side Zod validation in the API route is the source of truth —
  * everything here is UX-only sugar.
  */
-export function InscripcionForm({ locale, preselectedCourseId, docsVersion }: Props) {
+export function InscripcionForm({
+  locale,
+  preselectedCourseId,
+  cohorts,
+  docsVersion,
+}: Props) {
   const t = useTranslations("inscripcion");
   const tCourses = useTranslations("cursosGrid.items");
-  const tCohorts = useTranslations("cohortes");
 
   const [courseId, setCourseId] = useState<string>(
     preselectedCourseId && COURSES.some((c) => c.id === preselectedCourseId)
@@ -37,15 +51,15 @@ export function InscripcionForm({ locale, preselectedCourseId, docsVersion }: Pr
   );
 
   const availableCohorts = useMemo(
-    () => COHORTS.filter((c) => c.courseId === courseId && c.openForEnrollment),
-    [courseId],
+    () => cohorts.filter((c) => c.courseId === courseId),
+    [courseId, cohorts],
   );
   const [cohorteId, setCohorteId] = useState<string>(availableCohorts[0]?.id ?? "");
 
   // When course changes, pick the first cohort of the new course.
   function onCourseChange(next: string) {
     setCourseId(next);
-    const first = COHORTS.find((c) => c.courseId === next && c.openForEnrollment);
+    const first = cohorts.find((c) => c.courseId === next);
     setCohorteId(first?.id ?? "");
   }
 
@@ -207,7 +221,7 @@ export function InscripcionForm({ locale, preselectedCourseId, docsVersion }: Pr
             {availableCohorts.length === 0 && <option value="">{t("noCohortsAvailable")}</option>}
             {availableCohorts.map((c) => (
               <option key={c.id} value={c.id}>
-                {tCohorts(`${c.i18nKey}.label`)}
+                {c.label}
               </option>
             ))}
           </select>

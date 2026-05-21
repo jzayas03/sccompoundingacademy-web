@@ -30,6 +30,7 @@ export const routing = defineRouting({
     "/portal/certificado": "/portal/certificado",
     "/portal/reseñas": "/portal/reseñas",
     "/portal/admin": "/portal/admin",
+    "/portal/admin/cohortes": "/portal/admin/cohortes",
   },
 });
 

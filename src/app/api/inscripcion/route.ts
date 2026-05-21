@@ -1,7 +1,8 @@
 import { NextResponse } from "next/server";
 import { z } from "zod";
 import { stripe } from "@/lib/stripe";
-import { getCourseById, getCohortById, getPricingByTier } from "@/lib/courses";
+import { getCourseById, getPricingByTier } from "@/lib/courses";
+import { getCohort } from "@/lib/cohorts";
 import { getSiteUrl } from "@/lib/siteUrl";
 
 export const runtime = "nodejs";
@@ -79,7 +80,7 @@ export async function POST(req: Request) {
   // Resolve catalogue references — fail fast if course/cohort don't exist
   // or if the cohort doesn't belong to the course (rejects URL tampering).
   const course = getCourseById(data.curso_id);
-  const cohort = getCohortById(data.cohorte_id);
+  const cohort = await getCohort(data.cohorte_id);
   if (!course || !cohort || cohort.courseId !== course.id) {
     return NextResponse.json({ error: "Curso o cohorte inválido." }, { status: 400 });
   }

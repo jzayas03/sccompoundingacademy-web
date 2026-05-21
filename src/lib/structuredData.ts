@@ -1,4 +1,4 @@
-import { COURSES, COHORTS } from "@/lib/courses";
+import { COURSES } from "@/lib/courses";
 import { getSiteUrl } from "@/lib/siteUrl";
 
 /**
@@ -18,10 +18,17 @@ import { getSiteUrl } from "@/lib/siteUrl";
  * would be a misrepresentation. Re-add the field if/when SCCA is
  * accredited and surfaces it on Terms §8.
  */
-export function homepageJsonLd(locale: "es" | "en"): Record<string, unknown> {
+/**
+ * `nextCohort` is the upcoming open cohort (ISO `yyyy-mm-dd` dates),
+ * fetched from the DB by the page. When there is no open cohort the
+ * `CourseInstance` node is omitted rather than carrying a stale date.
+ */
+export function homepageJsonLd(
+  locale: "es" | "en",
+  nextCohort: { startDate: string; endDate: string } | null,
+): Record<string, unknown> {
   const siteUrl = getSiteUrl();
   const course = COURSES[0]!;
-  const cohort = COHORTS[0]!;
 
   const address = {
     "@type": "PostalAddress",
@@ -110,23 +117,27 @@ export function homepageJsonLd(locale: "es" | "en"): Record<string, unknown> {
             unitText: "CEUs",
           },
         }),
-        hasCourseInstance: {
-          "@type": "CourseInstance",
-          courseMode: "In-person",
-          startDate: cohort.startDate,
-          endDate: cohort.endDate,
-          location: {
-            "@type": "Place",
-            name: "Santa Cruz Pharma Care",
-            address,
+        ...(nextCohort && {
+          hasCourseInstance: {
+            "@type": "CourseInstance",
+            courseMode: "In-person",
+            startDate: nextCohort.startDate,
+            endDate: nextCohort.endDate,
+            location: {
+              "@type": "Place",
+              name: "Santa Cruz Pharma Care",
+              address,
+            },
+            instructor: {
+              "@type": "Person",
+              name: "Jorge L. Reyes Quiñones",
+              jobTitle:
+                locale === "es"
+                  ? "Farmacéutico · Director del programa"
+                  : "Pharmacist · Program Director",
+            },
           },
-          instructor: {
-            "@type": "Person",
-            name: "Jorge L. Reyes Quiñones",
-            jobTitle:
-              locale === "es" ? "Farmacéutico · Director del programa" : "Pharmacist · Program Director",
-          },
-        },
+        }),
       },
     ],
   };

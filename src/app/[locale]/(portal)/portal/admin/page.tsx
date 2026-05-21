@@ -8,7 +8,8 @@ import { auth } from "@/lib/auth";
 import { db } from "@/lib/db";
 import { users, reviews, certificates } from "@/lib/db/schema";
 import { isAdminEmail } from "@/lib/admin";
-import { getCohortById } from "@/lib/courses";
+import { listCohorts, formatCohortLabel, type Cohort } from "@/lib/cohorts";
+import { Link } from "@/i18n/routing";
 
 export const metadata: Metadata = {
   title: "Administración · SCCA Portal",
@@ -36,11 +37,11 @@ function fmtDate(d: Date | null): string {
   }).format(d);
 }
 
-function cohortLabel(cohortId: string | null): string {
+function cohortLabel(cohortId: string | null, byId: Map<string, Cohort>): string {
   if (!cohortId) return "—";
-  const c = getCohortById(cohortId);
+  const c = byId.get(cohortId);
   if (!c) return cohortId;
-  return `${cohortId} (${c.startDate} → ${c.endDate})`;
+  return formatCohortLabel(c, "es");
 }
 
 function ftLabel(value: string | null): string {
@@ -107,6 +108,11 @@ export default async function AdminPage({
     .leftJoin(users, eq(certificates.userId, users.id))
     .orderBy(desc(certificates.issuedAt));
 
+  const cohortList = await listCohorts();
+  const cohortById = new Map(
+    cohortList.map((c): [string, Cohort] => [c.id, c]),
+  );
+
   return (
     <Container className="max-w-6xl py-12 sm:py-16">
       <div>
@@ -122,6 +128,14 @@ export default async function AdminPage({
           {reviewRows.length} reseña{reviewRows.length === 1 ? "" : "s"} ·{" "}
           {certRows.length} certificado{certRows.length === 1 ? "" : "s"}
         </p>
+        <div className="mt-4">
+          <Link
+            href="/portal/admin/cohortes"
+            className="bg-teal-deep text-off-white hover:bg-teal font-heading inline-flex h-10 items-center rounded-md px-4 text-sm font-semibold transition-colors"
+          >
+            Gestionar cohortes →
+          </Link>
+        </div>
       </div>
 
       {/* Roster */}
@@ -167,7 +181,7 @@ export default async function AdminPage({
                   <td className="py-2 pr-4 text-gray-700">{r.phone ?? "—"}</td>
                   <td className="py-2 pr-4 text-gray-700">{r.tier ?? "—"}</td>
                   <td className="py-2 pr-4 text-gray-700">{fmtDate(r.paidAt)}</td>
-                  <td className="py-2 text-gray-700">{cohortLabel(r.cohortId)}</td>
+                  <td className="py-2 text-gray-700">{cohortLabel(r.cohortId, cohortById)}</td>
                 </tr>
               ))}
             </tbody>

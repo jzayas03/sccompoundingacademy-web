@@ -2,11 +2,15 @@ import { useLocale, useTranslations, useMessages } from "next-intl";
 import { Link } from "@/i18n/routing";
 import { Container } from "@/components/ui/Container";
 import { Reveal } from "@/components/ui/Reveal";
-import {
-  getCourseById,
-  getCohortsForCourse,
-  type CourseId,
-} from "@/lib/courses";
+import { getCourseById } from "@/lib/courses";
+
+/** One open cohort, trimmed to what the grid footer needs. The server
+ * page fetches these from the DB (`lib/cohorts.ts`) and passes them in. */
+export type CohortBrief = {
+  courseId: string;
+  /** ISO date (yyyy-mm-dd) of the cohort's first day. */
+  startDate: string;
+};
 
 type ModuleItem = {
   id: string;
@@ -41,7 +45,7 @@ type CourseItem = {
  * Cohort dates and USP labels come from `lib/courses.ts` (catalogue
  * truth). i18n owns the localised copy keyed by course id.
  */
-export function CursosGrid() {
+export function CursosGrid({ openCohorts }: { openCohorts: CohortBrief[] }) {
   const t = useTranslations("cursosGrid");
   const locale = useLocale();
   const messages = useMessages() as unknown as {
@@ -51,13 +55,14 @@ export function CursosGrid() {
   const includesItems = messages.cursosGrid.includesItems;
 
   function nextCohortLabel(courseId: string): string | null {
-    const course = getCourseById(courseId);
-    if (!course) return null;
-    const cohort = getCohortsForCourse(course.id as CourseId)[0];
+    // `openCohorts` arrives ordered earliest-first, so the first match is
+    // the upcoming cohort for this course.
+    const cohort = openCohorts.find((c) => c.courseId === courseId);
     if (!cohort) return null;
     return new Intl.DateTimeFormat(locale === "es" ? "es-PR" : "en-US", {
       month: "long",
       year: "numeric",
+      timeZone: "UTC",
     }).format(new Date(cohort.startDate));
   }
 

@@ -5,7 +5,8 @@ import { stripe } from "@/lib/stripe";
 import { recordInscripcion, type InscripcionRecord } from "@/lib/airtable";
 import { buildConfirmationEmail } from "@/lib/emails/inscripcion-confirmacion";
 import { buildInternalEmail } from "@/lib/emails/inscripcion-interna";
-import { getCourseById, getCohortById, formatPrice } from "@/lib/courses";
+import { getCourseById, formatPrice } from "@/lib/courses";
+import { getCohort, formatCohortLabel, formatCohortDate } from "@/lib/cohorts";
 import { db } from "@/lib/db";
 import { users } from "@/lib/db/schema";
 
@@ -90,7 +91,7 @@ export async function POST(req: Request) {
   const md = (session.metadata ?? {}) as Record<string, string>;
 
   const course = getCourseById(md.curso_id ?? "");
-  const cohort = getCohortById(md.cohorte_id ?? "");
+  const cohort = await getCohort(md.cohorte_id ?? "");
   if (!course || !cohort) {
     console.error(
       "[stripe-webhook] session metadata missing/invalid course or cohort",
@@ -112,9 +113,9 @@ export async function POST(req: Request) {
 
   // Derive the human-facing strings the email uses.
   const cursoTitulo = course.id; // i18n display happens in form/email at lookup time
-  const cohorteEtiqueta = cohort.id;
-  const cohorteFechaInicio = cohort.startDate;
-  const cohorteFechaFin = cohort.endDate;
+  const cohorteEtiqueta = formatCohortLabel(cohort, locale);
+  const cohorteFechaInicio = formatCohortDate(cohort.startDate, locale);
+  const cohorteFechaFin = formatCohortDate(cohort.endDate, locale);
   const montoFormatted = formatPrice(amountPaid);
 
   // Derive tier from metadata, with a Stripe-coupon-based fallback for the
