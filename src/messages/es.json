@@ -553,7 +553,8 @@
       "email": "Correo electrónico",
       "telefono": "Teléfono",
       "licencia": "Número de licencia farmacéutica",
-      "notas": "Notas o preguntas"
+      "notas": "Notas o preguntas",
+      "tipoProfesional": "¿Eres farmacéutico o técnico de farmacia?"
     },
     "tiers": {
       "profesional": {
@@ -589,6 +590,10 @@
       "body": "No se completó el cobro y tu cupo no fue reservado. Puedes volver a intentarlo cuando quieras o escribirnos si tuviste algún problema durante el proceso.",
       "ctaRetry": "Intentar de nuevo",
       "ctaContact": "Contactarnos"
+    },
+    "tiposProfesional": {
+      "farmaceutico": "Farmacéutico",
+      "tecnico": "Técnico de farmacia"
     }
   },
   "ctaFinal": {

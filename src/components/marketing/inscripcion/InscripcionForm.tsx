@@ -50,6 +50,11 @@ export function InscripcionForm({ locale, preselectedCourseId, docsVersion }: Pr
   }
 
   const [tier, setTier] = useState<Tier>(DEFAULT_TIER);
+  // Farmacéutico vs Técnico — required for the profesional tier (the
+  // ACPE registry distinguishes them), not asked for the student tier.
+  const [tipoProfesional, setTipoProfesional] = useState<
+    "farmaceutico" | "tecnico" | ""
+  >("");
   const [submitting, setSubmitting] = useState(false);
   const [accepted, setAccepted] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -70,6 +75,7 @@ export function InscripcionForm({ locale, preselectedCourseId, docsVersion }: Pr
       curso_id: courseId,
       cohorte_id: cohorteId,
       tier,
+      tipo_profesional: tier === "profesional" ? tipoProfesional : "",
       notas: String(fd.get("notas") ?? ""),
       acepto_terminos: accepted,
       acepto_version_docs: docsVersion,
@@ -137,6 +143,35 @@ export function InscripcionForm({ locale, preselectedCourseId, docsVersion }: Pr
           })}
         </div>
       </div>
+
+      {/* Farmacéutico / Técnico — only for the profesional tier. The
+          ACPE "Registro de Educación Continua" records the two
+          separately, so we capture it at enrollment. */}
+      {tier === "profesional" && (
+        <div>
+          <p className={labelCls}>{t("fields.tipoProfesional")}</p>
+          <div className="mt-2 grid grid-cols-1 gap-3 sm:grid-cols-2">
+            {(["farmaceutico", "tecnico"] as const).map((tp) => {
+              const isActive = tipoProfesional === tp;
+              return (
+                <button
+                  key={tp}
+                  type="button"
+                  onClick={() => setTipoProfesional(tp)}
+                  aria-pressed={isActive}
+                  className={`font-heading text-teal-deep flex items-center rounded-md border bg-white p-4 text-left text-sm font-semibold transition-colors ${
+                    isActive
+                      ? "border-teal-deep ring-teal-deep/30 ring-2"
+                      : "border-gray-300 hover:border-teal-deep/60"
+                  }`}
+                >
+                  {t(`tiposProfesional.${tp}`)}
+                </button>
+              );
+            })}
+          </div>
+        </div>
+      )}
 
       {/* Course + cohort selectors */}
       <div className="grid grid-cols-1 gap-6 sm:grid-cols-2">
@@ -279,7 +314,12 @@ export function InscripcionForm({ locale, preselectedCourseId, docsVersion }: Pr
       <div className="border-gray-300 flex flex-col gap-4 border-t pt-6 sm:flex-row sm:items-center sm:justify-end">
         <button
           type="submit"
-          disabled={!accepted || submitting || !cohorteId}
+          disabled={
+            !accepted ||
+            submitting ||
+            !cohorteId ||
+            (tier === "profesional" && !tipoProfesional)
+          }
           className="bg-chartreuse text-teal-deep ring-teal-deep/15 shadow-soft hover:bg-chartreuse/95 hover:shadow-lift focus-visible:ring-chartreuse font-heading inline-flex h-12 items-center justify-center rounded-md px-6 text-sm font-semibold ring-1 transition-[color,background-color,box-shadow,transform] duration-200 ease-out focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-offset-white focus-visible:outline-none disabled:cursor-not-allowed disabled:opacity-50 sm:h-14 sm:px-7 sm:text-base motion-safe:hover:-translate-y-px"
         >
           {submitting ? t("submitting") : t("submit")}

@@ -53,7 +53,7 @@ function GlassNavView({
           {isAdmin ? (
             <Link
               href="/portal/admin"
-              className="text-teal-deep hover:text-teal font-heading text-sm font-semibold"
+              className="bg-teal-deep text-off-white hover:bg-teal font-heading inline-flex h-10 items-center rounded-md px-4 text-sm font-semibold transition-colors"
             >
               Admin
             </Link>

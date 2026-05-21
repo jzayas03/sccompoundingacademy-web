@@ -33,6 +33,9 @@ export async function GET() {
       name: users.name,
       email: users.email,
       tier: users.tier,
+      professionalType: users.professionalType,
+      license: users.license,
+      phone: users.phone,
       paidAt: users.paidAt,
       cohortId: users.cohortId,
     })
@@ -40,11 +43,22 @@ export async function GET() {
     .where(isNotNull(users.paidAt))
     .orderBy(desc(users.paidAt));
 
-  const rows = [["Nombre", "Email", "Tier", "Pago", "Cohorte"]];
+  // Column order mirrors the ACPE "Registro de Educación Continua"
+  // form (Nombre · F/T · Licencia · Email · Celular), with tier /
+  // payment / cohort appended for the owner's own bookkeeping.
+  const ftLabel = (v: string | null) =>
+    v === "farmaceutico" ? "Farmacéutico" : v === "tecnico" ? "Técnico" : "";
+
+  const rows = [
+    ["Nombre", "Farmacéutico/Técnico", "Licencia", "Email", "Celular", "Tier", "Pago", "Cohorte"],
+  ];
   for (const r of roster) {
     rows.push([
       r.name ?? "",
+      ftLabel(r.professionalType),
+      r.license ?? "",
       r.email,
+      r.phone ?? "",
       r.tier ?? "",
       r.paidAt ? r.paidAt.toISOString().slice(0, 10) : "",
       r.cohortId ?? "",

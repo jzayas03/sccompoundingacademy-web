@@ -171,6 +171,14 @@ export async function POST(req: Request) {
   //    confirmation emails — the source of truth at this point is
   //    Stripe, and the webhook is idempotent so a replay heals the DB.
   if (email) {
+    // ACPE-registry fields. `professionalType` is only set for the
+    // profesional tier; the student tier leaves it null.
+    const phone = record.telefono || null;
+    const license = record.licencia || null;
+    const professionalType =
+      md.tipo_profesional === "farmaceutico" || md.tipo_profesional === "tecnico"
+        ? md.tipo_profesional
+        : null;
     try {
       await db
         .insert(users)
@@ -181,6 +189,9 @@ export async function POST(req: Request) {
           paidAt: new Date(),
           stripeCustomerId,
           cohortId: cohort.id,
+          phone,
+          license,
+          professionalType,
         })
         .onConflictDoUpdate({
           target: users.email,
@@ -190,6 +201,9 @@ export async function POST(req: Request) {
             paidAt: new Date(),
             stripeCustomerId,
             cohortId: cohort.id,
+            phone,
+            license,
+            professionalType,
           },
         });
     } catch (err) {

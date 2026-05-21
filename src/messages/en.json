@@ -547,7 +547,8 @@
       "email": "Email address",
       "telefono": "Phone",
       "licencia": "Pharmacy license number",
-      "notas": "Notes or questions"
+      "notas": "Notes or questions",
+      "tipoProfesional": "Are you a pharmacist or pharmacy technician?"
     },
     "tiers": {
       "profesional": {
@@ -583,6 +584,10 @@
       "body": "The charge was not completed and your seat was not reserved. You can try again whenever you're ready or write to us if you had any problem during the process.",
       "ctaRetry": "Try again",
       "ctaContact": "Contact us"
+    },
+    "tiposProfesional": {
+      "farmaceutico": "Pharmacist",
+      "tecnico": "Pharmacy technician"
     }
   },
   "ctaFinal": {
