@@ -76,7 +76,7 @@ function InscripcionPage({
   return (
     <section className="bg-white">
       <Container className="max-w-2xl py-16 sm:py-20 lg:py-24">
-        <p className="font-heading text-teal-deep/70 flex items-center text-xs font-semibold tracking-[0.18em] uppercase sm:text-sm">
+        <p className="font-heading text-teal-deep/80 flex items-center text-xs font-semibold tracking-[0.18em] uppercase sm:text-sm">
           <span aria-hidden className="bg-chartreuse mr-3 inline-block h-4 w-1 shrink-0 rounded-sm" />
           {t("eyebrow")}
         </p>

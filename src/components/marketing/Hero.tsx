@@ -39,7 +39,7 @@ export function Hero() {
           <p className="font-accent text-teal-deep/80 italic text-base sm:text-lg">
             {t("slogan")}
           </p>
-          <p className="font-heading text-teal-deep/70 mt-3 flex items-center text-xs font-semibold tracking-[0.18em] uppercase sm:text-sm">
+          <p className="font-heading text-teal-deep/80 mt-3 flex items-center text-xs font-semibold tracking-[0.18em] uppercase sm:text-sm">
             <span aria-hidden className="bg-chartreuse mr-3 inline-block h-4 w-1 shrink-0 rounded-sm" />
             {t("eyebrow")}
           </p>

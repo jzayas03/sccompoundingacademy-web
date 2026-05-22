@@ -337,13 +337,24 @@ The CI a11y scan in `tests/e2e/accessibility.spec.ts` asserts no
 `impact: "critical"` violations. Serious / moderate findings logged
 but not blocking, for incremental triage:
 
-- **Landing /es** — 2 serious `color-contrast` violations on
-  `text-teal-deep/70` over white backgrounds (regulatory eyebrow rows
-  + sticky LocaleSwitch hover state). Fix: bump opacity to /80 or
-  switch to a darker stop. 1 minor `image-redundant-alt` on three
-  next/image fill containers where the alt repeats nearby copy.
+- **Public-page color-contrast** — RESOLVED 2026-05-22. Three classes
+  of serious `color-contrast` findings on the marketing surfaces (`/es`,
+  `/es/cursos`, `/es/contacto`) were fixed:
+  - marketing eyebrow rows — `text-teal-deep/70` → `/80` (~3.86 → ~4.87:1)
+  - Footer contact `<dt>` labels — `text-off-white/60` → `/80` on the
+    teal-deep footer (~3.88 → ~5.4:1)
+  - LocaleSwitch inactive locale — `text-off-white/80` → `/90` on the
+    glass pill (~4.42 → ~5.0:1)
+  Admin table headers were also bumped `/70` → `/80` for consistency.
+  Verified with `pnpm test:e2e` (axe) — no serious `color-contrast`
+  findings remain on any scanned surface.
+- **image-redundant-alt** — 1 minor finding on three next/image fill
+  containers on the landing where the alt repeats nearby copy. Still
+  open (minor, non-blocking).
 - **Other surfaces** — no critical or serious findings on `/cursos`,
   `/contacto`, `/portal/login`.
 
-Fix in a Phase B polish PR. The current state is WCAG 2.1 AA-compatible
-except for those flagged contrast adjustments.
+The current state is WCAG 2.1 AA-compatible. (The one remaining
+`text-teal-deep/70` — a disabled "coming soon" button in the module
+page — is exempt: WCAG places no contrast requirement on inactive
+controls.)
