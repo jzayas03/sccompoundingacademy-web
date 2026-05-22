@@ -1,6 +1,6 @@
 # SCCA — Project Status
 
-> **Last updated**: 2026-05-19
+> **Last updated**: 2026-05-22
 >
 > **What this is**: Single-source-of-truth status doc for handoff between
 > sessions or contributors. Read this first to pick up cleanly.
@@ -10,8 +10,9 @@
 ## Project
 
 **Santa Cruz Compounding Academy** — bilingual (ES/EN) landing page +
-inscription + Stripe payment + student portal (Phase A SHIPPED) with
-ACPE-sponsored compounding courses aligned to USP 〈795〉 and USP 〈800〉.
+inscription + Stripe payment + student portal (Phase A SHIPPED, Phase B
+in progress) with ACPE-sponsored compounding courses aligned to USP
+〈795〉 and USP 〈800〉.
 
 SCCA is a Puerto Rico LLC affiliated with Santa Cruz Pharma Care
 (pharmacy in Bayamón, PR).
@@ -35,41 +36,58 @@ SCCA is a Puerto Rico LLC affiliated with Santa Cruz Pharma Care
 - Cloudflare Email Routing catch-all → `sccapr2025@gmail.com`
 - Resend domain verified (DKIM + SPF + MX + DMARC)
 - Landing page (Hero + slogan, Confianza, CursosGrid with modules + Inclusiones + pricing + ACPE row, Instructor section with portrait + bio + credentials, Aprenderás, ParaQuienEs, Especialidades, Galería, FAQ, Ubicación, Instagram, CtaFinal)
-- Bilingual ES/EN routing (`/es` and `/en`) — 299 i18n keys parity
-- Inscripción form → Stripe Checkout (code ready, awaits Price IDs)
-- Legal docs attorney-approved (Privacy, Terms, Refund) — updated address + ACPE Provider 0151 wording
+- Bilingual ES/EN routing (`/es` and `/en`) — 315 i18n keys parity
+- Inscripción form → Stripe Checkout — **live**: both Price IDs configured, webhook active, promotion-code field enabled
+- Legal docs attorney-approved (Privacy, Terms, Refund) — updated address + ACPE Provider 0151 wording; tiered refund policy 100/50/0 (PR #57)
 - Schema.org JSON-LD: EducationalOrganization + LocalBusiness + Course (with `educationalCredentialAwarded` + `numberOfCredits`)
 
 **Student portal (Phase A — `/portal/*`)**
 - Magic-link sign-in via Auth.js v5 + Resend custom email template
 - Dashboard with InstructorHero glass card + payment-pending / cert-ready / reviews banners
-- Module pages (`/portal/modulos/[id]`) with native PDF viewer + Canva-template auto-detection
-- Quiz engine: 45 real questions (15 × 3 days) transcribed from owner PDFs, one-at-a-time UX with progress bar
+- Module pages (`/portal/modulos/[id]`) with native PDF viewer + ES/EN language toggle (PR #61)
+- Diagnostic pre-test before each module (PR #59) + quiz engine: 45 real questions (15 × 3 days), one-at-a-time UX with progress bar
 - Results page with "show correct answers" toggle
-- Certificate generation: `pdf-lib` dual-mode (Canva PNG overlay OR primitive layout), QR code, sequential `SCCA-{YYYY}-{NNN}` numbering, ACPE 0151 ribbon
+- Certificate generation: `pdf-lib` — vector PDF template (`template.pdf`) → Canva PNG overlay → primitive layout fallback, QR code, sequential `SCCA-{YYYY}-{NNN}` numbering, ACPE 0151 ribbon
 - Public verification at `/verificar/[certNo]` — no auth, no locale prefix
 - Reviews collection with 5-star ratings + 2 textareas + public consent
 - GlassNav with sticky blur + sign-out
 - Middleware gates `/portal/*` and `/modulos/*.pdf` for anonymous traffic
-- 23/23 e2e tests passing (locale routing, contact form, brand-lint, portal public, portal gating, axe accessibility scans)
+
+**Owner admin (`/portal/admin`)**
+- Roster, reviews, certificates view (PR #58)
+- ACPE registry data capture + export (PR #60)
+- Owner-managed cohort scheduling (PR #62)
 
 ### ⏸ Blocked on owner setup
 
-| Item | Blocker | Notes |
+| Item | Status | Notes |
 |---|---|---|
-| Real Stripe payment | LLC activation + Price IDs | `STRIPE_PRICE_ID_PROFESIONAL` + `STRIPE_PRICE_ID_STUDENT` env vars empty in Vercel |
-| Tier enum migration | Manual SQL | Run `ALTER TYPE "tier" ADD VALUE 'profesional'` once in Neon SQL Editor (drizzle/0001_tired_wilson_fisk.sql) |
-| Module PDF content | Owner produces in Gamma | Drop to `public/modulos/dia-{1,2,3}.pdf` — viewer auto-flips from "coming soon" to inline render |
-| Certificate Canva PNG | Owner designs in Canva, exports PNG | Drop to `public/certificate/template.png` — renderer auto-flips from primitive layout to Canva overlay |
-| Lcdo. Reyes signature scan | Owner provides transparent PNG | Drop to `public/instructor/firma-jorge-reyes.png` (wiring in follow-up PR) |
-| Instagram auto-refresh | FB Developer App + GitHub Secrets | See `.github/workflows/README-IG-AUTO-REFRESH.md` |
+| Día 2 + Día 3 module PDFs | ⏸ Pending | Owner exports from Gamma → drop at `public/modulos/dia-{2,3}.pdf`. Día 1 is published (PR #64); viewer auto-flips from "coming soon" to inline render. |
+| Airtable base | ⏸ Pending (optional) | `AIRTABLE_TOKEN` + `AIRTABLE_BASE_ID` empty in Vercel — operational triage view only; Postgres is system-of-record, so this is non-blocking. |
+| Instagram auto-refresh | ⏸ Pending | FB Developer App + GitHub Secrets. See `.github/workflows/README-IG-AUTO-REFRESH.md`. |
 
-### 🔵 Phase B (designed, not built)
+### ✅ Resolved in the 2026-05-22 session
 
+- **Stripe is live** — account activated; 2 Products created ($495 Estudiante, $2,350 Profesional); webhook endpoint configured at `https://sccompoundingacademy.com/api/webhooks/stripe` (event `checkout.session.completed`); `STRIPE_WEBHOOK_SECRET` + both `STRIPE_PRICE_ID_*` set in Vercel. The full payment → webhook → `paidAt` → portal-unlock flow was verified end-to-end with a 100%-off coupon.
+- **Webhook 307 bug fixed** — the Vercel apex domain was redirecting (307) to `www`, so Stripe could not deliver webhooks (Stripe does not follow redirects). Fixed by making the apex the primary domain (see Repo conventions → Domain config).
+- **Price-ID misconfig fixed** — `STRIPE_PRICE_ID_PROFESIONAL` had been pointing at the $495 price; corrected to the $2,350 price and verified at checkout.
+- **DB migrations 0001–0004** confirmed applied in Neon.
+- **Día 1 module PDF** published (PR #64).
+- **Instructor signature** `public/instructor/firma-jorge-reyes.png` present.
+
+### 🔵 Phase B
+
+**Built**
+- Admin dashboard (`/portal/admin`) — roster, reviews, certificates (PR #58)
+- ACPE registry data capture + export (PR #60)
+- Owner-managed cohort scheduling from the admin panel (PR #62)
+- Diagnostic pre-test before each module (PR #59)
+- ES/EN language toggle on the module PDF viewer (PR #61)
+
+**Not yet built**
 - Public reviews display with consent filter on homepage
-- Admin dashboard (`/admin`): students table, CSV export, individual responses, cohort management
 - Automated email sequences (welcome post-payment, pre-quiz reminder, certificate-issued notification)
-- Portal i18n parity (Phase A is ES-only)
+- Full portal i18n parity (portal UI is still ES-only; only the PDF viewer toggles ES/EN)
 - Mobile PWA: installable + offline PDF cache
 - Analytics dashboard (pass rates, time-on-module, drop-off per question)
 - Digital signature canvas on cert (student signs instead of using a signature image)
@@ -88,9 +106,9 @@ SCCA is a Puerto Rico LLC affiliated with Santa Cruz Pharma Care
 | Transactional email | **Resend** | Branded sender on verified domain |
 | Portal auth | **NextAuth (Auth.js v5) magic-link via Resend** | No passwords, magic-link flow, JWT session strategy (Edge-compatible middleware) |
 | Module content format | **PDF presentations** (was AI-narrated video → dropped Mux) | Simpler ship, $45/year saved, easier to revise mid-cohort |
-| Pricing model | **2-tier under 1 Stripe Product** | Profesional $2,350 (RPh + licensed techs) · Estudiante $495 (pre-licensure) |
+| Pricing model | **2-tier, 2 Stripe Products** | Profesional $2,350 (RPh + licensed techs) · Estudiante $495 (pre-licensure). Each tier is its own Stripe Product; the route resolves the Price ID by tier. |
 | Student-tier verification | **Hybrid pragmatic** — institutional email allowlist + manual Stripe coupon | Phase A trusts honor system + 28 PR institutional domains; Phase B adds Student ID upload UI if abuse appears |
-| Cert format | **PDF server-generated** via pdf-lib | Local generation, no external dep; Canva PNG overlay when owner provides template |
+| Cert format | **PDF server-generated** via pdf-lib | Local generation, no external dep; vector PDF template overlay when owner provides one |
 | Cert numbering | `SCCA-{YYYY}-{NNN}` sequential per year | Human-readable, traceable, year-resets |
 | Quiz passing score | **70 %** (env-configurable via `QUIZ_PASSING_THRESHOLD`) | Threshold for participation certificate, owner can change without deploy |
 | Quiz retries | **Unlimited** | Reduces abandonment; only the most recent attempt counts |
@@ -132,8 +150,8 @@ SCCA is a Puerto Rico LLC affiliated with Santa Cruz Pharma Care
 | **Cloudflare** | ✅ Active | Domain + DNS + Email Routing catch-all | $10/year |
 | **Vercel** | ✅ Active | Hosting, edge functions | $0 (Hobby) |
 | **Resend** | ✅ Active | Transactional email (Stripe receipts, magic links, contact form) | $0 (3k/mo free) |
-| **Neon Postgres** | ✅ Active | Portal DB (users, accounts, sessions, quiz_attempts, certificates, reviews) | $0 (Free tier) |
-| **Stripe** | ⏸ Pending Price IDs | Inscripción + Coupon-based student discount | 2.9% + $0.30/tx |
+| **Neon Postgres** | ✅ Active | Portal DB (users, accounts, sessions, quiz_attempts, certificates, reviews, cohorts) | $0 (Free tier) |
+| **Stripe** | ✅ Active | Inscripción + Coupon-based student discount; webhook live | 2.9% + $0.30/tx |
 | **Airtable** | ⏸ Pending owner setup | Operational triage view of paid inscriptions | $0 (1k records free) |
 | **Gamma Plus** | ✅ Owner pays | Module slide production (PDFs) | $10/mo |
 | **Canva Pro** | ✅ Owner pays | Brand kit + certificate template + brochure | $13/mo |
@@ -143,30 +161,17 @@ SCCA is a Puerto Rico LLC affiliated with Santa Cruz Pharma Care
 
 ---
 
-## Owner action items (priority order)
+## Owner action items
 
-### Blocking first paid inscription
-1. **Run Drizzle migration** in Neon SQL Editor:
-   ```sql
-   ALTER TYPE "public"."tier" ADD VALUE 'profesional' BEFORE 'student';
-   ```
-2. **Activate Stripe** under SCCA LLC (3–5 days)
-3. **Create 1 Stripe Product** "Basic Compounding No Estéril" with 2 Prices:
-   - Profesional: $2,350 one-time → `STRIPE_PRICE_ID_PROFESIONAL`
-   - Estudiante: $495 one-time → `STRIPE_PRICE_ID_STUDENT`
-4. **Configure Stripe webhook** endpoint `https://sccompoundingacademy.com/api/webhooks/stripe` listening to `checkout.session.completed` → copy signing secret to `STRIPE_WEBHOOK_SECRET`
-5. **Set Stripe env vars** in Vercel (Production, Preview, Development)
-6. **Create Airtable base** "SCCA Inscripciones" with `Inscripciones` table mirroring `lib/airtable.ts` schema → set `AIRTABLE_TOKEN` + `AIRTABLE_BASE_ID`
-
-### Blocking portal content quality
-7. **Produce 3 module PDFs** in Gamma → export → drop at `public/modulos/dia-{1,2,3}.pdf`
-8. **Design certificate** in Canva → export as 300 DPI PNG → drop at `public/certificate/template.png`
-9. **Scan signature** (transparent PNG) → drop at `public/instructor/firma-jorge-reyes.png`
+### Remaining
+1. **Produce Día 2 + Día 3 module PDFs** in Gamma → export → drop at `public/modulos/dia-{2,3}.pdf` (Día 1 already published).
+2. **Clean up test data** before launch — remove test enrollment rows from the Neon `user` table (e.g. the 2026-05-22 verification rows).
+3. **Create Airtable base** "SCCA Inscripciones" with an `Inscripciones` table mirroring `lib/airtable.ts` schema → set `AIRTABLE_TOKEN` + `AIRTABLE_BASE_ID` (optional — operational triage only; non-blocking).
 
 ### Optional — Instagram auto-refresh (v2)
-10. Convert `@santacruzpharmacare` to IG Business + connect to FB Page
-11. Create FB Developer App + obtain long-lived token + IG Business User ID
-12. Create fine-grained GitHub PAT + add 3 secrets to repo (see `.github/workflows/README-IG-AUTO-REFRESH.md`)
+4. Convert `@santacruzpharmacare` to IG Business + connect to FB Page
+5. Create FB Developer App + obtain long-lived token + IG Business User ID
+6. Create fine-grained GitHub PAT + add 3 secrets to repo (see `.github/workflows/README-IG-AUTO-REFRESH.md`)
 
 ---
 
@@ -199,7 +204,8 @@ sccompoundingacademy-web/
 │   │   │       ├── layout.tsx
 │   │   │       ├── page.tsx (dashboard)
 │   │   │       ├── login/, verify/
-│   │   │       ├── modulos/[id]/{page.tsx, post-test/{page.tsx, resultados/page.tsx}}
+│   │   │       ├── admin/{page.tsx, cohortes/}
+│   │   │       ├── modulos/[id]/{page.tsx, pre-test/, post-test/{page.tsx, resultados/}}
 │   │   │       ├── certificado/
 │   │   │       └── reseñas/
 │   │   ├── verificar/[certNo]/page.tsx  ← public cert verification (no locale)
@@ -214,13 +220,14 @@ sccompoundingacademy-web/
 │   │   ├── marketing/ (Hero, CursosGrid, Instructor, etc.)
 │   │   ├── brand/    (LogoFull, LogoShield, Pattern)
 │   │   ├── glass/    (GlassCard, MeshBackground)
-│   │   ├── portal/   (GlassNav, InstructorHero)
+│   │   ├── portal/   (GlassNav, InstructorHero, ModulePdfViewer)
 │   │   ├── certificate/ (reserved — currently render is in lib/)
 │   │   └── ui/       (Button, Container, Accordion, etc.)
 │   ├── lib/
 │   │   ├── auth.ts, auth.config.ts     ← Auth.js v5 (split for Edge runtime)
 │   │   ├── brand.ts                     ← color tokens (no-hex-literal allowlist)
 │   │   ├── courses.ts                   ← course catalogue + 2-tier pricing + ACPE
+│   │   ├── cohorts.ts                   ← cohort data layer (DB-backed)
 │   │   ├── stripe.ts                    ← Stripe SDK instance
 │   │   ├── siteUrl.ts                   ← canonical URL helper (rejects .vercel.app)
 │   │   ├── structuredData.ts            ← JSON-LD graph builder
@@ -231,14 +238,14 @@ sccompoundingacademy-web/
 │   │   ├── quizzes/{types,dia-1,dia-2,dia-3,index}.ts  ← 45 questions + scoring
 │   │   └── emails/                      ← inscripcion-confirmacion, interna, magic-link
 │   ├── i18n/         (routing.ts, request.ts)
-│   ├── messages/     (es.json + en.json, 299 keys parity)
+│   ├── messages/     (es.json + en.json, 315 keys parity)
 │   ├── middleware.ts                    ← next-intl + Auth.js gating
 │   └── eslint-rules/no-hex-literal.js   ← custom ESLint rule
-├── drizzle/                              ← migrations (0000_initial, 0001_tier_enum)
+├── drizzle/                              ← migrations 0000–0004 (committed; applied manually in Neon)
 ├── public/
 │   ├── brand/, photos/, instagram/, instructor/
-│   ├── certificate/ (template.png pending)
-│   └── modulos/ (dia-*.pdf pending)
+│   ├── certificate/template.pdf          ← vector cert template
+│   └── modulos/dia-1.pdf                 ← Día 1 published; dia-2/3 pending
 ├── docs/modules/refined-module-prompts.md
 ├── .github/workflows/{refresh-ig.yml, refresh-ig-token.yml}
 ├── scripts/{check-i18n-parity.mjs, fetch-ig-feed.mjs, refresh-ig-{thumbs,token}.mjs}
@@ -255,13 +262,14 @@ sccompoundingacademy-web/
 ## Repo conventions
 
 - **No-hex-literal rule** — all hex must come from `src/lib/brand.ts`. Component code uses Tailwind tokens or interpolates from `brand.colors`. The `qrcode` lib + email templates are the rare exception (they need raw hex strings and import them from `brand.ts` by reference).
-- **i18n parity** — `pnpm check:i18n` must pass (299 identical keys ES/EN as of 2026-05-19).
+- **i18n parity** — `pnpm check:i18n` must pass (315 identical keys ES/EN as of 2026-05-22).
 - **Route groups** — `(marketing)/` and `(portal)/portal/` split the chrome; URLs unchanged.
 - **PR cycle**: branch → commit → push → `gh pr create` → `gh pr merge --squash --delete-branch`.
 - **Co-author tag**: `Co-Authored-By: Claude Opus 4.7 (1M context) <noreply@anthropic.com>` on every commit.
 - **Full gauntlet** before merge: `pnpm typecheck && pnpm lint && pnpm check:i18n && pnpm test && pnpm test:e2e && pnpm build`.
-- **Drizzle migrations** are committed to git. Apply them in Neon SQL Editor (no CI migration runner yet — Vercel CLI not installed locally).
+- **Drizzle migrations** are committed to git. Apply them manually in the Neon SQL Editor (no CI migration runner). Migrations 0001–0004 are applied as of 2026-05-22.
 - **Canonical URL** — never trust `NEXT_PUBLIC_SITE_URL` blindly; `lib/siteUrl.ts` rejects `.vercel.app` hostnames and falls back to the custom domain in production.
+- **Domain config** — the Vercel **primary domain must be the apex** `sccompoundingacademy.com` ("Connect to environment / Production" — serves directly); `www.sccompoundingacademy.com` and the `*.vercel.app` domain **redirect to the apex**. The Stripe webhook URL, `AUTH_URL`, `NEXT_PUBLIC_SITE_URL` and `siteUrl.ts` all assume the apex. ⚠️ If `www` is ever made primary, the apex 307-redirects and **Stripe webhook delivery silently breaks** — Stripe does not follow redirects, so payments never get marked `paid_at`. (This bug occurred and was fixed 2026-05-22.)
 
 ---
 
@@ -276,38 +284,49 @@ Read STATUS.md in the SCCA repo for full context. The path is
 Long-form plan with all design decisions:
 ~/.claude/plans/resumen-para-humming-comet.md
 
-What's the next owner blocker we can unblock today?
+What's the next thing to ship?
 ```
 
-### Critical path to first paid student
+### Critical path to first paid student — UNBLOCKED (2026-05-22)
 
-1. Owner runs the tier migration in Neon SQL Editor (1 command)
-2. Owner provisions Stripe Prices + sets env vars in Vercel
-3. Test purchase with `4242 4242 4242 4242` → webhook updates user row → student signs in → dashboard unlocks → completes 3 post-tests → downloads cert → owner reviews `reviews` table for feedback
+The payment → portal flow is live and verified end-to-end. A real
+professional enrollment now runs: inscription form → Stripe Checkout
+($2,350) → pay → `checkout.session.completed` webhook → `users.paidAt`
+set → magic-link sign-in → dashboard unlocks → 3 post-tests →
+certificate. The Estudiante tier ($495) is gated by the institutional-
+email allowlist or a manually-issued Stripe coupon. Remaining for a
+polished launch: Día 2/3 module PDFs and test-data cleanup.
 
 ---
 
-## PR history (Phase A complete: PRs #32–#47)
+## PR history
+
+Phase A complete at **PR #47**. Phase B and polish from **#48**:
 
 ```
 PR #6-#31   Phase 0 — landing page, brand, legal, instagram, single-course collapse
-            (see prior git history)
+PR #32-#47  Phase A — single course + instructor, 2-tier pricing, portal
+            (Drizzle + Auth.js, magic-link, Stripe webhook, module viewer,
+            quiz engine, certificates, reviews, brand parity, e2e + axe)
 
-PR #32     feat(content): single course + instructor + branded contact
-PR #34     fix(seo): reject .vercel.app hostname in NEXT_PUBLIC_SITE_URL
-PR #35     feat(course): 2-tier pricing + instructor portrait + ACPE
-PR #36     content(instructor): expand bio + credentials from CV
-PR #37     feat(portal) PR 1 — Drizzle + Auth.js + glass design tokens
-PR #38     feat(portal) PR 2 — magic-link login + verify + locked dashboard
-PR #39     feat(portal) PR 3 — Stripe webhook upserts users.paidAt + portal CTA
-PR #40     feat(portal) PR 4 — module PDF viewer + middleware auth gating
-PR #41     feat(portal) PR 5 — quiz engine (30 real questions + per-module post-test)
-PR #42     content(quiz): populate Día 3 question bank from owner's PDF
-PR #43     chore(content): brochure + CV review corrections (address, phones, tier, bio, ACPE)
-PR #44     feat(portal) PR 6 — certificate generation + public verification
-PR #45     feat(portal) PR 7 — course reviews collection (form-only Phase A)
-PR #46     feat(portal) PR 8 — brand parity, GlassNav, InstructorHero on dashboard
-PR #47     feat(portal) PR 9 — e2e + axe scans + this STATUS.md refresh (Phase A complete)
+PR #48     chore(instructor): refresh Lcdo. Reyes portrait
+PR #49     feat(checkout): hide tier prices until Stripe Checkout
+PR #50     feat(nav): add Portal sign-in link to marketing header
+PR #51     feat(portal): use dark logo variant on light mesh background
+PR #52     feat(cert): vector PDF template + English overlay + signature slot
+PR #53     fix(ig): graceful skip when Instagram API credentials are absent
+PR #54     feat(email): add SCCA logo header + update what-to-bring copy
+PR #55     fix(inscripcion): show readable message on form validation failure
+PR #56     fix(content): swap primary/secondary phone numbers
+PR #57     chore(legal): tiered refund policy (100/50/0) per owner
+PR #58     feat(admin): owner admin view — roster, reviews, certificates (Phase A)
+PR #59     feat(portal): diagnostic pre-test before each module
+PR #60     feat(admin): ACPE registry data capture + export (Phase B)
+PR #61     feat(portal): ES/EN language toggle on module PDF viewer
+PR #62     feat(cohorts): owner-managed cohort scheduling from admin panel
+PR #63     feat(inscripcion): "Otro" profession option in the enrollment form
+PR #64     content(portal): publish Día 1 module PDF
+PR #65     feat(checkout): enable promotion codes on Stripe Checkout
 ```
 
 ---
