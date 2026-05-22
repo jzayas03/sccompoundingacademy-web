@@ -122,6 +122,12 @@ export async function POST(req: Request) {
   try {
     const session = await stripe().checkout.sessions.create({
       mode: "payment",
+      // Surfaces the optional "promotion code" field on Stripe Checkout.
+      // Full-price enrollees are unaffected; it only does anything when a
+      // valid code is entered. The webhook already reads
+      // `total_details.amount_discount` for the manual student-discount
+      // workflow, so this completes that feature end-to-end.
+      allow_promotion_codes: true,
       line_items: [{ price: stripePriceId, quantity: 1 }],
       customer_email: data.email,
       // EVERY datum the webhook needs travels here. Metadata is limited
