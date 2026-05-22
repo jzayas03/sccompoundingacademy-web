@@ -221,7 +221,7 @@ function drawOverlay(
     thickness: 0.5,
     color: COLOR.gray700,
   });
-  drawCentered(page, "Jorge L. Reyes Quiñones, RPh, B.S.Ph. UPR", {
+  drawCentered(page, "Jorge L. Reyes Quiñones, RPh, FACA, FACVP, B.S.Ph. UPR", {
     y: 104,
     size: 10,
     font: helveticaBold,
@@ -379,7 +379,7 @@ function drawPlaceholderBody(
     thickness: 0.5,
     color: COLOR.gray700,
   });
-  drawCentered(page, "Lcdo. Jorge L. Reyes Quiñones, RPh", {
+  drawCentered(page, "Lcdo. Jorge L. Reyes Quiñones, RPh, FACA, FACVP", {
     y: 154,
     size: 10,
     font: helveticaBold,

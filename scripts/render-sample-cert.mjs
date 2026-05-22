@@ -135,7 +135,7 @@ page.drawLine({
   thickness: 0.5,
   color: COLOR.gray700,
 });
-drawCentered("Jorge L. Reyes Quiñones, RPh, B.S.Ph. UPR", {
+drawCentered("Jorge L. Reyes Quiñones, RPh, FACA, FACVP, B.S.Ph. UPR", {
   y: 104,
   size: 10,
   font: helveticaBold,
