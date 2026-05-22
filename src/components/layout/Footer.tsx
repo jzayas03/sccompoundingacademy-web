@@ -46,13 +46,13 @@ export function Footer() {
           </h3>
           <dl className="mt-3 space-y-2 text-sm">
             <div className="flex gap-x-3">
-              <dt className="text-off-white/60 w-20 shrink-0 text-xs tracking-wide uppercase">
+              <dt className="text-off-white/80 w-20 shrink-0 text-xs tracking-wide uppercase">
                 {t("addressLabel")}
               </dt>
               <dd>{t("address")}</dd>
             </div>
             <div className="flex gap-x-3">
-              <dt className="text-off-white/60 w-20 shrink-0 text-xs tracking-wide uppercase">
+              <dt className="text-off-white/80 w-20 shrink-0 text-xs tracking-wide uppercase">
                 {t("phoneLabel")}
               </dt>
               <dd>
@@ -65,7 +65,7 @@ export function Footer() {
               </dd>
             </div>
             <div className="flex gap-x-3">
-              <dt className="text-off-white/60 w-20 shrink-0 text-xs tracking-wide uppercase">
+              <dt className="text-off-white/80 w-20 shrink-0 text-xs tracking-wide uppercase">
                 {t("whatsappLabel")}
               </dt>
               <dd>
@@ -78,7 +78,7 @@ export function Footer() {
               </dd>
             </div>
             <div className="flex gap-x-3">
-              <dt className="text-off-white/60 w-20 shrink-0 text-xs tracking-wide uppercase">
+              <dt className="text-off-white/80 w-20 shrink-0 text-xs tracking-wide uppercase">
                 {t("emailLabel")}
               </dt>
               <dd>
@@ -109,7 +109,7 @@ export function Footer() {
           <div className="mt-6 flex items-center gap-3">
             <span
               aria-hidden
-              className="text-off-white/60 text-xs tracking-wide uppercase"
+              className="text-off-white/80 text-xs tracking-wide uppercase"
             >
               {t("socialLabel")}
             </span>

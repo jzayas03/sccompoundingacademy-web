@@ -45,7 +45,7 @@ export function LocaleSwitch({
               "rounded-full px-3.5 py-1.5 font-semibold tracking-wide uppercase transition-colors",
               active
                 ? "bg-off-white text-teal-deep shadow-soft"
-                : "text-off-white/80 hover:bg-off-white/10 hover:text-off-white",
+                : "text-off-white/90 hover:bg-off-white/10 hover:text-off-white",
             )}
           >
             {locale.toUpperCase()}

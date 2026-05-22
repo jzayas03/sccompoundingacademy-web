@@ -155,7 +155,7 @@ export default async function AdminPage({
         ) : (
           <table className="mt-4 w-full border-collapse text-left text-sm">
             <thead>
-              <tr className="text-teal-deep/70 border-gray-300 border-b text-xs uppercase tracking-wide">
+              <tr className="text-teal-deep/80 border-gray-300 border-b text-xs uppercase tracking-wide">
                 <th className="py-2 pr-4 font-semibold">Nombre</th>
                 <th className="py-2 pr-4 font-semibold">Email</th>
                 <th className="py-2 pr-4 font-semibold">Profesión</th>
@@ -194,7 +194,7 @@ export default async function AdminPage({
         ) : (
           <table className="mt-4 w-full border-collapse text-left text-sm">
             <thead>
-              <tr className="text-teal-deep/70 border-gray-300 border-b text-xs uppercase tracking-wide">
+              <tr className="text-teal-deep/80 border-gray-300 border-b text-xs uppercase tracking-wide">
                 <th className="py-2 pr-4 font-semibold">Estudiante</th>
                 <th className="py-2 pr-4 font-semibold">General</th>
                 <th className="py-2 pr-4 font-semibold">M1 / M2 / M3</th>
@@ -233,7 +233,7 @@ export default async function AdminPage({
         ) : (
           <table className="mt-4 w-full border-collapse text-left text-sm">
             <thead>
-              <tr className="text-teal-deep/70 border-gray-300 border-b text-xs uppercase tracking-wide">
+              <tr className="text-teal-deep/80 border-gray-300 border-b text-xs uppercase tracking-wide">
                 <th className="py-2 pr-4 font-semibold">Certificado</th>
                 <th className="py-2 pr-4 font-semibold">Estudiante</th>
                 <th className="py-2 font-semibold">Emitido</th>
