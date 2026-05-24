@@ -35,6 +35,9 @@ function fmtDate(d: Date | null): string {
     day: "2-digit",
     month: "short",
     year: "numeric",
+    // Drizzle timestamps deserialize to UTC Date — pin formatting to UTC
+    // so the admin roster does not shift by a day in PR (UTC-4).
+    timeZone: "UTC",
   }).format(d);
 }
 

@@ -23,6 +23,15 @@ import type { NextAuthConfig } from "next-auth";
  * imports the Resend SDK + the branded email template.
  */
 export const authConfig = {
+  // Auth.js v5 on Vercel: without `trustHost: true`, callback URLs are
+  // rejected unless the request's X-Forwarded-Host header matches
+  // `AUTH_URL` byte-for-byte. Vercel routes traffic through multiple
+  // host headers (apex, preview, .vercel.app, www) so the conservative
+  // option is to trust the inbound host. The `siteUrl.ts` canonical
+  // helper still rejects `.vercel.app` for outbound URLs (canonical
+  // tags, success URLs, JSON-LD), so this only affects inbound
+  // callback acceptance.
+  trustHost: true,
   session: {
     strategy: "jwt",
     maxAge: 30 * 24 * 60 * 60,

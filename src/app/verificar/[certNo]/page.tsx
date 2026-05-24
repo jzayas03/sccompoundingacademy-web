@@ -87,6 +87,10 @@ function VerifyPanel({
         day: "numeric",
         month: "long",
         year: "numeric",
+        // Drizzle `timestamp` columns deserialize to a UTC Date; pin the
+        // formatter to UTC so the public verification page does not
+        // drift by a day for certs issued near midnight AST (UTC-4).
+        timeZone: "UTC",
       }).format(issuedAt)
     : "—";
 

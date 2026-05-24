@@ -497,5 +497,9 @@ function formatDate(date: Date): string {
     month: "long",
     day: "numeric",
     year: "numeric",
+    // Pin to UTC: the cert is generated server-side from a UTC-stored
+    // `issuedAt`. Without this the rendered PDF date drifts by a day
+    // for certs issued near midnight AST (UTC-4).
+    timeZone: "UTC",
   }).format(date);
 }
