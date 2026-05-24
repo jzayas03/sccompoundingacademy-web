@@ -1,3 +1,4 @@
+import { createHash } from "node:crypto";
 import { NextResponse } from "next/server";
 import { z } from "zod";
 import { stripe } from "@/lib/stripe";
@@ -119,8 +120,27 @@ export async function POST(req: Request) {
   const successUrl = `${origin}/${data.locale}/inscripcion/exito?session_id={CHECKOUT_SESSION_ID}`;
   const cancelUrl = `${origin}/${data.locale}/inscripcion/cancelada`;
 
+  // Stripe idempotency key — deterministic over the *intent* of the
+  // submission (same email + course + cohort + tier + locale → same
+  // Checkout Session URL). A double-click or a network-retry within
+  // Stripe's 24h idempotency window returns the existing session
+  // instead of creating a duplicate. Excludes `acceptedAt` so the key
+  // is actually stable across the two requests.
+  const idempotencyKey = createHash("sha256")
+    .update(
+      [
+        data.email.trim().toLowerCase(),
+        data.curso_id,
+        data.cohorte_id,
+        data.tier,
+        data.locale,
+      ].join(":"),
+    )
+    .digest("hex");
+
   try {
-    const session = await stripe().checkout.sessions.create({
+    const session = await stripe().checkout.sessions.create(
+      {
       mode: "payment",
       // Surfaces the optional "promotion code" field on Stripe Checkout.
       // Full-price enrollees are unaffected; it only does anything when a
@@ -158,7 +178,9 @@ export async function POST(req: Request) {
       // manually once owner confirms with their accountant (set
       // `automatic_tax: { enabled: true }` later if/when SCCA registers).
       locale: data.locale === "es" ? "es" : "en",
-    });
+      },
+      { idempotencyKey },
+    );
 
     if (!session.url) {
       return NextResponse.json({ error: "Stripe no devolvió URL de checkout." }, { status: 500 });
