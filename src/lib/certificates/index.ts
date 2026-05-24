@@ -1,4 +1,4 @@
-import { and, desc, eq, sql } from "drizzle-orm";
+import { and, desc, eq, inArray, sql } from "drizzle-orm";
 import { db } from "@/lib/db";
 import { certificates, quizAttempts } from "@/lib/db/schema";
 
@@ -34,24 +34,29 @@ const MODULE_IDS = [1, 2, 3] as const;
 export async function isEligibleForCertificate(
   userId: string,
 ): Promise<EligibilityReport> {
-  const passedModules = { 1: false, 2: false, 3: false };
-  for (const m of MODULE_IDS) {
-    const [row] = await db
-      .select({ id: quizAttempts.id })
-      .from(quizAttempts)
-      .where(
-        and(
-          eq(quizAttempts.userId, userId),
-          eq(quizAttempts.moduleId, m),
-          eq(quizAttempts.passed, true),
-          // Only the graded post-test counts toward the certificate —
-          // a passing diagnostic pre-test must never qualify a student.
-          eq(quizAttempts.phase, "post"),
-        ),
-      )
-      .limit(1);
-    if (row) passedModules[m] = true;
-  }
+  // Single query for all three modules — pulls the moduleIds of any
+  // passing post-test attempt for this user, then materialises the
+  // {1,2,3}→boolean map in JS. Previously this ran one query per
+  // module (a 3x N+1 on every dashboard render).
+  const rows = await db
+    .select({ moduleId: quizAttempts.moduleId })
+    .from(quizAttempts)
+    .where(
+      and(
+        eq(quizAttempts.userId, userId),
+        inArray(quizAttempts.moduleId, [...MODULE_IDS]),
+        eq(quizAttempts.passed, true),
+        // Only the graded post-test counts toward the certificate —
+        // a passing diagnostic pre-test must never qualify a student.
+        eq(quizAttempts.phase, "post"),
+      ),
+    );
+  const passed = new Set(rows.map((r) => r.moduleId));
+  const passedModules = {
+    1: passed.has(1),
+    2: passed.has(2),
+    3: passed.has(3),
+  };
   return {
     eligible: passedModules[1] && passedModules[2] && passedModules[3],
     passedModules,
