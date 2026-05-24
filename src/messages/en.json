@@ -756,5 +756,14 @@
       "pendingBody": "The question bank for this module has not been produced yet. We will let you know when it is ready.",
       "backToDashboard": "Back to dashboard"
     }
+  },
+  "resenas": {
+    "eyebrow": "Community",
+    "heading": "What students are saying",
+    "subheading": "Real reviews from students who completed the course.",
+    "tierProfesional": "Professional",
+    "tierStudent": "Student",
+    "cohortPrefix": "Cohort",
+    "starsAriaLabel": "{rating} of 5 stars"
   }
 }

@@ -176,6 +176,21 @@ export const reviews = pgTable("reviews", {
   /** Opt-in toggle for Phase B public display. Default off. */
   publicConsent: boolean("public_consent").notNull().default(false),
   submittedAt: timestamp("submitted_at", { mode: "date" }).defaultNow().notNull(),
+  publishedAt: timestamp("published_at", { mode: "date" }),
+  archivedAt: timestamp("archived_at", { mode: "date" }),
+});
+
+/**
+ * Dedupe ledger for the daily review-invite cron — one row per user the
+ * moment the invite is sent. Skipping rule: the cron excludes any user
+ * with a matching row here (regardless of whether they later left a
+ * review). Cascades on user deletion so test-cleanup stays simple.
+ */
+export const reviewInvites = pgTable("review_invites", {
+  userId: text("user_id")
+    .primaryKey()
+    .references(() => users.id, { onDelete: "cascade" }),
+  sentAt: timestamp("sent_at", { mode: "date" }).defaultNow().notNull(),
 });
 
 export type User = typeof users.$inferSelect;
@@ -184,3 +199,5 @@ export type Cohort = typeof cohorts.$inferSelect;
 export type QuizAttempt = typeof quizAttempts.$inferSelect;
 export type Certificate = typeof certificates.$inferSelect;
 export type Review = typeof reviews.$inferSelect;
+export type ReviewInvite = typeof reviewInvites.$inferSelect;
+export type NewReviewInvite = typeof reviewInvites.$inferInsert;

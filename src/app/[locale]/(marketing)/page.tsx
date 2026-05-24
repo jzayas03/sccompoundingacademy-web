@@ -11,6 +11,7 @@ import { Aprenderas } from "@/components/marketing/Aprenderas";
 import { ParaQuienEs } from "@/components/marketing/ParaQuienEs";
 import { Especialidades } from "@/components/marketing/Especialidades";
 import { Galeria } from "@/components/marketing/Galeria";
+import { Resenas } from "@/components/marketing/Resenas";
 import { FaqClean } from "@/components/marketing/FaqClean";
 import { Ubicacion } from "@/components/marketing/Ubicacion";
 import { InstagramFeatured } from "@/components/marketing/InstagramFeatured";
@@ -96,6 +97,7 @@ export default async function LandingPage({ params }: { params: Promise<{ locale
       <ParaQuienEs />
       <Especialidades />
       <Galeria />
+      <Resenas locale={locale as "es" | "en"} />
       <FaqClean />
       <Ubicacion />
       <InstagramFeatured />

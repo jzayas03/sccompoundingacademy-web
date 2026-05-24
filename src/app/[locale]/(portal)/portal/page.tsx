@@ -10,6 +10,7 @@ import { auth } from "@/lib/auth";
 import { db } from "@/lib/db";
 import { users, type User } from "@/lib/db/schema";
 import { isEligibleForCertificate } from "@/lib/certificates";
+import { AcpeDisclosure } from "@/components/portal/AcpeDisclosure";
 import { InstructorHero } from "@/components/portal/InstructorHero";
 
 export const metadata: Metadata = {
@@ -111,6 +112,10 @@ function Dashboard({
           so paid students see the human anchor for the course before
           the payment + cert + module banners. */}
       <InstructorHero />
+
+      {/* ACPE Standard 3 — learner-facing financial-relationships
+          disclosure. Must appear before any module content. */}
+      <AcpeDisclosure />
 
       {/* Payment-pending alert — primary CTA when the user has not paid yet. */}
       {!isPaid && (

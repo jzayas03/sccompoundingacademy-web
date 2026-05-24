@@ -1,0 +1,46 @@
+# Sends the 24h review-invite emails by calling the protected Next.js
+# cron route once a day. The route does the DB scan + Resend send +
+# deduplication; this workflow's only job is to hit it on schedule.
+#
+# Required GitHub Actions secret:
+#   CRON_SECRET — the same value set as CRON_SECRET in Vercel Production
+#                 env vars. Generate with `openssl rand -hex 32`.
+#
+# The same secret protects the route from public traffic. If the run
+# returns a non-2xx the job fails and the Actions UI surfaces the body.
+
+name: Send review invites
+
+on:
+  schedule:
+    # Once daily at 16:00 UTC (12:00 noon AST). Off-peak, lets a
+    # student who finished the previous evening still get the email
+    # the next day.
+    - cron: "0 16 * * *"
+  workflow_dispatch: # manual trigger from the Actions tab
+
+concurrency:
+  group: send-review-invites
+  cancel-in-progress: false
+
+jobs:
+  send:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - name: Hit the cron route
+        env:
+          CRON_SECRET: ${{ secrets.CRON_SECRET }}
+        run: |
+          response=$(curl -sS -X POST \
+            -H "Authorization: Bearer ${CRON_SECRET}" \
+            -w "\n%{http_code}" \
+            https://sccompoundingacademy.com/api/cron/review-invites)
+          body=$(echo "$response" | head -n -1)
+          status=$(echo "$response" | tail -n 1)
+          echo "HTTP $status"
+          echo "$body"
+          if [ "$status" != "200" ]; then
+            echo "::error::cron route returned HTTP $status"
+            exit 1
+          fi
