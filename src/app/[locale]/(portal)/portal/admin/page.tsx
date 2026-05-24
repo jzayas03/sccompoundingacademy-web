@@ -11,6 +11,7 @@ import { isAdminEmail } from "@/lib/admin";
 import { listCohorts, formatCohortLabel, type Cohort } from "@/lib/cohorts";
 import { professionLabel } from "@/lib/professions";
 import { Link } from "@/i18n/routing";
+import { approveReview, archiveReview } from "./actions";
 
 export const metadata: Metadata = {
   title: "Administración · SCCA Portal",
@@ -81,8 +82,9 @@ export default async function AdminPage({
 
   const reviewRows = await db
     .select({
-      studentName: users.name,
-      studentEmail: users.email,
+      id: reviews.id,
+      userName: users.name,
+      userEmail: users.email,
       overall: reviews.overallRating,
       m1: reviews.m1Rating,
       m2: reviews.m2Rating,
@@ -90,10 +92,17 @@ export default async function AdminPage({
       best: reviews.bestComment,
       improve: reviews.improveComment,
       submittedAt: reviews.submittedAt,
+      publicConsent: reviews.publicConsent,
+      publishedAt: reviews.publishedAt,
+      archivedAt: reviews.archivedAt,
     })
     .from(reviews)
-    .leftJoin(users, eq(reviews.userId, users.id))
+    .innerJoin(users, eq(reviews.userId, users.id))
     .orderBy(desc(reviews.submittedAt));
+
+  const pendingReviews = reviewRows.filter(
+    (r) => r.publicConsent && !r.publishedAt && !r.archivedAt,
+  );
 
   const certRows = await db
     .select({
@@ -187,6 +196,39 @@ export default async function AdminPage({
         )}
       </GlassCard>
 
+      {/* Pending reviews — consent given but not yet published or archived */}
+      {pendingReviews.length > 0 && (
+        <section aria-labelledby="resenas-pendientes-heading" className="mt-12">
+          <h2
+            id="resenas-pendientes-heading"
+            className="font-heading text-teal-deep text-xl font-semibold sm:text-2xl"
+          >
+            Reseñas pendientes ({pendingReviews.length})
+          </h2>
+          <p className="text-gray-700 mt-2 text-sm">
+            Estas reseñas tienen consentimiento del estudiante. Apruébalas para mostrarlas en la
+            landing, o archívalas si prefieres no publicarlas.
+          </p>
+          <ul className="mt-6 space-y-4">
+            {pendingReviews.map((r) => (
+              <li key={r.id}>
+                <PendingCard
+                  reviewId={r.id}
+                  userName={r.userName}
+                  overall={r.overall}
+                  m1={r.m1}
+                  m2={r.m2}
+                  m3={r.m3}
+                  best={r.best}
+                  improve={r.improve}
+                  submittedAt={r.submittedAt}
+                />
+              </li>
+            ))}
+          </ul>
+        </section>
+      )}
+
       {/* Reviews */}
       <GlassCard className="mt-8 overflow-x-auto p-6 sm:p-8">
         <h2 className="font-heading text-teal-deep text-lg font-semibold">
@@ -203,14 +245,17 @@ export default async function AdminPage({
                 <th className="py-2 pr-4 font-semibold">M1 / M2 / M3</th>
                 <th className="py-2 pr-4 font-semibold">Lo mejor</th>
                 <th className="py-2 pr-4 font-semibold">A mejorar</th>
-                <th className="py-2 font-semibold">Fecha</th>
+                <th className="py-2 pr-4 font-semibold">Fecha</th>
+                <th scope="col" className="px-4 py-3 text-left">
+                  Estado
+                </th>
               </tr>
             </thead>
             <tbody>
               {reviewRows.map((r, i) => (
                 <tr key={i} className="border-gray-300/60 border-b align-top last:border-0">
                   <td className="py-2 pr-4 text-gray-900">
-                    {r.studentName ?? r.studentEmail ?? "—"}
+                    {r.userName ?? r.userEmail ?? "—"}
                   </td>
                   <td className="py-2 pr-4 text-gray-700">{r.overall}/5</td>
                   <td className="py-2 pr-4 text-gray-700">
@@ -218,7 +263,16 @@ export default async function AdminPage({
                   </td>
                   <td className="py-2 pr-4 text-gray-700">{r.best ?? "—"}</td>
                   <td className="py-2 pr-4 text-gray-700">{r.improve ?? "—"}</td>
-                  <td className="py-2 text-gray-700">{fmtDate(r.submittedAt)}</td>
+                  <td className="py-2 pr-4 text-gray-700">{fmtDate(r.submittedAt)}</td>
+                  <td className="px-4 py-3 text-xs">
+                    {r.publishedAt
+                      ? "Publicada"
+                      : r.archivedAt
+                        ? "Archivada"
+                        : r.publicConsent
+                          ? "Pendiente"
+                          : "Sin consentimiento"}
+                  </td>
                 </tr>
               ))}
             </tbody>
@@ -259,5 +313,70 @@ export default async function AdminPage({
         )}
       </GlassCard>
     </Container>
+  );
+}
+
+function PendingCard({
+  reviewId,
+  userName,
+  overall,
+  m1,
+  m2,
+  m3,
+  best,
+  improve,
+  submittedAt,
+}: {
+  reviewId: string;
+  userName: string | null;
+  overall: number;
+  m1: number | null;
+  m2: number | null;
+  m3: number | null;
+  best: string | null;
+  improve: string | null;
+  submittedAt: Date;
+}) {
+  return (
+    <article className="border-gray-300 rounded-lg border bg-white p-5 shadow-sm">
+      <header className="flex flex-wrap items-baseline justify-between gap-x-4 gap-y-1">
+        <p className="font-heading text-teal-deep text-base font-semibold">
+          {userName ?? "Estudiante"}
+        </p>
+        <p className="text-gray-700 text-xs">{fmtDate(submittedAt)}</p>
+      </header>
+      <p className="text-gray-900 mt-3 text-sm">
+        General: <strong>{overall}/5</strong> · Día 1: {m1 ?? "—"}/5 · Día 2:{" "}
+        {m2 ?? "—"}/5 · Día 3: {m3 ?? "—"}/5
+      </p>
+      {best && (
+        <p className="text-gray-900 mt-3 text-sm leading-relaxed">
+          <strong>Lo mejor:</strong> {best}
+        </p>
+      )}
+      {improve && (
+        <p className="text-gray-900 mt-2 text-sm leading-relaxed">
+          <strong>Mejoraríamos:</strong> {improve}
+        </p>
+      )}
+      <div className="mt-5 flex flex-wrap gap-3">
+        <form action={approveReview.bind(null, reviewId)}>
+          <button
+            type="submit"
+            className="bg-chartreuse text-teal-deep font-heading inline-flex h-10 items-center rounded-md px-4 text-sm font-semibold hover:opacity-90"
+          >
+            Aprobar
+          </button>
+        </form>
+        <form action={archiveReview.bind(null, reviewId)}>
+          <button
+            type="submit"
+            className="border-gray-300 text-gray-900 font-heading inline-flex h-10 items-center rounded-md border bg-white px-4 text-sm font-semibold hover:bg-gray-100"
+          >
+            Archivar
+          </button>
+        </form>
+      </div>
+    </article>
   );
 }
