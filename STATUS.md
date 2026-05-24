@@ -1,6 +1,6 @@
 # SCCA — Project Status
 
-> **Last updated**: 2026-05-22
+> **Last updated**: 2026-05-24
 >
 > **What this is**: Single-source-of-truth status doc for handoff between
 > sessions or contributors. Read this first to pick up cleanly.
@@ -52,11 +52,17 @@ SCCA is a Puerto Rico LLC affiliated with Santa Cruz Pharma Care
 - Reviews collection with 5-star ratings + 2 textareas + public consent
 - GlassNav with sticky blur + sign-out
 - Middleware gates `/portal/*` and `/modulos/*.pdf` for anonymous traffic
+- ACPE Standard 3 — financial-relationships disclosure block on the portal dashboard (env-driven, configurable per cohort)
+- Review-invite email sent 24h after cert-eligibility (daily GitHub Actions cron → `/api/cron/review-invites` → Resend)
+- Admin: "Reseñas pendientes" with approve / archive server actions
 
 **Owner admin (`/portal/admin`)**
 - Roster, reviews, certificates view (PR #58)
 - ACPE registry data capture + export (PR #60)
 - Owner-managed cohort scheduling (PR #62)
+
+**Marketing landing**
+- "Lo que dicen los estudiantes" section between Galería and FAQ — shows 3-5 most-recent approved reviews; section is hidden when fewer than 3 are approved
 
 ### ⏸ Blocked on owner setup
 
@@ -83,10 +89,11 @@ SCCA is a Puerto Rico LLC affiliated with Santa Cruz Pharma Care
 - Owner-managed cohort scheduling from the admin panel (PR #62)
 - Diagnostic pre-test before each module (PR #59)
 - ES/EN language toggle on the module PDF viewer (PR #61)
+- Public reviews display on landing with owner curation (PR for the reviews + ACPE bundle)
+- Automated review-invite email
 
 **Not yet built**
-- Public reviews display with consent filter on homepage
-- Automated email sequences (welcome post-payment, pre-quiz reminder, certificate-issued notification)
+- Automated welcome-post-payment and pre-quiz reminder emails (review-invite shipped)
 - Full portal i18n parity (portal UI is still ES-only; only the PDF viewer toggles ES/EN)
 - Mobile PWA: installable + offline PDF cache
 - Analytics dashboard (pass rates, time-on-module, drop-off per question)
@@ -357,4 +364,4 @@ but not blocking, for incremental triage:
 The current state is WCAG 2.1 AA-compatible. (The one remaining
 `text-teal-deep/70` — a disabled "coming soon" button in the module
 page — is exempt: WCAG places no contrast requirement on inactive
-controls.)
+controls. The new ACPE disclosure block uses `text-gray-900 text-sm` on the GlassCard surface (≈8.5:1 contrast) and the new Resenas section uses the same `text-gray-900` body color on white — both pass AA without additional changes.)
