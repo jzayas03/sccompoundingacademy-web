@@ -762,5 +762,14 @@
       "pendingBody": "El banco de preguntas para este módulo aún no ha sido producido. Te avisaremos cuando esté listo.",
       "backToDashboard": "Volver al panel"
     }
+  },
+  "resenas": {
+    "eyebrow": "Comunidad",
+    "heading": "Lo que dicen los estudiantes",
+    "subheading": "Reseñas reales de quienes han completado el curso.",
+    "tierProfesional": "Profesional",
+    "tierStudent": "Estudiante",
+    "cohortPrefix": "Cohorte",
+    "starsAriaLabel": "{rating} de 5 estrellas"
   }
 }
