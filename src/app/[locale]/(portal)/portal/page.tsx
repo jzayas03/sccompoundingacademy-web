@@ -180,7 +180,7 @@ function Dashboard({
                 </p>
               </div>
               <Link
-                href="/portal/reseñas"
+                href="/portal/resenas"
                 className="border-teal-deep text-teal-deep hover:bg-teal-deep hover:text-off-white font-heading inline-flex h-10 shrink-0 items-center justify-center rounded-md border px-4 text-sm font-semibold transition-colors"
               >
                 {t("reviewPromptCta")} →

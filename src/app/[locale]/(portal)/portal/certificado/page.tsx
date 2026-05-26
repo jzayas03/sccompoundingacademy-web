@@ -227,7 +227,7 @@ function CertPanel({
       {eligible && (
         <p className="mt-8 text-center text-sm">
           <Link
-            href="/portal/reseñas"
+            href="/portal/resenas"
             className="text-teal-deep hover:text-teal underline underline-offset-2"
           >
             {t("reviewLinkLabel")} →

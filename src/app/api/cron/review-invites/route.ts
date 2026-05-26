@@ -120,7 +120,7 @@ export async function POST(req: Request) {
     return NextResponse.json({ sent: 0, message: "no candidates" });
   }
 
-  const reviewUrl = `${getSiteUrl()}/es/portal/rese%C3%B1as`;
+  const reviewUrl = `${getSiteUrl()}/es/portal/reseñas`;
 
   let sent = 0;
   const errors: Array<{ userId: string; error: string }> = [];

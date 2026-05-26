@@ -222,7 +222,7 @@ sccompoundingacademy-web/
 │   │   │       ├── admin/{page.tsx, cohortes/}
 │   │   │       ├── modulos/[id]/{page.tsx, pre-test/, post-test/{page.tsx, resultados/}}
 │   │   │       ├── certificado/
-│   │   │       └── reseñas/
+│   │   │       └── resenas/                  ← serves /portal/reseñas via next-intl pathnames
 │   │   ├── verificar/[certNo]/page.tsx  ← public cert verification (no locale)
 │   │   └── api/
 │   │       ├── auth/[...nextauth]/      ← Auth.js handler
