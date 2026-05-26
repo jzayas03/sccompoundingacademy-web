@@ -1,6 +1,6 @@
 # SCCA — Project Status
 
-> **Last updated**: 2026-05-24
+> **Last updated**: 2026-05-26
 >
 > **What this is**: Single-source-of-truth status doc for handoff between
 > sessions or contributors. Read this first to pick up cleanly.
@@ -60,6 +60,14 @@ SCCA is a Puerto Rico LLC affiliated with Santa Cruz Pharma Care
 - Roster, reviews, certificates view (PR #58)
 - ACPE registry data capture + export (PR #60)
 - Owner-managed cohort scheduling (PR #62)
+- **Owner content-preview access (PR #76)** — emails in `ADMIN_EMAILS`
+  bypass every student gate (`paidAt`, pre-test one-shot, "pre-test
+  required before module", cert eligibility) and can preview modules,
+  pre/post-tests, the cert template, and the review form end-to-end
+  without a real Stripe transaction. The cert API renders a
+  `SCCA-PREVIEW` PDF with no DB insert, so the cert sequence stays
+  untouched. Activate by adding the email to `ADMIN_EMAILS` in Vercel
+  (no redeploy needed).
 
 **Marketing landing**
 - "Lo que dicen los estudiantes" section between Galería and FAQ — shows 3-5 most-recent approved reviews; section is hidden when fewer than 3 are approved
@@ -334,6 +342,17 @@ PR #62     feat(cohorts): owner-managed cohort scheduling from admin panel
 PR #63     feat(inscripcion): "Otro" profession option in the enrollment form
 PR #64     content(portal): publish Día 1 module PDF
 PR #65     feat(checkout): enable promotion codes on Stripe Checkout
+PR #66     docs(status): refresh STATUS.md through PR #65
+PR #67     fix(a11y): resolve serious color-contrast violations on public pages
+PR #68     content(instructor): add FACA + FACVP to Lcdo. Reyes credentials
+PR #69     content(cert): add FACA + FACVP to instructor credentials on certificate
+PR #70     content(cert): drop "B.S.Ph. UPR" from certificate signature line
+PR #71     docs(spec): reviews collection + ACPE compliance design
+PR #72     docs(plan): reviews + ACPE implementation plan
+PR #73     fix: bug-scan pre-launch — UTC dates, Stripe idempotency, Auth.js trustHost, cert N+1
+PR #74     feat: reviews collection + ACPE Standards 3 & 5.1 compliance
+PR #75     fix(copy): CtaFinal eyebrow now says "Junio 2026" / "June 2026"
+PR #76     feat(portal): owner emails (ADMIN_EMAILS) preview full learner flow
 ```
 
 ---
