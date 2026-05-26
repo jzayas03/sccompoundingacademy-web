@@ -15,6 +15,7 @@ import {
   sanitizeQuiz,
   type ModuleQuizId,
 } from "@/lib/quizzes";
+import { isAdminEmail } from "@/lib/admin";
 import { QuizForm } from "@/components/portal/QuizForm";
 import { submitQuizAction } from "./actions";
 
@@ -55,7 +56,9 @@ export default async function PostTestPage({
     .where(eq(users.email, session.user.email))
     .limit(1);
   if (!user) redirect(`/${locale}/portal/login`);
-  if (!user.paidAt) redirect(`/${locale}/portal`);
+  if (!user.paidAt && !isAdminEmail(session.user.email)) {
+    redirect(`/${locale}/portal`);
+  }
 
   const questions = getQuiz(moduleId);
   const threshold = getPassingThreshold();

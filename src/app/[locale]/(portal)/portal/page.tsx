@@ -10,6 +10,7 @@ import { auth } from "@/lib/auth";
 import { db } from "@/lib/db";
 import { users, type User } from "@/lib/db/schema";
 import { isEligibleForCertificate } from "@/lib/certificates";
+import { isAdminEmail } from "@/lib/admin";
 import { AcpeDisclosure } from "@/components/portal/AcpeDisclosure";
 import { InstructorHero } from "@/components/portal/InstructorHero";
 
@@ -62,16 +63,19 @@ export default async function PortalDashboardPage({
   // Cert eligibility surfaces a top-of-dashboard CTA when all three
   // post-tests are passed — same query the certificate page runs, just
   // pulled up one level so paid students notice the unlock without
-  // hunting for the cert tab.
-  const certEligible = user.paidAt
-    ? (await isEligibleForCertificate(user.id)).eligible
-    : false;
+  // hunting for the cert tab. Owners (ADMIN_EMAILS) always see the
+  // cert-ready banner so they can preview the download flow.
+  const isOwner = isAdminEmail(session.user.email);
+  const certEligible =
+    isOwner ||
+    (user.paidAt ? (await isEligibleForCertificate(user.id)).eligible : false);
 
   return (
     <Dashboard
       user={user}
       sessionEmail={session.user.email}
       certEligible={certEligible}
+      isOwner={isOwner}
     />
   );
 }
@@ -80,16 +84,19 @@ function Dashboard({
   user,
   sessionEmail,
   certEligible,
+  isOwner,
 }: {
   user: User;
   sessionEmail: string;
   certEligible: boolean;
+  isOwner: boolean;
 }) {
   const t = useTranslations("portal.dashboard");
   const messages = useMessages() as unknown as CursosGridMessages;
   const modules = messages.cursosGrid.items[0]?.modules ?? [];
   const displayName = user.name?.trim() || sessionEmail.split("@")[0] || t("fallbackName");
-  const isPaid = Boolean(user.paidAt);
+  // Owners get the full unlocked layout without a real Stripe payment.
+  const isPaid = Boolean(user.paidAt) || isOwner;
 
   return (
     <Container className="max-w-4xl py-12 sm:py-16 lg:py-20">
