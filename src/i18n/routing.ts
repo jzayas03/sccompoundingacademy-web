@@ -28,7 +28,14 @@ export const routing = defineRouting({
     "/portal/modulos/[id]/post-test/resultados":
       "/portal/modulos/[id]/post-test/resultados",
     "/portal/certificado": "/portal/certificado",
-    "/portal/reseñas": "/portal/reseñas",
+    // The reviews page lives at the ASCII filesystem segment `resenas` —
+    // Next.js's routes-manifest stores the dir name verbatim in the URL
+    // matcher regex, and browsers always send the percent-encoded form
+    // (`rese%C3%B1as`) of any ñ in the URL. Those two never match, so a
+    // literal-ñ directory ends up 404ing in production. The public URL
+    // keeps the Spanish-native `reseñas` via the localized mapping
+    // below; canonical (used in <Link href>) is the ASCII slug.
+    "/portal/resenas": { es: "/portal/reseñas", en: "/portal/reseñas" },
     "/portal/admin": "/portal/admin",
     "/portal/admin/cohortes": "/portal/admin/cohortes",
   },

@@ -61,7 +61,7 @@ export async function submitReviewAction(
     .where(eq(reviews.userId, user.id))
     .limit(1);
   if (existing) {
-    redirect(`/es/portal/rese%C3%B1as`);
+    redirect(`/es/portal/reseñas`);
   }
 
   const overall = Number.parseInt(String(formData.get("overallRating") ?? ""), 10);
@@ -94,5 +94,5 @@ export async function submitReviewAction(
     return { error: "send-failed" };
   }
 
-  redirect(`/es/portal/rese%C3%B1as`);
+  redirect(`/es/portal/reseñas`);
 }
