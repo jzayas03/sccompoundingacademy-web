@@ -10,6 +10,7 @@ import { auth } from "@/lib/auth";
 import { db } from "@/lib/db";
 import { reviews, users } from "@/lib/db/schema";
 import { isEligibleForCertificate } from "@/lib/certificates";
+import { isAdminEmail } from "@/lib/admin";
 import { ReviewForm } from "./review-form";
 
 export const metadata: Metadata = {
@@ -46,9 +47,15 @@ export default async function ReviewsPage({
     .where(eq(users.email, session.user.email))
     .limit(1);
   if (!user) redirect(`/${locale}/portal/login`);
-  if (!user.paidAt) redirect(`/${locale}/portal`);
+
+  // Owners preview the review form without paying or completing the
+  // post-tests. If they actually submit a review it lands in the admin
+  // queue and can be archived from /portal/admin.
+  const isOwner = isAdminEmail(session.user.email);
+  if (!user.paidAt && !isOwner) redirect(`/${locale}/portal`);
 
   const eligibility = await isEligibleForCertificate(user.id);
+  const eligible = eligibility.eligible || isOwner;
   const [existing] = await db
     .select({ id: reviews.id })
     .from(reviews)
@@ -57,7 +64,7 @@ export default async function ReviewsPage({
 
   return (
     <ReviewsPanel
-      eligible={eligibility.eligible}
+      eligible={eligible}
       alreadySubmitted={Boolean(existing)}
     />
   );

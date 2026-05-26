@@ -10,6 +10,7 @@ import { auth } from "@/lib/auth";
 import { db } from "@/lib/db";
 import { users, quizAttempts } from "@/lib/db/schema";
 import { getQuiz, sanitizeQuiz, type ModuleQuizId } from "@/lib/quizzes";
+import { isAdminEmail } from "@/lib/admin";
 import { QuizForm } from "@/components/portal/QuizForm";
 import { submitPreTestAction } from "./actions";
 
@@ -60,21 +61,28 @@ export default async function PreTestPage({
     .where(eq(users.email, session.user.email))
     .limit(1);
   if (!user) redirect(`/${locale}/portal/login`);
-  if (!user.paidAt) redirect(`/${locale}/portal`);
+
+  // Owner emails bypass payment + the one-shot gate so the academy can
+  // re-preview the pre-test layout as many times as needed.
+  const isOwner = isAdminEmail(session.user.email);
+  if (!user.paidAt && !isOwner) redirect(`/${locale}/portal`);
 
   // One-shot: already completed → straight to the module content.
-  const [existing] = await db
-    .select({ id: quizAttempts.id })
-    .from(quizAttempts)
-    .where(
-      and(
-        eq(quizAttempts.userId, user.id),
-        eq(quizAttempts.moduleId, moduleQuizIdToInt(moduleId)),
-        eq(quizAttempts.phase, "pre"),
-      ),
-    )
-    .limit(1);
-  if (existing) redirect(`/${locale}/portal/modulos/${moduleId}`);
+  // Owners can re-render this page even after a previous submission.
+  if (!isOwner) {
+    const [existing] = await db
+      .select({ id: quizAttempts.id })
+      .from(quizAttempts)
+      .where(
+        and(
+          eq(quizAttempts.userId, user.id),
+          eq(quizAttempts.moduleId, moduleQuizIdToInt(moduleId)),
+          eq(quizAttempts.phase, "pre"),
+        ),
+      )
+      .limit(1);
+    if (existing) redirect(`/${locale}/portal/modulos/${moduleId}`);
+  }
 
   const questions = getQuiz(moduleId);
 

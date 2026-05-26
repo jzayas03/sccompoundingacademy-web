@@ -11,6 +11,7 @@ import { auth } from "@/lib/auth";
 import { db } from "@/lib/db";
 import { users, quizAttempts } from "@/lib/db/schema";
 import { getQuiz, type ModuleQuizId } from "@/lib/quizzes";
+import { isAdminEmail } from "@/lib/admin";
 import { ModulePdfViewer } from "@/components/portal/ModulePdfViewer";
 
 export const metadata: Metadata = {
@@ -82,7 +83,12 @@ export default async function ModulePage({
     .where(eq(users.email, session.user.email))
     .limit(1);
   if (!user) redirect(`/${locale}/portal/login`);
-  if (!user.paidAt) redirect(`/${locale}/portal`);
+
+  // Owner/admin emails (ADMIN_EMAILS) bypass the payment + pre-test
+  // gates so the academy can preview the full learner flow without a
+  // real Stripe transaction. See src/lib/admin.ts.
+  const isOwner = isAdminEmail(session.user.email);
+  if (!user.paidAt && !isOwner) redirect(`/${locale}/portal`);
 
   const hasQuiz = getQuiz(id as ModuleQuizId).length > 0;
 
@@ -90,8 +96,8 @@ export default async function ModulePage({
   // module content unlocks. `quizAttempts.moduleId` is the integer day
   // (1/2/3), which equals `day` here. Skipped when the module has no
   // quiz at all — otherwise the student would be stranded on a pre-test
-  // page that has no questions to submit.
-  if (hasQuiz) {
+  // page that has no questions to submit. Owners bypass.
+  if (hasQuiz && !isOwner) {
     const [preDone] = await db
       .select({ id: quizAttempts.id })
       .from(quizAttempts)

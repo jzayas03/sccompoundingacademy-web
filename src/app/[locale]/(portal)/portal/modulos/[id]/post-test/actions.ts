@@ -11,6 +11,7 @@ import {
   scoreQuiz,
   type ModuleQuizId,
 } from "@/lib/quizzes";
+import { isAdminEmail } from "@/lib/admin";
 
 /**
  * Submit a post-test attempt.
@@ -49,7 +50,9 @@ export async function submitQuizAction(args: {
     .where(eq(users.email, session.user.email))
     .limit(1);
   if (!user) redirect(`/${locale}/portal/login`);
-  if (!user.paidAt) redirect(`/${locale}/portal`);
+  if (!user.paidAt && !isAdminEmail(session.user.email)) {
+    redirect(`/${locale}/portal`);
+  }
 
   const questions = getQuiz(moduleId);
   if (questions.length === 0) {

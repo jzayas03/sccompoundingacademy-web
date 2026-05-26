@@ -10,6 +10,7 @@ import { auth } from "@/lib/auth";
 import { db } from "@/lib/db";
 import { quizAttempts, users } from "@/lib/db/schema";
 import { getQuiz, getPassingThreshold, type ModuleQuizId } from "@/lib/quizzes";
+import { isAdminEmail } from "@/lib/admin";
 import { ResultsList } from "./results-list";
 
 export const metadata: Metadata = {
@@ -45,7 +46,9 @@ export default async function ResultsPage({
     .where(eq(users.email, session.user.email))
     .limit(1);
   if (!user) redirect(`/${locale}/portal/login`);
-  if (!user.paidAt) redirect(`/${locale}/portal`);
+  if (!user.paidAt && !isAdminEmail(session.user.email)) {
+    redirect(`/${locale}/portal`);
+  }
 
   // Most recent attempt for this user+module. Older attempts stay in the
   // DB for future analytics; the results screen always reflects "latest".

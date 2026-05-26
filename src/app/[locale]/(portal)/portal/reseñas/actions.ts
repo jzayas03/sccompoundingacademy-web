@@ -6,6 +6,7 @@ import { auth } from "@/lib/auth";
 import { db } from "@/lib/db";
 import { reviews, users } from "@/lib/db/schema";
 import { isEligibleForCertificate } from "@/lib/certificates";
+import { isAdminEmail } from "@/lib/admin";
 
 export type ReviewState =
   | { error: "missing-rating" }
@@ -42,10 +43,15 @@ export async function submitReviewAction(
     .from(users)
     .where(eq(users.email, session.user.email))
     .limit(1);
-  if (!user || !user.paidAt) return { error: "send-failed" };
+  if (!user) return { error: "send-failed" };
+
+  // Owners can submit a test review without paying or completing the
+  // post-tests; mirrors the page-level bypass in reseñas/page.tsx.
+  const isOwner = isAdminEmail(session.user.email);
+  if (!user.paidAt && !isOwner) return { error: "send-failed" };
 
   const eligibility = await isEligibleForCertificate(user.id);
-  if (!eligibility.eligible) return { error: "send-failed" };
+  if (!eligibility.eligible && !isOwner) return { error: "send-failed" };
 
   // One review per user — bounce silently to the same page if a row
   // already exists; the server page renders the thank-you state.

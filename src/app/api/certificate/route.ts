@@ -9,6 +9,7 @@ import {
 } from "@/lib/certificates";
 import { renderCertificatePdf } from "@/lib/certificates/render";
 import { getSiteUrl } from "@/lib/siteUrl";
+import { isAdminEmail } from "@/lib/admin";
 
 export const runtime = "nodejs";
 
@@ -48,6 +49,33 @@ export async function GET() {
   if (!user) {
     return NextResponse.json({ error: "User not found" }, { status: 401 });
   }
+
+  // Owner/admin preview path — renders the cert PDF with a placeholder
+  // number so the academy can verify the design without paying or
+  // consuming a real `SCCA-{YYYY}-{NNN}` slot. No DB insert, no
+  // verification URL (the QR points at the placeholder route, which
+  // returns "not found"; the cert is clearly marked as preview by its
+  // number). See src/lib/admin.ts for the allowlist.
+  const isOwner = isAdminEmail(session.user.email);
+  if (isOwner) {
+    const siteUrl = getSiteUrl();
+    const previewCertNo = "SCCA-PREVIEW";
+    const pdfBytes = await renderCertificatePdf({
+      certNo: previewCertNo,
+      studentName: user.name?.trim() || session.user.email,
+      issuedAt: new Date(),
+      verificationUrl: `${siteUrl}/verificar/${previewCertNo}`,
+    });
+    return new NextResponse(new Uint8Array(pdfBytes), {
+      status: 200,
+      headers: {
+        "content-type": "application/pdf",
+        "content-disposition": `attachment; filename="${previewCertNo}.pdf"`,
+        "cache-control": "private, no-store",
+      },
+    });
+  }
+
   if (!user.paidAt) {
     return NextResponse.json(
       { error: "Payment required to download certificate." },

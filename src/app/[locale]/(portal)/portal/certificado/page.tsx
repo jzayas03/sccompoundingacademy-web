@@ -10,6 +10,7 @@ import { auth } from "@/lib/auth";
 import { db } from "@/lib/db";
 import { users } from "@/lib/db/schema";
 import { findCertificateByUser, isEligibleForCertificate } from "@/lib/certificates";
+import { isAdminEmail } from "@/lib/admin";
 
 export const metadata: Metadata = {
   title: "Certificado · SCCA Portal",
@@ -47,17 +48,26 @@ export default async function CertificadoPage({
     .where(eq(users.email, session.user.email))
     .limit(1);
   if (!user) redirect(`/${locale}/portal/login`);
-  if (!user.paidAt) redirect(`/${locale}/portal`);
+
+  // Owners (ADMIN_EMAILS) preview the cert page as if all prerequisites
+  // are met — bypasses payment + post-test eligibility. The cert PDF
+  // they download is a preview (no DB row, "SCCA-PREVIEW" number).
+  const isOwner = isAdminEmail(session.user.email);
+  if (!user.paidAt && !isOwner) redirect(`/${locale}/portal`);
 
   const eligibility = await isEligibleForCertificate(user.id);
+  const eligible = eligibility.eligible || isOwner;
+  const passedModules = isOwner
+    ? { 1: true, 2: true, 3: true }
+    : eligibility.passedModules;
   const cert = eligibility.eligible
     ? await findCertificateByUser(user.id)
     : null;
 
   return (
     <CertPanel
-      passedModules={eligibility.passedModules}
-      eligible={eligibility.eligible}
+      passedModules={passedModules}
+      eligible={eligible}
       certNo={cert?.certNo ?? null}
       certIssuedAt={cert?.issuedAt ?? null}
     />
