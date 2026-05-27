@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import { redirect } from "next/navigation";
 import { eq } from "drizzle-orm";
-import { useTranslations, useMessages } from "next-intl";
+import { useTranslations, useMessages, useLocale } from "next-intl";
 import { setRequestLocale } from "next-intl/server";
 import { Container } from "@/components/ui/Container";
 import { GlassCard } from "@/components/glass/GlassCard";
@@ -92,6 +92,7 @@ function Dashboard({
   isOwner: boolean;
 }) {
   const t = useTranslations("portal.dashboard");
+  const locale = useLocale() === "en" ? "en" : "es";
   const messages = useMessages() as unknown as CursosGridMessages;
   const modules = messages.cursosGrid.items[0]?.modules ?? [];
   const displayName = user.name?.trim() || sessionEmail.split("@")[0] || t("fallbackName");
@@ -122,7 +123,7 @@ function Dashboard({
 
       {/* ACPE Standard 3 — learner-facing financial-relationships
           disclosure. Must appear before any module content. */}
-      <AcpeDisclosure />
+      <AcpeDisclosure locale={locale} />
 
       {/* Payment-pending alert — primary CTA when the user has not paid yet. */}
       {!isPaid && (
