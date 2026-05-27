@@ -116,9 +116,17 @@ export async function POST(req: Request) {
   // checkout. `getSiteUrl()` rejects misconfigured `.vercel.app` env
   // values so users always land back on the canonical custom domain;
   // dev still gets localhost via `NODE_ENV`.
+  //
+  // Path segments are locale-specific (per `src/i18n/routing.ts`
+  // pathnames map): `/inscripcion/...` for ES, `/enroll/...` for EN.
+  // Using the matching segment avoids the next-intl middleware rewrite
+  // that an EN user would otherwise see post-checkout.
   const origin = getSiteUrl();
-  const successUrl = `${origin}/${data.locale}/inscripcion/exito?session_id={CHECKOUT_SESSION_ID}`;
-  const cancelUrl = `${origin}/${data.locale}/inscripcion/cancelada`;
+  const isEn = data.locale === "en";
+  const successPath = isEn ? "enroll/success" : "inscripcion/exito";
+  const cancelPath = isEn ? "enroll/cancelled" : "inscripcion/cancelada";
+  const successUrl = `${origin}/${data.locale}/${successPath}?session_id={CHECKOUT_SESSION_ID}`;
+  const cancelUrl = `${origin}/${data.locale}/${cancelPath}`;
 
   // Stripe idempotency key — deterministic over the *intent* of the
   // submission (same email + course + cohort + tier + locale → same
