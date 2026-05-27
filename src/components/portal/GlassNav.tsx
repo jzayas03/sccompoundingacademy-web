@@ -1,9 +1,11 @@
 import { useTranslations } from "next-intl";
+import { getLocale } from "next-intl/server";
 import { Link } from "@/i18n/routing";
 import { LogoFullInverse } from "@/components/brand";
 import { auth } from "@/lib/auth";
 import { isAdminEmail } from "@/lib/admin";
 import { logoutAction } from "@/app/[locale]/(portal)/portal/actions";
+import { PortalLocaleSwitch } from "@/components/portal/PortalLocaleSwitch";
 
 /**
  * Portal-only top navigation — replaces the marketing Header inside
@@ -19,23 +21,30 @@ import { logoutAction } from "@/app/[locale]/(portal)/portal/actions";
  *                  session cookie + DB session row, redirects to /).
  *   - signed out → "Volver al sitio" link back to the public landing.
  *
- * `LocaleSwitch` is intentionally absent — Phase A portal is ES-only
- * (decision 2026-05-19), and surfacing locale toggles here would just
- * surface the gap.
+ * The portal-flavored `PortalLocaleSwitch` lives next to those actions
+ * so a learner who signed in through the wrong locale (or just wants
+ * to switch) doesn't have to sign out first. The wrapper suppresses
+ * itself on in-progress pre-test / post-test routes to avoid wiping
+ * answer state mid-assessment.
  */
 export async function GlassNav() {
   const session = await auth();
   const isSignedIn = Boolean(session?.user?.email);
   const isAdmin = isAdminEmail(session?.user?.email);
-  return <GlassNavView isSignedIn={isSignedIn} isAdmin={isAdmin} />;
+  const locale = (await getLocale()) === "en" ? "en" : "es";
+  return (
+    <GlassNavView isSignedIn={isSignedIn} isAdmin={isAdmin} locale={locale} />
+  );
 }
 
 function GlassNavView({
   isSignedIn,
   isAdmin,
+  locale,
 }: {
   isSignedIn: boolean;
   isAdmin: boolean;
+  locale: "es" | "en";
 }) {
   const t = useTranslations("portal.nav");
   return (
@@ -50,6 +59,7 @@ function GlassNavView({
         </Link>
 
         <div className="flex items-center gap-3">
+          <PortalLocaleSwitch currentLocale={locale} />
           {isAdmin ? (
             <Link
               href="/portal/admin"
