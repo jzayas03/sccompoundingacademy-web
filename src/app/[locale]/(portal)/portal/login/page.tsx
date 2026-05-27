@@ -27,10 +27,10 @@ export default async function PortalLoginPage({
     redirect(`/${locale}/portal`);
   }
 
-  return <LoginPanel />;
+  return <LoginPanel locale={locale} />;
 }
 
-function LoginPanel() {
+function LoginPanel({ locale }: { locale: string }) {
   const t = useTranslations("portal.login");
   return (
     <Container className="max-w-lg py-20 sm:py-24 lg:py-28">
@@ -46,7 +46,7 @@ function LoginPanel() {
           {t("subtitle")}
         </p>
 
-        <LoginForm />
+        <LoginForm locale={locale} />
 
         <p className="mt-8 text-center text-sm">
           <Link

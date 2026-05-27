@@ -1,9 +1,14 @@
 "use server";
 
 import { AuthError } from "next-auth";
+import { redirect } from "next/navigation";
 import { signIn } from "@/lib/auth";
 
 export type LoginState = { error?: string } | null;
+
+function normalizeLocale(value: FormDataEntryValue | null): "es" | "en" {
+  return value === "en" ? "en" : "es";
+}
 
 /**
  * Server action invoked by the login form. Triggers Auth.js's Resend
@@ -11,21 +16,22 @@ export type LoginState = { error?: string } | null;
  * the `verificationToken` table, and sends the branded magic-link email
  * via the SDK call wired in `lib/auth.ts`.
  *
- * On success Auth.js redirects the browser to `pages.verifyRequest`
- * (`/es/portal/verify`) — that redirect surfaces as a Next.js internal
- * `NEXT_REDIRECT` error which we deliberately re-throw so the runtime
- * handles it. Any other error (rate-limit, send failure, bad config)
- * comes back as an `AuthError` and we surface a generic message to the
- * client without leaking provider details.
+ * We pass `redirect: false` so signIn returns instead of throwing
+ * NEXT_REDIRECT — the static `pages.verifyRequest` (es) would otherwise
+ * lock every user into the Spanish verify page regardless of the
+ * originating locale. After a successful send we issue our own redirect
+ * to `/{locale}/portal/verify`. The `redirectTo` arg here is the
+ * destination after the email link is clicked.
  *
- * The `redirectTo` argument is where the user lands *after* clicking
- * the magic link in their inbox — i.e. the eventual destination, not
- * the immediate post-submit redirect.
+ * Any other error (rate-limit, send failure, bad config) comes back as
+ * an `AuthError` and we surface a generic message to the client without
+ * leaking provider details.
  */
 export async function signInWithEmailAction(
   _prevState: LoginState,
   formData: FormData,
 ): Promise<LoginState> {
+  const locale = normalizeLocale(formData.get("locale"));
   // Auth.js's Resend provider (via the underlying Email provider's
   // `normalizeIdentifier`) already trims + lowercases the identifier
   // before insert. We mirror that here so the value we pass back to
@@ -39,15 +45,17 @@ export async function signInWithEmailAction(
   try {
     await signIn("resend", {
       email,
-      redirectTo: "/es/portal",
+      redirectTo: `/${locale}/portal`,
+      redirect: false,
     });
-    return null;
   } catch (error) {
     if (error instanceof AuthError) {
       console.error("[portal] sign-in failed", error.type);
       return { error: "send-failed" };
     }
-    // Re-throw NEXT_REDIRECT (success path) and any other unknown error.
     throw error;
   }
+  // `redirect()` throws NEXT_REDIRECT — must run outside the try/catch
+  // so the AuthError branch above doesn't swallow it.
+  redirect(`/${locale}/portal/verify`);
 }

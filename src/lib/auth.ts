@@ -31,6 +31,26 @@ const EMAIL_REPLY_TO =
   process.env.EMAIL_REPLY_TO ?? "info@sccompoundingacademy.com";
 const RESEND_API_KEY = process.env.RESEND_API_KEY ?? "";
 
+/**
+ * Auth.js plumbs the post-click `callbackUrl` query parameter into the
+ * magic-link URL but doesn't expose the originating page's locale on
+ * its own. Parsing the callbackUrl back out gives us the only signal
+ * that survives. Falls back to `es` for malformed or missing values —
+ * matches the canonical portal locale per the i18n pathnames config.
+ */
+function extractLocaleFromCallbackUrl(magicLinkUrl: string): "es" | "en" {
+  try {
+    const callbackUrl = new URL(magicLinkUrl).searchParams.get("callbackUrl");
+    if (!callbackUrl) return "es";
+    const path = callbackUrl.startsWith("http")
+      ? new URL(callbackUrl).pathname
+      : callbackUrl;
+    return path.startsWith("/en/") || path === "/en" ? "en" : "es";
+  } catch {
+    return "es";
+  }
+}
+
 export const { handlers, auth, signIn, signOut } = NextAuth({
   ...authConfig,
   adapter: DrizzleAdapter(db, {
@@ -53,7 +73,7 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
         const resend = new ResendSDK(RESEND_API_KEY);
         const { subject, html, text } = buildMagicLinkEmail({
           url,
-          locale: "es",
+          locale: extractLocaleFromCallbackUrl(url),
         });
         const { error } = await resend.emails.send({
           from: EMAIL_FROM,

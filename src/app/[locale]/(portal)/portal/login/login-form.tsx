@@ -10,7 +10,7 @@ import { signInWithEmailAction, type LoginState } from "./actions";
  * form is pre-disabled while pending, and a failure message renders
  * underneath the input until the next attempt.
  */
-export function LoginForm() {
+export function LoginForm({ locale }: { locale: string }) {
   const t = useTranslations("portal.login");
   const [state, action, pending] = useActionState<LoginState, FormData>(
     signInWithEmailAction,
@@ -19,6 +19,10 @@ export function LoginForm() {
 
   return (
     <form action={action} className="mt-8 space-y-5">
+      {/* Originating-locale travels with the form so the server action
+          redirects to the matching verify page and the magic-link email
+          renders in the user's chosen language. */}
+      <input type="hidden" name="locale" value={locale} />
       <label className="block">
         <span className="font-heading text-teal-deep block text-sm font-semibold tracking-wide">
           {t("emailLabel")}

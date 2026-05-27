@@ -54,7 +54,11 @@ export default authCheck((req) => {
   const { pathname } = req.nextUrl;
 
   if (requiresSession(pathname) && !req.auth) {
-    return NextResponse.redirect(new URL("/es/portal/login", req.url));
+    // Preserve the user's chosen locale across the auth bounce. The
+    // `/modulos/...` PDF guard has no locale segment, so default to
+    // `es` (the canonical portal locale per pathnames config).
+    const locale = pathname.startsWith("/en/") ? "en" : "es";
+    return NextResponse.redirect(new URL(`/${locale}/portal/login`, req.url));
   }
 
   // PDF requests skip i18n routing entirely (no locale prefix needed).
