@@ -12,6 +12,7 @@ import { db } from "@/lib/db";
 import { users, quizAttempts } from "@/lib/db/schema";
 import { getQuiz, type ModuleQuizId } from "@/lib/quizzes";
 import { isAdminEmail } from "@/lib/admin";
+import { resolveModuleAccess } from "@/lib/portal/module-access";
 import { ModulePdfViewer } from "@/components/portal/ModulePdfViewer";
 
 export const metadata: Metadata = {
@@ -84,20 +85,22 @@ export default async function ModulePage({
     .limit(1);
   if (!user) redirect(`/${locale}/portal/login`);
 
-  // Owner/admin emails (ADMIN_EMAILS) bypass the payment + pre-test
-  // gates so the academy can preview the full learner flow without a
-  // real Stripe transaction. See src/lib/admin.ts.
+  // Access policy — payment + pre-test gates, with the owner/admin
+  // (ADMIN_EMAILS) bypass for content preview — is encoded in
+  // `resolveModuleAccess` so the contract can be unit-tested without a
+  // DB. See src/lib/portal/module-access.ts and tests/unit/module-access.
+  //
+  // We only run the quizAttempts lookup when it can actually change the
+  // outcome (a paid non-owner on a module that has a quiz); owners and
+  // unpaid users are decided without touching the DB.
   const isOwner = isAdminEmail(session.user.email);
-  if (!user.paidAt && !isOwner) redirect(`/${locale}/portal`);
-
+  const hasPaid = Boolean(user.paidAt);
   const hasQuiz = getQuiz(id as ModuleQuizId).length > 0;
 
-  // Pre-test gate: the diagnostic pre-test must be completed before the
-  // module content unlocks. `quizAttempts.moduleId` is the integer day
-  // (1/2/3), which equals `day` here. Skipped when the module has no
-  // quiz at all — otherwise the student would be stranded on a pre-test
-  // page that has no questions to submit. Owners bypass.
-  if (hasQuiz && !isOwner) {
+  let hasPreAttempt = false;
+  if (!isOwner && hasPaid && hasQuiz) {
+    // `quizAttempts.moduleId` is the integer day (1/2/3), which equals
+    // `day` here.
     const [preDone] = await db
       .select({ id: quizAttempts.id })
       .from(quizAttempts)
@@ -109,7 +112,16 @@ export default async function ModulePage({
         ),
       )
       .limit(1);
-    if (!preDone) redirect(`/${locale}/portal/modulos/${id}/pre-test`);
+    hasPreAttempt = Boolean(preDone);
+  }
+
+  const access = resolveModuleAccess({ isOwner, hasPaid, hasQuiz, hasPreAttempt });
+  if (access.kind === "redirect") {
+    redirect(
+      access.to === "pre-test"
+        ? `/${locale}/portal/modulos/${id}/pre-test`
+        : `/${locale}/portal`,
+    );
   }
 
   // Module material lives at public/modulos/dia-{n}.pdf (Spanish) and,
