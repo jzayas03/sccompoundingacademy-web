@@ -182,7 +182,7 @@ function Dashboard({
               </div>
               <Link
                 href="/portal/resenas"
-                className="border-teal-deep text-teal-deep hover:bg-teal-deep hover:text-off-white font-heading inline-flex h-10 shrink-0 items-center justify-center rounded-md border px-4 text-sm font-semibold transition-colors"
+                className="border-teal-deep text-teal-deep hover:bg-teal-deep hover:text-off-white focus-visible:ring-chartreuse font-heading inline-flex h-10 shrink-0 items-center justify-center rounded-md border px-4 text-sm font-semibold transition-colors focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-offset-white focus-visible:outline-none"
               >
                 {t("reviewPromptCta")} →
               </Link>
@@ -215,7 +215,7 @@ function Dashboard({
                 <Link
                   href={{ pathname: "/portal/modulos/[id]", params: { id: mod.id } }}
                   aria-label={t("moduleOpenAria", { n: idx + 1 })}
-                  className="block h-full"
+                  className="focus-visible:ring-chartreuse block h-full rounded-lg focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-offset-off-white focus-visible:outline-none"
                 >
                   <GlassCard
                     interactive
