@@ -63,7 +63,7 @@ function GlassNavView({
           {isAdmin ? (
             <Link
               href="/portal/admin"
-              className="bg-teal-deep text-off-white hover:bg-teal font-heading inline-flex h-10 items-center rounded-md px-4 text-sm font-semibold transition-colors"
+              className="bg-teal-deep text-off-white hover:bg-teal focus-visible:ring-chartreuse font-heading inline-flex h-10 items-center rounded-md px-4 text-sm font-semibold transition-colors focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-offset-white focus-visible:outline-none"
             >
               Admin
             </Link>
@@ -72,7 +72,7 @@ function GlassNavView({
             <form action={logoutAction}>
               <button
                 type="submit"
-                className="border-teal-deep text-teal-deep hover:bg-teal-deep hover:text-off-white font-heading inline-flex h-10 items-center rounded-md border px-4 text-sm font-semibold transition-colors"
+                className="border-teal-deep text-teal-deep hover:bg-teal-deep hover:text-off-white focus-visible:ring-chartreuse font-heading inline-flex h-10 items-center rounded-md border px-4 text-sm font-semibold transition-colors focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-offset-white focus-visible:outline-none"
               >
                 {t("logout")}
               </button>
@@ -80,7 +80,7 @@ function GlassNavView({
           ) : (
             <Link
               href="/"
-              className="text-teal-deep hover:text-teal font-heading text-sm font-semibold underline underline-offset-2"
+              className="text-teal-deep hover:text-teal focus-visible:ring-chartreuse font-heading rounded-sm text-sm font-semibold underline underline-offset-2 focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-offset-white focus-visible:outline-none"
             >
               ← {t("backToHome")}
             </Link>

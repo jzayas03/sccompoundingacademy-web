@@ -138,7 +138,7 @@ export default async function AdminPage({
         <div className="mt-4">
           <Link
             href="/portal/admin/cohortes"
-            className="bg-teal-deep text-off-white hover:bg-teal font-heading inline-flex h-10 items-center rounded-md px-4 text-sm font-semibold transition-colors"
+            className="bg-teal-deep text-off-white hover:bg-teal focus-visible:ring-chartreuse font-heading inline-flex h-10 items-center rounded-md px-4 text-sm font-semibold transition-colors focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-offset-white focus-visible:outline-none"
           >
             Gestionar cohortes →
           </Link>
@@ -157,7 +157,7 @@ export default async function AdminPage({
           {/* eslint-disable-next-line @next/next/no-html-link-for-pages */}
           <a
             href="/api/admin/export"
-            className="border-teal-deep text-teal-deep hover:bg-teal-deep hover:text-off-white font-heading inline-flex h-9 items-center rounded-md border px-3 text-xs font-semibold transition-colors"
+            className="border-teal-deep text-teal-deep hover:bg-teal-deep hover:text-off-white focus-visible:ring-chartreuse font-heading inline-flex h-9 items-center rounded-md border px-3 text-xs font-semibold transition-colors focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-offset-white focus-visible:outline-none"
           >
             Exportar CSV ↓
           </a>
@@ -165,7 +165,7 @@ export default async function AdminPage({
         {roster.length === 0 ? (
           <p className="text-gray-700 mt-4 text-sm">Sin inscritos aún.</p>
         ) : (
-          <table className="mt-4 w-full border-collapse text-left text-sm">
+          <table className="mt-4 w-full border-collapse text-left text-sm tabular-nums">
             <thead>
               <tr className="text-teal-deep/80 border-gray-300 border-b text-xs uppercase tracking-wide">
                 <th className="py-2 pr-4 font-semibold">Nombre</th>
@@ -237,7 +237,7 @@ export default async function AdminPage({
         {reviewRows.length === 0 ? (
           <p className="text-gray-700 mt-4 text-sm">Sin reseñas aún.</p>
         ) : (
-          <table className="mt-4 w-full border-collapse text-left text-sm">
+          <table className="mt-4 w-full border-collapse text-left text-sm tabular-nums">
             <thead>
               <tr className="text-teal-deep/80 border-gray-300 border-b text-xs uppercase tracking-wide">
                 <th className="py-2 pr-4 font-semibold">Estudiante</th>
@@ -246,7 +246,7 @@ export default async function AdminPage({
                 <th className="py-2 pr-4 font-semibold">Lo mejor</th>
                 <th className="py-2 pr-4 font-semibold">A mejorar</th>
                 <th className="py-2 pr-4 font-semibold">Fecha</th>
-                <th scope="col" className="px-4 py-3 text-left">
+                <th scope="col" className="py-2 font-semibold">
                   Estado
                 </th>
               </tr>
@@ -264,7 +264,7 @@ export default async function AdminPage({
                   <td className="py-2 pr-4 text-gray-700">{r.best ?? "—"}</td>
                   <td className="py-2 pr-4 text-gray-700">{r.improve ?? "—"}</td>
                   <td className="py-2 pr-4 text-gray-700">{fmtDate(r.submittedAt)}</td>
-                  <td className="px-4 py-3 text-xs">
+                  <td className="py-2 text-xs text-gray-700">
                     {r.publishedAt
                       ? "Publicada"
                       : r.archivedAt
@@ -288,7 +288,7 @@ export default async function AdminPage({
         {certRows.length === 0 ? (
           <p className="text-gray-700 mt-4 text-sm">Sin certificados emitidos aún.</p>
         ) : (
-          <table className="mt-4 w-full border-collapse text-left text-sm">
+          <table className="mt-4 w-full border-collapse text-left text-sm tabular-nums">
             <thead>
               <tr className="text-teal-deep/80 border-gray-300 border-b text-xs uppercase tracking-wide">
                 <th className="py-2 pr-4 font-semibold">Certificado</th>
@@ -363,7 +363,7 @@ function PendingCard({
         <form action={approveReview.bind(null, reviewId)}>
           <button
             type="submit"
-            className="bg-chartreuse text-teal-deep font-heading inline-flex h-10 items-center rounded-md px-4 text-sm font-semibold hover:opacity-90"
+            className="bg-chartreuse text-teal-deep ring-teal-deep/15 shadow-soft hover:bg-chartreuse/95 hover:shadow-lift focus-visible:ring-chartreuse font-heading inline-flex h-10 items-center rounded-md px-4 text-sm font-semibold ring-1 transition-[color,background-color,box-shadow,transform] duration-200 ease-out focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-offset-white focus-visible:outline-none motion-safe:hover:-translate-y-px"
           >
             Aprobar
           </button>
@@ -371,7 +371,7 @@ function PendingCard({
         <form action={archiveReview.bind(null, reviewId)}>
           <button
             type="submit"
-            className="border-gray-300 text-gray-900 font-heading inline-flex h-10 items-center rounded-md border bg-white px-4 text-sm font-semibold hover:bg-gray-100"
+            className="border-gray-300 text-gray-900 hover:bg-gray-100 focus-visible:ring-teal-deep font-heading inline-flex h-10 items-center rounded-md border bg-white px-4 text-sm font-semibold transition-colors focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-offset-white focus-visible:outline-none"
           >
             Archivar
           </button>

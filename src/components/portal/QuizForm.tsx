@@ -105,7 +105,7 @@ export function QuizForm({
           return (
             <label
               key={opt.letter}
-              className={`block cursor-pointer rounded-md border p-4 transition-colors ${
+              className={`block cursor-pointer rounded-md border p-4 transition-colors has-[:focus-visible]:ring-2 has-[:focus-visible]:ring-chartreuse has-[:focus-visible]:ring-offset-2 has-[:focus-visible]:ring-offset-off-white ${
                 selected
                   ? "border-teal-deep bg-teal-deep/5 ring-teal-deep/30 ring-2"
                   : "border-gray-300 bg-white hover:border-teal-deep/60"
@@ -136,7 +136,7 @@ export function QuizForm({
           type="button"
           onClick={goPrev}
           disabled={current === 0 || pending}
-          className="border-teal-deep text-teal-deep hover:bg-teal-deep hover:text-off-white font-heading inline-flex h-11 items-center justify-center rounded-md border px-5 text-sm font-semibold transition-colors disabled:cursor-not-allowed disabled:opacity-50"
+          className="border-teal-deep text-teal-deep hover:bg-teal-deep hover:text-off-white focus-visible:ring-chartreuse font-heading inline-flex h-11 items-center justify-center rounded-md border px-5 text-sm font-semibold transition-colors focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-offset-off-white focus-visible:outline-none disabled:cursor-not-allowed disabled:opacity-50"
         >
           ← {t("previousButton")}
         </button>
@@ -146,7 +146,7 @@ export function QuizForm({
             type="button"
             onClick={onSubmit}
             disabled={!allAnswered || pending}
-            className="bg-chartreuse text-teal-deep ring-teal-deep/15 shadow-soft hover:bg-chartreuse/95 hover:shadow-lift font-heading inline-flex h-12 items-center justify-center rounded-md px-6 text-sm font-semibold ring-1 transition-[color,background-color,box-shadow,transform] duration-200 disabled:cursor-not-allowed disabled:opacity-50 sm:text-base motion-safe:hover:-translate-y-px"
+            className="bg-chartreuse text-teal-deep ring-teal-deep/15 shadow-soft hover:bg-chartreuse/95 hover:shadow-lift focus-visible:ring-chartreuse font-heading inline-flex h-12 items-center justify-center rounded-md px-6 text-sm font-semibold ring-1 transition-[color,background-color,box-shadow,transform] duration-200 focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-offset-off-white focus-visible:outline-none disabled:cursor-not-allowed disabled:opacity-50 sm:text-base motion-safe:hover:-translate-y-px"
           >
             {pending ? t("submittingButton") : t("submitButton")}
           </button>
@@ -155,7 +155,7 @@ export function QuizForm({
             type="button"
             onClick={goNext}
             disabled={pending}
-            className="bg-teal-deep text-off-white hover:bg-teal font-heading inline-flex h-11 items-center justify-center rounded-md px-5 text-sm font-semibold transition-colors disabled:cursor-not-allowed disabled:opacity-50"
+            className="bg-teal-deep text-off-white hover:bg-teal focus-visible:ring-chartreuse font-heading inline-flex h-11 items-center justify-center rounded-md px-5 text-sm font-semibold transition-colors focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-offset-off-white focus-visible:outline-none disabled:cursor-not-allowed disabled:opacity-50"
           >
             {t("nextButton")} →
           </button>
