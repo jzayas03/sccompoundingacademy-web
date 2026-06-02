@@ -24,16 +24,7 @@ export async function POST(request: Request): Promise<NextResponse> {
     const json = await handleUpload({
       body,
       request,
-      // NOTE: @vercel/blob v2.x requires onBeforeGenerateToken to accept
-      // (pathname, clientPayload, multipart) — the plan showed a zero-arg
-      // signature, which does not match the actual SDK types. The unused
-      // parameters are prefixed with _ to satisfy TypeScript's no-unused-vars
-      // rules while still conforming to the required function signature.
-      onBeforeGenerateToken: async (
-        _pathname: string,
-        _clientPayload: string | null,
-        _multipart: boolean,
-      ) => ({
+      onBeforeGenerateToken: async () => ({
         allowedContentTypes: [...VERIFICATION_ACCEPTED_TYPES],
         maximumSizeInBytes: VERIFICATION_MAX_BYTES,
         addRandomSuffix: true,
