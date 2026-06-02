@@ -7,8 +7,10 @@ import { buildConfirmationEmail } from "@/lib/emails/inscripcion-confirmacion";
 import { buildInternalEmail } from "@/lib/emails/inscripcion-interna";
 import { getCourseById, formatPrice } from "@/lib/courses";
 import { getCohort, formatCohortLabel, formatCohortDate } from "@/lib/cohorts";
+import { sql } from "drizzle-orm";
 import { db } from "@/lib/db";
 import { users } from "@/lib/db/schema";
+import { initialVerificationFor } from "@/lib/portal/initial-verification";
 
 export const runtime = "nodejs";
 
@@ -178,6 +180,7 @@ export async function POST(req: Request) {
     const phone = record.telefono || null;
     const license = record.licencia || null;
     const professionalType = md.tipo_profesional?.trim() || null;
+    const studentVerification = initialVerificationFor(tier);
     try {
       await db
         .insert(users)
@@ -185,6 +188,7 @@ export async function POST(req: Request) {
           email,
           name: record.nombre || null,
           tier,
+          studentVerification,
           paidAt: new Date(),
           stripeCustomerId,
           cohortId: cohort.id,
@@ -197,6 +201,13 @@ export async function POST(req: Request) {
           set: {
             name: record.nombre || undefined,
             tier,
+            // Preserve an existing approval across webhook replays / duplicate
+            // events; only (re)set to pending when not already approved.
+            ...(tier === "student"
+              ? {
+                  studentVerification: sql`case when ${users.studentVerification} = 'approved' then ${users.studentVerification} else 'pending'::"public"."student_verification_status" end`,
+                }
+              : {}),
             paidAt: new Date(),
             stripeCustomerId,
             cohortId: cohort.id,

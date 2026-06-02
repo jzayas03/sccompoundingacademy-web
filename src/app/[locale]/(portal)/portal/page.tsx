@@ -11,6 +11,7 @@ import { db } from "@/lib/db";
 import { users, type User } from "@/lib/db/schema";
 import { isEligibleForCertificate } from "@/lib/certificates";
 import { isAdminEmail } from "@/lib/admin";
+import { resolveVerificationGate } from "@/lib/portal/verification-gate";
 import { AcpeDisclosure } from "@/components/portal/AcpeDisclosure";
 import { InstructorHero } from "@/components/portal/InstructorHero";
 
@@ -58,6 +59,18 @@ export default async function PortalDashboardPage({
     .limit(1);
   if (!user) {
     redirect(`/${locale}/portal/login`);
+  }
+
+  // Student-tier users must pass matrícula verification before the
+  // dashboard renders. Owners and the profesional tier are unaffected.
+  if (
+    resolveVerificationGate({
+      isOwner: isAdminEmail(session.user.email),
+      tier: user.tier,
+      studentVerification: user.studentVerification,
+    }) === "redirect-verificacion"
+  ) {
+    redirect(`/${locale}/portal/verificacion`);
   }
 
   // Cert eligibility surfaces a top-of-dashboard CTA when all three

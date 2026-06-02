@@ -89,7 +89,7 @@
       "sections": [
         {
           "heading": "1. Información que recopilamos",
-          "body": "Recopilamos la información que tú mismo nos provees cuando completas formularios en el Sitio, te inscribes en un curso, o nos contactas. Esto incluye, según el caso: nombre completo, dirección de correo electrónico, número telefónico, número de licencia profesional (cuando aplica), información de pago (procesada por nuestro procesador de pago, ver sección 4), y cualquier comentario o consulta que nos envíes.\n\nTambién recopilamos automáticamente cierta información técnica cuando navegas el Sitio: dirección IP, tipo y versión de navegador, sistema operativo, páginas visitadas, fecha y duración de la visita, y la referencia (URL desde la que llegaste). Esta información se recopila mediante cookies y tecnologías similares.\n\nNo recopilamos categorías especiales de datos sensibles (origen racial, opiniones políticas, salud, orientación sexual, etc.) salvo cuando tú expresamente nos los proveas para un fin legítimo identificado."
+          "body": "Recopilamos la información que tú mismo nos provees cuando completas formularios en el Sitio, te inscribes en un curso, o nos contactas. Esto incluye, según el caso: nombre completo, dirección de correo electrónico, número telefónico, número de licencia profesional (cuando aplica), información de pago (procesada por nuestro procesador de pago, ver sección 4), y cualquier comentario o consulta que nos envíes. Para estudiantes que solicitan la tarifa reducida, recopilamos también una foto o copia de la matrícula estudiantil, que se utiliza únicamente para verificar su elegibilidad y se elimina una vez completada la verificación.\n\nTambién recopilamos automáticamente cierta información técnica cuando navegas el Sitio: dirección IP, tipo y versión de navegador, sistema operativo, páginas visitadas, fecha y duración de la visita, y la referencia (URL desde la que llegaste). Esta información se recopila mediante cookies y tecnologías similares.\n\nNo recopilamos categorías especiales de datos sensibles (origen racial, opiniones políticas, salud, orientación sexual, etc.) salvo cuando tú expresamente nos los proveas para un fin legítimo identificado."
         },
         {
           "heading": "2. Cómo usamos tu información",
@@ -761,6 +761,22 @@
       "pendingTitle": "Pre-test pendiente",
       "pendingBody": "El banco de preguntas para este módulo aún no ha sido producido. Te avisaremos cuando esté listo.",
       "backToDashboard": "Volver al panel"
+    },
+    "verificacion": {
+      "eyebrow": "Verificación de estudiante",
+      "title": "Sube tu matrícula",
+      "intro": "Para activar tu acceso con la tarifa de estudiante, sube una foto o PDF de tu matrícula vigente. La revisamos manualmente y te avisamos por correo.",
+      "instructions": "Acepta JPG, PNG o PDF, hasta 8 MB. Asegúrate de que se lea con claridad tu nombre y la institución.",
+      "chooseFile": "Seleccionar archivo",
+      "submit": "Enviar para revisión",
+      "submitting": "Subiendo…",
+      "pendingTitle": "Matrícula en revisión",
+      "pendingBody": "Recibimos tu documento. Te avisaremos por correo en cuanto lo verifiquemos. Puedes cerrar esta página.",
+      "rejectedTitle": "No pudimos verificar tu matrícula",
+      "rejectedBody": "La foto anterior no nos sirvió. Por favor sube una foto clara y vigente.",
+      "errorType": "Formato no válido. Usa JPG, PNG o PDF.",
+      "errorSize": "El archivo supera el límite de 8 MB.",
+      "errorUpload": "No pudimos subir el archivo. Verifica tu conexión e intenta de nuevo."
     }
   },
   "resenas": {

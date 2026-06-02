@@ -41,6 +41,19 @@ import type { AdapterAccountType } from "next-auth/adapters";
  */
 export const tierEnum = pgEnum("tier", ["pharmacist", "profesional", "student"]);
 
+/**
+ * Student-tier verification state. Set to "pending" by the Stripe webhook
+ * when a student-tier enrollment is upserted; the owner moves it to
+ * "approved" or "rejected" from /portal/admin. Null for the profesional
+ * tier (no verification required) and for rows created before this column
+ * existed.
+ */
+export const studentVerificationStatus = pgEnum("student_verification_status", [
+  "pending",
+  "approved",
+  "rejected",
+]);
+
 export const users = pgTable("user", {
   id: text("id")
     .primaryKey()
@@ -64,6 +77,17 @@ export const users = pgTable("user", {
   /** "farmaceutico" | "tecnico" — only meaningful for the profesional
    * tier; null for student-tier enrollees. */
   professionalType: text("professional_type"),
+  /** Student-tier identity verification. Null for profesional tier. */
+  studentVerification: studentVerificationStatus("student_verification"),
+  /** Vercel Blob URL of the uploaded matrícula photo. Cleared (null) the
+   * moment the owner approves or rejects — the document is not retained. */
+  verificationDocUrl: text("verification_doc_url"),
+  /** When the student submitted their matrícula for review. */
+  verificationSubmittedAt: timestamp("verification_submitted_at", { mode: "date" }),
+  /** Set when the owner approves; mutually exclusive with rejectedAt. */
+  verifiedAt: timestamp("verified_at", { mode: "date" }),
+  /** Set when the owner rejects; mutually exclusive with verifiedAt. */
+  rejectedAt: timestamp("rejected_at", { mode: "date" }),
   createdAt: timestamp("created_at", { mode: "date" }).defaultNow().notNull(),
 });
 

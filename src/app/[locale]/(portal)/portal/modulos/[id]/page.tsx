@@ -13,6 +13,7 @@ import { users, quizAttempts } from "@/lib/db/schema";
 import { getQuiz, type ModuleQuizId } from "@/lib/quizzes";
 import { isAdminEmail } from "@/lib/admin";
 import { resolveModuleAccess } from "@/lib/portal/module-access";
+import { resolveVerificationGate } from "@/lib/portal/verification-gate";
 import { ModulePdfViewer } from "@/components/portal/ModulePdfViewer";
 
 export const metadata: Metadata = {
@@ -94,6 +95,20 @@ export default async function ModulePage({
   // outcome (a paid non-owner on a module that has a quiz); owners and
   // unpaid users are decided without touching the DB.
   const isOwner = isAdminEmail(session.user.email);
+
+  // Defense-in-depth: student-tier users who have not passed matrícula
+  // verification are redirected before any module content is served.
+  // Owners and the profesional tier bypass this gate.
+  if (
+    resolveVerificationGate({
+      isOwner,
+      tier: user.tier,
+      studentVerification: user.studentVerification,
+    }) === "redirect-verificacion"
+  ) {
+    redirect(`/${locale}/portal/verificacion`);
+  }
+
   const hasPaid = Boolean(user.paidAt);
   const hasQuiz = getQuiz(id as ModuleQuizId).length > 0;
 

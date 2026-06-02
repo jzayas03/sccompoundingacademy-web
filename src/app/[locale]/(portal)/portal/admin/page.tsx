@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import { redirect } from "next/navigation";
-import { desc, eq, isNotNull } from "drizzle-orm";
+import { and, desc, eq, isNotNull } from "drizzle-orm";
 import { setRequestLocale } from "next-intl/server";
 import { Container } from "@/components/ui/Container";
 import { GlassCard } from "@/components/glass/GlassCard";
@@ -11,7 +11,12 @@ import { isAdminEmail } from "@/lib/admin";
 import { listCohorts, formatCohortLabel, type Cohort } from "@/lib/cohorts";
 import { professionLabel } from "@/lib/professions";
 import { Link } from "@/i18n/routing";
-import { approveReview, archiveReview } from "./actions";
+import {
+  approveReview,
+  archiveReview,
+  approveStudentVerification,
+  rejectStudentVerification,
+} from "./actions";
 
 export const metadata: Metadata = {
   title: "Administración · SCCA Portal",
@@ -114,6 +119,23 @@ export default async function AdminPage({
     .from(certificates)
     .leftJoin(users, eq(certificates.userId, users.id))
     .orderBy(desc(certificates.issuedAt));
+
+  const pendingVerifications = await db
+    .select({
+      id: users.id,
+      name: users.name,
+      email: users.email,
+      docUrl: users.verificationDocUrl,
+      submittedAt: users.verificationSubmittedAt,
+    })
+    .from(users)
+    .where(
+      and(
+        eq(users.studentVerification, "pending"),
+        isNotNull(users.verificationDocUrl),
+      ),
+    )
+    .orderBy(desc(users.verificationSubmittedAt));
 
   const cohortList = await listCohorts();
   const cohortById = new Map(
@@ -223,6 +245,72 @@ export default async function AdminPage({
                   improve={r.improve}
                   submittedAt={r.submittedAt}
                 />
+              </li>
+            ))}
+          </ul>
+        </section>
+      )}
+
+      {/* Pending student verifications — matrícula uploaded, awaiting decision */}
+      {pendingVerifications.length > 0 && (
+        <section aria-labelledby="verif-pendientes-heading" className="mt-12">
+          <h2
+            id="verif-pendientes-heading"
+            className="font-heading text-teal-deep text-xl font-semibold sm:text-2xl"
+          >
+            Verificación de estudiantes ({pendingVerifications.length})
+          </h2>
+          <p className="text-gray-700 mt-2 text-sm">
+            Estos estudiantes subieron su matrícula. Aprueba para darles acceso,
+            o rechaza para pedir otra foto. La imagen se elimina al decidir.
+          </p>
+          <ul className="mt-6 grid grid-cols-1 gap-4 sm:grid-cols-2">
+            {pendingVerifications.map((v) => (
+              <li
+                key={v.id}
+                className="border-gray-300 rounded-lg border bg-white p-5 shadow-sm"
+              >
+                <p className="font-heading text-teal-deep text-base font-semibold">
+                  {v.name ?? "Estudiante"}
+                </p>
+                <p className="text-gray-700 text-xs">{v.email}</p>
+                <p className="text-gray-700 mt-1 text-xs">
+                  Subida: {fmtDate(v.submittedAt)}
+                </p>
+                {v.docUrl && (
+                  <a
+                    href={v.docUrl}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="mt-3 block"
+                  >
+                    {/* Image OR a PDF link, depending on the upload. */}
+                    {/* eslint-disable-next-line @next/next/no-img-element */}
+                    <img
+                      src={v.docUrl}
+                      alt={`Matrícula de ${v.name ?? v.email}`}
+                      className="border-gray-300 max-h-64 w-full rounded-md border object-contain"
+                    />
+                  </a>
+                )}
+                <div className="mt-4 flex flex-wrap gap-3">
+                  <form action={approveStudentVerification.bind(null, v.id)}>
+                    <button
+                      type="submit"
+                      className="bg-chartreuse text-teal-deep focus-visible:ring-chartreuse font-heading inline-flex h-10 items-center rounded-md px-4 text-sm font-semibold transition-colors focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none"
+                    >
+                      Aprobar
+                    </button>
+                  </form>
+                  <form action={rejectStudentVerification.bind(null, v.id)}>
+                    <button
+                      type="submit"
+                      className="border-gray-300 text-gray-900 hover:bg-gray-100 focus-visible:ring-teal-deep font-heading inline-flex h-10 items-center rounded-md border bg-white px-4 text-sm font-semibold transition-colors focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none"
+                    >
+                      Rechazar
+                    </button>
+                  </form>
+                </div>
               </li>
             ))}
           </ul>
