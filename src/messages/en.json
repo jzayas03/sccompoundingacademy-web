@@ -755,6 +755,22 @@
       "pendingTitle": "Pre-test pending",
       "pendingBody": "The question bank for this module has not been produced yet. We will let you know when it is ready.",
       "backToDashboard": "Back to dashboard"
+    },
+    "verificacion": {
+      "eyebrow": "Student verification",
+      "title": "Upload your student ID",
+      "intro": "To activate your student-rate access, upload a photo or PDF of your current student ID (matrícula). We review it manually and email you the result.",
+      "instructions": "Accepts JPG, PNG, or PDF, up to 8 MB. Make sure your name and institution are clearly legible.",
+      "chooseFile": "Choose file",
+      "submit": "Submit for review",
+      "submitting": "Uploading…",
+      "pendingTitle": "Student ID under review",
+      "pendingBody": "We received your document. We'll email you as soon as it's verified. You can close this page.",
+      "rejectedTitle": "We couldn't verify your student ID",
+      "rejectedBody": "The previous photo didn't work. Please upload a clear, current photo.",
+      "errorType": "Invalid format. Use JPG, PNG, or PDF.",
+      "errorSize": "The file exceeds the 8 MB limit.",
+      "errorUpload": "We couldn't upload the file. Check your connection and try again."
     }
   },
   "resenas": {
