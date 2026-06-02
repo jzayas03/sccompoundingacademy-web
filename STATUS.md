@@ -1,6 +1,6 @@
 # SCCA — Project Status
 
-> **Last updated**: 2026-05-26
+> **Last updated**: 2026-06-02
 >
 > **What this is**: Single-source-of-truth status doc for handoff between
 > sessions or contributors. Read this first to pick up cleanly.
@@ -122,7 +122,7 @@ SCCA is a Puerto Rico LLC affiliated with Santa Cruz Pharma Care
 | Portal auth | **NextAuth (Auth.js v5) magic-link via Resend** | No passwords, magic-link flow, JWT session strategy (Edge-compatible middleware) |
 | Module content format | **PDF presentations** (was AI-narrated video → dropped Mux) | Simpler ship, $45/year saved, easier to revise mid-cohort |
 | Pricing model | **2-tier, 2 Stripe Products** | Profesional $2,350 (RPh + licensed techs) · Estudiante $495 (pre-licensure). Each tier is its own Stripe Product; the route resolves the Price ID by tier. |
-| Student-tier verification | **Hybrid pragmatic** — institutional email allowlist + manual Stripe coupon | Phase A trusts honor system + 28 PR institutional domains; Phase B adds Student ID upload UI if abuse appears |
+| Student-tier verification | **Matrícula photo gate (Phase B shipped)** — student-tier portal access requires uploading a matrícula photo at `/portal/verificacion`; owner reviews submissions (Aprobar / Rechazar) in `/portal/admin`; approved students unlock the portal. Photo stored in Vercel Blob, deleted on decision. Owners (`ADMIN_EMAILS`) bypass the gate. Requires: `BLOB_READ_WRITE_TOKEN` env var (Production + Preview) and migration `drizzle/0006_student_verification.sql` applied to Neon DB (idempotent). Phase A institutional-email allowlist remains in place for initial screening. |
 | Cert format | **PDF server-generated** via pdf-lib | Local generation, no external dep; vector PDF template overlay when owner provides one |
 | Cert numbering | `SCCA-{YYYY}-{NNN}` sequential per year | Human-readable, traceable, year-resets |
 | Quiz passing score | **70 %** (env-configurable via `QUIZ_PASSING_THRESHOLD`) | Threshold for participation certificate, owner can change without deploy |
