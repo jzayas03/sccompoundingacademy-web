@@ -36,6 +36,13 @@ export type CertRenderInput = {
   studentName: string;     // Display-cased; we render verbatim
   issuedAt: Date;
   verificationUrl: string; // "https://sccompoundingacademy.com/verificar/SCCA-..."
+  /**
+   * Whether the cert states the ACPE CE credit ("1.8 CEUs"). Only the
+   * licensed tiers (profesional / pharmacist) earn ACPE continuing-
+   * education credit; non-licensed students complete the same 18 contact
+   * hours but receive no CEUs, so their cert omits the credit token.
+   */
+  awardsCeus: boolean;
 };
 
 const PAGE_W = 842;
@@ -200,12 +207,18 @@ function drawOverlay(
     font: helvetica,
     color: COLOR.gray900,
   });
-  drawCentered(page, "18 contact hours · 1.8 CEUs · Knowledge-based, Level 1", {
-    y: 221,
-    size: 10,
-    font: helvetica,
-    color: COLOR.gray900,
-  });
+  drawCentered(
+    page,
+    input.awardsCeus
+      ? "18 contact hours · 1.8 CEUs · Knowledge-based, Level 1"
+      : "18 contact hours · Knowledge-based, Level 1",
+    {
+      y: 221,
+      size: 10,
+      font: helvetica,
+      color: COLOR.gray900,
+    },
+  );
   drawCentered(page, "ACPE Provider 0151 — Puerto Rico College of Pharmacists", {
     y: 205,
     size: 9,
@@ -354,12 +367,18 @@ function drawPlaceholderBody(
       color: COLOR.tealDeep,
     },
   );
-  drawCentered(page, "18 horas de contacto · 1.8 CEUs · Knowledge-based, Level 1", {
-    y: PAGE_H - 384,
-    size: 10,
-    font: helvetica,
-    color: COLOR.gray900,
-  });
+  drawCentered(
+    page,
+    input.awardsCeus
+      ? "18 horas de contacto · 1.8 CEUs · Knowledge-based, Level 1"
+      : "18 horas de contacto · Knowledge-based, Level 1",
+    {
+      y: PAGE_H - 384,
+      size: 10,
+      font: helvetica,
+      color: COLOR.gray900,
+    },
+  );
   drawCentered(
     page,
     "Acreditado por el Colegio de Farmacéuticos de Puerto Rico — ACPE Provider 0151",

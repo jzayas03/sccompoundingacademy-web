@@ -50,6 +50,13 @@ export async function GET() {
     return NextResponse.json({ error: "User not found" }, { status: 401 });
   }
 
+  // ACPE CE credit ("1.8 CEUs") is earned only by the licensed tiers
+  // (profesional / pharmacist). Non-licensed students complete the same
+  // 18 contact hours but receive no CEUs, so their certificate omits the
+  // credit token. A null tier (owner/admin or legacy row) defaults to the
+  // credit-bearing variant.
+  const awardsCeus = user.tier !== "student";
+
   // Owner/admin preview path — renders the cert PDF with a placeholder
   // number so the academy can verify the design without paying or
   // consuming a real `SCCA-{YYYY}-{NNN}` slot. No DB insert, no
@@ -65,6 +72,7 @@ export async function GET() {
       studentName: user.name?.trim() || session.user.email,
       issuedAt: new Date(),
       verificationUrl: `${siteUrl}/verificar/${previewCertNo}`,
+      awardsCeus,
     });
     return new NextResponse(new Uint8Array(pdfBytes), {
       status: 200,
@@ -104,6 +112,7 @@ export async function GET() {
     studentName: user.name?.trim() || session.user.email,
     issuedAt: cert.issuedAt,
     verificationUrl,
+    awardsCeus,
   });
 
   return new NextResponse(new Uint8Array(pdfBytes), {
