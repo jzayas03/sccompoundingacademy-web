@@ -55,6 +55,17 @@ const FROM_ADDRESS =
   "Santa Cruz Compounding Academy <noreply@sccompoundingacademy.com>";
 const REPLY_TO = process.env.EMAIL_REPLY_TO ?? "info@sccompoundingacademy.com";
 
+// "Información Importante" welcome packet (parking, schedule, dress code,
+// course-material instructions) attached to every confirmation email.
+// Resend downloads it from this hosted URL at send time, so the asset
+// lives in `public/docs/`. We use the APEX domain on purpose — www
+// redirects to the apex, and Resend does not follow redirects when
+// fetching an attachment `path` (the same reason the Stripe webhook URL
+// must be the apex). The recipient sees the accented display name.
+const WELCOME_PACKET_URL =
+  "https://sccompoundingacademy.com/docs/informacion-importante.pdf";
+const WELCOME_PACKET_FILENAME = "Información Importante - SCCA.pdf";
+
 function getResend(): Resend | null {
   const key = process.env.RESEND_API_KEY;
   if (!key) {
@@ -244,6 +255,12 @@ export async function POST(req: Request) {
         subject: conf.subject,
         html: conf.html,
         text: conf.text,
+        attachments: [
+          {
+            filename: WELCOME_PACKET_FILENAME,
+            path: WELCOME_PACKET_URL,
+          },
+        ],
       });
     } catch (err) {
       console.error("[stripe-webhook] confirmation email failed", err);

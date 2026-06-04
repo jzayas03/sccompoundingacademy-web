@@ -206,13 +206,13 @@ function ModuleView({
         )}
       </div>
 
-      {/* Viewer — the ES/EN toggle, the PDF object, the download button,
+      {/* Viewer — the ES/EN toggle, the inline (view-only) PDF object,
           and the "coming soon" fallback all live in ModulePdfViewer. */}
       <section aria-label={t("viewerTitle")} className="mt-10">
         <ModulePdfViewer esPdfHref={esPdfHref} enPdfHref={enPdfHref} />
       </section>
 
-      {/* Action row — download + post-test link.
+      {/* Action row — post-test link.
           PR 5 swaps the post-test CTA's `href` to /portal/modulos/[id]/post-test
           once the quiz engine ships; until then the button is rendered
           disabled with an explanatory hint. */}

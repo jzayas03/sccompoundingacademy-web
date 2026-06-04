@@ -12,10 +12,13 @@ import { GlassCard } from "@/components/glass/GlassCard";
  * The server module page checks which files exist and passes the hrefs
  * here:
  *
- *   - both present  → an ES/EN toggle appears; the viewer and the
- *                      download button follow the selected language.
+ *   - both present  → an ES/EN toggle appears; the viewer follows the
+ *                      selected language.
  *   - one present   → that language renders, no toggle.
  *   - none present  → a "coming soon" card.
+ *
+ * View-only: the module is shown inline and intentionally offers no
+ * download link, so the course material stays inside the portal.
  *
  * Forward-compatible: the toggle simply appears the day the owner
  * uploads the English PDFs — no code change needed.
@@ -77,6 +80,11 @@ export function ModulePdfViewer({ esPdfHref, enPdfHref }: Props) {
         </div>
       )}
 
+      {/* View-only: the module is presented inline through the <object>
+          viewer; no download link is offered so the course material stays
+          inside the portal. (Note: the native PDF viewer's own toolbar and
+          a direct hit on the .pdf URL are outside this component's control —
+          true download-prevention would require a pdf.js canvas renderer.) */}
       <GlassCard className="overflow-hidden p-0">
         <object
           data={href}
@@ -86,16 +94,6 @@ export function ModulePdfViewer({ esPdfHref, enPdfHref }: Props) {
           <p className="text-gray-900 p-6 text-sm">{t("viewerFallback")}</p>
         </object>
       </GlassCard>
-
-      <div className="mt-4">
-        <a
-          href={href}
-          download
-          className="border-teal-deep text-teal-deep bg-white shadow-soft hover:bg-teal-deep hover:text-off-white hover:shadow-lift focus-visible:ring-chartreuse font-heading inline-flex h-12 items-center justify-center rounded-md border-2 px-6 text-sm font-semibold transition-[color,background-color,box-shadow,transform] duration-200 ease-out focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-offset-white focus-visible:outline-none motion-safe:hover:-translate-y-px"
-        >
-          {t("downloadCta")} ↓
-        </a>
-      </div>
     </div>
   );
 }

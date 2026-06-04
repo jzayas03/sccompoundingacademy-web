@@ -66,7 +66,7 @@ export function InscripcionForm({
   const [tier, setTier] = useState<Tier>(DEFAULT_TIER);
   // Profession — captured for the profesional tier. Farmacéutico/Técnico
   // feed the ACPE registry; "otro" lets non-pharmacy professionals
-  // self-identify without changing the price (they stay on the $2,350
+  // self-identify without changing the price (they stay on the $2,500
   // profesional tier — the $495 student price is students-only).
   const [tipoProfesional, setTipoProfesional] = useState<
     "farmaceutico" | "tecnico" | "otro" | ""
