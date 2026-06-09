@@ -5,6 +5,8 @@ import { stripe } from "@/lib/stripe";
 import { getCourseById, getPricingByTier } from "@/lib/courses";
 import { getCohort } from "@/lib/cohorts";
 import { getSiteUrl } from "@/lib/siteUrl";
+import { rateLimit, clientIp } from "@/lib/ratelimit";
+import { verifyTurnstile } from "@/lib/turnstile";
 
 export const runtime = "nodejs";
 
@@ -48,11 +50,30 @@ const InscripcionSchema = z.object({
   }),
   acepto_version_docs: z.string().trim().min(1),
   locale: z.enum(["es", "en"]),
+  // Cloudflare Turnstile token from the browser widget. Optional in the
+  // schema so the form keeps working before Turnstile is wired up; when
+  // TURNSTILE_SECRET_KEY is configured, `verifyTurnstile` rejects a missing
+  // or invalid token below.
+  turnstile_token: z.string().trim().max(2048).optional().or(z.literal("")),
 });
 
 export type InscripcionPayload = z.infer<typeof InscripcionSchema>;
 
 export async function POST(req: Request) {
+  // ── Abuse shield 1: per-IP rate limit ────────────────────────────────
+  // Cheapest check first, before parsing or any Stripe call. Caps how fast
+  // a single source can spin up Checkout Sessions (bot spam, card-testing
+  // probes). 8 attempts/minute is generous for a human filling a form,
+  // hostile to a script. No-op when Upstash isn't configured.
+  const ip = clientIp(req);
+  const rl = await rateLimit("inscripcion", ip, 8, 60);
+  if (!rl.success) {
+    return NextResponse.json(
+      { error: "Demasiados intentos. Espera un momento e inténtalo de nuevo." },
+      { status: 429, headers: { "Retry-After": String(rl.retryAfterSeconds) } },
+    );
+  }
+
   let body: unknown;
   try {
     body = await req.json();
@@ -77,6 +98,24 @@ export async function POST(req: Request) {
   }
   const data = parsed.data;
 
+  // ── Abuse shield 2: Cloudflare Turnstile (CAPTCHA) ───────────────────
+  // Proves a human (well, a browser that solved the challenge) is behind
+  // this submission. No-op when TURNSTILE_SECRET_KEY isn't configured.
+  const turnstile = await verifyTurnstile(data.turnstile_token, ip);
+  if (!turnstile.success) {
+    console.warn("[inscripcion] Turnstile rejected", {
+      ip,
+      errorCodes: turnstile.errorCodes,
+    });
+    return NextResponse.json(
+      {
+        error:
+          "No pudimos verificar que eres una persona. Recarga la página e inténtalo de nuevo.",
+      },
+      { status: 403 },
+    );
+  }
+
   // Resolve catalogue references — fail fast if course/cohort don't exist
   // or if the cohort doesn't belong to the course (rejects URL tampering).
   const course = getCourseById(data.curso_id);
@@ -90,10 +129,8 @@ export async function POST(req: Request) {
 
   // Capture audit-trail facts from the request (server-side, can't be
   // spoofed by the client). The browser-supplied legal-acceptance flag
-  // gets timestamped/IP-stamped here.
-  const ipHeader =
-    req.headers.get("x-forwarded-for") ?? req.headers.get("x-real-ip") ?? "unknown";
-  const ip = ipHeader.split(",")[0]?.trim() ?? "unknown";
+  // gets timestamped/IP-stamped here. `ip` is the same client IP resolved
+  // at the top of the handler for rate limiting.
   const userAgent = req.headers.get("user-agent") ?? "unknown";
   const acceptedAt = new Date().toISOString();
 

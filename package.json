@@ -26,6 +26,8 @@
     "@auth/drizzle-adapter": "^1.11.2",
     "@neondatabase/serverless": "^1.1.0",
     "@stripe/stripe-js": "^9.5.0",
+    "@upstash/ratelimit": "^2.0.8",
+    "@upstash/redis": "^1.38.0",
     "@vercel/blob": "^2.4.0",
     "clsx": "^2.1",
     "drizzle-orm": "^0.45.2",

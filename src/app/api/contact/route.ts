@@ -1,5 +1,6 @@
 import { z } from "zod";
 import { Resend } from "resend";
+import { rateLimit, clientIp } from "@/lib/ratelimit";
 
 const schema = z.object({
   name: z.string().min(1).max(120),
@@ -10,26 +11,18 @@ const schema = z.object({
   locale: z.enum(["es", "en"]),
 });
 
-// in-memory token bucket (per process, per IP) — fine for low-traffic launch
-const RATE: Map<string, { count: number; resetAt: number }> = new Map();
-const WINDOW_MS = 60_000;
-const LIMIT = 5;
-
-function rateLimited(ip: string): boolean {
-  const now = Date.now();
-  const entry = RATE.get(ip);
-  if (!entry || entry.resetAt < now) {
-    RATE.set(ip, { count: 1, resetAt: now + WINDOW_MS });
-    return false;
-  }
-  entry.count += 1;
-  return entry.count > LIMIT;
-}
-
 export async function POST(req: Request) {
-  const ip = req.headers.get("x-forwarded-for")?.split(",")[0]?.trim() || "unknown";
-  if (rateLimited(ip)) {
-    return Response.json({ error: "rate_limited" }, { status: 429 });
+  // Distributed per-IP rate limit (Upstash). Replaces the old in-memory
+  // token bucket, which reset on every serverless cold start and wasn't
+  // shared across instances — so it didn't actually hold. No-op when
+  // Upstash isn't configured.
+  const ip = clientIp(req);
+  const rl = await rateLimit("contact", ip, 5, 60);
+  if (!rl.success) {
+    return Response.json(
+      { error: "rate_limited" },
+      { status: 429, headers: { "Retry-After": String(rl.retryAfterSeconds) } },
+    );
   }
 
   const json = await req.json().catch(() => null);

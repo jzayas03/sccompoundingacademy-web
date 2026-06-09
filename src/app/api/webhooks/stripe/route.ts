@@ -7,10 +7,11 @@ import { buildConfirmationEmail } from "@/lib/emails/inscripcion-confirmacion";
 import { buildInternalEmail } from "@/lib/emails/inscripcion-interna";
 import { getCourseById, formatPrice } from "@/lib/courses";
 import { getCohort, formatCohortLabel, formatCohortDate } from "@/lib/cohorts";
-import { sql } from "drizzle-orm";
+import { sql, eq } from "drizzle-orm";
 import { db } from "@/lib/db";
-import { users } from "@/lib/db/schema";
+import { users, processedStripeEvents } from "@/lib/db/schema";
 import { initialVerificationFor } from "@/lib/portal/initial-verification";
+import { sendOpsAlert } from "@/lib/alerts";
 
 export const runtime = "nodejs";
 
@@ -100,6 +101,29 @@ export async function POST(req: Request) {
     return NextResponse.json({ received: true, ignored: event.type });
   }
 
+  // ── Idempotency claim ────────────────────────────────────────────────
+  // Stripe delivers AT-LEAST-once: this exact event may have been handled
+  // already (a prior delivery, or a manual "resend" from the dashboard).
+  // Atomically claim it by inserting its id; if the row already exists the
+  // insert no-ops and we short-circuit, so the confirmation + internal
+  // emails are sent exactly once. Wrapped in try/catch: if the dedup table
+  // is unreachable we fall through and process anyway — the user upsert is
+  // already replay-safe (onConflictDoUpdate) and a duplicate email is a far
+  // better failure than dropping a real enrollment.
+  try {
+    const claim = await db
+      .insert(processedStripeEvents)
+      .values({ eventId: event.id, eventType: event.type })
+      .onConflictDoNothing({ target: processedStripeEvents.eventId })
+      .returning({ eventId: processedStripeEvents.eventId });
+    if (claim.length === 0) {
+      // Already processed — acknowledge without re-running side effects.
+      return NextResponse.json({ received: true, duplicate: event.id });
+    }
+  } catch (err) {
+    console.error("[stripe-webhook] dedup claim failed — processing anyway", err);
+  }
+
   const session = event.data.object as Stripe.Checkout.Session;
   const md = (session.metadata ?? {}) as Record<string, string>;
 
@@ -110,6 +134,14 @@ export async function POST(req: Request) {
       "[stripe-webhook] session metadata missing/invalid course or cohort",
       { md, session_id: session.id },
     );
+    // A real payment we can't attribute to a course/cohort — needs a human.
+    await sendOpsAlert("Pago recibido con metadata inválida", {
+      stripe_session_id: session.id,
+      customer_email: session.customer_email ?? "",
+      curso_id: md.curso_id ?? "(vacío)",
+      cohorte_id: md.cohorte_id ?? "(vacío)",
+      accion: "Reconciliar manualmente en el panel de Stripe.",
+    });
     // Still return 200 so Stripe doesn't retry — this is unrecoverable
     // without operator intervention; the session lives in Stripe's
     // dashboard for manual reconciliation.
@@ -229,6 +261,31 @@ export async function POST(req: Request) {
         });
     } catch (err) {
       console.error("[stripe-webhook] users upsert failed", err);
+      // The student paid but the portal DB didn't record it — their
+      // dashboard won't unlock. RELEASE the idempotency claim so a manual
+      // "resend" from the Stripe dashboard reprocesses this event and heals
+      // the DB (the upsert is itself replay-safe). The only cost is that a
+      // resend will re-send the confirmation email — an acceptable, operator-
+      // initiated trade-off. Best-effort: if the release itself fails, the
+      // alert below still tells the owner to fix the DB directly.
+      try {
+        await db
+          .delete(processedStripeEvents)
+          .where(eq(processedStripeEvents.eventId, event.id));
+      } catch (releaseErr) {
+        console.error("[stripe-webhook] failed to release dedup claim", releaseErr);
+      }
+      // Alert so the owner can act before the student is locked out.
+      // (Airtable + emails below still run.)
+      await sendOpsAlert("Pago OK pero falló el upsert en la base del portal", {
+        email,
+        stripe_session_id: session.id,
+        tier,
+        cohorte_id: cohort.id,
+        error: err,
+        accion:
+          "Verificar la DB (Neon). El registro está en Stripe/Airtable; reenviar el evento desde el panel de Stripe sana la DB.",
+      });
     }
   }
 

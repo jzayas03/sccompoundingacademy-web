@@ -1,8 +1,14 @@
 "use client";
 import { useState, useMemo } from "react";
+import Script from "next/script";
 import { useTranslations } from "next-intl";
 import { Link } from "@/i18n/routing";
 import { COURSES, DEFAULT_TIER, type Tier } from "@/lib/courses";
+
+// Cloudflare Turnstile public site key. When unset (local dev, or before
+// the widget is provisioned) the widget is not rendered and the server
+// skips verification — enrollment keeps working either way.
+const TURNSTILE_SITE_KEY = process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY;
 
 /** One open cohort, with its label already formatted server-side in the
  * page's locale (cohort data lives in the DB — see `lib/cohorts.ts`). */
@@ -113,6 +119,9 @@ export function InscripcionForm({
       acepto_terminos: accepted,
       acepto_version_docs: docsVersion,
       locale,
+      // Cloudflare Turnstile injects this hidden field into the form once
+      // the challenge is solved. Empty when Turnstile isn't configured.
+      turnstile_token: String(fd.get("cf-turnstile-response") ?? ""),
     };
 
     setSubmitting(true);
@@ -377,6 +386,27 @@ export function InscripcionForm({
           </span>
         </label>
       </div>
+
+      {/* Cloudflare Turnstile (CAPTCHA) — invisible/managed challenge that
+          blocks automated submissions before a Stripe Checkout Session is
+          created. Rendered only when the public site key is configured;
+          the script injects a hidden `cf-turnstile-response` input into the
+          form, which onSubmit forwards to the server for verification. */}
+      {TURNSTILE_SITE_KEY && (
+        <>
+          <Script
+            src="https://challenges.cloudflare.com/turnstile/v0/api.js"
+            async
+            defer
+          />
+          <div
+            className="cf-turnstile"
+            data-sitekey={TURNSTILE_SITE_KEY}
+            data-theme="light"
+            data-language={locale}
+          />
+        </>
+      )}
 
       {/* Submit — final price is rendered by Stripe Checkout, not in our UI. */}
       <div className="border-gray-300 flex flex-col gap-4 border-t pt-6 sm:flex-row sm:items-center sm:justify-end">
