@@ -59,6 +59,53 @@ const InscripcionSchema = z.object({
 
 export type InscripcionPayload = z.infer<typeof InscripcionSchema>;
 
+/**
+ * Stripe idempotency key for a checkout submission.
+ *
+ * Stripe REJECTS a reused key whose request parameters differ from the
+ * first use: "Keys for idempotent requests can only be used with the same
+ * parameters they were first used with." The audit metadata we attach to
+ * the Checkout Session — `acepto_timestamp` (always `new Date()`),
+ * `acepto_ip`, `acepto_user_agent` — varies on every POST. So the key MUST
+ * incorporate that volatile data: otherwise a second enrollment attempt for
+ * the same (email, course, cohort, tier, locale) within Stripe's 24h
+ * idempotency window reuses the key with a fresh timestamp and Stripe
+ * throws — surfacing to the student as "No se pudo iniciar el cobro".
+ *
+ * Including `acceptedAt` (millisecond-precise server time) makes every
+ * distinct submission produce a distinct key, so the mismatch can't happen.
+ * An exact network-level retry of the SAME request (same acceptedAt) still
+ * shares the key and dedupes, which is the only thing an idempotency key
+ * usefully buys us here. Double-click is already guarded client-side (the
+ * submit button disables on first click), so we lose nothing.
+ *
+ * The previous implementation deliberately EXCLUDED acceptedAt to keep the
+ * key "stable" — but the body it was used with was not stable, which is
+ * exactly what Stripe forbids. That was the root cause of the intermittent
+ * enrollment failures (first attempt per combo worked; every retry failed).
+ */
+export function checkoutIdempotencyKey(parts: {
+  email: string;
+  cursoId: string;
+  cohorteId: string;
+  tier: string;
+  locale: string;
+  acceptedAt: string;
+}): string {
+  return createHash("sha256")
+    .update(
+      [
+        parts.email.trim().toLowerCase(),
+        parts.cursoId,
+        parts.cohorteId,
+        parts.tier,
+        parts.locale,
+        parts.acceptedAt,
+      ].join(":"),
+    )
+    .digest("hex");
+}
+
 export async function POST(req: Request) {
   // ── Abuse shield 1: per-IP rate limit ────────────────────────────────
   // Cheapest check first, before parsing or any Stripe call. Caps how fast
@@ -165,23 +212,19 @@ export async function POST(req: Request) {
   const successUrl = `${origin}/${data.locale}/${successPath}?session_id={CHECKOUT_SESSION_ID}`;
   const cancelUrl = `${origin}/${data.locale}/${cancelPath}`;
 
-  // Stripe idempotency key — deterministic over the *intent* of the
-  // submission (same email + course + cohort + tier + locale → same
-  // Checkout Session URL). A double-click or a network-retry within
-  // Stripe's 24h idempotency window returns the existing session
-  // instead of creating a duplicate. Excludes `acceptedAt` so the key
-  // is actually stable across the two requests.
-  const idempotencyKey = createHash("sha256")
-    .update(
-      [
-        data.email.trim().toLowerCase(),
-        data.curso_id,
-        data.cohorte_id,
-        data.tier,
-        data.locale,
-      ].join(":"),
-    )
-    .digest("hex");
+  // Stripe idempotency key — see `checkoutIdempotencyKey` for the full
+  // rationale. It MUST include `acceptedAt` because the request body
+  // carries that (and ip / user-agent) as audit metadata; a key reused
+  // with a different body is rejected by Stripe, which was the root cause
+  // of intermittent enrollment failures on retries.
+  const idempotencyKey = checkoutIdempotencyKey({
+    email: data.email,
+    cursoId: data.curso_id,
+    cohorteId: data.cohorte_id,
+    tier: data.tier,
+    locale: data.locale,
+    acceptedAt,
+  });
 
   try {
     const session = await stripe().checkout.sessions.create(
@@ -232,7 +275,14 @@ export async function POST(req: Request) {
     }
     return NextResponse.json({ url: session.url });
   } catch (err) {
-    console.error("[inscripcion] Stripe error", err);
+    // Surface Stripe's own type/code/message explicitly — the bare object
+    // was opaque in Vercel's log table and made this bug hard to diagnose.
+    const e = err as { type?: string; code?: string; message?: string };
+    console.error("[inscripcion] Stripe error", {
+      type: e?.type,
+      code: e?.code,
+      message: e?.message,
+    });
     return NextResponse.json(
       { error: "No se pudo iniciar el cobro. Intenta nuevamente o escríbenos." },
       { status: 500 },
