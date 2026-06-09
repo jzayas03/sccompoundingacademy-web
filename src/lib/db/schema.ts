@@ -217,6 +217,26 @@ export const reviewInvites = pgTable("review_invites", {
   sentAt: timestamp("sent_at", { mode: "date" }).defaultNow().notNull(),
 });
 
+/**
+ * Stripe webhook idempotency ledger — one row per Stripe event we have
+ * fully processed, keyed by Stripe's own `event.id` (evt_…).
+ *
+ * Stripe guarantees AT-LEAST-once delivery: the same event can arrive more
+ * than once (network retries, dashboard "resend"). Without a dedupe record
+ * each replay re-sends the confirmation + internal emails. The webhook
+ * claims an event by inserting here BEFORE doing its work; a duplicate
+ * insert conflicts on the primary key and the handler short-circuits.
+ *
+ * `eventType` is stored for operability (easy to eyeball what's been seen);
+ * `processedAt` supports a future retention sweep (these rows are pure
+ * bookkeeping and can be pruned after, say, 90 days).
+ */
+export const processedStripeEvents = pgTable("processed_stripe_events", {
+  eventId: text("event_id").primaryKey(),
+  eventType: text("event_type").notNull(),
+  processedAt: timestamp("processed_at", { mode: "date" }).defaultNow().notNull(),
+});
+
 export type User = typeof users.$inferSelect;
 export type NewUser = typeof users.$inferInsert;
 export type Cohort = typeof cohorts.$inferSelect;
@@ -225,3 +245,4 @@ export type Certificate = typeof certificates.$inferSelect;
 export type Review = typeof reviews.$inferSelect;
 export type ReviewInvite = typeof reviewInvites.$inferSelect;
 export type NewReviewInvite = typeof reviewInvites.$inferInsert;
+export type ProcessedStripeEvent = typeof processedStripeEvents.$inferSelect;
