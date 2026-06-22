@@ -96,3 +96,39 @@ export function getModuleCatalogue(
     ? (m.studentCurriculum?.modules ?? [])
     : (m.cursosGrid?.items?.[0]?.modules ?? []);
 }
+
+/**
+ * Owner-only effective-tier override for previewing both portals.
+ * Owners (ADMIN_EMAILS) may force the student or professional portal via
+ * a `?preview=` query param; everyone else always gets their real tier
+ * (a real student must never be able to spoof into another portal).
+ */
+export function resolveEffectiveTier(params: {
+  isOwner: boolean;
+  userTier: UserTier;
+  preview?: string | null;
+}): UserTier {
+  if (
+    params.isOwner &&
+    (params.preview === "student" || params.preview === "profesional")
+  ) {
+    return params.preview;
+  }
+  return params.userTier;
+}
+
+/**
+ * Cross-tier module lookup by id. Module ids are globally unique across
+ * tiers, so this resolves a module regardless of tier and reports which
+ * tier owns it (used for the owning-tier i18n catalogue). Owners use this
+ * to open any module; normal users stay tier-scoped via `resolveModule`.
+ */
+export function findModule(
+  id: string,
+): { module: CurriculumModule; tier: "profesional" | "student" } | null {
+  for (const tier of ["profesional", "student"] as const) {
+    const module = getCurriculum(tier).find((m) => m.id === id);
+    if (module) return { module, tier };
+  }
+  return null;
+}
