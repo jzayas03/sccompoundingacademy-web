@@ -14,12 +14,14 @@
  * curriculum with more than three modules needs a `scoreM4+` migration.
  */
 
+import type { ModuleQuizId } from "@/lib/quizzes/types";
+
 /** Mirror of `users.tier` (Drizzle `tierEnum` + nullable). */
 export type UserTier = "pharmacist" | "profesional" | "student" | null;
 
 export type CurriculumModule = {
   /** Route param + quiz-bank key, e.g. "modulo-1" | "usp-795". */
-  id: string;
+  id: ModuleQuizId;
   /** 1..N position; becomes quizAttempts.moduleId and scoreM{ordinal}. */
   ordinal: number;
   /** public/modulos/{pdfBasename}.pdf (and -en.pdf when present). */
@@ -67,3 +69,30 @@ export function showAcpeDisclosure(tier: UserTier): boolean {
 /** i18n message key holding the student module catalogue (title/day/
  *  summary). Professional modules live at cursosGrid.items[0].modules. */
 export const STUDENT_MODULES_I18N_KEY = "studentCurriculum" as const;
+
+/** One module's display copy from i18n (cursosGrid / studentCurriculum). */
+export type ModuleI18nEntry = {
+  id: string;
+  day: string;
+  title: string;
+  summary: string;
+};
+
+/**
+ * Select the i18n module catalogue for a tier. Students read the
+ * `studentCurriculum.modules` block; everyone else reads the professional
+ * `cursosGrid.items[0].modules`. `messages` is the next-intl messages
+ * object (pass `useMessages()`).
+ */
+export function getModuleCatalogue(
+  messages: unknown,
+  tier: UserTier,
+): ModuleI18nEntry[] {
+  const m = messages as {
+    cursosGrid?: { items?: Array<{ modules?: ModuleI18nEntry[] }> };
+    studentCurriculum?: { modules?: ModuleI18nEntry[] };
+  };
+  return tier === "student"
+    ? (m.studentCurriculum?.modules ?? [])
+    : (m.cursosGrid?.items?.[0]?.modules ?? []);
+}

@@ -10,7 +10,7 @@ import { auth } from "@/lib/auth";
 import { db } from "@/lib/db";
 import { users, quizAttempts } from "@/lib/db/schema";
 import { getQuiz, sanitizeQuiz, type ModuleQuizId } from "@/lib/quizzes";
-import { resolveModule } from "@/lib/curriculum";
+import { resolveModule, getModuleCatalogue } from "@/lib/curriculum";
 import { isAdminEmail } from "@/lib/admin";
 import { QuizForm } from "@/components/portal/QuizForm";
 import { submitPreTestAction } from "./actions";
@@ -18,12 +18,6 @@ import { submitPreTestAction } from "./actions";
 export const metadata: Metadata = {
   title: "Pre-test · SCCA Portal",
   robots: { index: false, follow: false },
-};
-
-type ModuleI18n = { id: string; day: string; title: string; summary: string };
-type CursosGridMessages = {
-  cursosGrid: { items: Array<{ modules: ModuleI18n[] }> };
-  studentCurriculum?: { modules: ModuleI18n[] };
 };
 
 /**
@@ -103,12 +97,9 @@ function PreTestPanel({
   questions: ReturnType<typeof getQuiz>;
 }) {
   const t = useTranslations("portal.preTest");
-  const messages = useMessages() as unknown as CursosGridMessages;
-  const moduleList =
-    tier === "student"
-      ? (messages.studentCurriculum?.modules ?? [])
-      : (messages.cursosGrid.items[0]?.modules ?? []);
-  const moduleData = moduleList.find((m) => m.id === moduleId);
+  const moduleData = getModuleCatalogue(useMessages(), tier).find(
+    (m) => m.id === moduleId,
+  );
 
   const isEmpty = questions.length === 0;
   const sanitized = sanitizeQuiz(questions);

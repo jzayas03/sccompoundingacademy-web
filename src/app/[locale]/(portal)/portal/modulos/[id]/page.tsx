@@ -11,7 +11,7 @@ import { auth } from "@/lib/auth";
 import { db } from "@/lib/db";
 import { users, quizAttempts } from "@/lib/db/schema";
 import { getQuiz, type ModuleQuizId } from "@/lib/quizzes";
-import { resolveModule } from "@/lib/curriculum";
+import { resolveModule, getModuleCatalogue } from "@/lib/curriculum";
 import { isAdminEmail } from "@/lib/admin";
 import { resolveModuleAccess } from "@/lib/portal/module-access";
 import { resolveVerificationGate } from "@/lib/portal/verification-gate";
@@ -43,19 +43,6 @@ export const metadata: Metadata = {
  * As soon as a file lands at e.g. `public/modulos/dia-1.pdf` the
  * `<object>` viewer takes over without code changes.
  */
-
-type ModuleMessage = {
-  id: string;
-  day: string;
-  title: string;
-  summary: string;
-};
-
-type CursosGridMessages = {
-  cursosGrid: {
-    items: Array<{ modules: ModuleMessage[] }>;
-  };
-};
 
 export default async function ModulePage({
   params,
@@ -173,14 +160,9 @@ function ModuleView({
   hasQuiz: boolean;
 }) {
   const t = useTranslations("portal.module");
-  const messages = useMessages() as unknown as CursosGridMessages & {
-    studentCurriculum?: { modules: ModuleMessage[] };
-  };
-  const moduleList =
-    tier === "student"
-      ? (messages.studentCurriculum?.modules ?? [])
-      : (messages.cursosGrid.items[0]?.modules ?? []);
-  const moduleData = moduleList.find((m) => m.id === id);
+  const moduleData = getModuleCatalogue(useMessages(), tier).find(
+    (m) => m.id === id,
+  );
 
   return (
     <Container className="max-w-5xl py-16 sm:py-20 lg:py-24">

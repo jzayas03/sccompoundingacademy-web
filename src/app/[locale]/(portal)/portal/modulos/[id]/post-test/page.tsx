@@ -15,7 +15,7 @@ import {
   sanitizeQuiz,
   type ModuleQuizId,
 } from "@/lib/quizzes";
-import { resolveModule } from "@/lib/curriculum";
+import { resolveModule, getModuleCatalogue } from "@/lib/curriculum";
 import { isAdminEmail } from "@/lib/admin";
 import { QuizForm } from "@/components/portal/QuizForm";
 import { submitQuizAction } from "./actions";
@@ -23,17 +23,6 @@ import { submitQuizAction } from "./actions";
 export const metadata: Metadata = {
   title: "Post-test · SCCA Portal",
   robots: { index: false, follow: false },
-};
-
-type ModuleI18n = {
-  id: string;
-  day: string;
-  title: string;
-  summary: string;
-};
-type CursosGridMessages = {
-  cursosGrid: { items: Array<{ modules: ModuleI18n[] }> };
-  studentCurriculum?: { modules: ModuleI18n[] };
 };
 
 export default async function PostTestPage({
@@ -92,12 +81,9 @@ function PostTestPanel({
   // Pull the module display name from the same catalogue the landing
   // and portal dashboard render — keeps copy in sync without a separate
   // portal-side i18n branch for module titles.
-  const messages = useMessages() as unknown as CursosGridMessages;
-  const moduleList =
-    tier === "student"
-      ? (messages.studentCurriculum?.modules ?? [])
-      : (messages.cursosGrid.items[0]?.modules ?? []);
-  const moduleData = moduleList.find((m) => m.id === moduleId);
+  const moduleData = getModuleCatalogue(useMessages(), tier).find(
+    (m) => m.id === moduleId,
+  );
 
   const isEmpty = questions.length === 0;
   const sanitized = sanitizeQuiz(questions);

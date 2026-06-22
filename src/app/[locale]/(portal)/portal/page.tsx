@@ -10,6 +10,7 @@ import { auth } from "@/lib/auth";
 import { db } from "@/lib/db";
 import { users, type User } from "@/lib/db/schema";
 import { isEligibleForCertificate } from "@/lib/certificates";
+import { showAcpeDisclosure, getModuleCatalogue } from "@/lib/curriculum";
 import { isAdminEmail } from "@/lib/admin";
 import { resolveVerificationGate } from "@/lib/portal/verification-gate";
 import { AcpeDisclosure } from "@/components/portal/AcpeDisclosure";
@@ -18,21 +19,6 @@ import { InstructorHero } from "@/components/portal/InstructorHero";
 export const metadata: Metadata = {
   title: "Portal · SCCA",
   robots: { index: false, follow: false },
-};
-
-type ModuleI18n = {
-  id: string;
-  day: string;
-  title: string;
-  summary: string;
-};
-
-type CursosGridMessages = {
-  cursosGrid: {
-    items: Array<{
-      modules: ModuleI18n[];
-    }>;
-  };
 };
 
 export default async function PortalDashboardPage({
@@ -106,8 +92,7 @@ function Dashboard({
 }) {
   const t = useTranslations("portal.dashboard");
   const locale = useLocale() === "en" ? "en" : "es";
-  const messages = useMessages() as unknown as CursosGridMessages;
-  const modules = messages.cursosGrid.items[0]?.modules ?? [];
+  const modules = getModuleCatalogue(useMessages(), user.tier);
   const displayName = user.name?.trim() || sessionEmail.split("@")[0] || t("fallbackName");
   // Owners get the full unlocked layout without a real Stripe payment.
   const isPaid = Boolean(user.paidAt) || isOwner;
@@ -136,7 +121,7 @@ function Dashboard({
 
       {/* ACPE Standard 3 — learner-facing financial-relationships
           disclosure. Must appear before any module content. */}
-      <AcpeDisclosure locale={locale} />
+      {showAcpeDisclosure(user.tier) && <AcpeDisclosure locale={locale} />}
 
       {/* Payment-pending alert — primary CTA when the user has not paid yet. */}
       {!isPaid && (
