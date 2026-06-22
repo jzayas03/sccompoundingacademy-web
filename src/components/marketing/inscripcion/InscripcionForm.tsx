@@ -23,7 +23,7 @@ type Props = {
   /** Course pre-selected via ?course=slug query param (optional). */
   preselectedCourseId?: string;
   /** Tier pre-selected via ?tier= query param (optional). */
-  preselectedTier?: "profesional" | "student";
+  preselectedTier?: Tier;
   /** Open cohorts fetched from the DB by the server page. */
   cohorts: CohortOption[];
   /** Version stamp of the legal docs the user is accepting — typically the

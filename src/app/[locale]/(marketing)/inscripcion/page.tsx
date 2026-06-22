@@ -7,6 +7,7 @@ import {
   type CohortOption,
 } from "@/components/marketing/inscripcion/InscripcionForm";
 import { listOpenCohorts, formatCohortLabel } from "@/lib/cohorts";
+import { type Tier } from "@/lib/courses";
 
 export async function generateMetadata({
   params,
@@ -66,7 +67,7 @@ function InscripcionPage({
 }: {
   locale: "es" | "en";
   preselectedCourseSlug?: string;
-  preselectedTier?: "profesional" | "student";
+  preselectedTier?: Tier;
   cohorts: CohortOption[];
 }) {
   const t = useTranslations("inscripcion");

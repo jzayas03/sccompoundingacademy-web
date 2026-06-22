@@ -2,7 +2,7 @@ import { useLocale, useTranslations, useMessages } from "next-intl";
 import { Link } from "@/i18n/routing";
 import { Container } from "@/components/ui/Container";
 import { Reveal } from "@/components/ui/Reveal";
-import { getCourseById } from "@/lib/courses";
+import { getCourseById, type Tier } from "@/lib/courses";
 
 /** One open cohort, trimmed to what the grid footer needs. The server
  * page fetches these from the DB (`lib/cohorts.ts`) and passes them in. */
@@ -30,7 +30,7 @@ type CourseItem = {
   includesItems?: string[];
   credentialNote?: string;
   enrollCourseId?: string;
-  enrollTier?: "profesional" | "student";
+  enrollTier?: Tier;
 };
 
 /**
