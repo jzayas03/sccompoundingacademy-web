@@ -254,4 +254,18 @@ export const usp795: readonly Question[] = [
     explanation:
       "The deck states hazardous drugs always layer in <800> — <795> sets the floor for nonsterile compounding, and <800> adds mandatory HD controls on top.",
   },
+  {
+    id: "E795-Q16",
+    prompt: "Under <795>, simply breaking or cutting a tablet into smaller portions is:",
+    type: "multiple-choice",
+    options: [
+      { letter: "A", text: "Compounding, and always within the scope of <795>" },
+      { letter: "B", text: "Tablet splitting, which does not constitute compounding under this chapter" },
+      { letter: "C", text: "Permitted only inside a C-PEC" },
+      { letter: "D", text: "Repackaging governed by <797>" },
+    ],
+    correctAnswer: "B",
+    explanation:
+      "The deck lists tablet splitting among practices outside the scope of <795>: simply breaking or cutting a tablet into smaller portions does not constitute compounding under this chapter.",
+  },
 ] as const;
