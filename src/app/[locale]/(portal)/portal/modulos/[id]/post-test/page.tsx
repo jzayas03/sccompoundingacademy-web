@@ -44,7 +44,7 @@ export default async function PostTestPage({
   const { locale, id } = await params;
   setRequestLocale(locale);
 
-  if (!MODULE_IDS.includes(id as ModuleQuizId)) notFound();
+  if (!(MODULE_IDS as readonly string[]).includes(id)) notFound();
   const moduleId = id as ModuleQuizId;
 
   const session = await auth();
