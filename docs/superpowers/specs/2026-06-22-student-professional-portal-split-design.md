@@ -40,6 +40,7 @@ unchanged.
 | Quiz authoring | Claude drafts ~15 MCQ/module from the PDFs (ES/EN), owner reviews |
 | Certificate | Same pdf-lib engine, no ACPE elements, numbering `SCCA-EST-{YYYY}-{NNN}` |
 | Access / enrollment | Unchanged: $495 Stripe + matrícula gate. This work divides **content** only |
+| Landing presentation | Two course cards (Profesional + Estudiantes) in `CursosGrid`; the student card is informational and enrolls into the existing `basic-compounding` course with the `student` tier preselected — no new course, cohort, or payment plumbing |
 
 ## Chosen approach — Tier-keyed curriculum abstraction (Approach A)
 
@@ -152,7 +153,38 @@ resolveModule(tier: Tier, id: string): CurriculumModule | null; // membership ch
   English; the viewer shows the single available language, as the
   professional modules do today).
 
-### 8. Tests
+### 8. Landing / cursos presentation (two cards)
+
+`CursosGrid` already maps over `cursosGrid.items[]` and renders the ACPE
+block only when `getCourseById(item.id)?.acpe` is set, so a second card
+drops in cleanly. Add a second i18n item for the student track with a
+**virtual** id `student-foundations` (intentionally NOT in the `COURSES`
+catalogue, so `getCourseById` returns `undefined` → no ACPE block, no
+catalogue facts). The component is extended to read a few fields off the
+item itself when there is no catalogue entry:
+
+- `uspLabel` — rendered from `courseData?.uspLabel ?? item.uspLabel`.
+- `includesItems` — per-item (the global "Taller práctico supervisado /
+  Almuerzo incluido" list is professional-only; the student card carries
+  its own online-track inclusions). Component uses `item.includesItems ??
+  globalIncludesItems`.
+- `credentialNote` — when there is no `acpe`, render a "Credencial" block
+  from this string ("Certificado de finalización · sin CE de ACPE").
+- `enrollCourseId` + `enrollTier` — the CTA links to
+  `/inscripcion?course=${item.enrollCourseId ?? item.id}&tier=${item.enrollTier}`.
+  For the student card that is `basic-compounding` + `student`, so
+  enrollment uses the existing, validated course/cohort/price path.
+
+The next-cohort line is keyed on the catalogue course id; the virtual
+`student-foundations` id matches no cohort, so the line is simply hidden
+(the student track is self-paced/online, not cohort-dated).
+
+`InscripcionForm` gains an optional `preselectedTier` prop (read from the
+`?tier=` query param by the inscription page) that seeds the existing
+tier radio. No change to prices, cohorts, the Stripe session, or the
+webhook — only which radio starts selected.
+
+### 9. Tests
 
 - **Professional regression**: the dashboard, module pages, eligibility,
   and numbering for the professional tier remain identical.
@@ -164,8 +196,11 @@ resolveModule(tier: Tier, id: string): CurriculumModule | null; // membership ch
 
 ## Out of scope (this phase)
 
-- Enrollment / payments (no change).
-- Marketing / landing pages.
+- Enrollment / payments plumbing (no change — the landing card reuses
+  the existing course/cohort/price/webhook path; only a tier radio is
+  preselected).
+- Marketing surfaces beyond the two-card `CursosGrid` presentation
+  (Hero, FAQ, etc. unchanged).
 - Full portal i18n parity (portal UI stays ES except the PDF toggle).
 - A bespoke Canva student certificate template (the programmatic render
   is used; a Canva overlay can be dropped in later, like `dia-{n}.pdf`).
