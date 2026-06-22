@@ -11,6 +11,7 @@ import { auth } from "@/lib/auth";
 import { db } from "@/lib/db";
 import { users, quizAttempts } from "@/lib/db/schema";
 import { getQuiz, type ModuleQuizId } from "@/lib/quizzes";
+import { resolveModule } from "@/lib/curriculum";
 import { isAdminEmail } from "@/lib/admin";
 import { resolveModuleAccess } from "@/lib/portal/module-access";
 import { resolveVerificationGate } from "@/lib/portal/verification-gate";
@@ -24,9 +25,10 @@ export const metadata: Metadata = {
 /**
  * `/[locale]/portal/modulos/[id]` — per-module workspace.
  *
- * Path-param validation: the dashboard module strip uses ids `modulo-1`,
- * `modulo-2`, `modulo-3` (matches the i18n catalogue at
- * `cursosGrid.items[0].modules`). Anything else → 404.
+ * Path-param validation: the `[id]` is resolved against the curriculum
+ * for the signed-in user's tier (see `resolveModule` in
+ * `@/lib/curriculum`) — professional ids `modulo-1..3`, student ids
+ * `usp-795`/`usp-800`. An id that does not belong to the tier → 404.
  *
  * Gating happens in two layers:
  *   1. `src/middleware.ts` redirects unauthenticated requests to
@@ -41,14 +43,6 @@ export const metadata: Metadata = {
  * As soon as a file lands at e.g. `public/modulos/dia-1.pdf` the
  * `<object>` viewer takes over without code changes.
  */
-
-const MODULE_IDS = ["modulo-1", "modulo-2", "modulo-3"] as const;
-type ModuleId = (typeof MODULE_IDS)[number];
-
-function dayNumberFromId(id: string): number | null {
-  const idx = MODULE_IDS.indexOf(id as ModuleId);
-  return idx >= 0 ? idx + 1 : null;
-}
 
 type ModuleMessage = {
   id: string;
@@ -71,9 +65,6 @@ export default async function ModulePage({
   const { locale, id } = await params;
   setRequestLocale(locale);
 
-  const day = dayNumberFromId(id);
-  if (day === null) notFound();
-
   const session = await auth();
   if (!session?.user?.email) {
     redirect(`/${locale}/portal/login`);
@@ -85,6 +76,10 @@ export default async function ModulePage({
     .where(eq(users.email, session.user.email))
     .limit(1);
   if (!user) redirect(`/${locale}/portal/login`);
+
+  const mod = resolveModule(user.tier, id);
+  if (!mod) notFound();
+  const day = mod.ordinal;
 
   // Access policy — payment + pre-test gates, with the owner/admin
   // (ADMIN_EMAILS) bypass for content preview — is encoded in
@@ -139,20 +134,21 @@ export default async function ModulePage({
     );
   }
 
-  // Module material lives at public/modulos/dia-{n}.pdf (Spanish) and,
-  // once the owner produces them, dia-{n}-en.pdf (English). The viewer
+  // Module material lives at public/modulos/{basename}.pdf (Spanish) and,
+  // once the owner produces them, {basename}-en.pdf (English). The viewer
   // shows a language toggle only when both files are present.
   const modulosDir = join(process.cwd(), "public", "modulos");
-  const esPdfHref = existsSync(join(modulosDir, `dia-${day}.pdf`))
-    ? `/modulos/dia-${day}.pdf`
+  const esPdfHref = existsSync(join(modulosDir, `${mod.pdfBasename}.pdf`))
+    ? `/modulos/${mod.pdfBasename}.pdf`
     : null;
-  const enPdfHref = existsSync(join(modulosDir, `dia-${day}-en.pdf`))
-    ? `/modulos/dia-${day}-en.pdf`
+  const enPdfHref = existsSync(join(modulosDir, `${mod.pdfBasename}-en.pdf`))
+    ? `/modulos/${mod.pdfBasename}-en.pdf`
     : null;
 
   return (
     <ModuleView
-      id={id as ModuleId}
+      id={id}
+      tier={user.tier}
       day={day}
       esPdfHref={esPdfHref}
       enPdfHref={enPdfHref}
@@ -163,20 +159,28 @@ export default async function ModulePage({
 
 function ModuleView({
   id,
+  tier,
   day,
   esPdfHref,
   enPdfHref,
   hasQuiz,
 }: {
-  id: ModuleId;
+  id: string;
+  tier: import("@/lib/curriculum").UserTier;
   day: number;
   esPdfHref: string | null;
   enPdfHref: string | null;
   hasQuiz: boolean;
 }) {
   const t = useTranslations("portal.module");
-  const messages = useMessages() as unknown as CursosGridMessages;
-  const moduleData = messages.cursosGrid.items[0]?.modules.find((m) => m.id === id);
+  const messages = useMessages() as unknown as CursosGridMessages & {
+    studentCurriculum?: { modules: ModuleMessage[] };
+  };
+  const moduleList =
+    tier === "student"
+      ? (messages.studentCurriculum?.modules ?? [])
+      : (messages.cursosGrid.items[0]?.modules ?? []);
+  const moduleData = moduleList.find((m) => m.id === id);
 
   return (
     <Container className="max-w-5xl py-16 sm:py-20 lg:py-24">
