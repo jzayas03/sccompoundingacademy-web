@@ -22,6 +22,8 @@ type Props = {
   locale: "es" | "en";
   /** Course pre-selected via ?course=slug query param (optional). */
   preselectedCourseId?: string;
+  /** Tier pre-selected via ?tier= query param (optional). */
+  preselectedTier?: "profesional" | "student";
   /** Open cohorts fetched from the DB by the server page. */
   cohorts: CohortOption[];
   /** Version stamp of the legal docs the user is accepting — typically the
@@ -44,6 +46,7 @@ type Props = {
 export function InscripcionForm({
   locale,
   preselectedCourseId,
+  preselectedTier,
   cohorts,
   docsVersion,
 }: Props) {
@@ -69,7 +72,11 @@ export function InscripcionForm({
     setCohorteId(first?.id ?? "");
   }
 
-  const [tier, setTier] = useState<Tier>(DEFAULT_TIER);
+  const [tier, setTier] = useState<Tier>(
+    preselectedTier === "profesional" || preselectedTier === "student"
+      ? preselectedTier
+      : DEFAULT_TIER,
+  );
   // Profession — captured for the profesional tier. Farmacéutico/Técnico
   // feed the ACPE registry; "otro" lets non-pharmacy professionals
   // self-identify without changing the price (they stay on the $2,500

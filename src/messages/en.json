@@ -305,6 +305,7 @@
     "ceLabel": "CE Credit",
     "ceBody": "{contactHours} contact hours · {ceus} CEUs · Knowledge-based, Level 1 · ACPE Provider {providerNumber} via {provider}",
     "includesLabel": "Includes",
+    "credentialLabel": "Credential",
     "includesItems": [
       "Supervised hands-on workshop",
       "Small-group format",
@@ -338,6 +339,37 @@
             "summary": "BHRT (Bi-est, testosterone), the Topi-Click system, penetration enhancers, shortage and excipient-allergy exceptions, 503A vs 503B distinctions, and veterinary compounding."
           }
         ]
+      },
+      {
+        "id": "student-foundations",
+        "level": "Foundations",
+        "uspLabel": "USP 〈795〉 + 〈800〉",
+        "title": "Student Track — Nonsterile Compounding",
+        "description": "A self-paced online program for pre-licensure students. Two didactic modules on the USP chapters that govern nonsterile compounding and hazardous-drug handling.",
+        "duration": "Self-paced · online",
+        "modules": [
+          {
+            "id": "usp-795",
+            "day": "Module 1",
+            "title": "USP 〈795〉 — Nonsterile Compounding",
+            "summary": "Scope of a compounded nonsterile preparation (CNSP), the designated person, facility standards, Beyond-Use Dates by water activity (aw), and distinguishing 〈795〉 from 〈797〉 and 〈800〉."
+          },
+          {
+            "id": "usp-800",
+            "day": "Module 2",
+            "title": "USP 〈800〉 — Hazardous Drugs",
+            "summary": "NIOSH criteria, the HD list and Assessment of Risk, engineering controls (C-PEC, C-SEC), PPE including ASTM D6978 gloves, and spill and medical-surveillance procedures."
+          }
+        ],
+        "includesItems": [
+          "Student portal access",
+          "USP 〈795〉 and 〈800〉 presentations",
+          "Per-module quiz with feedback",
+          "Certificate of completion"
+        ],
+        "credentialNote": "Certificate of completion — no ACPE continuing-education (CE) credit. CE credit is reserved for the professional track.",
+        "enrollCourseId": "basic-compounding",
+        "enrollTier": "student"
       }
     ]
   },

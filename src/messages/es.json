@@ -305,6 +305,7 @@
     "ceLabel": "Crédito CE",
     "ceBody": "{contactHours} horas de contacto · {ceus} CEUs · Knowledge-based, Level 1 · ACPE Provider {providerNumber} vía {provider}",
     "includesLabel": "Incluye",
+    "credentialLabel": "Credencial",
     "includesItems": [
       "Taller práctico supervisado",
       "Grupos pequeños",
@@ -338,6 +339,37 @@
             "summary": "BHRT (Bi-est, testosterona), sistema Topi-Click, penetration enhancers, excepciones de shortage y excipiente alérgico, distinción 503A/503B y compounding veterinario."
           }
         ]
+      },
+      {
+        "id": "student-foundations",
+        "level": "Fundamentos",
+        "uspLabel": "USP 〈795〉 + 〈800〉",
+        "title": "Track de Estudiantes — Compounding No Estéril",
+        "description": "Programa auto-dirigido en línea para estudiantes pre-licenciatura. Dos módulos didácticos sobre los capítulos USP que rigen el compounding no estéril y el manejo de drogas peligrosas.",
+        "duration": "Auto-dirigido · en línea",
+        "modules": [
+          {
+            "id": "usp-795",
+            "day": "Módulo 1",
+            "title": "USP 〈795〉 — Compounding No Estéril",
+            "summary": "Alcance de una preparación no estéril (CNSP), persona designada, estándares de instalación, Beyond-Use Dates por actividad de agua (aw) y la distinción frente a 〈797〉 y 〈800〉."
+          },
+          {
+            "id": "usp-800",
+            "day": "Módulo 2",
+            "title": "USP 〈800〉 — Drogas Peligrosas",
+            "summary": "Criterios NIOSH, lista de HD y Assessment of Risk, controles de ingeniería (C-PEC, C-SEC), PPE incluyendo guantes ASTM D6978, y procedimientos de derrame y vigilancia médica."
+          }
+        ],
+        "includesItems": [
+          "Acceso al portal de estudiantes",
+          "Presentaciones USP 〈795〉 y 〈800〉",
+          "Quiz por módulo con retroalimentación",
+          "Certificado de finalización"
+        ],
+        "credentialNote": "Certificado de finalización — sin créditos de educación continua (CE) de ACPE. El crédito CE está reservado al track profesional.",
+        "enrollCourseId": "basic-compounding",
+        "enrollTier": "student"
       }
     ]
   },
