@@ -781,6 +781,7 @@ git commit -m "feat(portal): tier-aware dashboard module list; hide ACPE block f
 **Files:**
 - Modify: `src/lib/certificates/index.ts`
 - Create: `tests/unit/certificate-program.test.ts`
+- Modify (call sites, to keep `pnpm typecheck` green): `src/app/[locale]/(portal)/portal/page.tsx`, `src/app/api/certificate/route.ts`, `src/app/[locale]/(portal)/portal/certificado/page.tsx`
 
 - [ ] **Step 1: Write failing unit tests for the pure helpers**
 
@@ -937,10 +938,56 @@ export async function getOrCreateCertificate(
 Run: `pnpm vitest run tests/unit/certificate-program.test.ts`
 Expected: PASS.
 
-- [ ] **Step 5: Commit**
+- [ ] **Step 5: Update every call site of the changed signatures (keep the tree green)**
+
+Changing `isEligibleForCertificate` (now needs `tier`), `EligibilityReport.passedModules` (now `Record<number, boolean>`), and `getOrCreateCertificate` (now needs `program`) breaks three callers. Update all of them in this task:
+
+**(a) `src/app/[locale]/(portal)/portal/page.tsx`** — the dashboard eligibility call (line ~84):
+```ts
+    (user.paidAt ? (await isEligibleForCertificate(user.id, user.tier)).eligible : false);
+```
+
+**(b) `src/app/api/certificate/route.ts`** — eligibility + allocation (do NOT touch the render calls yet; those move in Task 10). Add `import { programForTier } from "@/lib/certificates";`, then:
+```ts
+  const eligibility = await isEligibleForCertificate(user.id, user.tier);
+```
+```ts
+  const { cert } = await getOrCreateCertificate(user.id, programForTier(user.tier));
+```
+(The existing `const awardsCeus = user.tier !== "student";` and the `renderCertificatePdf({ …, awardsCeus })` calls stay unchanged in this task.)
+
+**(c) `src/app/[locale]/(portal)/portal/certificado/page.tsx`** — make the eligibility call + checklist curriculum-driven. Concretely:
+- Add `import { getCurriculum, requiredOrdinals, type UserTier } from "@/lib/curriculum";` and `STUDENT_MODULES_I18N_KEY` is not needed (read the array directly).
+- Delete the page-local `const MODULE_IDS = ["modulo-1","modulo-2","modulo-3"] as const;` (line 20).
+- Eligibility call (line 58): `const eligibility = await isEligibleForCertificate(user.id, user.tier);`
+- Owner passed-map (lines 60-62): derive from the tier's ordinals instead of the literal `{1,2,3}`:
+```ts
+  const passedModules = isOwner
+    ? Object.fromEntries(requiredOrdinals(user.tier).map((o) => [o, true]))
+    : eligibility.passedModules;
+```
+- Pass the curriculum + tier into `CertPanel`: add props `modules={getCurriculum(user.tier)}` and `tier={user.tier}`.
+- In `CertPanel`, change the `passedModules` prop type to `Record<number, boolean>`, add `modules: readonly { id: string; ordinal: number }[]` and `tier: UserTier` props, select the i18n catalogue tier-aware:
+```ts
+  const messages = useMessages() as unknown as CursosGridMessages & {
+    studentCurriculum?: { modules: ModuleI18n[] };
+  };
+  const moduleList =
+    tier === "student"
+      ? (messages.studentCurriculum?.modules ?? [])
+      : (messages.cursosGrid.items[0]?.modules ?? []);
+```
+- Replace the checklist `MODULE_IDS.map((moduleId, idx) => { const moduleNum = (idx+1) as 1|2|3; ... })` (lines 151-211) so it iterates the passed `modules` curriculum list: use `mod.id` for the route `id`, `mod.ordinal` for `passedModules[mod.ordinal]`, and `moduleList.find((m) => m.id === mod.id)` for the i18n title/day. The fallback title becomes `` `Módulo ${mod.ordinal}` ``.
+
+- [ ] **Step 6: Type-check + unit tests**
+
+Run: `pnpm typecheck && pnpm vitest run tests/unit`
+Expected: PASS (all call sites updated; professional path unchanged — 3 modules, `SCCA-` numbering).
+
+- [ ] **Step 7: Commit**
 
 ```bash
-git add src/lib/certificates/index.ts tests/unit/certificate-program.test.ts
+git add src/lib/certificates/index.ts tests/unit/certificate-program.test.ts "src/app/[locale]/(portal)/portal/page.tsx" src/app/api/certificate/route.ts "src/app/[locale]/(portal)/portal/certificado/page.tsx"
 git commit -m "feat(cert): tier-aware eligibility + per-program numbering"
 ```
 
@@ -1052,12 +1099,7 @@ Replace the cert allocation (line 105) with:
 
 In the final render (lines 110-116), replace `awardsCeus,` with `program,`.
 
-- [ ] **Step 4: Update the dashboard eligibility call**
-
-In `src/app/[locale]/(portal)/portal/page.tsx`, the dashboard calls `isEligibleForCertificate(user.id)` (line 84). Update to:
-```ts
-    (user.paidAt ? (await isEligibleForCertificate(user.id, user.tier)).eligible : false);
-```
+- [ ] **Step 4: (Done in Task 9)** The dashboard and certificado eligibility calls + `getOrCreateCertificate(program)` were already updated in Task 9 Step 5 to keep the tree green. Nothing to do here — just confirm `src/app/[locale]/(portal)/portal/page.tsx` already passes `user.tier`.
 
 - [ ] **Step 5: Make the public verification page program-aware**
 
