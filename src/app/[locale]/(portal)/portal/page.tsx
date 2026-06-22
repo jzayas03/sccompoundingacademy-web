@@ -67,7 +67,7 @@ export default async function PortalDashboardPage({
   const isOwner = isAdminEmail(session.user.email);
   const certEligible =
     isOwner ||
-    (user.paidAt ? (await isEligibleForCertificate(user.id)).eligible : false);
+    (user.paidAt ? (await isEligibleForCertificate(user.id, user.tier)).eligible : false);
 
   return (
     <Dashboard

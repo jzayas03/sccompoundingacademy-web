@@ -6,6 +6,7 @@ import { users } from "@/lib/db/schema";
 import {
   getOrCreateCertificate,
   isEligibleForCertificate,
+  programForTier,
 } from "@/lib/certificates";
 import { renderCertificatePdf } from "@/lib/certificates/render";
 import { getSiteUrl } from "@/lib/siteUrl";
@@ -56,6 +57,7 @@ export async function GET() {
   // credit token. A null tier (owner/admin or legacy row) defaults to the
   // credit-bearing variant.
   const awardsCeus = user.tier !== "student";
+  const program = programForTier(user.tier);
 
   // Owner/admin preview path — renders the cert PDF with a placeholder
   // number so the academy can verify the design without paying or
@@ -91,7 +93,7 @@ export async function GET() {
     );
   }
 
-  const eligibility = await isEligibleForCertificate(user.id);
+  const eligibility = await isEligibleForCertificate(user.id, user.tier);
   if (!eligibility.eligible) {
     return NextResponse.json(
       {
@@ -102,7 +104,7 @@ export async function GET() {
     );
   }
 
-  const { cert } = await getOrCreateCertificate(user.id);
+  const { cert } = await getOrCreateCertificate(user.id, program);
 
   const siteUrl = getSiteUrl();
   const verificationUrl = `${siteUrl}/verificar/${cert.certNo}`;

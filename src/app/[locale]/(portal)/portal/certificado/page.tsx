@@ -10,23 +10,17 @@ import { auth } from "@/lib/auth";
 import { db } from "@/lib/db";
 import { users } from "@/lib/db/schema";
 import { findCertificateByUser, isEligibleForCertificate } from "@/lib/certificates";
+import {
+  getCurriculum,
+  requiredOrdinals,
+  getModuleCatalogue,
+  type UserTier,
+} from "@/lib/curriculum";
 import { isAdminEmail } from "@/lib/admin";
 
 export const metadata: Metadata = {
   title: "Certificado · SCCA Portal",
   robots: { index: false, follow: false },
-};
-
-const MODULE_IDS = ["modulo-1", "modulo-2", "modulo-3"] as const;
-
-type ModuleI18n = {
-  id: string;
-  day: string;
-  title: string;
-  summary: string;
-};
-type CursosGridMessages = {
-  cursosGrid: { items: Array<{ modules: ModuleI18n[] }> };
 };
 
 export default async function CertificadoPage({
@@ -55,10 +49,10 @@ export default async function CertificadoPage({
   const isOwner = isAdminEmail(session.user.email);
   if (!user.paidAt && !isOwner) redirect(`/${locale}/portal`);
 
-  const eligibility = await isEligibleForCertificate(user.id);
+  const eligibility = await isEligibleForCertificate(user.id, user.tier);
   const eligible = eligibility.eligible || isOwner;
   const passedModules = isOwner
-    ? { 1: true, 2: true, 3: true }
+    ? Object.fromEntries(requiredOrdinals(user.tier).map((o) => [o, true]))
     : eligibility.passedModules;
   const cert = eligibility.eligible
     ? await findCertificateByUser(user.id)
@@ -70,6 +64,8 @@ export default async function CertificadoPage({
       eligible={eligible}
       certNo={cert?.certNo ?? null}
       certIssuedAt={cert?.issuedAt ?? null}
+      modules={getCurriculum(user.tier)}
+      tier={user.tier}
     />
   );
 }
@@ -79,15 +75,18 @@ function CertPanel({
   eligible,
   certNo,
   certIssuedAt,
+  modules,
+  tier,
 }: {
-  passedModules: { 1: boolean; 2: boolean; 3: boolean };
+  passedModules: Record<number, boolean>;
   eligible: boolean;
   certNo: string | null;
   certIssuedAt: Date | null;
+  modules: readonly { id: string; ordinal: number }[];
+  tier: UserTier;
 }) {
   const t = useTranslations("portal.cert");
-  const messages = useMessages() as unknown as CursosGridMessages;
-  const modules = messages.cursosGrid.items[0]?.modules ?? [];
+  const moduleList = getModuleCatalogue(useMessages(), tier);
 
   void certNo;
   void certIssuedAt;
@@ -148,9 +147,10 @@ function CertPanel({
           {t("checklistTitle")}
         </h2>
         <ul className="mt-6 space-y-3">
-          {MODULE_IDS.map((moduleId, idx) => {
-            const moduleNum = (idx + 1) as 1 | 2 | 3;
-            const moduleData = modules.find((m) => m.id === moduleId);
+          {modules.map((mod) => {
+            const moduleId = mod.id;
+            const moduleNum = mod.ordinal;
+            const moduleData = moduleList.find((m) => m.id === moduleId);
             const passed = passedModules[moduleNum];
             return (
               <li

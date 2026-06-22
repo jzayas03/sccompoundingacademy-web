@@ -50,7 +50,7 @@ export async function submitReviewAction(
   const isOwner = isAdminEmail(session.user.email);
   if (!user.paidAt && !isOwner) return { error: "send-failed" };
 
-  const eligibility = await isEligibleForCertificate(user.id);
+  const eligibility = await isEligibleForCertificate(user.id, user.tier);
   if (!eligibility.eligible && !isOwner) return { error: "send-failed" };
 
   // One review per user — bounce silently to the same page if a row

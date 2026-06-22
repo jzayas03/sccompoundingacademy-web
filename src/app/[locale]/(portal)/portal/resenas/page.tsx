@@ -54,7 +54,7 @@ export default async function ReviewsPage({
   const isOwner = isAdminEmail(session.user.email);
   if (!user.paidAt && !isOwner) redirect(`/${locale}/portal`);
 
-  const eligibility = await isEligibleForCertificate(user.id);
+  const eligibility = await isEligibleForCertificate(user.id, user.tier);
   const eligible = eligibility.eligible || isOwner;
   const [existing] = await db
     .select({ id: reviews.id })
