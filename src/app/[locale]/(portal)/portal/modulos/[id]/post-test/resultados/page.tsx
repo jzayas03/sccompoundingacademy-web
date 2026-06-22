@@ -10,6 +10,7 @@ import { auth } from "@/lib/auth";
 import { db } from "@/lib/db";
 import { quizAttempts, users } from "@/lib/db/schema";
 import { getQuiz, getPassingThreshold, type ModuleQuizId } from "@/lib/quizzes";
+import { resolveModule } from "@/lib/curriculum";
 import { isAdminEmail } from "@/lib/admin";
 import { ResultsList } from "./results-list";
 
@@ -18,14 +19,6 @@ export const metadata: Metadata = {
   robots: { index: false, follow: false },
 };
 
-const MODULE_IDS = ["modulo-1", "modulo-2", "modulo-3"] as const;
-
-function moduleQuizIdToInt(id: ModuleQuizId): number {
-  if (id === "modulo-1") return 1;
-  if (id === "modulo-2") return 2;
-  return 3;
-}
-
 export default async function ResultsPage({
   params,
 }: {
@@ -33,9 +26,6 @@ export default async function ResultsPage({
 }) {
   const { locale, id } = await params;
   setRequestLocale(locale);
-
-  if (!(MODULE_IDS as readonly string[]).includes(id)) notFound();
-  const moduleId = id as ModuleQuizId;
 
   const session = await auth();
   if (!session?.user?.email) redirect(`/${locale}/portal/login`);
@@ -50,6 +40,10 @@ export default async function ResultsPage({
     redirect(`/${locale}/portal`);
   }
 
+  const mod = resolveModule(user.tier, id);
+  if (!mod) notFound();
+  const moduleId = id as ModuleQuizId;
+
   // Most recent attempt for this user+module. Older attempts stay in the
   // DB for future analytics; the results screen always reflects "latest".
   const [attempt] = await db
@@ -58,7 +52,7 @@ export default async function ResultsPage({
     .where(
       and(
         eq(quizAttempts.userId, user.id),
-        eq(quizAttempts.moduleId, moduleQuizIdToInt(moduleId)),
+        eq(quizAttempts.moduleId, mod.ordinal),
       ),
     )
     .orderBy(desc(quizAttempts.submittedAt))

@@ -15,6 +15,7 @@ import {
   sanitizeQuiz,
   type ModuleQuizId,
 } from "@/lib/quizzes";
+import { resolveModule } from "@/lib/curriculum";
 import { isAdminEmail } from "@/lib/admin";
 import { QuizForm } from "@/components/portal/QuizForm";
 import { submitQuizAction } from "./actions";
@@ -24,8 +25,6 @@ export const metadata: Metadata = {
   robots: { index: false, follow: false },
 };
 
-const MODULE_IDS = ["modulo-1", "modulo-2", "modulo-3"] as const;
-
 type ModuleI18n = {
   id: string;
   day: string;
@@ -34,6 +33,7 @@ type ModuleI18n = {
 };
 type CursosGridMessages = {
   cursosGrid: { items: Array<{ modules: ModuleI18n[] }> };
+  studentCurriculum?: { modules: ModuleI18n[] };
 };
 
 export default async function PostTestPage({
@@ -43,9 +43,6 @@ export default async function PostTestPage({
 }) {
   const { locale, id } = await params;
   setRequestLocale(locale);
-
-  if (!(MODULE_IDS as readonly string[]).includes(id)) notFound();
-  const moduleId = id as ModuleQuizId;
 
   const session = await auth();
   if (!session?.user?.email) redirect(`/${locale}/portal/login`);
@@ -60,6 +57,10 @@ export default async function PostTestPage({
     redirect(`/${locale}/portal`);
   }
 
+  const mod = resolveModule(user.tier, id);
+  if (!mod) notFound();
+  const moduleId = id as ModuleQuizId;
+
   const questions = getQuiz(moduleId);
   const threshold = getPassingThreshold();
 
@@ -67,6 +68,7 @@ export default async function PostTestPage({
     <PostTestPanel
       locale={locale as "es" | "en"}
       moduleId={moduleId}
+      tier={user.tier}
       questions={questions}
       threshold={threshold}
     />
@@ -76,11 +78,13 @@ export default async function PostTestPage({
 function PostTestPanel({
   locale,
   moduleId,
+  tier,
   questions,
   threshold,
 }: {
   locale: "es" | "en";
   moduleId: ModuleQuizId;
+  tier: import("@/lib/curriculum").UserTier;
   questions: ReturnType<typeof getQuiz>;
   threshold: number;
 }) {
@@ -89,7 +93,11 @@ function PostTestPanel({
   // and portal dashboard render — keeps copy in sync without a separate
   // portal-side i18n branch for module titles.
   const messages = useMessages() as unknown as CursosGridMessages;
-  const moduleData = messages.cursosGrid.items[0]?.modules.find((m) => m.id === moduleId);
+  const moduleList =
+    tier === "student"
+      ? (messages.studentCurriculum?.modules ?? [])
+      : (messages.cursosGrid.items[0]?.modules ?? []);
+  const moduleData = moduleList.find((m) => m.id === moduleId);
 
   const isEmpty = questions.length === 0;
   const sanitized = sanitizeQuiz(questions);
