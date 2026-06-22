@@ -341,6 +341,22 @@
       }
     ]
   },
+  "studentCurriculum": {
+    "modules": [
+      {
+        "id": "usp-795",
+        "day": "Módulo 1",
+        "title": "USP 〈795〉 — Compounding No Estéril",
+        "summary": "Definición de una preparación no estéril (CNSP) y su alcance, responsabilidades de la persona designada, estándares de instalación y manejo de componentes, asignación de Beyond-Use Dates por actividad de agua (aw) y la distinción frente a 〈797〉 y 〈800〉."
+      },
+      {
+        "id": "usp-800",
+        "day": "Módulo 2",
+        "title": "USP 〈800〉 — Manejo de Drogas Peligrosas",
+        "summary": "Criterios NIOSH para drogas peligrosas, lista de HD y Assessment of Risk, los tres niveles de controles de ingeniería (C-PEC, C-SEC, suplementarios), selección de PPE incluyendo guantes ASTM D6978, y procedimientos de recibo, derrame, desactivación y vigilancia médica."
+      }
+    ]
+  },
   "instructor": {
     "eyebrow": "Instructor",
     "heading": "Lcdo. Jorge L. Reyes Quiñones, RPh, FACA, FACVP",

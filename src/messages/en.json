@@ -341,6 +341,22 @@
       }
     ]
   },
+  "studentCurriculum": {
+    "modules": [
+      {
+        "id": "usp-795",
+        "day": "Module 1",
+        "title": "USP 〈795〉 — Nonsterile Compounding",
+        "summary": "Defining a compounded nonsterile preparation (CNSP) and its scope, the designated person's responsibilities, facility and component-handling standards, assigning Beyond-Use Dates by water activity (aw), and distinguishing 〈795〉 from 〈797〉 and 〈800〉."
+      },
+      {
+        "id": "usp-800",
+        "day": "Module 2",
+        "title": "USP 〈800〉 — Handling Hazardous Drugs",
+        "summary": "NIOSH criteria for hazardous drugs, the HD list and Assessment of Risk, the three levels of engineering controls (C-PEC, C-SEC, supplemental), PPE selection including ASTM D6978 chemotherapy gloves, and receipt, spill, deactivation, and medical-surveillance procedures."
+      }
+    ]
+  },
   "instructor": {
     "eyebrow": "Instructor",
     "heading": "Jorge L. Reyes Quiñones, RPh, FACA, FACVP",
