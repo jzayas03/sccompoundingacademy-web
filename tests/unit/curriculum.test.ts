@@ -1,6 +1,7 @@
 import { describe, expect, it } from "vitest";
 import {
   getCurriculum,
+  requiredOrdinals,
   resolveModule,
   showAcpeDisclosure,
   type UserTier,
@@ -45,6 +46,13 @@ describe("resolveModule", () => {
 
   it("returns null for an unknown id", () => {
     expect(resolveModule("profesional", "modulo-9")).toBeNull();
+  });
+});
+
+describe("requiredOrdinals", () => {
+  it("returns the curriculum ordinals for each tier", () => {
+    expect(requiredOrdinals("profesional")).toEqual([1, 2, 3]);
+    expect(requiredOrdinals("student")).toEqual([1, 2]);
   });
 });
 

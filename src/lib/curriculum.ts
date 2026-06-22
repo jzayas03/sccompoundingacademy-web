@@ -9,6 +9,9 @@
  * `certificates.scoreM{ordinal}` column. It is per-tier (professional
  * 1/2/3, student 1/2); there is no collision because every query filters
  * by `userId` and a user belongs to exactly one tier.
+ *
+ * NOTE: `certificates` only has `scoreM1/M2/M3` columns, so any future
+ * curriculum with more than three modules needs a `scoreM4+` migration.
  */
 
 /** Mirror of `users.tier` (Drizzle `tierEnum` + nullable). */
