@@ -751,7 +751,10 @@
     "nav": {
       "logout": "Sign out",
       "backToHome": "Back to site",
-      "homeAria": "SCCA portal home"
+      "homeAria": "SCCA portal home",
+      "previewLabel": "View portal:",
+      "previewProfesional": "Professional",
+      "previewEstudiante": "Student"
     },
     "reviews": {
       "eyebrow": "Your feedback",

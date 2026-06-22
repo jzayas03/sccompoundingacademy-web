@@ -9,7 +9,7 @@ import {
   programForTier,
 } from "@/lib/certificates";
 import { renderCertificatePdf } from "@/lib/certificates/render";
-import { requiredOrdinals } from "@/lib/curriculum";
+import { requiredOrdinals, resolveEffectiveTier } from "@/lib/curriculum";
 import { getSiteUrl } from "@/lib/siteUrl";
 import { isAdminEmail } from "@/lib/admin";
 
@@ -37,7 +37,7 @@ export const runtime = "nodejs";
  *   6. PDF: generated on-the-fly via `pdf-lib`. Re-downloads regenerate
  *      the bytes; certificate identity is the DB row, not the PDF file.
  */
-export async function GET() {
+export async function GET(req: Request) {
   const session = await auth();
   if (!session?.user?.email) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
@@ -52,12 +52,6 @@ export async function GET() {
     return NextResponse.json({ error: "User not found" }, { status: 401 });
   }
 
-  // Certificate program selects the cert variant: "student" renders a
-  // completion certificate with no ACPE CE credit / provider line, while
-  // "profesional" renders the credit-bearing ACPE variant. A null tier
-  // (owner/admin or legacy row) maps to "profesional".
-  const program = programForTier(user.tier);
-
   // Owner/admin preview path — renders the cert PDF with a placeholder
   // number so the academy can verify the design without paying or
   // consuming a real `SCCA-{YYYY}-{NNN}` slot. No DB insert, no
@@ -65,6 +59,21 @@ export async function GET() {
   // returns "not found"; the cert is clearly marked as preview by its
   // number). See src/lib/admin.ts for the allowlist.
   const isOwner = isAdminEmail(session.user.email);
+
+  // Certificate program selects the cert variant: "student" renders a
+  // completion certificate with no ACPE CE credit / provider line, while
+  // "profesional" renders the credit-bearing ACPE variant. A null tier
+  // (owner/admin or legacy row) maps to "profesional". Owners may force
+  // either variant via ?preview= so the preview PDF reflects the chosen
+  // program; for real (non-owner) users effectiveTier === user.tier so
+  // behavior is unchanged.
+  const preview = new URL(req.url).searchParams.get("preview");
+  const effectiveTier = resolveEffectiveTier({
+    isOwner,
+    userTier: user.tier,
+    preview,
+  });
+  const program = programForTier(effectiveTier);
   if (isOwner) {
     const siteUrl = getSiteUrl();
     const previewCertNo = "SCCA-PREVIEW";

@@ -14,6 +14,7 @@ import {
   getCurriculum,
   requiredOrdinals,
   getModuleCatalogue,
+  resolveEffectiveTier,
   type UserTier,
 } from "@/lib/curriculum";
 import { isAdminEmail } from "@/lib/admin";
@@ -25,10 +26,13 @@ export const metadata: Metadata = {
 
 export default async function CertificadoPage({
   params,
+  searchParams,
 }: {
   params: Promise<{ locale: string }>;
+  searchParams: Promise<{ preview?: string }>;
 }) {
   const { locale } = await params;
+  const { preview } = await searchParams;
   setRequestLocale(locale);
 
   const session = await auth();
@@ -49,10 +53,23 @@ export default async function CertificadoPage({
   const isOwner = isAdminEmail(session.user.email);
   if (!user.paidAt && !isOwner) redirect(`/${locale}/portal`);
 
-  const eligibility = await isEligibleForCertificate(user.id, user.tier);
+  const effectiveTier = resolveEffectiveTier({
+    isOwner,
+    userTier: user.tier,
+    preview,
+  });
+  // Only thread a preview through to navigation when an owner actually
+  // supplied a valid one — keeps the previewed portal sticky across the
+  // download link + checklist links without leaking the param to others.
+  const effectivePreview =
+    isOwner && (preview === "student" || preview === "profesional")
+      ? preview
+      : undefined;
+
+  const eligibility = await isEligibleForCertificate(user.id, effectiveTier);
   const eligible = eligibility.eligible || isOwner;
   const passedModules = isOwner
-    ? Object.fromEntries(requiredOrdinals(user.tier).map((o) => [o, true]))
+    ? Object.fromEntries(requiredOrdinals(effectiveTier).map((o) => [o, true]))
     : eligibility.passedModules;
   const cert = eligibility.eligible
     ? await findCertificateByUser(user.id)
@@ -64,8 +81,9 @@ export default async function CertificadoPage({
       eligible={eligible}
       certNo={cert?.certNo ?? null}
       certIssuedAt={cert?.issuedAt ?? null}
-      modules={getCurriculum(user.tier)}
-      tier={user.tier}
+      modules={getCurriculum(effectiveTier)}
+      tier={effectiveTier}
+      preview={effectivePreview}
     />
   );
 }
@@ -77,6 +95,7 @@ function CertPanel({
   certIssuedAt,
   modules,
   tier,
+  preview,
 }: {
   passedModules: Record<number, boolean>;
   eligible: boolean;
@@ -84,6 +103,7 @@ function CertPanel({
   certIssuedAt: Date | null;
   modules: readonly { id: string; ordinal: number }[];
   tier: UserTier;
+  preview?: "profesional" | "student";
 }) {
   const t = useTranslations("portal.cert");
   const moduleList = getModuleCatalogue(useMessages(), tier);
@@ -121,7 +141,7 @@ function CertPanel({
             {t("readyBody")}
           </p>
           <a
-            href="/api/certificate"
+            href={preview ? `/api/certificate?preview=${preview}` : "/api/certificate"}
             download
             className="bg-chartreuse text-teal-deep ring-teal-deep/15 shadow-soft hover:bg-chartreuse/95 hover:shadow-lift focus-visible:ring-chartreuse font-heading mt-6 inline-flex h-12 items-center rounded-md px-6 text-sm font-semibold ring-1 transition-[color,background-color,box-shadow,transform] duration-200 sm:text-base motion-safe:hover:-translate-y-px"
           >
@@ -196,10 +216,12 @@ function CertPanel({
                           pathname:
                             "/portal/modulos/[id]/post-test/resultados",
                           params: { id: moduleId },
+                          ...(preview ? { query: { preview } } : {}),
                         }
                       : {
                           pathname: "/portal/modulos/[id]/post-test",
                           params: { id: moduleId },
+                          ...(preview ? { query: { preview } } : {}),
                         }
                   }
                   className="text-teal-deep hover:text-teal text-sm font-semibold underline underline-offset-2"
