@@ -127,8 +127,8 @@ export function findModule(
   id: string,
 ): { module: CurriculumModule; tier: "profesional" | "student" } | null {
   for (const tier of ["profesional", "student"] as const) {
-    const module = getCurriculum(tier).find((m) => m.id === id);
-    if (module) return { module, tier };
+    const found = getCurriculum(tier).find((m) => m.id === id);
+    if (found) return { module: found, tier };
   }
   return null;
 }
@@ -145,7 +145,7 @@ export function resolveViewableModule(params: {
   id: string;
 }): { module: CurriculumModule; tier: "profesional" | "student" } | null {
   if (params.isOwner) return findModule(params.id);
-  const module = resolveModule(params.userTier, params.id);
-  if (!module) return null;
-  return { module, tier: params.userTier === "student" ? "student" : "profesional" };
+  const found = resolveModule(params.userTier, params.id);
+  if (!found) return null;
+  return { module: found, tier: params.userTier === "student" ? "student" : "profesional" };
 }
