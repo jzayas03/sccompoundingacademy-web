@@ -10,7 +10,7 @@ import { auth } from "@/lib/auth";
 import { db } from "@/lib/db";
 import { users, quizAttempts } from "@/lib/db/schema";
 import { getQuiz, sanitizeQuiz, type ModuleQuizId } from "@/lib/quizzes";
-import { resolveModule, getModuleCatalogue } from "@/lib/curriculum";
+import { resolveViewableModule, getModuleCatalogue } from "@/lib/curriculum";
 import { isAdminEmail } from "@/lib/admin";
 import { QuizForm } from "@/components/portal/QuizForm";
 import { submitPreTestAction } from "./actions";
@@ -52,8 +52,9 @@ export default async function PreTestPage({
   const isOwner = isAdminEmail(session.user.email);
   if (!user.paidAt && !isOwner) redirect(`/${locale}/portal`);
 
-  const mod = resolveModule(user.tier, id);
-  if (!mod) notFound();
+  const viewable = resolveViewableModule({ isOwner, userTier: user.tier, id });
+  if (!viewable) notFound();
+  const mod = viewable.module;
   const moduleId = id as ModuleQuizId;
 
   // One-shot: already completed → straight to the module content.
@@ -79,7 +80,7 @@ export default async function PreTestPage({
     <PreTestPanel
       locale={locale as "es" | "en"}
       moduleId={moduleId}
-      tier={user.tier}
+      tier={viewable.tier}
       questions={questions}
     />
   );

@@ -132,3 +132,20 @@ export function findModule(
   }
   return null;
 }
+
+/**
+ * Resolve a module for a viewer. Owners (ADMIN_EMAILS) may open ANY
+ * module regardless of tier (cross-tier preview); normal users are
+ * restricted to their own tier's curriculum. Returns the module plus its
+ * owning tier (used to pick the i18n catalogue), or null (→ 404).
+ */
+export function resolveViewableModule(params: {
+  isOwner: boolean;
+  userTier: UserTier;
+  id: string;
+}): { module: CurriculumModule; tier: "profesional" | "student" } | null {
+  if (params.isOwner) return findModule(params.id);
+  const module = resolveModule(params.userTier, params.id);
+  if (!module) return null;
+  return { module, tier: params.userTier === "student" ? "student" : "profesional" };
+}

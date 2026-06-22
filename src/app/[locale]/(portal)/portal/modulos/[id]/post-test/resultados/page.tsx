@@ -10,7 +10,7 @@ import { auth } from "@/lib/auth";
 import { db } from "@/lib/db";
 import { quizAttempts, users } from "@/lib/db/schema";
 import { getQuiz, getPassingThreshold, type ModuleQuizId } from "@/lib/quizzes";
-import { resolveModule } from "@/lib/curriculum";
+import { resolveViewableModule } from "@/lib/curriculum";
 import { isAdminEmail } from "@/lib/admin";
 import { ResultsList } from "./results-list";
 
@@ -36,12 +36,14 @@ export default async function ResultsPage({
     .where(eq(users.email, session.user.email))
     .limit(1);
   if (!user) redirect(`/${locale}/portal/login`);
-  if (!user.paidAt && !isAdminEmail(session.user.email)) {
+  const isOwner = isAdminEmail(session.user.email);
+  if (!user.paidAt && !isOwner) {
     redirect(`/${locale}/portal`);
   }
 
-  const mod = resolveModule(user.tier, id);
-  if (!mod) notFound();
+  const viewable = resolveViewableModule({ isOwner, userTier: user.tier, id });
+  if (!viewable) notFound();
+  const mod = viewable.module;
   const moduleId = id as ModuleQuizId;
 
   // Most recent attempt for this user+module. Older attempts stay in the

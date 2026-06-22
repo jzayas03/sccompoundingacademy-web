@@ -11,7 +11,7 @@ import { auth } from "@/lib/auth";
 import { db } from "@/lib/db";
 import { users, quizAttempts } from "@/lib/db/schema";
 import { getQuiz, type ModuleQuizId } from "@/lib/quizzes";
-import { resolveModule, getModuleCatalogue } from "@/lib/curriculum";
+import { resolveViewableModule, getModuleCatalogue } from "@/lib/curriculum";
 import { isAdminEmail } from "@/lib/admin";
 import { resolveModuleAccess } from "@/lib/portal/module-access";
 import { resolveVerificationGate } from "@/lib/portal/verification-gate";
@@ -46,10 +46,13 @@ export const metadata: Metadata = {
 
 export default async function ModulePage({
   params,
+  searchParams,
 }: {
   params: Promise<{ locale: string; id: string }>;
+  searchParams: Promise<{ preview?: string }>;
 }) {
   const { locale, id } = await params;
+  const { preview: p } = await searchParams;
   setRequestLocale(locale);
 
   const session = await auth();
@@ -64,8 +67,15 @@ export default async function ModulePage({
     .limit(1);
   if (!user) redirect(`/${locale}/portal/login`);
 
-  const mod = resolveModule(user.tier, id);
-  if (!mod) notFound();
+  const isOwner = isAdminEmail(session.user.email);
+  // Owner-only `?preview=` stickiness: keep the chosen portal selected on
+  // the dashboard/back links; ignored (and never trusted) for non-owners.
+  const preview =
+    isOwner && (p === "student" || p === "profesional") ? p : undefined;
+
+  const viewable = resolveViewableModule({ isOwner, userTier: user.tier, id });
+  if (!viewable) notFound();
+  const mod = viewable.module;
   const day = mod.ordinal;
 
   // Access policy — payment + pre-test gates, with the owner/admin
@@ -76,7 +86,6 @@ export default async function ModulePage({
   // We only run the quizAttempts lookup when it can actually change the
   // outcome (a paid non-owner on a module that has a quiz); owners and
   // unpaid users are decided without touching the DB.
-  const isOwner = isAdminEmail(session.user.email);
 
   // Defense-in-depth: student-tier users who have not passed matrícula
   // verification are redirected before any module content is served.
@@ -135,11 +144,12 @@ export default async function ModulePage({
   return (
     <ModuleView
       id={id}
-      tier={user.tier}
+      tier={viewable.tier}
       day={day}
       esPdfHref={esPdfHref}
       enPdfHref={enPdfHref}
       hasQuiz={hasQuiz}
+      preview={preview}
     />
   );
 }
@@ -151,6 +161,7 @@ function ModuleView({
   esPdfHref,
   enPdfHref,
   hasQuiz,
+  preview,
 }: {
   id: string;
   tier: import("@/lib/curriculum").UserTier;
@@ -158,6 +169,7 @@ function ModuleView({
   esPdfHref: string | null;
   enPdfHref: string | null;
   hasQuiz: boolean;
+  preview?: "student" | "profesional";
 }) {
   const t = useTranslations("portal.module");
   const moduleData = getModuleCatalogue(useMessages(), tier).find(
@@ -169,7 +181,7 @@ function ModuleView({
       {/* Breadcrumb back to dashboard */}
       <p className="text-sm">
         <Link
-          href="/portal"
+          href={preview ? { pathname: "/portal", query: { preview } } : "/portal"}
           className="text-teal-deep hover:text-teal underline underline-offset-2"
         >
           ← {t("backToDashboard")}
@@ -208,6 +220,7 @@ function ModuleView({
             href={{
               pathname: "/portal/modulos/[id]/post-test",
               params: { id },
+              ...(preview ? { query: { preview } } : {}),
             }}
             className="bg-chartreuse text-teal-deep ring-teal-deep/15 shadow-soft hover:bg-chartreuse/95 hover:shadow-lift focus-visible:ring-chartreuse font-heading inline-flex h-12 items-center justify-center rounded-md px-6 text-sm font-semibold ring-1 transition-[color,background-color,box-shadow,transform] duration-200 ease-out focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-offset-white focus-visible:outline-none sm:text-base motion-safe:hover:-translate-y-px"
           >

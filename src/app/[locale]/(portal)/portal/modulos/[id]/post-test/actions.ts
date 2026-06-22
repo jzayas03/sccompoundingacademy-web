@@ -11,7 +11,7 @@ import {
   scoreQuiz,
   type ModuleQuizId,
 } from "@/lib/quizzes";
-import { resolveModule } from "@/lib/curriculum";
+import { resolveViewableModule } from "@/lib/curriculum";
 import { isAdminEmail } from "@/lib/admin";
 
 /**
@@ -55,8 +55,12 @@ export async function submitQuizAction(args: {
     redirect(`/${locale}/portal`);
   }
 
-  const mod = resolveModule(user.tier, moduleId);
-  if (!mod) notFound();
+  const viewable = resolveViewableModule({
+    isOwner: isAdminEmail(session.user.email),
+    userTier: user.tier,
+    id: moduleId,
+  });
+  if (!viewable) notFound();
 
   const questions = getQuiz(moduleId);
   if (questions.length === 0) {
@@ -72,7 +76,7 @@ export async function submitQuizAction(args: {
   // attempt stays in the table for future analytics.
   await db.insert(quizAttempts).values({
     userId: user.id,
-    moduleId: mod.ordinal,
+    moduleId: viewable.module.ordinal,
     phase: "post",
     submittedAt: new Date(),
     answers,

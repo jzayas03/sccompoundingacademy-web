@@ -15,7 +15,7 @@ import {
   sanitizeQuiz,
   type ModuleQuizId,
 } from "@/lib/quizzes";
-import { resolveModule, getModuleCatalogue } from "@/lib/curriculum";
+import { resolveViewableModule, getModuleCatalogue } from "@/lib/curriculum";
 import { isAdminEmail } from "@/lib/admin";
 import { QuizForm } from "@/components/portal/QuizForm";
 import { submitQuizAction } from "./actions";
@@ -42,12 +42,13 @@ export default async function PostTestPage({
     .where(eq(users.email, session.user.email))
     .limit(1);
   if (!user) redirect(`/${locale}/portal/login`);
-  if (!user.paidAt && !isAdminEmail(session.user.email)) {
+  const isOwner = isAdminEmail(session.user.email);
+  if (!user.paidAt && !isOwner) {
     redirect(`/${locale}/portal`);
   }
 
-  const mod = resolveModule(user.tier, id);
-  if (!mod) notFound();
+  const viewable = resolveViewableModule({ isOwner, userTier: user.tier, id });
+  if (!viewable) notFound();
   const moduleId = id as ModuleQuizId;
 
   const questions = getQuiz(moduleId);
@@ -57,7 +58,7 @@ export default async function PostTestPage({
     <PostTestPanel
       locale={locale as "es" | "en"}
       moduleId={moduleId}
-      tier={user.tier}
+      tier={viewable.tier}
       questions={questions}
       threshold={threshold}
     />
