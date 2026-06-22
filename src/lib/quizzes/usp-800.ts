@@ -15,7 +15,7 @@ export const usp800: readonly Question[] = [
       { letter: "B", text: "Patients, workers, and the environment" },
       { letter: "C", text: "Patients, prescribers, and the public" },
       { letter: "D", text: "Workers, payers, and the environment" },
-      { letter: "E", text: "none of above is correct" },
+      { letter: "E", text: "None of the above" },
     ],
     correctAnswer: "B",
     explanation:
@@ -63,7 +63,7 @@ export const usp800: readonly Question[] = [
       { letter: "B", text: "Conventionally manufactured HD products requiring only counting or repackaging" },
       { letter: "C", text: "Any HD active pharmaceutical ingredient (API) and any antineoplastic requiring HD manipulation" },
       { letter: "D", text: "Non-antineoplastic final dosage forms on the NIOSH list" },
-      { letter: "E", text: "none of above is correct" },
+      { letter: "E", text: "None of the above" },
     ],
     correctAnswer: "C",
     explanation:
@@ -95,7 +95,7 @@ export const usp800: readonly Question[] = [
       { letter: "B", text: "The entity must apply ALL <800> containment strategies to every HD" },
       { letter: "C", text: "The HD is removed from the NIOSH list" },
       { letter: "D", text: "Only PPE is required, with no engineering controls" },
-      { letter: "E", text: "none of above is correct" },
+      { letter: "E", text: "None of the above" },
     ],
     correctAnswer: "B",
     explanation:
@@ -104,14 +104,14 @@ export const usp800: readonly Question[] = [
   {
     id: "E800-Q7",
     prompt:
-      "Which of the following is one of the mandatory occupational-safety-plan elements every entity handling HDs must build?",
+      "Which of the following are mandatory occupational-safety-plan elements every entity handling HDs must build?",
     type: "multiple-choice",
     options: [
       { letter: "A", text: "An HD list" },
       { letter: "B", text: "Facility and engineering controls" },
       { letter: "C", text: "Competent (trained) personnel and safe work practices" },
       { letter: "D", text: "Proper PPE use and HD waste segregation/disposal" },
-      { letter: "E", text: "all of above is correct" },
+      { letter: "E", text: "All of the above" },
     ],
     correctAnswer: "E",
     explanation:
@@ -127,7 +127,7 @@ export const usp800: readonly Question[] = [
       { letter: "B", text: "The room in which the primary device is placed" },
       { letter: "C", text: "A closed-system drug-transfer device used at the bedside" },
       { letter: "D", text: "A respirator cartridge rated for HD vapors" },
-      { letter: "E", text: "none of above is correct" },
+      { letter: "E", text: "None of the above" },
     ],
     correctAnswer: "A",
     explanation:
@@ -172,7 +172,7 @@ export const usp800: readonly Question[] = [
       { letter: "B", text: "30 ACPH, positive pressure" },
       { letter: "C", text: "6 ACPH, neutral pressure" },
       { letter: "D", text: "30 ACPH, negative pressure (0.01-0.03 in. w.c.) relative to adjacent areas" },
-      { letter: "E", text: "none of above is correct" },
+      { letter: "E", text: "None of the above" },
     ],
     correctAnswer: "D",
     explanation:
@@ -188,7 +188,7 @@ export const usp800: readonly Question[] = [
       { letter: "B", text: "It permits high-risk CSPs of any BUD" },
       { letter: "C", text: "It allows only low- and medium-risk HD CSPs and yields shorter BUDs than the ISO 7 configuration" },
       { letter: "D", text: "It eliminates the need for a C-PEC" },
-      { letter: "E", text: "none of above is correct" },
+      { letter: "E", text: "None of the above" },
     ],
     correctAnswer: "C",
     explanation:
@@ -204,7 +204,7 @@ export const usp800: readonly Question[] = [
       { letter: "B", text: "ISO 5 and must be sterile for all uses" },
       { letter: "C", text: "OSHA 1910.134 and must be reusable" },
       { letter: "D", text: "NIOSH N95 and must be latex" },
-      { letter: "E", text: "none of above is correct" },
+      { letter: "E", text: "None of the above" },
     ],
     correctAnswer: "A",
     explanation:
@@ -220,7 +220,7 @@ export const usp800: readonly Question[] = [
       { letter: "B", text: "A cloth lab coat and one pair of gloves" },
       { letter: "C", text: "A gown; head, hair, and shoe covers; and TWO pairs of chemotherapy gloves" },
       { letter: "D", text: "A surgical mask and goggles only" },
-      { letter: "E", text: "none of above is correct" },
+      { letter: "E", text: "None of the above" },
     ],
     correctAnswer: "C",
     explanation:
@@ -249,7 +249,7 @@ export const usp800: readonly Question[] = [
       { letter: "B", text: "Seal it in plastic or an impervious container, transport it to a C-PEC, open it on a plastic-backed prep mat, and handle damaged items as hazardous waste" },
       { letter: "C", text: "Return it to the shelf and use it normally" },
       { letter: "D", text: "Place it in the pneumatic tube system for disposal" },
-      { letter: "E", text: "none of above is correct" },
+      { letter: "E", text: "None of the above" },
     ],
     correctAnswer: "B",
     explanation:
@@ -265,7 +265,7 @@ export const usp800: readonly Question[] = [
       { letter: "B", text: "Deactivation, decontamination, cleaning, and (for sterile) disinfection" },
       { letter: "C", text: "Disinfection, cleaning, decontamination, deactivation" },
       { letter: "D", text: "Decontamination, deactivation, disinfection, cleaning" },
-      { letter: "E", text: "none of above is correct" },
+      { letter: "E", text: "None of the above" },
     ],
     correctAnswer: "B",
     explanation:
@@ -281,7 +281,7 @@ export const usp800: readonly Question[] = [
       { letter: "B", text: "Wipes, NOT spray bottles, to avoid spreading residue" },
       { letter: "C", text: "Compressed-air dusters" },
       { letter: "D", text: "Dry paper towels only" },
-      { letter: "E", text: "none of above is correct" },
+      { letter: "E", text: "None of the above" },
     ],
     correctAnswer: "B",
     explanation:
@@ -313,7 +313,7 @@ export const usp800: readonly Question[] = [
       { letter: "B", text: "It enrolls personnel who handle HDs as a regular part of their job and includes baseline (pre-placement), periodic, and exit examinations" },
       { letter: "C", text: "It is a one-time exam at hire with no follow-up" },
       { letter: "D", text: "It is optional for entities that perform wipe sampling" },
-      { letter: "E", text: "none of above is correct" },
+      { letter: "E", text: "None of the above" },
     ],
     correctAnswer: "B",
     explanation:

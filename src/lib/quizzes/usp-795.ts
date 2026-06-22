@@ -27,7 +27,7 @@ export const usp795: readonly Question[] = [
         letter: "D",
         text: "Dispensing a commercially available product in its original container",
       },
-      { letter: "E", text: "none of above is correct" },
+      { letter: "E", text: "None of the above" },
     ],
     correctAnswer: "B",
     explanation:
@@ -36,14 +36,14 @@ export const usp795: readonly Question[] = [
   {
     id: "E795-Q2",
     prompt:
-      "Which of the following dosage forms is covered under the scope of <795>?",
+      "Which of the following is true of the dosage forms within the scope of <795>?",
     type: "multiple-choice",
     options: [
       { letter: "A", text: "Solid oral preparations (tablets, capsules, powders, lozenges)" },
       { letter: "B", text: "Liquid oral solutions, suspensions, syrups, and elixirs" },
       { letter: "C", text: "Rectal and vaginal suppositories, creams, gels, and enemas" },
       { letter: "D", text: "Topical creams, gels, ointments, and pastes" },
-      { letter: "E", text: "all of above is correct" },
+      { letter: "E", text: "All of the above" },
     ],
     correctAnswer: "E",
     explanation:
@@ -59,7 +59,7 @@ export const usp795: readonly Question[] = [
       { letter: "B", text: "<797>, because a perforated membrane requires a sterile preparation" },
       { letter: "C", text: "<800>, because the ear is an internal route" },
       { letter: "D", text: "<825>, because it is administered locally" },
-      { letter: "E", text: "none of above is correct" },
+      { letter: "E", text: "None of the above" },
     ],
     correctAnswer: "B",
     explanation:
@@ -104,7 +104,7 @@ export const usp795: readonly Question[] = [
       { letter: "B", text: "4 hours" },
       { letter: "C", text: "12 hours" },
       { letter: "D", text: "24 hours" },
-      { letter: "E", text: "none of above is correct" },
+      { letter: "E", text: "None of the above" },
     ],
     correctAnswer: "B",
     explanation:
@@ -152,7 +152,7 @@ export const usp795: readonly Question[] = [
       { letter: "B", text: "A solo compounder is, by definition, the designated person" },
       { letter: "C", text: "The designated person's accountability may be assumed informally rather than written" },
       { letter: "D", text: "The designated person is responsible only for cleaning schedules" },
-      { letter: "E", text: "none of above is correct" },
+      { letter: "E", text: "None of the above" },
     ],
     correctAnswer: "B",
     explanation:
@@ -184,7 +184,7 @@ export const usp795: readonly Question[] = [
       { letter: "B", text: "Wash hands with soap and water for at least 30 seconds, dry with disposable towels, then don gloves" },
       { letter: "C", text: "Rinse hands with tap water only" },
       { letter: "D", text: "No hand hygiene is required if gloves are worn" },
-      { letter: "E", text: "none of above is correct" },
+      { letter: "E", text: "None of the above" },
     ],
     correctAnswer: "B",
     explanation:
@@ -232,7 +232,7 @@ export const usp795: readonly Question[] = [
       { letter: "B", text: "Tap water may be used when a formulation includes water as an ingredient" },
       { letter: "C", text: "APIs must comply with the USP-NF monograph (if one exists), be accompanied by a COA, and water as an ingredient must be Purified Water or better" },
       { letter: "D", text: "Component selection is the responsibility of any technician on duty" },
-      { letter: "E", text: "none of above is correct" },
+      { letter: "E", text: "None of the above" },
     ],
     correctAnswer: "C",
     explanation:
@@ -248,7 +248,7 @@ export const usp795: readonly Question[] = [
       { letter: "B", text: "<795> replaces <800> for nonsterile HD compounding" },
       { letter: "C", text: "<795> sets the floor and <800> adds mandatory HD containment controls on top" },
       { letter: "D", text: "HDs may be compounded without any additional controls beyond <795>" },
-      { letter: "E", text: "none of above is correct" },
+      { letter: "E", text: "None of the above" },
     ],
     correctAnswer: "C",
     explanation:
