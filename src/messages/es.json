@@ -632,6 +632,8 @@
     "invalidBody": "El número {certNo} no corresponde a un certificado emitido por Santa Cruz Compounding Academy.",
     "courseTitle": "Basic Compounding No Estéril para Farmacéuticos y Técnicos de Farmacia",
     "courseSubtitle": "18 horas de contacto · 1.8 CEUs · Knowledge-based, Level 1 · ACPE Provider 0151",
+    "courseTitleStudent": "Programa de Estudiantes — Fundamentos de Compounding No Estéril",
+    "courseSubtitleStudent": "USP 〈795〉 y 〈800〉 · Certificado de finalización",
     "backToHome": "Volver a sccompoundingacademy.com"
   },
   "portal": {

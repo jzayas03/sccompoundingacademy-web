@@ -9,6 +9,7 @@ import {
   programForTier,
 } from "@/lib/certificates";
 import { renderCertificatePdf } from "@/lib/certificates/render";
+import { requiredOrdinals } from "@/lib/curriculum";
 import { getSiteUrl } from "@/lib/siteUrl";
 import { isAdminEmail } from "@/lib/admin";
 
@@ -51,12 +52,10 @@ export async function GET() {
     return NextResponse.json({ error: "User not found" }, { status: 401 });
   }
 
-  // ACPE CE credit ("1.8 CEUs") is earned only by the licensed tiers
-  // (profesional / pharmacist). Non-licensed students complete the same
-  // 18 contact hours but receive no CEUs, so their certificate omits the
-  // credit token. A null tier (owner/admin or legacy row) defaults to the
-  // credit-bearing variant.
-  const awardsCeus = user.tier !== "student";
+  // Certificate program selects the cert variant: "student" renders a
+  // completion certificate with no ACPE CE credit / provider line, while
+  // "profesional" renders the credit-bearing ACPE variant. A null tier
+  // (owner/admin or legacy row) maps to "profesional".
   const program = programForTier(user.tier);
 
   // Owner/admin preview path — renders the cert PDF with a placeholder
@@ -74,7 +73,7 @@ export async function GET() {
       studentName: user.name?.trim() || session.user.email,
       issuedAt: new Date(),
       verificationUrl: `${siteUrl}/verificar/${previewCertNo}`,
-      awardsCeus,
+      program,
     });
     return new NextResponse(new Uint8Array(pdfBytes), {
       status: 200,
@@ -97,7 +96,7 @@ export async function GET() {
   if (!eligibility.eligible) {
     return NextResponse.json(
       {
-        error: "All three module post-tests must be passed first.",
+        error: `All ${requiredOrdinals(user.tier).length} module post-tests must be passed first.`,
         passedModules: eligibility.passedModules,
       },
       { status: 409 },
@@ -114,7 +113,7 @@ export async function GET() {
     studentName: user.name?.trim() || session.user.email,
     issuedAt: cert.issuedAt,
     verificationUrl,
-    awardsCeus,
+    program,
   });
 
   return new NextResponse(new Uint8Array(pdfBytes), {

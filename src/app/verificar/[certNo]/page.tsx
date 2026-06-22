@@ -54,6 +54,9 @@ export default async function VerificarPage({
     .limit(1);
 
   const valid = Boolean(row);
+  // Program is encoded in the cert-number prefix: student certs mint
+  // "SCCA-EST-..." (Task 9). Everything else is the professional variant.
+  const program = certNo.startsWith("SCCA-EST-") ? "student" : "profesional";
   const studentName = row?.studentName?.trim() || row?.studentEmail || "—";
   const issuedAt = row?.issuedAt ?? null;
 
@@ -63,6 +66,7 @@ export default async function VerificarPage({
       <VerifyPanel
         valid={valid}
         certNo={certNo}
+        program={program}
         studentName={studentName}
         issuedAt={issuedAt}
       />
@@ -73,11 +77,13 @@ export default async function VerificarPage({
 function VerifyPanel({
   valid,
   certNo,
+  program,
   studentName,
   issuedAt,
 }: {
   valid: boolean;
   certNo: string;
+  program: "profesional" | "student";
   studentName: string;
   issuedAt: Date | null;
 }) {
@@ -151,10 +157,10 @@ function VerifyPanel({
               {certNo}
             </p>
             <p className="font-heading text-gray-900 mt-2 text-base font-semibold leading-snug sm:text-lg">
-              {t("courseTitle")}
+              {t(program === "student" ? "courseTitleStudent" : "courseTitle")}
             </p>
             <p className="text-gray-700 mt-2 text-sm leading-relaxed">
-              {t("courseSubtitle")}
+              {t(program === "student" ? "courseSubtitleStudent" : "courseSubtitle")}
             </p>
           </div>
         )}

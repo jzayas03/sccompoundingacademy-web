@@ -626,6 +626,8 @@
     "invalidBody": "The number {certNo} does not match a certificate issued by Santa Cruz Compounding Academy.",
     "courseTitle": "Basic Non-Sterile Compounding for Pharmacists & Pharmacy Technicians",
     "courseSubtitle": "18 contact hours · 1.8 CEUs · Knowledge-based, Level 1 · ACPE Provider 0151",
+    "courseTitleStudent": "Student Program — Foundations of Nonsterile Compounding",
+    "courseSubtitleStudent": "USP 〈795〉 & 〈800〉 · Certificate of completion",
     "backToHome": "Back to sccompoundingacademy.com"
   },
   "portal": {
