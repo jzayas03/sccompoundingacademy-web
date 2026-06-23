@@ -434,8 +434,8 @@ function PendingCard({
         <p className="text-gray-700 text-xs">{fmtDate(submittedAt)}</p>
       </header>
       <p className="text-gray-900 mt-3 text-sm">
-        General: <strong>{overall}/5</strong> · Día 1: {m1 ?? "—"}/5 · Día 2:{" "}
-        {m2 ?? "—"}/5 · Día 3: {m3 ?? "—"}/5
+        General: <strong>{overall}/5</strong> · M1: {m1 ?? "—"}/5 · M2:{" "}
+        {m2 ?? "—"}/5 · M3: {m3 ?? "—"}/5
       </p>
       {best && (
         <p className="text-gray-900 mt-3 text-sm leading-relaxed">

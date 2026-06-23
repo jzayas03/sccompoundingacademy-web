@@ -130,7 +130,11 @@ export function CursosGrid({ openCohorts }: { openCohorts: CohortBrief[] }) {
                       <p className="font-heading text-teal-deep text-xs font-semibold tracking-[0.18em] uppercase">
                         {t("modulesLabel")}
                       </p>
-                      <ol className="mt-4 grid gap-4 sm:grid-cols-3">
+                      <ol
+                        className={`mt-4 grid gap-4 ${
+                          course.modules.length === 2 ? "sm:grid-cols-2" : "sm:grid-cols-3"
+                        }`}
+                      >
                         {course.modules.map((mod) => (
                           <li
                             key={mod.id}

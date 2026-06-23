@@ -232,7 +232,11 @@ function Dashboard({
           </p>
         </div>
 
-        <ul className="mt-6 grid grid-cols-1 gap-4 md:grid-cols-3">
+        <ul
+          className={`mt-6 grid grid-cols-1 gap-4 ${
+            modules.length === 2 ? "sm:grid-cols-2" : "md:grid-cols-3"
+          }`}
+        >
           {modules.map((mod, idx) => (
             <li key={mod.id}>
               {isPaid ? (
