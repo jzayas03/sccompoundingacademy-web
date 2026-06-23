@@ -11,6 +11,7 @@ import { db } from "@/lib/db";
 import { reviews, users } from "@/lib/db/schema";
 import { isEligibleForCertificate } from "@/lib/certificates";
 import { isAdminEmail } from "@/lib/admin";
+import type { UserTier } from "@/lib/curriculum";
 import { ReviewForm } from "./review-form";
 
 export const metadata: Metadata = {
@@ -66,6 +67,7 @@ export default async function ReviewsPage({
     <ReviewsPanel
       eligible={eligible}
       alreadySubmitted={Boolean(existing)}
+      tier={user.tier}
     />
   );
 }
@@ -73,9 +75,11 @@ export default async function ReviewsPage({
 function ReviewsPanel({
   eligible,
   alreadySubmitted,
+  tier,
 }: {
   eligible: boolean;
   alreadySubmitted: boolean;
+  tier: UserTier;
 }) {
   const t = useTranslations("portal.reviews");
 
@@ -146,7 +150,7 @@ function ReviewsPanel({
         </GlassCard>
       ) : (
         <GlassCard className="mt-10 p-6 sm:p-8">
-          <ReviewForm />
+          <ReviewForm tier={tier} />
         </GlassCard>
       )}
     </Container>

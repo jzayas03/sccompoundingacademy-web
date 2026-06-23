@@ -7,6 +7,7 @@ import { db } from "@/lib/db";
 import { reviews, users } from "@/lib/db/schema";
 import { isEligibleForCertificate } from "@/lib/certificates";
 import { isAdminEmail } from "@/lib/admin";
+import { requiredOrdinals } from "@/lib/curriculum";
 
 export type ReviewState =
   | { error: "missing-rating" }
@@ -64,11 +65,13 @@ export async function submitReviewAction(
     redirect(`/es/portal/reseñas`);
   }
 
+  const ordinals = requiredOrdinals(user.tier);
   const overall = Number.parseInt(String(formData.get("overallRating") ?? ""), 10);
-  const m1 = Number.parseInt(String(formData.get("m1Rating") ?? ""), 10);
-  const m2 = Number.parseInt(String(formData.get("m2Rating") ?? ""), 10);
-  const m3 = Number.parseInt(String(formData.get("m3Rating") ?? ""), 10);
-  if (!VALID_RATING.has(overall) || !VALID_RATING.has(m1) || !VALID_RATING.has(m2) || !VALID_RATING.has(m3)) {
+  const ratings: Record<number, number> = {};
+  for (const o of ordinals) {
+    ratings[o] = Number.parseInt(String(formData.get(`m${o}Rating`) ?? ""), 10);
+  }
+  if (!VALID_RATING.has(overall) || ordinals.some((o) => !VALID_RATING.has(ratings[o] ?? NaN))) {
     return { error: "missing-rating" };
   }
 
@@ -82,9 +85,9 @@ export async function submitReviewAction(
     await db.insert(reviews).values({
       userId: user.id,
       overallRating: overall,
-      m1Rating: m1,
-      m2Rating: m2,
-      m3Rating: m3,
+      m1Rating: ratings[1] ?? null,
+      m2Rating: ratings[2] ?? null,
+      m3Rating: ratings[3] ?? null,
       bestComment,
       improveComment,
       publicConsent,

@@ -2,17 +2,8 @@
 
 import { useActionState, useState } from "react";
 import { useTranslations, useMessages } from "next-intl";
+import { getModuleCatalogue, type UserTier } from "@/lib/curriculum";
 import { submitReviewAction, type ReviewState } from "./actions";
-
-type ModuleI18n = {
-  id: string;
-  day: string;
-  title: string;
-  summary: string;
-};
-type CursosGridMessages = {
-  cursosGrid: { items: Array<{ modules: ModuleI18n[] }> };
-};
 
 /**
  * Review form — interactive client component.
@@ -26,10 +17,9 @@ type CursosGridMessages = {
  * form without manual fetch wiring — pending state disables the
  * submit button automatically.
  */
-export function ReviewForm() {
+export function ReviewForm({ tier }: { tier: UserTier }) {
   const t = useTranslations("portal.reviews");
-  const messages = useMessages() as unknown as CursosGridMessages;
-  const modules = messages.cursosGrid.items[0]?.modules ?? [];
+  const modules = getModuleCatalogue(useMessages(), tier);
 
   const [state, action, pending] = useActionState<ReviewState, FormData>(
     submitReviewAction,
@@ -37,14 +27,9 @@ export function ReviewForm() {
   );
 
   const [overall, setOverall] = useState<number>(0);
-  const [m1, setM1] = useState<number>(0);
-  const [m2, setM2] = useState<number>(0);
-  const [m3, setM3] = useState<number>(0);
+  const [ratings, setRatings] = useState<number[]>(() => modules.map(() => 0));
 
-  const moduleSetters = [setM1, setM2, setM3];
-  const moduleValues = [m1, m2, m3];
-
-  const canSubmit = overall > 0 && m1 > 0 && m2 > 0 && m3 > 0;
+  const canSubmit = overall > 0 && ratings.length > 0 && ratings.every((r) => r > 0);
   const showError = state?.error === "missing-rating" || state?.error === "send-failed";
 
   return (
@@ -83,9 +68,11 @@ export function ReviewForm() {
                 </p>
               </div>
               <StarRow
-                name={idx === 0 ? "m1Rating" : idx === 1 ? "m2Rating" : "m3Rating"}
-                value={moduleValues[idx]!}
-                onChange={moduleSetters[idx]!}
+                name={`m${idx + 1}Rating`}
+                value={ratings[idx] ?? 0}
+                onChange={(star) =>
+                  setRatings((prev) => prev.map((r, j) => (j === idx ? star : r)))
+                }
                 ariaLabelTemplate={(stars) =>
                   t("moduleStarAria", { stars, module: mod.day })
                 }
