@@ -17,6 +17,7 @@ import {
   approveStudentVerification,
   rejectStudentVerification,
 } from "./actions";
+import { AdminEditEmail } from "@/components/portal/AdminEditEmail";
 
 export const metadata: Metadata = {
   title: "Administración · SCCA Portal",
@@ -72,6 +73,7 @@ export default async function AdminPage({
 
   const roster = await db
     .select({
+      id: users.id,
       name: users.name,
       email: users.email,
       tier: users.tier,
@@ -202,9 +204,11 @@ export default async function AdminPage({
             </thead>
             <tbody>
               {roster.map((r) => (
-                <tr key={r.email} className="border-gray-300/60 border-b last:border-0">
+                <tr key={r.id} className="border-gray-300/60 border-b last:border-0">
                   <td className="py-2 pr-4 text-gray-900">{r.name ?? "—"}</td>
-                  <td className="py-2 pr-4 text-gray-700">{r.email}</td>
+                  <td className="py-2 pr-4">
+                    <AdminEditEmail userId={r.id} email={r.email} />
+                  </td>
                   <td className="py-2 pr-4 text-gray-700">{professionLabel(r.professionalType) || "—"}</td>
                   <td className="py-2 pr-4 text-gray-700">{r.license ?? "—"}</td>
                   <td className="py-2 pr-4 text-gray-700">{r.phone ?? "—"}</td>
