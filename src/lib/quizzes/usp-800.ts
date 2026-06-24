@@ -1,322 +1,400 @@
 import type { Question } from "./types";
 
 /**
- * Student module 2 — USP 〈800〉 Hazardous Drugs in Healthcare Settings.
- * Bank drafted from public/modulos/est-800.pdf; pending owner review.
+ * Student module 2 — USP 〈800〉 Hazardous Drugs.
+ * 15 questions selected from the owner's authoritative Spanish
+ * question bank (Banco_Preguntas). Pre-test and post-test draw from
+ * this same bank. `id` carries the source bank number for traceability.
  */
 export const usp800: readonly Question[] = [
   {
-    id: "E800-Q1",
-    prompt:
-      "USP <800> is fundamentally an occupational safety standard. Which three populations does it protect?",
+    id: "E800-Q01",
+    // bank #4
+    prompt: "¿Qué entidades deben cumplir con <800>?",
     type: "multiple-choice",
     options: [
-      { letter: "A", text: "Prescribers, payers, and regulators" },
-      { letter: "B", text: "Patients, workers, and the environment" },
-      { letter: "C", text: "Patients, prescribers, and the public" },
-      { letter: "D", text: "Workers, payers, and the environment" },
-      { letter: "E", text: "None of the above" },
+      {
+        letter: "A",
+        text: "Solo fabricantes de APIs",
+      },
+      {
+        letter: "B",
+        text: "Todas las entidades y personal que almacenan, preparan, transportan o administran HDs",
+      },
+      {
+        letter: "C",
+        text: "Solo laboratorios de investigación",
+      },
+      {
+        letter: "D",
+        text: "Solo hospitales grandes",
+      },
     ],
     correctAnswer: "B",
-    explanation:
-      "The scope slide names three protected populations: patient safety, worker safety, and environmental protection. <800>'s first goal is protecting the worker.",
+    explanation: "Alcance amplio.",
   },
   {
-    id: "E800-Q2",
-    prompt:
-      "Which organization publishes the list of hazardous drugs that an entity must use as the basis for its own HD list?",
+    id: "E800-Q02",
+    // bank #5
+    prompt: "Un programa de HD debe incluir:",
     type: "multiple-choice",
     options: [
-      { letter: "A", text: "FDA" },
-      { letter: "B", text: "EPA" },
-      { letter: "C", text: "OSHA" },
-      { letter: "D", text: "NIOSH" },
-      { letter: "E", text: "USP" },
-    ],
-    correctAnswer: "D",
-    explanation:
-      "An entity must maintain its own HD list drawn from the current NIOSH List of Antineoplastic and Other Hazardous Drugs in Healthcare Settings.",
-  },
-  {
-    id: "E800-Q3",
-    prompt:
-      "How often must an entity review its hazardous drug list?",
-    type: "multiple-choice",
-    options: [
-      { letter: "A", text: "At least every 3 months" },
-      { letter: "B", text: "At least every 6 months" },
-      { letter: "C", text: "At least every 12 months" },
-      { letter: "D", text: "At least every 24 months" },
-      { letter: "E", text: "Only when NIOSH issues a new list" },
-    ],
-    correctAnswer: "C",
-    explanation:
-      "The entity's HD list, drawn from the NIOSH List, must be reviewed at least every 12 months (annually).",
-  },
-  {
-    id: "E800-Q4",
-    prompt:
-      "Which of the following must ALWAYS follow all <800> containment requirements and may NOT use an Assessment of Risk for alternative containment?",
-    type: "multiple-choice",
-    options: [
-      { letter: "A", text: "Final dosage forms of compounded HD preparations" },
-      { letter: "B", text: "Conventionally manufactured HD products requiring only counting or repackaging" },
-      { letter: "C", text: "Any HD active pharmaceutical ingredient (API) and any antineoplastic requiring HD manipulation" },
-      { letter: "D", text: "Non-antineoplastic final dosage forms on the NIOSH list" },
-      { letter: "E", text: "None of the above" },
-    ],
-    correctAnswer: "C",
-    explanation:
-      "Any HD API and any antineoplastic requiring manipulation MUST follow all containment requirements; these cannot be down-scoped by an Assessment of Risk. APIs and manipulated antineoplastics always require full containment, no exceptions.",
-  },
-  {
-    id: "E800-Q5",
-    prompt:
-      "An Assessment of Risk (AoR), at minimum, must consider all of the following EXCEPT:",
-    type: "multiple-choice",
-    options: [
-      { letter: "A", text: "Type of HD (antineoplastic, non-antineoplastic, reproductive risk only)" },
-      { letter: "B", text: "Dosage form and packaging" },
-      { letter: "C", text: "Risk of exposure and manipulation required" },
-      { letter: "D", text: "The reimbursement rate for the preparation" },
-      { letter: "E", text: "All of the above must be considered" },
-    ],
-    correctAnswer: "D",
-    explanation:
-      "An AoR must consider type of HD, dosage form, risk of exposure, packaging, and manipulation required. Reimbursement is not a factor in an Assessment of Risk.",
-  },
-  {
-    id: "E800-Q6",
-    prompt:
-      "If an entity does NOT perform an Assessment of Risk for an eligible HD, what is the consequence?",
-    type: "multiple-choice",
-    options: [
-      { letter: "A", text: "The HD may be handled with no special controls" },
-      { letter: "B", text: "The entity must apply ALL <800> containment strategies to every HD" },
-      { letter: "C", text: "The HD is removed from the NIOSH list" },
-      { letter: "D", text: "Only PPE is required, with no engineering controls" },
-      { letter: "E", text: "None of the above" },
-    ],
-    correctAnswer: "B",
-    explanation:
-      "The deck states the AoR is the only path to right-sized containment; if you don't perform one, you must apply ALL <800> containment strategies to every HD.",
-  },
-  {
-    id: "E800-Q7",
-    prompt:
-      "Which of the following are mandatory occupational-safety-plan elements every entity handling HDs must build?",
-    type: "multiple-choice",
-    options: [
-      { letter: "A", text: "An HD list" },
-      { letter: "B", text: "Facility and engineering controls" },
-      { letter: "C", text: "Competent (trained) personnel and safe work practices" },
-      { letter: "D", text: "Proper PPE use and HD waste segregation/disposal" },
-      { letter: "E", text: "All of the above" },
-    ],
-    correctAnswer: "E",
-    explanation:
-      "The six mandatory elements are: HD list, facility/engineering controls, competent personnel, safe work practices, proper PPE use, and HD waste segregation and disposal. <800> is a system, not a checklist.",
-  },
-  {
-    id: "E800-Q8",
-    prompt:
-      "In the three levels of engineering controls, what is a C-PEC?",
-    type: "multiple-choice",
-    options: [
-      { letter: "A", text: "A ventilated device that minimizes worker and environmental HD exposure during direct handling (e.g., CVE, Class I/II BSC, CACI)" },
-      { letter: "B", text: "The room in which the primary device is placed" },
-      { letter: "C", text: "A closed-system drug-transfer device used at the bedside" },
-      { letter: "D", text: "A respirator cartridge rated for HD vapors" },
-      { letter: "E", text: "None of the above" },
+      {
+        letter: "A",
+        text: "HD list, controles, personal competente, safe work practices, PPE y waste disposal",
+      },
+      {
+        letter: "B",
+        text: "Solo señalización en recepción",
+      },
+      {
+        letter: "C",
+        text: "Solo un inventario mensual",
+      },
+      {
+        letter: "D",
+        text: "Solo una lista de precios",
+      },
     ],
     correctAnswer: "A",
-    explanation:
-      "The C-PEC (Containment Primary Engineering Control) is the Level 1 ventilated device for direct handling — examples include a CVE, Class I/II BSC, or CACI. The C-SEC is the room (Level 2); CSTDs are supplemental (Level 3).",
+    explanation: "Elementos mínimos del plan.",
   },
   {
-    id: "E800-Q9",
-    prompt:
-      "A closed-system drug-transfer device (CSTD) can be used as a substitute for a C-PEC.",
-    type: "true-false",
+    id: "E800-Q03",
+    // bank #7
+    prompt: "La lista de HDs debe revisarse como mínimo:",
+    type: "multiple-choice",
     options: [
-      { letter: "TRUE", text: "True" },
-      { letter: "FALSE", text: "False" },
+      {
+        letter: "A",
+        text: "Cada 12 meses",
+      },
+      {
+        letter: "B",
+        text: "Nunca si no cambia el inventario",
+      },
+      {
+        letter: "C",
+        text: "Solo si hay inspección",
+      },
+      {
+        letter: "D",
+        text: "Cada 10 años",
+      },
     ],
-    correctAnswer: "FALSE",
-    explanation:
-      "A CSTD is a supplemental (Level 3) control and is NEVER a substitute for a C-PEC. It adds a layer of protection on top of the primary and secondary engineering controls.",
+    correctAnswer: "A",
+    explanation: "Revisión anual.",
+  },
+  {
+    id: "E800-Q04",
+    // bank #10
+    prompt: "El Assessment of Risk puede usarse para:",
+    type: "multiple-choice",
+    options: [
+      {
+        letter: "A",
+        text: "Eliminar todos los controles",
+      },
+      {
+        letter: "B",
+        text: "Antineoplásicos manipulados siempre",
+      },
+      {
+        letter: "C",
+        text: "Ciertos final dosage forms y otros HDs elegibles",
+      },
+      {
+        letter: "D",
+        text: "HD APIs sin datos",
+      },
+    ],
+    correctAnswer: "C",
+    explanation: "Permite containment alternativo en casos elegibles.",
+  },
+  {
+    id: "E800-Q05",
+    // bank #14
+    prompt: "¿Cuál es una ruta de entrada de HDs al cuerpo?",
+    type: "multiple-choice",
+    options: [
+      {
+        letter: "A",
+        text: "Refrigeración",
+      },
+      {
+        letter: "B",
+        text: "Fotodegradación",
+      },
+      {
+        letter: "C",
+        text: "Dermal absorption",
+      },
+      {
+        letter: "D",
+        text: "Facturación",
+      },
+    ],
+    correctAnswer: "C",
+    explanation: "También mucosal, inhalation, injection, ingestion.",
+  },
+  {
+    id: "E800-Q06",
+    // bank #32
+    prompt: "Un CSTD es un control:",
+    type: "multiple-choice",
+    options: [
+      {
+        letter: "A",
+        text: "Supplemental",
+      },
+      {
+        letter: "B",
+        text: "Primario único",
+      },
+      {
+        letter: "C",
+        text: "Sustituto del C-PEC",
+      },
+      {
+        letter: "D",
+        text: "Administrativo solamente",
+      },
+    ],
+    correctAnswer: "A",
+    explanation: "Control adicional.",
+  },
+  {
+    id: "E800-Q07",
+    // bank #35
+    prompt: "No se requiere C-PEC cuando la manipulación se limita a final dosage forms que:",
+    type: "multiple-choice",
+    options: [
+      {
+        letter: "A",
+        text: "Requieren trituración",
+      },
+      {
+        letter: "B",
+        text: "Siempre son líquidos",
+      },
+      {
+        letter: "C",
+        text: "No producen partículas, aerosoles o gases",
+      },
+      {
+        letter: "D",
+        text: "Siempre son estériles",
+      },
+    ],
+    correctAnswer: "C",
+    explanation: "Excepción limitada.",
+  },
+  {
+    id: "E800-Q08",
+    // bank #40
+    prompt: "Para antineoplastic HD compounding no se debe usar:",
+    type: "multiple-choice",
+    options: [
+      {
+        letter: "A",
+        text: "Class III BSC",
+      },
+      {
+        letter: "B",
+        text: "Class II BSC",
+      },
+      {
+        letter: "C",
+        text: "LAFW o CAI",
+      },
+      {
+        letter: "D",
+        text: "CACI",
+      },
+    ],
+    correctAnswer: "C",
+    explanation: "Prohibidos para antineoplásicos.",
+  },
+  {
+    id: "E800-Q09",
+    // bank #41
+    prompt: "La configuración preferida para sterile HD compounding es:",
+    type: "multiple-choice",
+    options: [
+      {
+        letter: "A",
+        text: "Mesa abierta",
+      },
+      {
+        letter: "B",
+        text: "ISO 7 buffer room + ISO 7 ante-room",
+      },
+      {
+        letter: "C",
+        text: "C-SCA en cualquier cuarto",
+      },
+      {
+        letter: "D",
+        text: "Área positiva sin separación",
+      },
+    ],
+    correctAnswer: "B",
+    explanation: "Configuración preferida.",
   },
   {
     id: "E800-Q10",
-    prompt:
-      "When MUST a CSTD be used, per <800>?",
+    // bank #54
+    prompt: "Un lugar apropiado para wipe sampling es:",
     type: "multiple-choice",
     options: [
-      { letter: "A", text: "When compounding any nonsterile HD" },
-      { letter: "B", text: "When administering antineoplastic HDs when the dosage form allows" },
-      { letter: "C", text: "When storing HDs in a refrigerator" },
-      { letter: "D", text: "When receiving HDs from a supplier" },
-      { letter: "E", text: "never; CSTDs are always optional" },
+      {
+        letter: "A",
+        text: "Oficina administrativa sin HDs",
+      },
+      {
+        letter: "B",
+        text: "Interior del C-PEC y áreas cerca del C-PEC",
+      },
+      {
+        letter: "C",
+        text: "Cafetería externa",
+      },
+      {
+        letter: "D",
+        text: "Baño público",
+      },
     ],
     correctAnswer: "B",
-    explanation:
-      "A CSTD MUST be used when administering antineoplastic HDs when the dosage form allows, and SHOULD be used when compounding HDs when the dosage form allows. It must not be used if incompatible with the specific HD.",
+    explanation: "Áreas de posible contaminación.",
   },
   {
     id: "E800-Q11",
-    prompt:
-      "For the PREFERRED sterile HD configuration (ISO 7 buffer + ISO 7 ante room), the HD buffer room requires which minimum air changes per hour (ACPH) and pressure relationship?",
+    // bank #58
+    prompt: "Los chemotherapy gloves deben cambiarse típicamente:",
     type: "multiple-choice",
     options: [
-      { letter: "A", text: "12 ACPH, positive pressure" },
-      { letter: "B", text: "30 ACPH, positive pressure" },
-      { letter: "C", text: "6 ACPH, neutral pressure" },
-      { letter: "D", text: "30 ACPH, negative pressure (0.01-0.03 in. w.c.) relative to adjacent areas" },
-      { letter: "E", text: "None of the above" },
+      {
+        letter: "A",
+        text: "Cada 30 minutos o antes si se comprometen",
+      },
+      {
+        letter: "B",
+        text: "Una vez al mes",
+      },
+      {
+        letter: "C",
+        text: "Cada 8 horas siempre",
+      },
+      {
+        letter: "D",
+        text: "Solo si terminan las cajas",
+      },
     ],
-    correctAnswer: "D",
-    explanation:
-      "Table 3 Row 1 (ISO 7 buffer configuration): externally vented C-SEC at 30 ACPH and negative pressure 0.01-0.03 in. w.c. relative to adjacent areas. This is the only configuration that allows standard <797> BUDs for sterile HD CSPs.",
+    correctAnswer: "A",
+    explanation: "Cambio frecuente por permeación/contaminación.",
   },
   {
     id: "E800-Q12",
-    prompt:
-      "What is the main trade-off of using a Containment Segregated Compounding Area (C-SCA) for sterile HD compounding instead of the full ISO 7 suite?",
+    // bank #61
+    prompt: "El receiving area debe tener disponible:",
     type: "multiple-choice",
     options: [
-      { letter: "A", text: "It requires no negative pressure" },
-      { letter: "B", text: "It permits high-risk CSPs of any BUD" },
-      { letter: "C", text: "It allows only low- and medium-risk HD CSPs and yields shorter BUDs than the ISO 7 configuration" },
-      { letter: "D", text: "It eliminates the need for a C-PEC" },
-      { letter: "E", text: "None of the above" },
+      {
+        letter: "A",
+        text: "Spill kit",
+      },
+      {
+        letter: "B",
+        text: "Cafetera",
+      },
+      {
+        letter: "C",
+        text: "Alfombra",
+      },
+      {
+        letter: "D",
+        text: "Mesa de comida",
+      },
     ],
-    correctAnswer: "C",
-    explanation:
-      "Table 3 Row 2 (C-SCA): an unclassified room at ≥12 ACPH and negative pressure where only low- and medium-risk HD CSPs may be prepared, with BUDs shorter than the ISO 7 configuration. Choosing the C-SCA buys simplicity at the cost of BUD.",
+    correctAnswer: "A",
+    explanation: "Preparación para derrames.",
   },
   {
     id: "E800-Q13",
-    prompt:
-      "Chemotherapy gloves used for handling HDs must meet which standard and which other requirement?",
+    // bank #62
+    prompt: "Un shipping container dañado y sin abrir debe:",
     type: "multiple-choice",
     options: [
-      { letter: "A", text: "ASTM D6978 (or successor) and must be powder-free" },
-      { letter: "B", text: "ISO 5 and must be sterile for all uses" },
-      { letter: "C", text: "OSHA 1910.134 and must be reusable" },
-      { letter: "D", text: "NIOSH N95 and must be latex" },
-      { letter: "E", text: "None of the above" },
+      {
+        letter: "A",
+        text: "Abrirse para inspección en área positiva",
+      },
+      {
+        letter: "B",
+        text: "Ignorarse si no huele",
+      },
+      {
+        letter: "C",
+        text: "Colocarse en breakroom",
+      },
+      {
+        letter: "D",
+        text: "Sellarse sin abrir y manejarse según procedimiento, contactando al suplidor",
+      },
     ],
-    correctAnswer: "A",
-    explanation:
-      "Chemotherapy gloves must meet ASTM D6978 (or successor), be powder-free, be inspected for defects, and be changed every 30 minutes (unless the manufacturer specifies otherwise) or immediately when torn or contaminated.",
+    correctAnswer: "D",
+    explanation: "Dañado = potencial spill/exposición.",
   },
   {
     id: "E800-Q14",
-    prompt:
-      "What is the baseline PPE for compounding both sterile and nonsterile hazardous drugs?",
+    // bank #64
+    prompt: "Los cuatro pasos de limpieza para HDs son:",
     type: "multiple-choice",
     options: [
-      { letter: "A", text: "A single pair of exam gloves only" },
-      { letter: "B", text: "A cloth lab coat and one pair of gloves" },
-      { letter: "C", text: "A gown; head, hair, and shoe covers; and TWO pairs of chemotherapy gloves" },
-      { letter: "D", text: "A surgical mask and goggles only" },
-      { letter: "E", text: "None of the above" },
+      {
+        letter: "A",
+        text: "Deactivation, decontamination, cleaning y disinfection",
+      },
+      {
+        letter: "B",
+        text: "Receipt, count, sell, file",
+      },
+      {
+        letter: "C",
+        text: "Wash, weigh, mix, dispense",
+      },
+      {
+        letter: "D",
+        text: "Rinse, label, store, bill",
+      },
     ],
-    correctAnswer: "C",
-    explanation:
-      "Baseline PPE for compounding sterile and nonsterile HDs is a gown; head, hair, and shoe covers; and two pairs of chemotherapy gloves. A cloth lab coat is not protection.",
+    correctAnswer: "A",
+    explanation: "Secuencia de limpieza HD.",
   },
   {
     id: "E800-Q15",
-    prompt:
-      "A surgical mask provides adequate respiratory protection from hazardous drugs.",
-    type: "true-false",
-    options: [
-      { letter: "TRUE", text: "True" },
-      { letter: "FALSE", text: "False" },
-    ],
-    correctAnswer: "FALSE",
-    explanation:
-      "Surgical masks do NOT provide respiratory protection from HDs. Most HD activities requiring respiratory protection need a fit-tested NIOSH-certified N95 or more protective device, with PAPR or full-facepiece required for spills and gas/vapor exposure.",
-  },
-  {
-    id: "E800-Q16",
-    prompt:
-      "When an HD shipping container that must be opened is found DAMAGED, the correct procedure is to:",
+    // bank #66
+    prompt: "Si se usa sodium hypochlorite, debe considerarse:",
     type: "multiple-choice",
     options: [
-      { letter: "A", text: "Open it on any counter and wipe up the spill with paper towels" },
-      { letter: "B", text: "Seal it in plastic or an impervious container, transport it to a C-PEC, open it on a plastic-backed prep mat, and handle damaged items as hazardous waste" },
-      { letter: "C", text: "Return it to the shelf and use it normally" },
-      { letter: "D", text: "Place it in the pneumatic tube system for disposal" },
-      { letter: "E", text: "None of the above" },
+      {
+        letter: "A",
+        text: "Mezclarlo con cualquier químico sin evaluar",
+      },
+      {
+        letter: "B",
+        text: "Dejarlo secar sin más pasos siempre",
+      },
+      {
+        letter: "C",
+        text: "Usarlo como único agente para todo",
+      },
+      {
+        letter: "D",
+        text: "Neutralizar o seguir con alcohol/agua/detergente para reducir corrosión",
+      },
     ],
-    correctAnswer: "B",
-    explanation:
-      "Table 4: a damaged container that must be opened is sealed in plastic/impervious container, transported to a C-PEC, opened on a plastic-backed prep mat; damaged items are enclosed and discarded as hazardous waste, then the C-PEC is deactivated, decontaminated, and cleaned. A damaged HD shipment is a contamination event (a spill).",
+    correctAnswer: "D",
+    explanation: "Prevención de corrosión e incompatibilidades.",
   },
-  {
-    id: "E800-Q17",
-    prompt:
-      "The four cleaning steps for HD surfaces, in their required sequential order, are:",
-    type: "multiple-choice",
-    options: [
-      { letter: "A", text: "Cleaning, disinfection, deactivation, decontamination" },
-      { letter: "B", text: "Deactivation, decontamination, cleaning, and (for sterile) disinfection" },
-      { letter: "C", text: "Disinfection, cleaning, decontamination, deactivation" },
-      { letter: "D", text: "Decontamination, deactivation, disinfection, cleaning" },
-      { letter: "E", text: "None of the above" },
-    ],
-    correctAnswer: "B",
-    explanation:
-      "Table 5 lists the steps in order: 1) deactivation (render inert), 2) decontamination (remove residue), 3) cleaning (remove organic/inorganic material), and 4) disinfection (sterile only). The steps are sequential and non-substitutable.",
-  },
-  {
-    id: "E800-Q18",
-    prompt:
-      "Cleaning agents for HD surfaces should be applied using:",
-    type: "multiple-choice",
-    options: [
-      { letter: "A", text: "Spray bottles, to cover the surface quickly" },
-      { letter: "B", text: "Wipes, NOT spray bottles, to avoid spreading residue" },
-      { letter: "C", text: "Compressed-air dusters" },
-      { letter: "D", text: "Dry paper towels only" },
-      { letter: "E", text: "None of the above" },
-    ],
-    correctAnswer: "B",
-    explanation:
-      "The cleaning rules specify applying agents via wipes — not spray bottles — to avoid aerosolizing and spreading HD residue.",
-  },
-  {
-    id: "E800-Q19",
-    prompt:
-      "How often should environmental wipe sampling for HD surface contamination be performed after the initial benchmark?",
-    type: "multiple-choice",
-    options: [
-      { letter: "A", text: "At least every 6 months (or more often as needed to verify containment)" },
-      { letter: "B", text: "At least every 12 months" },
-      { letter: "C", text: "At least every 24 months" },
-      { letter: "D", text: "Only when a spill occurs" },
-      { letter: "E", text: "Never; wipe sampling is optional" },
-    ],
-    correctAnswer: "A",
-    explanation:
-      "Wipe sampling is done initially as a benchmark, then at least every 6 months (or more often as needed). It is the only way to prove containment is actually working. The deck notes no universal acceptance limit exists, though some studies show worker uptake at cyclophosphamide > 1.00 ng/cm².",
-  },
-  {
-    id: "E800-Q20",
-    prompt:
-      "Which statement about medical surveillance under <800> is correct?",
-    type: "multiple-choice",
-    options: [
-      { letter: "A", text: "It applies only after a worker is injured by an HD" },
-      { letter: "B", text: "It enrolls personnel who handle HDs as a regular part of their job and includes baseline (pre-placement), periodic, and exit examinations" },
-      { letter: "C", text: "It is a one-time exam at hire with no follow-up" },
-      { letter: "D", text: "It is optional for entities that perform wipe sampling" },
-      { letter: "E", text: "None of the above" },
-    ],
-    correctAnswer: "B",
-    explanation:
-      "Medical surveillance (§18) enrolls personnel who handle HDs as a regular part of their job, with baseline pre-placement assessment, periodic surveillance, exit examination, and a follow-up plan after any health change or acute exposure. It is both primary (baseline) and secondary (early detection) prevention.",
-  },
-] as const;
+];

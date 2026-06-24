@@ -2,270 +2,399 @@ import type { Question } from "./types";
 
 /**
  * Student module 1 — USP 〈795〉 Pharmaceutical Compounding (Nonsterile).
- * Bank drafted from public/modulos/est-795.pdf; pending owner review.
+ * 15 questions selected from the owner's authoritative Spanish
+ * question bank (Banco_Preguntas). Pre-test and post-test draw from
+ * this same bank. `id` carries the source bank number for traceability.
  */
 export const usp795: readonly Question[] = [
   {
-    id: "E795-Q1",
-    prompt:
-      "A compounded nonsterile preparation (CNSP) under <795> is best defined as:",
+    id: "E795-Q01",
+    // bank #2
+    prompt: "¿Cuál de las siguientes formas farmacéuticas está cubierta por USP <795>?",
     type: "multiple-choice",
     options: [
       {
         letter: "A",
-        text: "Any drug product manufactured by an FDA-registered facility",
+        text: "Inyectables intravenosos",
       },
       {
         letter: "B",
-        text: "Combining, admixing, diluting, pooling, reconstituting other than as provided in the manufacturer's labeling, or otherwise altering a drug product or bulk drug substance to create a nonsterile preparation",
+        text: "Preparaciones oftálmicas estériles",
       },
       {
         letter: "C",
-        text: "Reconstituting a drug strictly according to the manufacturer's approved labeling",
+        text: "Cápsulas orales no estériles",
       },
       {
         letter: "D",
-        text: "Dispensing a commercially available product in its original container",
+        text: "Productos radiopharmaceuticals estériles",
       },
-      { letter: "E", text: "None of the above" },
-    ],
-    correctAnswer: "B",
-    explanation:
-      "The deck quotes the <795> definition verbatim: compounding is combining, admixing, diluting, pooling, reconstituting other than per the manufacturer's labeling, or otherwise altering a drug product or bulk drug substance to create a nonsterile preparation.",
-  },
-  {
-    id: "E795-Q2",
-    prompt:
-      "Which of the following is true of the dosage forms within the scope of <795>?",
-    type: "multiple-choice",
-    options: [
-      { letter: "A", text: "Solid oral preparations (tablets, capsules, powders, lozenges)" },
-      { letter: "B", text: "Liquid oral solutions, suspensions, syrups, and elixirs" },
-      { letter: "C", text: "Rectal and vaginal suppositories, creams, gels, and enemas" },
-      { letter: "D", text: "Topical creams, gels, ointments, and pastes" },
-      { letter: "E", text: "All of the above" },
-    ],
-    correctAnswer: "E",
-    explanation:
-      "The scope slide lists solid oral, liquid oral, rectal/vaginal, topical, nasal/sinus, and otic dosage forms as all falling within <795>.",
-  },
-  {
-    id: "E795-Q3",
-    prompt:
-      "An otic preparation intended for an ear with a PERFORATED tympanic membrane is governed by:",
-    type: "multiple-choice",
-    options: [
-      { letter: "A", text: "<795>, because it is still a nonsterile preparation" },
-      { letter: "B", text: "<797>, because a perforated membrane requires a sterile preparation" },
-      { letter: "C", text: "<800>, because the ear is an internal route" },
-      { letter: "D", text: "<825>, because it is administered locally" },
-      { letter: "E", text: "None of the above" },
-    ],
-    correctAnswer: "B",
-    explanation:
-      "The deck notes otic preparations fall under <795> only for an intact eardrum; a perforated tympanic membrane routes the preparation to sterile compounding under <797>.",
-  },
-  {
-    id: "E795-Q4",
-    prompt:
-      "Reconstituting a drug strictly according to the manufacturer's approved labeling is considered compounding under <795>.",
-    type: "true-false",
-    options: [
-      { letter: "TRUE", text: "True" },
-      { letter: "FALSE", text: "False" },
-    ],
-    correctAnswer: "FALSE",
-    explanation:
-      "Reconstitution strictly per the manufacturer's approved labeling is explicitly listed as a practice OUTSIDE the scope of <795>; it is not compounding.",
-  },
-  {
-    id: "E795-Q5",
-    prompt:
-      "Repackaging of conventionally manufactured drug products is addressed by which USP chapter, not <795>?",
-    type: "multiple-choice",
-    options: [
-      { letter: "A", text: "<797>" },
-      { letter: "B", text: "<800>" },
-      { letter: "C", text: "<825>" },
-      { letter: "D", text: "<1178>" },
-      { letter: "E", text: "<1231>" },
-    ],
-    correctAnswer: "D",
-    explanation:
-      "The 'Practices Outside the Scope' slide directs repackaging of conventionally manufactured products to USP General Chapter <1178>, Good Repackaging Practices.",
-  },
-  {
-    id: "E795-Q6",
-    prompt:
-      "Under the administration-preparation exception, preparing a single dose for a single patient is excluded from <795> when administration begins within:",
-    type: "multiple-choice",
-    options: [
-      { letter: "A", text: "1 hour" },
-      { letter: "B", text: "4 hours" },
-      { letter: "C", text: "12 hours" },
-      { letter: "D", text: "24 hours" },
-      { letter: "E", text: "None of the above" },
-    ],
-    correctAnswer: "B",
-    explanation:
-      "Preparing a single dose for a single patient (e.g., crushing a tablet to mix with food) is excluded from <795> when administration begins within 4 hours; the exception is patient-specific and time-limited.",
-  },
-  {
-    id: "E795-Q7",
-    prompt:
-      "Nonsterile radiopharmaceuticals are governed by which USP chapter rather than <795>?",
-    type: "multiple-choice",
-    options: [
-      { letter: "A", text: "<797>" },
-      { letter: "B", text: "<800>" },
-      { letter: "C", text: "<825>" },
-      { letter: "D", text: "<1112>" },
-      { letter: "E", text: "<1163>" },
     ],
     correctAnswer: "C",
-    explanation:
-      "The deck lists nonsterile radiopharmaceuticals among practices outside <795>; they fall under USP General Chapter <825>.",
+    explanation: "<795> cubre preparaciones no estériles.",
   },
   {
-    id: "E795-Q8",
-    prompt:
-      "Which of the following is NOT one of the five compounding risks that <795> was written to prevent?",
+    id: "E795-Q02",
+    // bank #9
+    prompt: "¿Quién debe ser identificado por nombre en los SOPs de la facilidad?",
     type: "multiple-choice",
     options: [
-      { letter: "A", text: "Excessive microbial contamination of the finished preparation" },
-      { letter: "B", text: "Variability from the intended strength of correct ingredients" },
-      { letter: "C", text: "Physical and chemical incompatibilities between ingredients" },
-      { letter: "D", text: "Failure to bill the preparation to the correct insurance plan" },
-      { letter: "E", text: "Use of bulk drug substances or excipients of inappropriate quality" },
+      {
+        letter: "A",
+        text: "El designated person",
+      },
+      {
+        letter: "B",
+        text: "El manufacturer del API",
+      },
+      {
+        letter: "C",
+        text: "El courier",
+      },
+      {
+        letter: "D",
+        text: "El paciente",
+      },
     ],
-    correctAnswer: "D",
-    explanation:
-      "The five risks are microbial contamination, strength variability, incompatibilities, chemical/physical contaminants, and substandard ingredients. Billing is not one of them.",
+    correctAnswer: "A",
+    explanation: "La responsabilidad debe estar nombrada.",
   },
   {
-    id: "E795-Q9",
-    prompt:
-      "Which statement about the designated person under <795> is correct?",
+    id: "E795-Q03",
+    // bank #11
+    prompt: "¿Cuál es una responsabilidad del designated person bajo <795>?",
     type: "multiple-choice",
     options: [
-      { letter: "A", text: "Only large facilities are required to name a designated person" },
-      { letter: "B", text: "A solo compounder is, by definition, the designated person" },
-      { letter: "C", text: "The designated person's accountability may be assumed informally rather than written" },
-      { letter: "D", text: "The designated person is responsible only for cleaning schedules" },
-      { letter: "E", text: "None of the above" },
+      {
+        letter: "A",
+        text: "Eliminar la necesidad de SOPs",
+      },
+      {
+        letter: "B",
+        text: "Seleccionar componentes y verificar documentación de calidad",
+      },
+      {
+        letter: "C",
+        text: "Reducir el BUD sin documentarlo",
+      },
+      {
+        letter: "D",
+        text: "Aprobar recetas médicas sin prescriptor",
+      },
     ],
     correctAnswer: "B",
-    explanation:
-      "The deck states every facility must name one or more designated persons, a solo compounder is by definition the designated person, and accountability must be named in writing in the SOPs.",
+    explanation: "Component selection es responsabilidad clave.",
+  },
+  {
+    id: "E795-Q04",
+    // bank #13
+    prompt: "La re-evaluación de competencia debe ocurrir como mínimo:",
+    type: "multiple-choice",
+    options: [
+      {
+        letter: "A",
+        text: "Cada mes",
+      },
+      {
+        letter: "B",
+        text: "Cada 12 meses",
+      },
+      {
+        letter: "C",
+        text: "Cada 6 meses",
+      },
+      {
+        letter: "D",
+        text: "Cada 3 años",
+      },
+    ],
+    correctAnswer: "B",
+    explanation: "Cadencia anual mínima.",
+  },
+  {
+    id: "E795-Q05",
+    // bank #16
+    prompt: "¿Cuál condición debe reportarse al designated person antes de componer?",
+    type: "multiple-choice",
+    options: [
+      {
+        letter: "A",
+        text: "Cambio de turno",
+      },
+      {
+        letter: "B",
+        text: "Rash o lesión supurante en piel expuesta",
+      },
+      {
+        letter: "C",
+        text: "Uso de gafas recetadas",
+      },
+      {
+        letter: "D",
+        text: "Dolor muscular leve sin síntomas",
+      },
+    ],
+    correctAnswer: "B",
+    explanation: "Condición que puede aumentar contaminación.",
+  },
+  {
+    id: "E795-Q06",
+    // bank #19
+    prompt: "¿Cuál afirmación sobre alcohol-based hand rub es correcta?",
+    type: "multiple-choice",
+    options: [
+      {
+        letter: "A",
+        text: "Solo se usa después de tocar APIs",
+      },
+      {
+        letter: "B",
+        text: "Por sí solo no es suficiente",
+      },
+      {
+        letter: "C",
+        text: "Sustituye por completo el lavado con agua y jabón",
+      },
+      {
+        letter: "D",
+        text: "No se permite nunca en farmacia",
+      },
+    ],
+    correctAnswer: "B",
+    explanation: "Debe lavarse con agua y jabón.",
+  },
+  {
+    id: "E795-Q07",
+    // bank #20
+    prompt: "Los guantes deben reemplazarse inmediatamente cuando:",
+    type: "multiple-choice",
+    options: [
+      {
+        letter: "A",
+        text: "Se imprime la etiqueta",
+      },
+      {
+        letter: "B",
+        text: "Se recibe una llamada",
+      },
+      {
+        letter: "C",
+        text: "Termina el mes",
+      },
+      {
+        letter: "D",
+        text: "Se rompe o compromete su integridad",
+      },
+    ],
+    correctAnswer: "D",
+    explanation: "Control de contaminación.",
+  },
+  {
+    id: "E795-Q08",
+    // bank #22
+    prompt: "La temperatura del área de almacenamiento en días abiertos debe monitorearse:",
+    type: "multiple-choice",
+    options: [
+      {
+        letter: "A",
+        text: "Una vez al año",
+      },
+      {
+        letter: "B",
+        text: "Cada 5 años",
+      },
+      {
+        letter: "C",
+        text: "Solo si hay excursión visible",
+      },
+      {
+        letter: "D",
+        text: "Al menos una vez diaria o continuamente con dispositivo de registro",
+      },
+    ],
+    correctAnswer: "D",
+    explanation: "Monitoreo documentado.",
+  },
+  {
+    id: "E795-Q09",
+    // bank #26
+    prompt: "Los estantes de almacenamiento deben limpiarse como mínimo:",
+    type: "multiple-choice",
+    options: [
+      {
+        letter: "A",
+        text: "Semanalmente",
+      },
+      {
+        letter: "B",
+        text: "Cada 5 años",
+      },
+      {
+        letter: "C",
+        text: "Diariamente",
+      },
+      {
+        letter: "D",
+        text: "Cada 3 meses y después de spills o contaminación sospechada",
+      },
+    ],
+    correctAnswer: "D",
+    explanation: "Frecuencia de storage shelving.",
   },
   {
     id: "E795-Q10",
-    prompt:
-      "Under <795>, personnel must complete initial training and competency before independent compounding, and re-evaluation must occur at least every:",
+    // bank #28
+    prompt: "Las superficies del equipo que contactan componentes no deben ser:",
     type: "multiple-choice",
     options: [
-      { letter: "A", text: "3 months" },
-      { letter: "B", text: "6 months" },
-      { letter: "C", text: "12 months" },
-      { letter: "D", text: "24 months" },
-      { letter: "E", text: "36 months" },
+      {
+        letter: "A",
+        text: "Lisas",
+      },
+      {
+        letter: "B",
+        text: "Lavables",
+      },
+      {
+        letter: "C",
+        text: "Reactivas, aditivas o sortivas",
+      },
+      {
+        letter: "D",
+        text: "Compatibles con la formulación",
+      },
     ],
     correctAnswer: "C",
-    explanation:
-      "Required training cadence: initial training and competency before independent compounding, then re-training and re-evaluation at least every 12 months, all documented.",
+    explanation: "Material compatibility.",
   },
   {
     id: "E795-Q11",
-    prompt:
-      "For hand hygiene under <795>, which of the following is required before donning gloves to compound?",
+    // bank #30
+    prompt: "Actividades que generan partículas en el aire deben evaluarse para usar:",
     type: "multiple-choice",
     options: [
-      { letter: "A", text: "Alcohol-based hand rub alone is sufficient" },
-      { letter: "B", text: "Wash hands with soap and water for at least 30 seconds, dry with disposable towels, then don gloves" },
-      { letter: "C", text: "Rinse hands with tap water only" },
-      { letter: "D", text: "No hand hygiene is required if gloves are worn" },
-      { letter: "E", text: "None of the above" },
+      {
+        letter: "A",
+        text: "Un libro de quejas",
+      },
+      {
+        letter: "B",
+        text: "Un refrigerador dedicado únicamente",
+      },
+      {
+        letter: "C",
+        text: "Un equipo cerrado como CVE, BSC o containment glove bag",
+      },
+      {
+        letter: "D",
+        text: "Una etiqueta más grande",
+      },
     ],
-    correctAnswer: "B",
-    explanation:
-      "The garbing slide specifies washing with soap and water for at least 30 seconds, drying completely with disposable towels, then donning gloves; an alcohol-based hand rub alone is NOT sufficient.",
+    correctAnswer: "C",
+    explanation: "Airborne-particle evaluation.",
   },
   {
     id: "E795-Q12",
-    prompt:
-      "Under Table 4 of <795>, what default BUD applies to a NONPRESERVED aqueous CNSP (water activity ≥ 0.60) when no monograph and no stability data exist?",
+    // bank #32
+    prompt: "Cuando el agua es ingrediente de la formulación, debe ser:",
     type: "multiple-choice",
     options: [
-      { letter: "A", text: "14 days, refrigerated" },
-      { letter: "B", text: "35 days, CRT or refrigerated" },
-      { letter: "C", text: "90 days, CRT or refrigerated" },
-      { letter: "D", text: "180 days, CRT or refrigerated" },
-      { letter: "E", text: "no BUD limit applies" },
+      {
+        letter: "A",
+        text: "Agua de cualquier fuente potable",
+      },
+      {
+        letter: "B",
+        text: "Agua mineral comercial sin evaluación",
+      },
+      {
+        letter: "C",
+        text: "Purified Water o mejor calidad",
+      },
+      {
+        letter: "D",
+        text: "Tap water",
+      },
     ],
-    correctAnswer: "A",
-    explanation:
-      "Table 4 assigns 14 days (refrigerator) to nonpreserved aqueous CNSPs with aw ≥ 0.60. The four default numbers are 14, 35, 90, and 180 days at the 0.60 aw threshold.",
+    correctAnswer: "C",
+    explanation: "Water in formulations.",
   },
   {
     id: "E795-Q13",
-    prompt:
-      "The water activity (aw) threshold in <795> that separates 'low microbial risk' (nonaqueous) from preparations that need preservation (aqueous) is:",
+    // bank #39
+    prompt: "La etiqueta de una CNSP debe incluir como mínimo:",
     type: "multiple-choice",
     options: [
-      { letter: "A", text: "0.30" },
-      { letter: "B", text: "0.45" },
-      { letter: "C", text: "0.60" },
-      { letter: "D", text: "0.85" },
-      { letter: "E", text: "0.99" },
+      {
+        letter: "A",
+        text: "Identificación interna, ingredientes activos, concentración, BUD, forma, almacenamiento y cantidad/volumen",
+      },
+      {
+        letter: "B",
+        text: "Solo logo de farmacia",
+      },
+      {
+        letter: "C",
+        text: "Solo nombre del paciente",
+      },
+      {
+        letter: "D",
+        text: "Solo fecha de compra del API",
+      },
     ],
-    correctAnswer: "C",
-    explanation:
-      "The deck repeatedly marks 0.60 as the water-activity line: aw ≥ 0.60 is aqueous (14-35 day BUD range) and aw < 0.60 is nonaqueous (90-180 day BUD range).",
+    correctAnswer: "A",
+    explanation: "Elementos mínimos de labeling.",
   },
   {
     id: "E795-Q14",
-    prompt:
-      "Regarding APIs and water used in <795> compounding, which statement is correct?",
+    // bank #45
+    prompt: "El BUD por defecto para una preparación acuosa preservada es:",
     type: "multiple-choice",
     options: [
-      { letter: "A", text: "APIs may be used without a Certificate of Analysis (COA) if the supplier is well known" },
-      { letter: "B", text: "Tap water may be used when a formulation includes water as an ingredient" },
-      { letter: "C", text: "APIs must comply with the USP-NF monograph (if one exists), be accompanied by a COA, and water as an ingredient must be Purified Water or better" },
-      { letter: "D", text: "Component selection is the responsibility of any technician on duty" },
-      { letter: "E", text: "None of the above" },
+      {
+        letter: "A",
+        text: "24 horas",
+      },
+      {
+        letter: "B",
+        text: "14 días",
+      },
+      {
+        letter: "C",
+        text: "365 días",
+      },
+      {
+        letter: "D",
+        text: "35 días a CRT o refrigerada",
+      },
     ],
-    correctAnswer: "C",
-    explanation:
-      "Component-selection slide: APIs must comply with the USP-NF monograph if one exists, carry a COA, and be FDA-registered-facility sourced; Purified Water or better is required when water is a formulation ingredient. 'No COA, no compounding.'",
+    correctAnswer: "D",
+    explanation: "Categoría acuosa preservada.",
   },
   {
     id: "E795-Q15",
-    prompt:
-      "How do hazardous drugs (HDs) relate to <795> compounding standards?",
+    // bank #48
+    prompt: "Un BUD puede exceder la fecha de expiración más corta de sus componentes:",
     type: "multiple-choice",
     options: [
-      { letter: "A", text: "HDs are exempt from <795> entirely" },
-      { letter: "B", text: "<795> replaces <800> for nonsterile HD compounding" },
-      { letter: "C", text: "<795> sets the floor and <800> adds mandatory HD containment controls on top" },
-      { letter: "D", text: "HDs may be compounded without any additional controls beyond <795>" },
-      { letter: "E", text: "None of the above" },
+      {
+        letter: "A",
+        text: "Solo si está refrigerado",
+      },
+      {
+        letter: "B",
+        text: "Sí, si el paciente lo solicita",
+      },
+      {
+        letter: "C",
+        text: "Sí, si la etiqueta es clara",
+      },
+      {
+        letter: "D",
+        text: "No",
+      },
     ],
-    correctAnswer: "C",
-    explanation:
-      "The deck states hazardous drugs always layer in <800> — <795> sets the floor for nonsterile compounding, and <800> adds mandatory HD controls on top.",
+    correctAnswer: "D",
+    explanation: "No puede exceder expiración de componentes.",
   },
-  {
-    id: "E795-Q16",
-    prompt: "Under <795>, simply breaking or cutting a tablet into smaller portions is:",
-    type: "multiple-choice",
-    options: [
-      { letter: "A", text: "Compounding, and always within the scope of <795>" },
-      { letter: "B", text: "Tablet splitting, which does not constitute compounding under this chapter" },
-      { letter: "C", text: "Permitted only inside a C-PEC" },
-      { letter: "D", text: "Repackaging governed by <797>" },
-    ],
-    correctAnswer: "B",
-    explanation:
-      "The deck lists tablet splitting among practices outside the scope of <795>: simply breaking or cutting a tablet into smaller portions does not constitute compounding under this chapter.",
-  },
-] as const;
+];
