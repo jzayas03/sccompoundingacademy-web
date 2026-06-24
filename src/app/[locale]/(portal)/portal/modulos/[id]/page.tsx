@@ -103,8 +103,19 @@ export default async function ModulePage({
   const hasPaid = Boolean(user.paidAt);
   const hasQuiz = getQuiz(id as ModuleQuizId).length > 0;
 
+  // Owner-preview QA: when an owner is actively previewing a tier
+  // (`?preview=student|profesional`), we drop the owner bypass for the
+  // PRE-TEST gate so the owner walks the same "pre-test before the module"
+  // flow a real student sees. Payment + verification stay assumed-satisfied
+  // for owners (they have no real enrollment to fake), so the pre-test is
+  // the only gate that actually engages during a preview. A non-previewing
+  // owner still bypasses every gate.
+  const previewActive = Boolean(preview);
+  const gateOwner = isOwner && !previewActive;
+  const gatePaid = hasPaid || isOwner;
+
   let hasPreAttempt = false;
-  if (!isOwner && hasPaid && hasQuiz) {
+  if (!gateOwner && gatePaid && hasQuiz) {
     // `quizAttempts.moduleId` is the integer day (1/2/3), which equals
     // `day` here.
     const [preDone] = await db
@@ -121,7 +132,12 @@ export default async function ModulePage({
     hasPreAttempt = Boolean(preDone);
   }
 
-  const access = resolveModuleAccess({ isOwner, hasPaid, hasQuiz, hasPreAttempt });
+  const access = resolveModuleAccess({
+    isOwner: gateOwner,
+    hasPaid: gatePaid,
+    hasQuiz,
+    hasPreAttempt,
+  });
   if (access.kind === "redirect") {
     redirect(
       access.to === "pre-test"
