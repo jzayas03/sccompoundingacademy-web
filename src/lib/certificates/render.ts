@@ -228,7 +228,7 @@ function drawOverlay(
   drawCentered(
     page,
     input.program === "student"
-      ? "Certificate of Completion · USP 〈795〉 & 〈800〉"
+      ? "Certificate of Completion · USP <795> & <800>"
       : awardsCeus
         ? "18 contact hours · 1.8 CEUs · Knowledge-based, Level 1"
         : "18 contact hours · Knowledge-based, Level 1",
@@ -398,7 +398,7 @@ function drawPlaceholderBody(
   drawCentered(
     page,
     input.program === "student"
-      ? "Certificado de Finalización · USP 〈795〉 y 〈800〉"
+      ? "Certificado de Finalización · USP <795> y <800>"
       : awardsCeus
         ? "18 horas de contacto · 1.8 CEUs · Knowledge-based, Level 1"
         : "18 horas de contacto · Knowledge-based, Level 1",
