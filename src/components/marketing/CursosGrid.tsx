@@ -2,7 +2,7 @@ import { useLocale, useTranslations, useMessages } from "next-intl";
 import { Link } from "@/i18n/routing";
 import { Container } from "@/components/ui/Container";
 import { Reveal } from "@/components/ui/Reveal";
-import { getCourseById } from "@/lib/courses";
+import { getCourseById, type Tier } from "@/lib/courses";
 
 /** One open cohort, trimmed to what the grid footer needs. The server
  * page fetches these from the DB (`lib/cohorts.ts`) and passes them in. */
@@ -26,6 +26,11 @@ type CourseItem = {
   description: string;
   duration: string;
   modules: ModuleItem[];
+  uspLabel?: string;
+  includesItems?: string[];
+  credentialNote?: string;
+  enrollCourseId?: string;
+  enrollTier?: Tier;
 };
 
 /**
@@ -95,6 +100,8 @@ export function CursosGrid({ openCohorts }: { openCohorts: CohortBrief[] }) {
           {items.map((course) => {
             const courseData = getCourseById(course.id);
             const cohortMonth = nextCohortLabel(course.id);
+            const uspLabel = courseData?.uspLabel ?? course.uspLabel;
+            const cardIncludes = course.includesItems ?? includesItems;
             return (
               <li key={course.id} className="h-full">
                 <article className="border-gray-300 group relative flex h-full flex-col overflow-hidden rounded-lg border bg-white p-6 sm:p-8 lg:p-10">
@@ -104,10 +111,10 @@ export function CursosGrid({ openCohorts }: { openCohorts: CohortBrief[] }) {
                   />
                   <p className="font-heading text-teal-deep flex flex-wrap items-center gap-x-2 gap-y-1 text-xs font-semibold tracking-[0.18em] uppercase">
                     <span>{course.level}</span>
-                    {courseData?.uspLabel && (
+                    {uspLabel && (
                       <>
                         <span aria-hidden className="text-teal-deep/40">·</span>
-                        <span className="text-teal-deep/80">{courseData.uspLabel}</span>
+                        <span className="text-teal-deep/80">{uspLabel}</span>
                       </>
                     )}
                   </p>
@@ -123,7 +130,11 @@ export function CursosGrid({ openCohorts }: { openCohorts: CohortBrief[] }) {
                       <p className="font-heading text-teal-deep text-xs font-semibold tracking-[0.18em] uppercase">
                         {t("modulesLabel")}
                       </p>
-                      <ol className="mt-4 grid gap-4 sm:grid-cols-3">
+                      <ol
+                        className={`mt-4 grid gap-4 ${
+                          course.modules.length === 2 ? "sm:grid-cols-2" : "sm:grid-cols-3"
+                        }`}
+                      >
                         {course.modules.map((mod) => (
                           <li
                             key={mod.id}
@@ -147,13 +158,13 @@ export function CursosGrid({ openCohorts }: { openCohorts: CohortBrief[] }) {
                   {/* Inclusiones — chartreuse-check selling points just
                       above the price/CE block. Two-column on sm+ to keep
                       the card height contained. */}
-                  {includesItems?.length > 0 && (
+                  {cardIncludes?.length > 0 && (
                     <div className="border-gray-300 mt-8 border-t pt-6">
                       <p className="font-heading text-teal-deep text-xs font-semibold tracking-[0.18em] uppercase">
                         {t("includesLabel")}
                       </p>
                       <ul className="mt-3 grid grid-cols-1 gap-2 sm:grid-cols-2">
-                        {includesItems.map((item) => (
+                        {cardIncludes.map((item) => (
                           <li key={item} className="flex items-start gap-2 text-sm">
                             <svg
                               aria-hidden
@@ -192,6 +203,17 @@ export function CursosGrid({ openCohorts }: { openCohorts: CohortBrief[] }) {
                     </div>
                   )}
 
+                  {!courseData?.acpe && course.credentialNote && (
+                    <div className="border-gray-300 mt-6 border-t pt-6">
+                      <p className="font-heading text-teal-deep text-xs font-semibold tracking-[0.18em] uppercase">
+                        {t("credentialLabel")}
+                      </p>
+                      <p className="text-gray-900 mt-3 text-sm leading-relaxed">
+                        {course.credentialNote}
+                      </p>
+                    </div>
+                  )}
+
                   <div className="mt-auto pt-8">
                     <div className="border-gray-300 border-t pt-4">
                       <div className="flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
@@ -210,7 +232,13 @@ export function CursosGrid({ openCohorts }: { openCohorts: CohortBrief[] }) {
                           )}
                         </div>
                         <Link
-                          href={{ pathname: "/inscripcion", query: { course: course.id } }}
+                          href={{
+                            pathname: "/inscripcion",
+                            query: {
+                              course: course.enrollCourseId ?? course.id,
+                              ...(course.enrollTier ? { tier: course.enrollTier } : {}),
+                            },
+                          }}
                           className="font-heading text-teal-deep group-hover:text-teal inline-flex shrink-0 items-center gap-1 text-sm font-semibold transition-colors"
                           aria-label={`${t("courseLinkAria")}: ${course.title}`}
                         >

@@ -15,6 +15,7 @@ import {
   sanitizeQuiz,
   type ModuleQuizId,
 } from "@/lib/quizzes";
+import { resolveViewableModule, getModuleCatalogue } from "@/lib/curriculum";
 import { isAdminEmail } from "@/lib/admin";
 import { QuizForm } from "@/components/portal/QuizForm";
 import { submitQuizAction } from "./actions";
@@ -22,18 +23,6 @@ import { submitQuizAction } from "./actions";
 export const metadata: Metadata = {
   title: "Post-test · SCCA Portal",
   robots: { index: false, follow: false },
-};
-
-const MODULE_IDS = ["modulo-1", "modulo-2", "modulo-3"] as const;
-
-type ModuleI18n = {
-  id: string;
-  day: string;
-  title: string;
-  summary: string;
-};
-type CursosGridMessages = {
-  cursosGrid: { items: Array<{ modules: ModuleI18n[] }> };
 };
 
 export default async function PostTestPage({
@@ -44,9 +33,6 @@ export default async function PostTestPage({
   const { locale, id } = await params;
   setRequestLocale(locale);
 
-  if (!MODULE_IDS.includes(id as ModuleQuizId)) notFound();
-  const moduleId = id as ModuleQuizId;
-
   const session = await auth();
   if (!session?.user?.email) redirect(`/${locale}/portal/login`);
 
@@ -56,9 +42,14 @@ export default async function PostTestPage({
     .where(eq(users.email, session.user.email))
     .limit(1);
   if (!user) redirect(`/${locale}/portal/login`);
-  if (!user.paidAt && !isAdminEmail(session.user.email)) {
+  const isOwner = isAdminEmail(session.user.email);
+  if (!user.paidAt && !isOwner) {
     redirect(`/${locale}/portal`);
   }
+
+  const viewable = resolveViewableModule({ isOwner, userTier: user.tier, id });
+  if (!viewable) notFound();
+  const moduleId = id as ModuleQuizId;
 
   const questions = getQuiz(moduleId);
   const threshold = getPassingThreshold();
@@ -67,6 +58,7 @@ export default async function PostTestPage({
     <PostTestPanel
       locale={locale as "es" | "en"}
       moduleId={moduleId}
+      tier={viewable.tier}
       questions={questions}
       threshold={threshold}
     />
@@ -76,11 +68,13 @@ export default async function PostTestPage({
 function PostTestPanel({
   locale,
   moduleId,
+  tier,
   questions,
   threshold,
 }: {
   locale: "es" | "en";
   moduleId: ModuleQuizId;
+  tier: import("@/lib/curriculum").UserTier;
   questions: ReturnType<typeof getQuiz>;
   threshold: number;
 }) {
@@ -88,8 +82,9 @@ function PostTestPanel({
   // Pull the module display name from the same catalogue the landing
   // and portal dashboard render — keeps copy in sync without a separate
   // portal-side i18n branch for module titles.
-  const messages = useMessages() as unknown as CursosGridMessages;
-  const moduleData = messages.cursosGrid.items[0]?.modules.find((m) => m.id === moduleId);
+  const moduleData = getModuleCatalogue(useMessages(), tier).find(
+    (m) => m.id === moduleId,
+  );
 
   const isEmpty = questions.length === 0;
   const sanitized = sanitizeQuiz(questions);

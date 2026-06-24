@@ -7,6 +7,7 @@ import {
   type CohortOption,
 } from "@/components/marketing/inscripcion/InscripcionForm";
 import { listOpenCohorts, formatCohortLabel } from "@/lib/cohorts";
+import { type Tier } from "@/lib/courses";
 
 export async function generateMetadata({
   params,
@@ -32,10 +33,10 @@ export default async function Page({
   searchParams,
 }: {
   params: Promise<{ locale: string }>;
-  searchParams: Promise<{ course?: string }>;
+  searchParams: Promise<{ course?: string; tier?: string }>;
 }) {
   const { locale } = await params;
-  const { course } = await searchParams;
+  const { course, tier } = await searchParams;
   setRequestLocale(locale);
   const loc = locale as "es" | "en";
 
@@ -49,17 +50,24 @@ export default async function Page({
   }));
 
   return (
-    <InscripcionPage locale={loc} preselectedCourseSlug={course} cohorts={cohorts} />
+    <InscripcionPage
+      locale={loc}
+      preselectedCourseSlug={course}
+      preselectedTier={tier === "student" || tier === "profesional" ? tier : undefined}
+      cohorts={cohorts}
+    />
   );
 }
 
 function InscripcionPage({
   locale,
   preselectedCourseSlug,
+  preselectedTier,
   cohorts,
 }: {
   locale: "es" | "en";
   preselectedCourseSlug?: string;
+  preselectedTier?: Tier;
   cohorts: CohortOption[];
 }) {
   const t = useTranslations("inscripcion");
@@ -89,6 +97,7 @@ function InscripcionPage({
           <InscripcionForm
             locale={locale}
             preselectedCourseId={preselectedCourseSlug}
+            preselectedTier={preselectedTier}
             cohorts={cohorts}
             docsVersion={docsVersion}
           />

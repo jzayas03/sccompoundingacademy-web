@@ -43,4 +43,9 @@ export type Question = {
  *  the interactive quiz form. */
 export type SanitizedQuestion = Omit<Question, "correctAnswer" | "explanation">;
 
-export type ModuleQuizId = "modulo-1" | "modulo-2" | "modulo-3";
+export type ModuleQuizId =
+  | "modulo-1"
+  | "modulo-2"
+  | "modulo-3"
+  | "usp-795"
+  | "usp-800";

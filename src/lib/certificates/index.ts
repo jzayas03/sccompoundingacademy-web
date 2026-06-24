@@ -1,6 +1,7 @@
 import { and, desc, eq, inArray, sql } from "drizzle-orm";
 import { db } from "@/lib/db";
 import { certificates, quizAttempts } from "@/lib/db/schema";
+import { requiredOrdinals, type UserTier } from "@/lib/curriculum";
 
 /**
  * Certificate lifecycle helpers for the SCCA portal.
@@ -26,41 +27,64 @@ import { certificates, quizAttempts } from "@/lib/db/schema";
 
 export type EligibilityReport = {
   eligible: boolean;
-  passedModules: { 1: boolean; 2: boolean; 3: boolean };
+  passedModules: Record<number, boolean>;
 };
 
-const MODULE_IDS = [1, 2, 3] as const;
+/** Which certificate program a given portal tier earns. The student
+ *  track gets a non-ACPE completion certificate with its own numbering;
+ *  everyone else (profesional / pharmacist / owner-null) gets the
+ *  professional certificate. */
+export type CertProgram = "profesional" | "student";
+
+export function programForTier(tier: UserTier): CertProgram {
+  return tier === "student" ? "student" : "profesional";
+}
+
+/** Human-friendly cert-number prefix per program. The two prefixes are
+ *  deliberately disjoint (`SCCA-` vs `SCCA-EST-`) so the `LIKE ${prefix}%`
+ *  numbering query never crosses programs — student numbering and
+ *  professional numbering each advance independently. */
+export function certPrefix(program: CertProgram, year: number): string {
+  return program === "student" ? `SCCA-EST-${year}-` : `SCCA-${year}-`;
+}
+
+/** Pure eligibility evaluator: given the ordinals the user has passed and
+ *  their tier, returns whether every curriculum-required ordinal is
+ *  covered plus the per-ordinal pass map (keyed by the tier's required
+ *  ordinals only). No DB access — unit-testable. */
+export function evaluateEligibility(
+  passedOrdinals: ReadonlySet<number>,
+  tier: UserTier,
+): EligibilityReport {
+  const required = requiredOrdinals(tier);
+  const passedModules: Record<number, boolean> = {};
+  for (const ordinal of required) passedModules[ordinal] = passedOrdinals.has(ordinal);
+  return { eligible: required.every((o) => passedModules[o]), passedModules };
+}
 
 export async function isEligibleForCertificate(
   userId: string,
+  tier: UserTier,
 ): Promise<EligibilityReport> {
-  // Single query for all three modules — pulls the moduleIds of any
-  // passing post-test attempt for this user, then materialises the
-  // {1,2,3}→boolean map in JS. Previously this ran one query per
-  // module (a 3x N+1 on every dashboard render).
+  const required = requiredOrdinals(tier);
+  // Single query — pulls the moduleIds (curriculum ordinals) of any
+  // passing post-test attempt for this user that belongs to the tier's
+  // required set, then delegates to the pure evaluator. Previously this
+  // ran one query per module (a 3x N+1 on every dashboard render).
   const rows = await db
     .select({ moduleId: quizAttempts.moduleId })
     .from(quizAttempts)
     .where(
       and(
         eq(quizAttempts.userId, userId),
-        inArray(quizAttempts.moduleId, [...MODULE_IDS]),
+        inArray(quizAttempts.moduleId, required),
         eq(quizAttempts.passed, true),
         // Only the graded post-test counts toward the certificate —
         // a passing diagnostic pre-test must never qualify a student.
         eq(quizAttempts.phase, "post"),
       ),
     );
-  const passed = new Set(rows.map((r) => r.moduleId));
-  const passedModules = {
-    1: passed.has(1),
-    2: passed.has(2),
-    3: passed.has(3),
-  };
-  return {
-    eligible: passedModules[1] && passedModules[2] && passedModules[3],
-    passedModules,
-  };
+  return evaluateEligibility(new Set(rows.map((r) => r.moduleId)), tier);
 }
 
 export type CertRecord = {
@@ -94,12 +118,13 @@ export async function findCertificateByNumber(
 
 export async function getOrCreateCertificate(
   userId: string,
+  program: CertProgram,
 ): Promise<{ cert: CertRecord; isNew: boolean }> {
   const existing = await findCertificateByUser(userId);
   if (existing) return { cert: existing, isNew: false };
 
   const year = new Date().getFullYear();
-  const prefix = `SCCA-${year}-`;
+  const prefix = certPrefix(program, year);
 
   const startSeq = (() => {
     const raw = process.env.CERTIFICATE_YEAR_SEQUENCE_START;

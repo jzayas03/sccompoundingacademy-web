@@ -1,6 +1,6 @@
 "use server";
 
-import { redirect } from "next/navigation";
+import { notFound, redirect } from "next/navigation";
 import { eq } from "drizzle-orm";
 import { auth } from "@/lib/auth";
 import { db } from "@/lib/db";
@@ -11,6 +11,7 @@ import {
   scoreQuiz,
   type ModuleQuizId,
 } from "@/lib/quizzes";
+import { resolveViewableModule } from "@/lib/curriculum";
 import { isAdminEmail } from "@/lib/admin";
 
 /**
@@ -46,6 +47,13 @@ export async function submitPreTestAction(args: {
     redirect(`/${locale}/portal`);
   }
 
+  const viewable = resolveViewableModule({
+    isOwner: isAdminEmail(session.user.email),
+    userTier: user.tier,
+    id: moduleId,
+  });
+  if (!viewable) notFound();
+
   const questions = getQuiz(moduleId);
   if (questions.length === 0) {
     redirect(`/${locale}/portal/modulos/${moduleId}`);
@@ -61,7 +69,7 @@ export async function submitPreTestAction(args: {
 
   await db.insert(quizAttempts).values({
     userId: user.id,
-    moduleId: moduleQuizIdToInt(moduleId),
+    moduleId: viewable.module.ordinal,
     phase: "pre",
     submittedAt: new Date(),
     answers,
@@ -71,11 +79,4 @@ export async function submitPreTestAction(args: {
   });
 
   redirect(`/${locale}/portal/modulos/${moduleId}`);
-}
-
-/** Translate the textual module id into the integer column the DB uses. */
-function moduleQuizIdToInt(id: ModuleQuizId): number {
-  if (id === "modulo-1") return 1;
-  if (id === "modulo-2") return 2;
-  return 3;
 }

@@ -305,6 +305,7 @@
     "ceLabel": "Crédito CE",
     "ceBody": "{contactHours} horas de contacto · {ceus} CEUs · Knowledge-based, Level 1 · ACPE Provider {providerNumber} vía {provider}",
     "includesLabel": "Incluye",
+    "credentialLabel": "Credencial",
     "includesItems": [
       "Taller práctico supervisado",
       "Grupos pequeños",
@@ -338,6 +339,53 @@
             "summary": "BHRT (Bi-est, testosterona), sistema Topi-Click, penetration enhancers, excepciones de shortage y excipiente alérgico, distinción 503A/503B y compounding veterinario."
           }
         ]
+      },
+      {
+        "id": "student-foundations",
+        "level": "Fundamentos",
+        "uspLabel": "USP 〈795〉 + 〈800〉",
+        "title": "Track de Estudiantes — Compounding No Estéril",
+        "description": "Programa auto-dirigido en línea para estudiantes pre-licenciatura. Dos módulos didácticos sobre los capítulos USP que rigen el compounding no estéril y el manejo de drogas peligrosas.",
+        "duration": "Auto-dirigido · en línea",
+        "modules": [
+          {
+            "id": "usp-795",
+            "day": "Módulo 1",
+            "title": "USP 〈795〉 — Compounding No Estéril",
+            "summary": "Alcance de una preparación no estéril (CNSP), persona designada, estándares de instalación, Beyond-Use Dates por actividad de agua (aw) y la distinción frente a 〈797〉 y 〈800〉."
+          },
+          {
+            "id": "usp-800",
+            "day": "Módulo 2",
+            "title": "USP 〈800〉 — Drogas Peligrosas",
+            "summary": "Criterios NIOSH, lista de HD y Assessment of Risk, controles de ingeniería (C-PEC, C-SEC), PPE incluyendo guantes ASTM D6978, y procedimientos de derrame y vigilancia médica."
+          }
+        ],
+        "includesItems": [
+          "Acceso al portal de estudiantes",
+          "Presentaciones USP 〈795〉 y 〈800〉",
+          "Quiz por módulo con retroalimentación",
+          "Certificado de finalización"
+        ],
+        "credentialNote": "Certificado de finalización — sin créditos de educación continua (CE) de ACPE. El crédito CE está reservado al track profesional.",
+        "enrollCourseId": "basic-compounding",
+        "enrollTier": "student"
+      }
+    ]
+  },
+  "studentCurriculum": {
+    "modules": [
+      {
+        "id": "usp-795",
+        "day": "Módulo 1",
+        "title": "USP 〈795〉 — Compounding No Estéril",
+        "summary": "Definición de una preparación no estéril (CNSP) y su alcance, responsabilidades de la persona designada, estándares de instalación y manejo de componentes, asignación de Beyond-Use Dates por actividad de agua (aw) y la distinción frente a 〈797〉 y 〈800〉."
+      },
+      {
+        "id": "usp-800",
+        "day": "Módulo 2",
+        "title": "USP 〈800〉 — Manejo de Drogas Peligrosas",
+        "summary": "Criterios NIOSH para drogas peligrosas, lista de HD y Assessment of Risk, los tres niveles de controles de ingeniería (C-PEC, C-SEC, suplementarios), selección de PPE incluyendo guantes ASTM D6978, y procedimientos de recibo, derrame, desactivación y vigilancia médica."
       }
     ]
   },
@@ -616,6 +664,8 @@
     "invalidBody": "El número {certNo} no corresponde a un certificado emitido por Santa Cruz Compounding Academy.",
     "courseTitle": "Basic Compounding No Estéril para Farmacéuticos y Técnicos de Farmacia",
     "courseSubtitle": "18 horas de contacto · 1.8 CEUs · Knowledge-based, Level 1 · ACPE Provider 0151",
+    "courseTitleStudent": "Programa de Estudiantes — Fundamentos de Compounding No Estéril",
+    "courseSubtitleStudent": "USP 〈795〉 y 〈800〉 · Certificado de finalización",
     "backToHome": "Volver a sccompoundingacademy.com"
   },
   "portal": {
@@ -643,7 +693,7 @@
       "fallbackName": "estudiante",
       "logout": "Cerrar sesión",
       "paymentPendingTitle": "Inscripción pendiente de pago",
-      "paymentPendingBody": "Para desbloquear el contenido del curso, completa el pago de inscripción. Una vez confirmado, los tres módulos quedan disponibles inmediatamente.",
+      "paymentPendingBody": "Para desbloquear el contenido del curso, completa el pago de inscripción. Una vez confirmado, los módulos del curso quedan disponibles inmediatamente.",
       "paymentCta": "Ir a la inscripción",
       "modulesTitle": "Módulos del curso",
       "modulesLockedHint": "Se desbloquean al confirmar el pago.",
@@ -653,10 +703,10 @@
       "moduleAria": "Módulo {n} — bloqueado, requiere pago de inscripción",
       "moduleOpenAria": "Abrir el módulo {n}",
       "certReadyTitle": "¡Tu certificado está listo!",
-      "certReadyBody": "Completaste los 3 post-tests con score sobre el umbral. Descargá tu certificado oficial de participación.",
+      "certReadyBody": "Aprobaste todos los post-tests de los módulos. Descargá tu certificado oficial de participación.",
       "certReadyCta": "Ir al certificado",
       "certPendingTitle": "Avanzá hacia tu certificado",
-      "certPendingBody": "Completá los 3 post-tests para desbloquear tu certificado de participación.",
+      "certPendingBody": "Aprobá todos los post-tests de los módulos para desbloquear tu certificado de participación.",
       "reviewPromptTitle": "Compartí tu opinión",
       "reviewPromptBody": "Tu feedback nos ayuda a mejorar el curso para futuras cohortes.",
       "reviewPromptCta": "Dejar reseña"
@@ -690,10 +740,10 @@
       "eyebrow": "Certificado",
       "title": "Certificado de participación",
       "readyTitle": "Tu certificado está listo",
-      "readyBody": "Completaste los 3 post-tests con score sobre el umbral. Descargá tu certificado oficial de participación — válido para verificación pública.",
+      "readyBody": "Aprobaste todos los post-tests por encima del umbral. Descargá tu certificado oficial de participación — verificable públicamente.",
       "downloadCta": "Descargar certificado (PDF)",
       "lockedTitle": "Aún falta para tu certificado",
-      "lockedBody": "Tu certificado se desbloquea cuando los 3 post-tests están aprobados. Estado actual:",
+      "lockedBody": "Tu certificado se desbloquea cuando apruebas todos los post-tests. Estado actual:",
       "checklistTitle": "Estado de los módulos",
       "checklistPassed": "Aprobado",
       "checklistPending": "Pendiente",
@@ -707,7 +757,10 @@
     "nav": {
       "logout": "Salir",
       "backToHome": "Volver al sitio",
-      "homeAria": "Ir al inicio del portal SCCA"
+      "homeAria": "Ir al inicio del portal SCCA",
+      "previewLabel": "Ver portal:",
+      "previewProfesional": "Profesional",
+      "previewEstudiante": "Estudiante"
     },
     "reviews": {
       "eyebrow": "Tu opinión",

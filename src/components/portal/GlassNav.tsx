@@ -6,6 +6,7 @@ import { auth } from "@/lib/auth";
 import { isAdminEmail } from "@/lib/admin";
 import { logoutAction } from "@/app/[locale]/(portal)/portal/actions";
 import { PortalLocaleSwitch } from "@/components/portal/PortalLocaleSwitch";
+import { AdminPortalToggle } from "@/components/portal/AdminPortalToggle";
 
 /**
  * Portal-only top navigation — replaces the marketing Header inside
@@ -60,6 +61,13 @@ function GlassNavView({
 
         <div className="flex items-center gap-3">
           <PortalLocaleSwitch currentLocale={locale} />
+          {isAdmin ? (
+            <AdminPortalToggle
+              label={t("previewLabel")}
+              profesionalLabel={t("previewProfesional")}
+              estudianteLabel={t("previewEstudiante")}
+            />
+          ) : null}
           {isAdmin ? (
             <Link
               href="/portal/admin"

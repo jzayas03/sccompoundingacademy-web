@@ -6,8 +6,10 @@ import { users } from "@/lib/db/schema";
 import {
   getOrCreateCertificate,
   isEligibleForCertificate,
+  programForTier,
 } from "@/lib/certificates";
 import { renderCertificatePdf } from "@/lib/certificates/render";
+import { requiredOrdinals, resolveEffectiveTier } from "@/lib/curriculum";
 import { getSiteUrl } from "@/lib/siteUrl";
 import { isAdminEmail } from "@/lib/admin";
 
@@ -35,7 +37,7 @@ export const runtime = "nodejs";
  *   6. PDF: generated on-the-fly via `pdf-lib`. Re-downloads regenerate
  *      the bytes; certificate identity is the DB row, not the PDF file.
  */
-export async function GET() {
+export async function GET(req: Request) {
   const session = await auth();
   if (!session?.user?.email) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
@@ -50,13 +52,6 @@ export async function GET() {
     return NextResponse.json({ error: "User not found" }, { status: 401 });
   }
 
-  // ACPE CE credit ("1.8 CEUs") is earned only by the licensed tiers
-  // (profesional / pharmacist). Non-licensed students complete the same
-  // 18 contact hours but receive no CEUs, so their certificate omits the
-  // credit token. A null tier (owner/admin or legacy row) defaults to the
-  // credit-bearing variant.
-  const awardsCeus = user.tier !== "student";
-
   // Owner/admin preview path — renders the cert PDF with a placeholder
   // number so the academy can verify the design without paying or
   // consuming a real `SCCA-{YYYY}-{NNN}` slot. No DB insert, no
@@ -64,6 +59,21 @@ export async function GET() {
   // returns "not found"; the cert is clearly marked as preview by its
   // number). See src/lib/admin.ts for the allowlist.
   const isOwner = isAdminEmail(session.user.email);
+
+  // Certificate program selects the cert variant: "student" renders a
+  // completion certificate with no ACPE CE credit / provider line, while
+  // "profesional" renders the credit-bearing ACPE variant. A null tier
+  // (owner/admin or legacy row) maps to "profesional". Owners may force
+  // either variant via ?preview= so the preview PDF reflects the chosen
+  // program; for real (non-owner) users effectiveTier === user.tier so
+  // behavior is unchanged.
+  const preview = new URL(req.url).searchParams.get("preview");
+  const effectiveTier = resolveEffectiveTier({
+    isOwner,
+    userTier: user.tier,
+    preview,
+  });
+  const program = programForTier(effectiveTier);
   if (isOwner) {
     const siteUrl = getSiteUrl();
     const previewCertNo = "SCCA-PREVIEW";
@@ -72,7 +82,7 @@ export async function GET() {
       studentName: user.name?.trim() || session.user.email,
       issuedAt: new Date(),
       verificationUrl: `${siteUrl}/verificar/${previewCertNo}`,
-      awardsCeus,
+      program,
     });
     return new NextResponse(new Uint8Array(pdfBytes), {
       status: 200,
@@ -91,18 +101,18 @@ export async function GET() {
     );
   }
 
-  const eligibility = await isEligibleForCertificate(user.id);
+  const eligibility = await isEligibleForCertificate(user.id, user.tier);
   if (!eligibility.eligible) {
     return NextResponse.json(
       {
-        error: "All three module post-tests must be passed first.",
+        error: `All ${requiredOrdinals(user.tier).length} module post-tests must be passed first.`,
         passedModules: eligibility.passedModules,
       },
       { status: 409 },
     );
   }
 
-  const { cert } = await getOrCreateCertificate(user.id);
+  const { cert } = await getOrCreateCertificate(user.id, program);
 
   const siteUrl = getSiteUrl();
   const verificationUrl = `${siteUrl}/verificar/${cert.certNo}`;
@@ -112,7 +122,7 @@ export async function GET() {
     studentName: user.name?.trim() || session.user.email,
     issuedAt: cert.issuedAt,
     verificationUrl,
-    awardsCeus,
+    program,
   });
 
   return new NextResponse(new Uint8Array(pdfBytes), {

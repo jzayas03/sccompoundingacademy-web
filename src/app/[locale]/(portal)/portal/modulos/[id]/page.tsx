@@ -11,6 +11,7 @@ import { auth } from "@/lib/auth";
 import { db } from "@/lib/db";
 import { users, quizAttempts } from "@/lib/db/schema";
 import { getQuiz, type ModuleQuizId } from "@/lib/quizzes";
+import { resolveViewableModule, getModuleCatalogue } from "@/lib/curriculum";
 import { isAdminEmail } from "@/lib/admin";
 import { resolveModuleAccess } from "@/lib/portal/module-access";
 import { resolveVerificationGate } from "@/lib/portal/verification-gate";
@@ -24,9 +25,10 @@ export const metadata: Metadata = {
 /**
  * `/[locale]/portal/modulos/[id]` — per-module workspace.
  *
- * Path-param validation: the dashboard module strip uses ids `modulo-1`,
- * `modulo-2`, `modulo-3` (matches the i18n catalogue at
- * `cursosGrid.items[0].modules`). Anything else → 404.
+ * Path-param validation: the `[id]` is resolved against the curriculum
+ * for the signed-in user's tier (see `resolveModule` in
+ * `@/lib/curriculum`) — professional ids `modulo-1..3`, student ids
+ * `usp-795`/`usp-800`. An id that does not belong to the tier → 404.
  *
  * Gating happens in two layers:
  *   1. `src/middleware.ts` redirects unauthenticated requests to
@@ -42,37 +44,16 @@ export const metadata: Metadata = {
  * `<object>` viewer takes over without code changes.
  */
 
-const MODULE_IDS = ["modulo-1", "modulo-2", "modulo-3"] as const;
-type ModuleId = (typeof MODULE_IDS)[number];
-
-function dayNumberFromId(id: string): number | null {
-  const idx = MODULE_IDS.indexOf(id as ModuleId);
-  return idx >= 0 ? idx + 1 : null;
-}
-
-type ModuleMessage = {
-  id: string;
-  day: string;
-  title: string;
-  summary: string;
-};
-
-type CursosGridMessages = {
-  cursosGrid: {
-    items: Array<{ modules: ModuleMessage[] }>;
-  };
-};
-
 export default async function ModulePage({
   params,
+  searchParams,
 }: {
   params: Promise<{ locale: string; id: string }>;
+  searchParams: Promise<{ preview?: string }>;
 }) {
   const { locale, id } = await params;
+  const { preview: p } = await searchParams;
   setRequestLocale(locale);
-
-  const day = dayNumberFromId(id);
-  if (day === null) notFound();
 
   const session = await auth();
   if (!session?.user?.email) {
@@ -86,6 +67,17 @@ export default async function ModulePage({
     .limit(1);
   if (!user) redirect(`/${locale}/portal/login`);
 
+  const isOwner = isAdminEmail(session.user.email);
+  // Owner-only `?preview=` stickiness: keep the chosen portal selected on
+  // the dashboard/back links; ignored (and never trusted) for non-owners.
+  const preview =
+    isOwner && (p === "student" || p === "profesional") ? p : undefined;
+
+  const viewable = resolveViewableModule({ isOwner, userTier: user.tier, id });
+  if (!viewable) notFound();
+  const mod = viewable.module;
+  const day = mod.ordinal;
+
   // Access policy — payment + pre-test gates, with the owner/admin
   // (ADMIN_EMAILS) bypass for content preview — is encoded in
   // `resolveModuleAccess` so the contract can be unit-tested without a
@@ -94,7 +86,6 @@ export default async function ModulePage({
   // We only run the quizAttempts lookup when it can actually change the
   // outcome (a paid non-owner on a module that has a quiz); owners and
   // unpaid users are decided without touching the DB.
-  const isOwner = isAdminEmail(session.user.email);
 
   // Defense-in-depth: student-tier users who have not passed matrícula
   // verification are redirected before any module content is served.
@@ -139,51 +130,58 @@ export default async function ModulePage({
     );
   }
 
-  // Module material lives at public/modulos/dia-{n}.pdf (Spanish) and,
-  // once the owner produces them, dia-{n}-en.pdf (English). The viewer
+  // Module material lives at public/modulos/{basename}.pdf (Spanish) and,
+  // once the owner produces them, {basename}-en.pdf (English). The viewer
   // shows a language toggle only when both files are present.
   const modulosDir = join(process.cwd(), "public", "modulos");
-  const esPdfHref = existsSync(join(modulosDir, `dia-${day}.pdf`))
-    ? `/modulos/dia-${day}.pdf`
+  const esPdfHref = existsSync(join(modulosDir, `${mod.pdfBasename}.pdf`))
+    ? `/modulos/${mod.pdfBasename}.pdf`
     : null;
-  const enPdfHref = existsSync(join(modulosDir, `dia-${day}-en.pdf`))
-    ? `/modulos/dia-${day}-en.pdf`
+  const enPdfHref = existsSync(join(modulosDir, `${mod.pdfBasename}-en.pdf`))
+    ? `/modulos/${mod.pdfBasename}-en.pdf`
     : null;
 
   return (
     <ModuleView
-      id={id as ModuleId}
+      id={id}
+      tier={viewable.tier}
       day={day}
       esPdfHref={esPdfHref}
       enPdfHref={enPdfHref}
       hasQuiz={hasQuiz}
+      preview={preview}
     />
   );
 }
 
 function ModuleView({
   id,
+  tier,
   day,
   esPdfHref,
   enPdfHref,
   hasQuiz,
+  preview,
 }: {
-  id: ModuleId;
+  id: string;
+  tier: import("@/lib/curriculum").UserTier;
   day: number;
   esPdfHref: string | null;
   enPdfHref: string | null;
   hasQuiz: boolean;
+  preview?: "student" | "profesional";
 }) {
   const t = useTranslations("portal.module");
-  const messages = useMessages() as unknown as CursosGridMessages;
-  const moduleData = messages.cursosGrid.items[0]?.modules.find((m) => m.id === id);
+  const moduleData = getModuleCatalogue(useMessages(), tier).find(
+    (m) => m.id === id,
+  );
 
   return (
     <Container className="max-w-5xl py-16 sm:py-20 lg:py-24">
       {/* Breadcrumb back to dashboard */}
       <p className="text-sm">
         <Link
-          href="/portal"
+          href={preview ? { pathname: "/portal", query: { preview } } : "/portal"}
           className="text-teal-deep hover:text-teal underline underline-offset-2"
         >
           ← {t("backToDashboard")}
@@ -222,6 +220,7 @@ function ModuleView({
             href={{
               pathname: "/portal/modulos/[id]/post-test",
               params: { id },
+              ...(preview ? { query: { preview } } : {}),
             }}
             className="bg-chartreuse text-teal-deep ring-teal-deep/15 shadow-soft hover:bg-chartreuse/95 hover:shadow-lift focus-visible:ring-chartreuse font-heading inline-flex h-12 items-center justify-center rounded-md px-6 text-sm font-semibold ring-1 transition-[color,background-color,box-shadow,transform] duration-200 ease-out focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-offset-white focus-visible:outline-none sm:text-base motion-safe:hover:-translate-y-px"
           >

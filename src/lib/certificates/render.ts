@@ -37,12 +37,11 @@ export type CertRenderInput = {
   issuedAt: Date;
   verificationUrl: string; // "https://sccompoundingacademy.com/verificar/SCCA-..."
   /**
-   * Whether the cert states the ACPE CE credit ("1.8 CEUs"). Only the
-   * licensed tiers (profesional / pharmacist) earn ACPE continuing-
-   * education credit; non-licensed students complete the same 18 contact
-   * hours but receive no CEUs, so their cert omits the credit token.
+   * Certificate program. "profesional" prints the ACPE CE credit and
+   * provider line; "student" prints a completion certificate with no
+   * CEUs and no ACPE provider line.
    */
-  awardsCeus: boolean;
+  program: "profesional" | "student";
 };
 
 const PAGE_W = 842;
@@ -69,6 +68,10 @@ export async function renderCertificatePdf(input: CertRenderInput): Promise<Uint
 
   const page = pdf.addPage([PAGE_W, PAGE_H]);
 
+  // Legacy boolean derived once from the program: "student" certs are
+  // completion-only (no ACPE CE credit / provider line).
+  const awardsCeus = input.program !== "student";
+
   // Prefer the vector PDF template (Canva → Share → PDF Print). Falls
   // back to the rasterized PNG, then to a primitive layout if neither
   // ships. Vector keeps the cert print-sharp at any zoom level.
@@ -80,9 +83,9 @@ export async function renderCertificatePdf(input: CertRenderInput): Promise<Uint
   const timesItalic = await pdf.embedFont(StandardFonts.TimesRomanItalic);
 
   if (existsSync(pdfTemplatePath)) {
-    await drawWithPdfTemplate(pdf, page, pdfTemplatePath, input, helvetica, helveticaBold);
+    await drawWithPdfTemplate(pdf, page, pdfTemplatePath, input, helvetica, helveticaBold, awardsCeus);
   } else if (existsSync(pngTemplatePath)) {
-    await drawWithTemplate(pdf, page, pngTemplatePath, input, helvetica, helveticaBold);
+    await drawWithTemplate(pdf, page, pngTemplatePath, input, helvetica, helveticaBold, awardsCeus);
   } else {
     drawPlaceholderBody(page, input, helvetica, helveticaBold, timesItalic);
   }
@@ -106,6 +109,7 @@ async function drawWithPdfTemplate(
   input: CertRenderInput,
   helvetica: PDFFont,
   helveticaBold: PDFFont,
+  awardsCeus: boolean,
 ): Promise<void> {
   // Background: embed the owner's Canva "PDF Print" export as a vector
   // page. Keeps the chrome (banner, seal, frames, logos) infinitely
@@ -118,7 +122,7 @@ async function drawWithPdfTemplate(
   }
   page.drawPage(embedded, { x: 0, y: 0, width: PAGE_W, height: PAGE_H });
 
-  drawOverlay(page, input, helvetica, helveticaBold);
+  drawOverlay(page, input, helvetica, helveticaBold, awardsCeus);
 }
 
 async function drawWithTemplate(
@@ -128,13 +132,14 @@ async function drawWithTemplate(
   input: CertRenderInput,
   helvetica: PDFFont,
   helveticaBold: PDFFont,
+  awardsCeus: boolean,
 ): Promise<void> {
   // Legacy PNG-template path (kept as a fallback if owner ever exports
   // a raster instead of a vector PDF).
   const pngBytes = readFileSync(templatePath);
   const png = await pdf.embedPng(pngBytes);
   page.drawImage(png, { x: 0, y: 0, width: PAGE_W, height: PAGE_H });
-  drawOverlay(page, input, helvetica, helveticaBold);
+  drawOverlay(page, input, helvetica, helveticaBold, awardsCeus);
 }
 
 function drawOverlay(
@@ -142,6 +147,7 @@ function drawOverlay(
   input: CertRenderInput,
   helvetica: PDFFont,
   helveticaBold: PDFFont,
+  awardsCeus: boolean,
 ): void {
 
   // The Canva export ships with placeholder text baked into the PNG
@@ -195,23 +201,37 @@ function drawOverlay(
     font: helvetica,
     color: COLOR.gray900,
   });
-  drawCentered(page, "Basic Non-Sterile Compounding", {
-    y: 254,
-    size: 14,
-    font: helveticaBold,
-    color: COLOR.tealDeep,
-  });
-  drawCentered(page, "for Pharmacists & Pharmacy Technicians", {
-    y: 237,
-    size: 10,
-    font: helvetica,
-    color: COLOR.gray900,
-  });
   drawCentered(
     page,
-    input.awardsCeus
-      ? "18 contact hours · 1.8 CEUs · Knowledge-based, Level 1"
-      : "18 contact hours · Knowledge-based, Level 1",
+    input.program === "student"
+      ? "Nonsterile Compounding — Student Program"
+      : "Basic Non-Sterile Compounding",
+    {
+      y: 254,
+      size: 14,
+      font: helveticaBold,
+      color: COLOR.tealDeep,
+    },
+  );
+  drawCentered(
+    page,
+    input.program === "student"
+      ? "Student Track — Foundations of Nonsterile Compounding"
+      : "for Pharmacists & Pharmacy Technicians",
+    {
+      y: 237,
+      size: 10,
+      font: helvetica,
+      color: COLOR.gray900,
+    },
+  );
+  drawCentered(
+    page,
+    input.program === "student"
+      ? "Certificate of Completion · USP 〈795〉 & 〈800〉"
+      : awardsCeus
+        ? "18 contact hours · 1.8 CEUs · Knowledge-based, Level 1"
+        : "18 contact hours · Knowledge-based, Level 1",
     {
       y: 221,
       size: 10,
@@ -219,12 +239,14 @@ function drawOverlay(
       color: COLOR.gray900,
     },
   );
-  drawCentered(page, "ACPE Provider 0151 — Puerto Rico College of Pharmacists", {
-    y: 205,
-    size: 9,
-    font: helvetica,
-    color: COLOR.gray700,
-  });
+  if (input.program !== "student") {
+    drawCentered(page, "ACPE Provider 0151 — Puerto Rico College of Pharmacists", {
+      y: 205,
+      size: 9,
+      font: helvetica,
+      color: COLOR.gray700,
+    });
+  }
 
   // Signature block — pushed down into the lower cleared zone so it
   // reads as the bottom-of-cert signature, not a mid-body callout.
@@ -279,6 +301,10 @@ function drawPlaceholderBody(
   helveticaBold: PDFFont,
   timesItalic: PDFFont,
 ): void {
+  // Legacy boolean derived from the program: "student" certs are
+  // completion-only (no ACPE CE credit / provider line).
+  const awardsCeus = input.program !== "student";
+
   // Paper-tinted fill so the cert reads as paper rather than glaring
   // white. Off-white sand tone — same family as the landing "sand"
   // brand token, but slightly warmer so it photographs nicely.
@@ -359,7 +385,9 @@ function drawPlaceholderBody(
   });
   drawCentered(
     page,
-    "Basic Compounding No Estéril para Farmacéuticos y Técnicos de Farmacia",
+    input.program === "student"
+      ? "Compounding No Estéril — Programa de Estudiantes"
+      : "Basic Compounding No Estéril para Farmacéuticos y Técnicos de Farmacia",
     {
       y: PAGE_H - 360,
       size: 13,
@@ -369,9 +397,11 @@ function drawPlaceholderBody(
   );
   drawCentered(
     page,
-    input.awardsCeus
-      ? "18 horas de contacto · 1.8 CEUs · Knowledge-based, Level 1"
-      : "18 horas de contacto · Knowledge-based, Level 1",
+    input.program === "student"
+      ? "Certificado de Finalización · USP 〈795〉 y 〈800〉"
+      : awardsCeus
+        ? "18 horas de contacto · 1.8 CEUs · Knowledge-based, Level 1"
+        : "18 horas de contacto · Knowledge-based, Level 1",
     {
       y: PAGE_H - 384,
       size: 10,
@@ -379,16 +409,18 @@ function drawPlaceholderBody(
       color: COLOR.gray900,
     },
   );
-  drawCentered(
-    page,
-    "Acreditado por el Colegio de Farmacéuticos de Puerto Rico — ACPE Provider 0151",
-    {
-      y: PAGE_H - 404,
-      size: 9,
-      font: helvetica,
-      color: COLOR.gray700,
-    },
-  );
+  if (input.program !== "student") {
+    drawCentered(
+      page,
+      "Acreditado por el Colegio de Farmacéuticos de Puerto Rico — ACPE Provider 0151",
+      {
+        y: PAGE_H - 404,
+        size: 9,
+        font: helvetica,
+        color: COLOR.gray700,
+      },
+    );
+  }
 
   // Signature block — line + name + title (firma escaneada lands when
   // owner uploads public/instructor/firma-jorge-reyes.png in a follow-up).

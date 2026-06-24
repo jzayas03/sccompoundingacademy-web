@@ -1,6 +1,8 @@
 import { dia1 } from "./dia-1";
 import { dia2 } from "./dia-2";
 import { dia3 } from "./dia-3";
+import { usp795 } from "./usp-795";
+import { usp800 } from "./usp-800";
 import type { ModuleQuizId, Question, SanitizedQuestion } from "./types";
 
 export type { ModuleQuizId, Question, SanitizedQuestion } from "./types";
@@ -14,6 +16,8 @@ const QUIZZES: Record<ModuleQuizId, readonly Question[]> = {
   "modulo-1": dia1,
   "modulo-2": dia2,
   "modulo-3": dia3,
+  "usp-795": usp795,
+  "usp-800": usp800,
 };
 
 export function getQuiz(moduleId: ModuleQuizId): readonly Question[] {

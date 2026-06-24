@@ -10,6 +10,7 @@ import { auth } from "@/lib/auth";
 import { db } from "@/lib/db";
 import { users, quizAttempts } from "@/lib/db/schema";
 import { getQuiz, sanitizeQuiz, type ModuleQuizId } from "@/lib/quizzes";
+import { resolveViewableModule, getModuleCatalogue } from "@/lib/curriculum";
 import { isAdminEmail } from "@/lib/admin";
 import { QuizForm } from "@/components/portal/QuizForm";
 import { submitPreTestAction } from "./actions";
@@ -18,19 +19,6 @@ export const metadata: Metadata = {
   title: "Pre-test · SCCA Portal",
   robots: { index: false, follow: false },
 };
-
-const MODULE_IDS = ["modulo-1", "modulo-2", "modulo-3"] as const;
-
-type ModuleI18n = { id: string; day: string; title: string; summary: string };
-type CursosGridMessages = {
-  cursosGrid: { items: Array<{ modules: ModuleI18n[] }> };
-};
-
-function moduleQuizIdToInt(id: ModuleQuizId): number {
-  if (id === "modulo-1") return 1;
-  if (id === "modulo-2") return 2;
-  return 3;
-}
 
 /**
  * `/[locale]/portal/modulos/[id]/pre-test` — diagnostic pre-test taken
@@ -49,9 +37,6 @@ export default async function PreTestPage({
   const { locale, id } = await params;
   setRequestLocale(locale);
 
-  if (!MODULE_IDS.includes(id as ModuleQuizId)) notFound();
-  const moduleId = id as ModuleQuizId;
-
   const session = await auth();
   if (!session?.user?.email) redirect(`/${locale}/portal/login`);
 
@@ -67,6 +52,11 @@ export default async function PreTestPage({
   const isOwner = isAdminEmail(session.user.email);
   if (!user.paidAt && !isOwner) redirect(`/${locale}/portal`);
 
+  const viewable = resolveViewableModule({ isOwner, userTier: user.tier, id });
+  if (!viewable) notFound();
+  const mod = viewable.module;
+  const moduleId = id as ModuleQuizId;
+
   // One-shot: already completed → straight to the module content.
   // Owners can re-render this page even after a previous submission.
   if (!isOwner) {
@@ -76,7 +66,7 @@ export default async function PreTestPage({
       .where(
         and(
           eq(quizAttempts.userId, user.id),
-          eq(quizAttempts.moduleId, moduleQuizIdToInt(moduleId)),
+          eq(quizAttempts.moduleId, mod.ordinal),
           eq(quizAttempts.phase, "pre"),
         ),
       )
@@ -90,6 +80,7 @@ export default async function PreTestPage({
     <PreTestPanel
       locale={locale as "es" | "en"}
       moduleId={moduleId}
+      tier={viewable.tier}
       questions={questions}
     />
   );
@@ -98,15 +89,16 @@ export default async function PreTestPage({
 function PreTestPanel({
   locale,
   moduleId,
+  tier,
   questions,
 }: {
   locale: "es" | "en";
   moduleId: ModuleQuizId;
+  tier: import("@/lib/curriculum").UserTier;
   questions: ReturnType<typeof getQuiz>;
 }) {
   const t = useTranslations("portal.preTest");
-  const messages = useMessages() as unknown as CursosGridMessages;
-  const moduleData = messages.cursosGrid.items[0]?.modules.find(
+  const moduleData = getModuleCatalogue(useMessages(), tier).find(
     (m) => m.id === moduleId,
   );
 

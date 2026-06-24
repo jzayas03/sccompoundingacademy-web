@@ -10,6 +10,13 @@ import { auth } from "@/lib/auth";
 import { db } from "@/lib/db";
 import { users } from "@/lib/db/schema";
 import { findCertificateByUser, isEligibleForCertificate } from "@/lib/certificates";
+import {
+  getCurriculum,
+  requiredOrdinals,
+  getModuleCatalogue,
+  resolveEffectiveTier,
+  type UserTier,
+} from "@/lib/curriculum";
 import { isAdminEmail } from "@/lib/admin";
 
 export const metadata: Metadata = {
@@ -17,24 +24,15 @@ export const metadata: Metadata = {
   robots: { index: false, follow: false },
 };
 
-const MODULE_IDS = ["modulo-1", "modulo-2", "modulo-3"] as const;
-
-type ModuleI18n = {
-  id: string;
-  day: string;
-  title: string;
-  summary: string;
-};
-type CursosGridMessages = {
-  cursosGrid: { items: Array<{ modules: ModuleI18n[] }> };
-};
-
 export default async function CertificadoPage({
   params,
+  searchParams,
 }: {
   params: Promise<{ locale: string }>;
+  searchParams: Promise<{ preview?: string }>;
 }) {
   const { locale } = await params;
+  const { preview } = await searchParams;
   setRequestLocale(locale);
 
   const session = await auth();
@@ -55,10 +53,23 @@ export default async function CertificadoPage({
   const isOwner = isAdminEmail(session.user.email);
   if (!user.paidAt && !isOwner) redirect(`/${locale}/portal`);
 
-  const eligibility = await isEligibleForCertificate(user.id);
+  const effectiveTier = resolveEffectiveTier({
+    isOwner,
+    userTier: user.tier,
+    preview,
+  });
+  // Only thread a preview through to navigation when an owner actually
+  // supplied a valid one — keeps the previewed portal sticky across the
+  // download link + checklist links without leaking the param to others.
+  const effectivePreview =
+    isOwner && (preview === "student" || preview === "profesional")
+      ? preview
+      : undefined;
+
+  const eligibility = await isEligibleForCertificate(user.id, effectiveTier);
   const eligible = eligibility.eligible || isOwner;
   const passedModules = isOwner
-    ? { 1: true, 2: true, 3: true }
+    ? Object.fromEntries(requiredOrdinals(effectiveTier).map((o) => [o, true]))
     : eligibility.passedModules;
   const cert = eligibility.eligible
     ? await findCertificateByUser(user.id)
@@ -70,6 +81,9 @@ export default async function CertificadoPage({
       eligible={eligible}
       certNo={cert?.certNo ?? null}
       certIssuedAt={cert?.issuedAt ?? null}
+      modules={getCurriculum(effectiveTier)}
+      tier={effectiveTier}
+      preview={effectivePreview}
     />
   );
 }
@@ -79,15 +93,20 @@ function CertPanel({
   eligible,
   certNo,
   certIssuedAt,
+  modules,
+  tier,
+  preview,
 }: {
-  passedModules: { 1: boolean; 2: boolean; 3: boolean };
+  passedModules: Record<number, boolean>;
   eligible: boolean;
   certNo: string | null;
   certIssuedAt: Date | null;
+  modules: readonly { id: string; ordinal: number }[];
+  tier: UserTier;
+  preview?: "profesional" | "student";
 }) {
   const t = useTranslations("portal.cert");
-  const messages = useMessages() as unknown as CursosGridMessages;
-  const modules = messages.cursosGrid.items[0]?.modules ?? [];
+  const moduleList = getModuleCatalogue(useMessages(), tier);
 
   void certNo;
   void certIssuedAt;
@@ -122,7 +141,7 @@ function CertPanel({
             {t("readyBody")}
           </p>
           <a
-            href="/api/certificate"
+            href={preview ? `/api/certificate?preview=${preview}` : "/api/certificate"}
             download
             className="bg-chartreuse text-teal-deep ring-teal-deep/15 shadow-soft hover:bg-chartreuse/95 hover:shadow-lift focus-visible:ring-chartreuse font-heading mt-6 inline-flex h-12 items-center rounded-md px-6 text-sm font-semibold ring-1 transition-[color,background-color,box-shadow,transform] duration-200 sm:text-base motion-safe:hover:-translate-y-px"
           >
@@ -148,9 +167,10 @@ function CertPanel({
           {t("checklistTitle")}
         </h2>
         <ul className="mt-6 space-y-3">
-          {MODULE_IDS.map((moduleId, idx) => {
-            const moduleNum = (idx + 1) as 1 | 2 | 3;
-            const moduleData = modules.find((m) => m.id === moduleId);
+          {modules.map((mod) => {
+            const moduleId = mod.id;
+            const moduleNum = mod.ordinal;
+            const moduleData = moduleList.find((m) => m.id === moduleId);
             const passed = passedModules[moduleNum];
             return (
               <li
@@ -196,10 +216,12 @@ function CertPanel({
                           pathname:
                             "/portal/modulos/[id]/post-test/resultados",
                           params: { id: moduleId },
+                          ...(preview ? { query: { preview } } : {}),
                         }
                       : {
                           pathname: "/portal/modulos/[id]/post-test",
                           params: { id: moduleId },
+                          ...(preview ? { query: { preview } } : {}),
                         }
                   }
                   className="text-teal-deep hover:text-teal text-sm font-semibold underline underline-offset-2"

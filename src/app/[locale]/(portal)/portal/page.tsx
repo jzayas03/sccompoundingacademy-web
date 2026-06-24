@@ -10,6 +10,12 @@ import { auth } from "@/lib/auth";
 import { db } from "@/lib/db";
 import { users, type User } from "@/lib/db/schema";
 import { isEligibleForCertificate } from "@/lib/certificates";
+import {
+  showAcpeDisclosure,
+  getModuleCatalogue,
+  resolveEffectiveTier,
+  type UserTier,
+} from "@/lib/curriculum";
 import { isAdminEmail } from "@/lib/admin";
 import { resolveVerificationGate } from "@/lib/portal/verification-gate";
 import { AcpeDisclosure } from "@/components/portal/AcpeDisclosure";
@@ -20,27 +26,15 @@ export const metadata: Metadata = {
   robots: { index: false, follow: false },
 };
 
-type ModuleI18n = {
-  id: string;
-  day: string;
-  title: string;
-  summary: string;
-};
-
-type CursosGridMessages = {
-  cursosGrid: {
-    items: Array<{
-      modules: ModuleI18n[];
-    }>;
-  };
-};
-
 export default async function PortalDashboardPage({
   params,
+  searchParams,
 }: {
   params: Promise<{ locale: string }>;
+  searchParams: Promise<{ preview?: string }>;
 }) {
   const { locale } = await params;
+  const { preview } = await searchParams;
   setRequestLocale(locale);
 
   const session = await auth();
@@ -79,9 +73,21 @@ export default async function PortalDashboardPage({
   // hunting for the cert tab. Owners (ADMIN_EMAILS) always see the
   // cert-ready banner so they can preview the download flow.
   const isOwner = isAdminEmail(session.user.email);
+  const effectiveTier = resolveEffectiveTier({
+    isOwner,
+    userTier: user.tier,
+    preview,
+  });
+  // Only thread a preview through to navigation when an owner actually
+  // supplied a valid one — non-owners and bare visits stay in their
+  // real portal with no query pollution.
+  const effectivePreview =
+    isOwner && (preview === "student" || preview === "profesional")
+      ? preview
+      : undefined;
   const certEligible =
     isOwner ||
-    (user.paidAt ? (await isEligibleForCertificate(user.id)).eligible : false);
+    (user.paidAt ? (await isEligibleForCertificate(user.id, effectiveTier)).eligible : false);
 
   return (
     <Dashboard
@@ -89,6 +95,8 @@ export default async function PortalDashboardPage({
       sessionEmail={session.user.email}
       certEligible={certEligible}
       isOwner={isOwner}
+      effectiveTier={effectiveTier}
+      preview={effectivePreview}
     />
   );
 }
@@ -98,16 +106,19 @@ function Dashboard({
   sessionEmail,
   certEligible,
   isOwner,
+  effectiveTier,
+  preview,
 }: {
   user: User;
   sessionEmail: string;
   certEligible: boolean;
   isOwner: boolean;
+  effectiveTier: UserTier;
+  preview?: "profesional" | "student";
 }) {
   const t = useTranslations("portal.dashboard");
   const locale = useLocale() === "en" ? "en" : "es";
-  const messages = useMessages() as unknown as CursosGridMessages;
-  const modules = messages.cursosGrid.items[0]?.modules ?? [];
+  const modules = getModuleCatalogue(useMessages(), effectiveTier);
   const displayName = user.name?.trim() || sessionEmail.split("@")[0] || t("fallbackName");
   // Owners get the full unlocked layout without a real Stripe payment.
   const isPaid = Boolean(user.paidAt) || isOwner;
@@ -136,7 +147,7 @@ function Dashboard({
 
       {/* ACPE Standard 3 — learner-facing financial-relationships
           disclosure. Must appear before any module content. */}
-      <AcpeDisclosure locale={locale} />
+      {showAcpeDisclosure(effectiveTier) && <AcpeDisclosure locale={locale} />}
 
       {/* Payment-pending alert — primary CTA when the user has not paid yet. */}
       {!isPaid && (
@@ -221,12 +232,20 @@ function Dashboard({
           </p>
         </div>
 
-        <ul className="mt-6 grid grid-cols-1 gap-4 md:grid-cols-3">
+        <ul
+          className={`mt-6 grid grid-cols-1 gap-4 ${
+            modules.length === 2 ? "sm:grid-cols-2" : "md:grid-cols-3"
+          }`}
+        >
           {modules.map((mod, idx) => (
             <li key={mod.id}>
               {isPaid ? (
                 <Link
-                  href={{ pathname: "/portal/modulos/[id]", params: { id: mod.id } }}
+                  href={{
+                    pathname: "/portal/modulos/[id]",
+                    params: { id: mod.id },
+                    ...(preview ? { query: { preview } } : {}),
+                  }}
                   aria-label={t("moduleOpenAria", { n: idx + 1 })}
                   className="focus-visible:ring-chartreuse block h-full rounded-lg focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-offset-off-white focus-visible:outline-none"
                 >

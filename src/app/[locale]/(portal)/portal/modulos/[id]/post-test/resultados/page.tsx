@@ -10,6 +10,7 @@ import { auth } from "@/lib/auth";
 import { db } from "@/lib/db";
 import { quizAttempts, users } from "@/lib/db/schema";
 import { getQuiz, getPassingThreshold, type ModuleQuizId } from "@/lib/quizzes";
+import { resolveViewableModule } from "@/lib/curriculum";
 import { isAdminEmail } from "@/lib/admin";
 import { ResultsList } from "./results-list";
 
@@ -18,14 +19,6 @@ export const metadata: Metadata = {
   robots: { index: false, follow: false },
 };
 
-const MODULE_IDS = ["modulo-1", "modulo-2", "modulo-3"] as const;
-
-function moduleQuizIdToInt(id: ModuleQuizId): number {
-  if (id === "modulo-1") return 1;
-  if (id === "modulo-2") return 2;
-  return 3;
-}
-
 export default async function ResultsPage({
   params,
 }: {
@@ -33,9 +26,6 @@ export default async function ResultsPage({
 }) {
   const { locale, id } = await params;
   setRequestLocale(locale);
-
-  if (!MODULE_IDS.includes(id as ModuleQuizId)) notFound();
-  const moduleId = id as ModuleQuizId;
 
   const session = await auth();
   if (!session?.user?.email) redirect(`/${locale}/portal/login`);
@@ -46,9 +36,15 @@ export default async function ResultsPage({
     .where(eq(users.email, session.user.email))
     .limit(1);
   if (!user) redirect(`/${locale}/portal/login`);
-  if (!user.paidAt && !isAdminEmail(session.user.email)) {
+  const isOwner = isAdminEmail(session.user.email);
+  if (!user.paidAt && !isOwner) {
     redirect(`/${locale}/portal`);
   }
+
+  const viewable = resolveViewableModule({ isOwner, userTier: user.tier, id });
+  if (!viewable) notFound();
+  const mod = viewable.module;
+  const moduleId = id as ModuleQuizId;
 
   // Most recent attempt for this user+module. Older attempts stay in the
   // DB for future analytics; the results screen always reflects "latest".
@@ -58,7 +54,7 @@ export default async function ResultsPage({
     .where(
       and(
         eq(quizAttempts.userId, user.id),
-        eq(quizAttempts.moduleId, moduleQuizIdToInt(moduleId)),
+        eq(quizAttempts.moduleId, mod.ordinal),
       ),
     )
     .orderBy(desc(quizAttempts.submittedAt))
