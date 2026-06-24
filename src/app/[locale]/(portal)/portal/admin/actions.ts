@@ -6,13 +6,7 @@ import { db } from "@/lib/db";
 import { reviews, users, quizAttempts, certificates } from "@/lib/db/schema";
 import { auth } from "@/lib/auth";
 import { isAdminEmail } from "@/lib/admin";
-import { del } from "@vercel/blob";
-import { Resend } from "resend";
-import { verificationDecisionPatch } from "@/lib/portal/verification-decision";
-import {
-  buildVerificationApprovedEmail,
-  buildVerificationRejectedEmail,
-} from "@/lib/emails/verificacion";
+import { applyVerificationDecision } from "@/lib/portal/apply-verification-decision";
 
 async function requireAdmin(): Promise<void> {
   const session = await auth();
@@ -53,60 +47,18 @@ export async function archiveReview(reviewId: string): Promise<void> {
   revalidatePath("/en");
 }
 
-const FROM_ADDRESS =
-  process.env.EMAIL_FROM ?? "SCCA <info@sccompoundingacademy.com>";
-
 /**
- * Shared internals for the two decisions: verify admin, look up the row,
- * apply the field patch, delete the document blob (best-effort), and email
- * the student. Emails default to Spanish (the academy's primary language).
+ * Apply an admin verification decision. Authorization is the admin session;
+ * the row flip + document cleanup + student email live in
+ * `applyVerificationDecision` so the emailed approve/reject links reuse the
+ * exact same logic.
  */
 async function decideVerification(
   userId: string,
   decision: "approved" | "rejected",
 ): Promise<void> {
   await requireAdmin();
-
-  const [row] = await db
-    .select({ email: users.email, doc: users.verificationDocUrl })
-    .from(users)
-    .where(eq(users.id, userId))
-    .limit(1);
-  if (!row) throw new Error("User not found");
-
-  await db
-    .update(users)
-    .set(verificationDecisionPatch(decision, new Date()))
-    .where(eq(users.id, userId));
-
-  // Best-effort blob cleanup — DB status is the source of truth.
-  if (row.doc) {
-    try {
-      await del(row.doc);
-    } catch (err) {
-      console.error("[verificacion] blob delete failed", err);
-    }
-  }
-
-  const key = process.env.RESEND_API_KEY;
-  if (key && row.email) {
-    const mail =
-      decision === "approved"
-        ? buildVerificationApprovedEmail("es")
-        : buildVerificationRejectedEmail("es");
-    try {
-      await new Resend(key).emails.send({
-        from: FROM_ADDRESS,
-        to: row.email,
-        subject: mail.subject,
-        html: mail.html,
-        text: mail.text,
-      });
-    } catch (err) {
-      console.error("[verificacion] student email failed", err);
-    }
-  }
-
+  await applyVerificationDecision(userId, decision);
   revalidatePath("/es/portal/admin");
 }
 

@@ -3,16 +3,10 @@
 import { del } from "@vercel/blob";
 import { eq } from "drizzle-orm";
 import { revalidatePath } from "next/cache";
-import { Resend } from "resend";
 import { auth } from "@/lib/auth";
 import { db } from "@/lib/db";
 import { users } from "@/lib/db/schema";
-import { buildVerificationSubmittedEmail } from "@/lib/emails/verificacion";
-
-const FROM_ADDRESS =
-  process.env.EMAIL_FROM ?? "SCCA <info@sccompoundingacademy.com>";
-const OPS_RECIPIENT =
-  process.env.EMAIL_REPLY_TO ?? "info@sccompoundingacademy.com";
+import { notifyMatriculaReview } from "@/lib/portal/notify-matricula-review";
 
 /**
  * Persists the Blob URL of a freshly-uploaded matrícula photo against the
@@ -45,34 +39,24 @@ export async function submitVerificationDoc(blobUrl: string): Promise<void> {
     }
   }
 
+  const submittedAt = new Date();
   await db
     .update(users)
     .set({
       verificationDocUrl: blobUrl,
       studentVerification: "pending",
-      verificationSubmittedAt: new Date(),
+      verificationSubmittedAt: submittedAt,
       rejectedAt: null,
     })
     .where(eq(users.id, user.id));
 
-  const key = process.env.RESEND_API_KEY;
-  if (key) {
-    const mail = buildVerificationSubmittedEmail({
-      nombre: session.user.name ?? "",
-      email: session.user.email,
-    });
-    try {
-      await new Resend(key).emails.send({
-        from: FROM_ADDRESS,
-        to: OPS_RECIPIENT,
-        subject: mail.subject,
-        html: mail.html,
-        text: mail.text,
-      });
-    } catch (err) {
-      console.error("[verificacion] owner notification failed", err);
-    }
-  }
+  await notifyMatriculaReview({
+    userId: user.id,
+    name: session.user.name ?? null,
+    email: session.user.email,
+    docUrl: blobUrl,
+    submittedAt,
+  });
 
   revalidatePath("/es/portal/verificacion");
   revalidatePath("/en/portal/verificacion");
