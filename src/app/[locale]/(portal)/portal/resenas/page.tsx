@@ -11,7 +11,7 @@ import { db } from "@/lib/db";
 import { reviews, users } from "@/lib/db/schema";
 import { isEligibleForCertificate } from "@/lib/certificates";
 import { isAdminEmail } from "@/lib/admin";
-import type { UserTier } from "@/lib/curriculum";
+import { resolveEffectiveTier, type UserTier } from "@/lib/curriculum";
 import { ReviewForm } from "./review-form";
 
 export const metadata: Metadata = {
@@ -33,10 +33,13 @@ export const metadata: Metadata = {
  */
 export default async function ReviewsPage({
   params,
+  searchParams,
 }: {
   params: Promise<{ locale: string }>;
+  searchParams: Promise<{ preview?: string }>;
 }) {
   const { locale } = await params;
+  const { preview } = await searchParams;
   setRequestLocale(locale);
 
   const session = await auth();
@@ -55,7 +58,16 @@ export default async function ReviewsPage({
   const isOwner = isAdminEmail(session.user.email);
   if (!user.paidAt && !isOwner) redirect(`/${locale}/portal`);
 
-  const eligibility = await isEligibleForCertificate(user.id, user.tier);
+  // Owner-only `?preview=` selects which tier's module catalogue the
+  // review form renders (student → USP 795/800, profesional → Día 1/2/3).
+  // Real users always get their own tier (preview is ignored for them).
+  const effectiveTier = resolveEffectiveTier({
+    isOwner,
+    userTier: user.tier,
+    preview,
+  });
+
+  const eligibility = await isEligibleForCertificate(user.id, effectiveTier);
   const eligible = eligibility.eligible || isOwner;
   const [existing] = await db
     .select({ id: reviews.id })
@@ -67,7 +79,7 @@ export default async function ReviewsPage({
     <ReviewsPanel
       eligible={eligible}
       alreadySubmitted={Boolean(existing)}
-      tier={user.tier}
+      tier={effectiveTier}
     />
   );
 }
