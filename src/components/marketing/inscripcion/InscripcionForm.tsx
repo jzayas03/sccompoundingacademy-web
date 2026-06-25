@@ -1,5 +1,6 @@
 "use client";
 import { useState, useMemo } from "react";
+import { upload } from "@vercel/blob/client";
 import Script from "next/script";
 import { useTranslations } from "next-intl";
 import { Link } from "@/i18n/routing";
@@ -91,6 +92,9 @@ export function InscripcionForm({
   const [submitting, setSubmitting] = useState(false);
   const [accepted, setAccepted] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  // Student tier only: the matrícula photo is uploaded to Blob on submit,
+  // before checkout, and its URL gates the discounted price server-side.
+  const [matriculaFile, setMatriculaFile] = useState<File | null>(null);
 
   const selectedCourse = COURSES.find((c) => c.id === courseId);
 
@@ -112,7 +116,33 @@ export function InscripcionForm({
     e.preventDefault();
     if (submitting) return;
     setError(null);
+
+    // Student tier requires the matrícula photo before checkout.
+    if (tier === "student" && !matriculaFile) {
+      setError(t("matricula.required"));
+      return;
+    }
+
     const fd = new FormData(e.currentTarget);
+    setSubmitting(true);
+
+    // Upload the matrícula to Blob first; its URL travels with the payload
+    // and is re-validated server-side before checkout.
+    let matriculaDocUrl = "";
+    if (tier === "student" && matriculaFile) {
+      try {
+        const blob = await upload(matriculaFile.name, matriculaFile, {
+          access: "public",
+          handleUploadUrl: "/api/inscripcion/matricula-upload",
+        });
+        matriculaDocUrl = blob.url;
+      } catch {
+        setError(t("matricula.uploadError"));
+        setSubmitting(false);
+        return;
+      }
+    }
+
     const payload = {
       nombre: String(fd.get("nombre") ?? ""),
       email: String(fd.get("email") ?? ""),
@@ -121,6 +151,7 @@ export function InscripcionForm({
       curso_id: courseId,
       cohorte_id: cohorteId,
       tier,
+      matricula_doc_url: matriculaDocUrl,
       tipo_profesional: profesion,
       notas: String(fd.get("notas") ?? ""),
       acepto_terminos: accepted,
@@ -131,7 +162,6 @@ export function InscripcionForm({
       turnstile_token: String(fd.get("cf-turnstile-response") ?? ""),
     };
 
-    setSubmitting(true);
     try {
       const res = await fetch("/api/inscripcion", {
         method: "POST",
@@ -192,6 +222,28 @@ export function InscripcionForm({
           })}
         </div>
       </div>
+
+      {/* Matrícula upload — only for the student tier. Required before
+          checkout; gates the discounted price on a document the owner
+          reviews and approves via the emailed link. */}
+      {tier === "student" && (
+        <div>
+          <label className={labelCls} htmlFor="matricula">
+            {t("matricula.label")}
+          </label>
+          <input
+            id="matricula"
+            type="file"
+            accept="image/jpeg,image/png,image/heic,image/webp,application/pdf"
+            required
+            onChange={(e) => setMatriculaFile(e.target.files?.[0] ?? null)}
+            className="border-gray-300 file:bg-teal-deep file:text-off-white hover:file:bg-teal mt-1.5 block w-full rounded-md border bg-white px-3 py-2.5 text-base text-gray-900 file:mr-3 file:cursor-pointer file:rounded file:border-0 file:px-3 file:py-1.5 file:text-sm file:font-semibold"
+          />
+          <p className="text-gray-700 mt-1.5 text-xs leading-relaxed">
+            {t("matricula.hint")}
+          </p>
+        </div>
+      )}
 
       {/* Profession — only for the profesional tier. Farmacéutico/Técnico
           feed the ACPE "Registro de Educación Continua"; "Otro" lets

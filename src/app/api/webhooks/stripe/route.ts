@@ -11,6 +11,7 @@ import { sql, eq } from "drizzle-orm";
 import { db } from "@/lib/db";
 import { users, processedStripeEvents } from "@/lib/db/schema";
 import { initialVerificationFor } from "@/lib/portal/initial-verification";
+import { notifyMatriculaReview } from "@/lib/portal/notify-matricula-review";
 import { sendOpsAlert } from "@/lib/alerts";
 
 export const runtime = "nodejs";
@@ -224,14 +225,24 @@ export async function POST(req: Request) {
     const license = record.licencia || null;
     const professionalType = md.tipo_profesional?.trim() || null;
     const studentVerification = initialVerificationFor(tier);
+    // Matrícula photo uploaded on the enrollment form (student tier only).
+    // Persisted on the row so the owner can review + approve via the emailed
+    // link below. `matriculaSubmittedAt` doubles as the token's submission
+    // stamp, so it must match the row's `verificationSubmittedAt`.
+    const matriculaDocUrl =
+      tier === "student" ? md.matricula_doc_url?.trim() || null : null;
+    const matriculaSubmittedAt = tier === "student" ? new Date() : null;
+    let upserted: { id: string; verification: string | null } | undefined;
     try {
-      await db
+      const [row] = await db
         .insert(users)
         .values({
           email,
           name: record.nombre || null,
           tier,
           studentVerification,
+          verificationDocUrl: matriculaDocUrl,
+          verificationSubmittedAt: matriculaSubmittedAt,
           paidAt: new Date(),
           stripeCustomerId,
           cohortId: cohort.id,
@@ -249,6 +260,8 @@ export async function POST(req: Request) {
             ...(tier === "student"
               ? {
                   studentVerification: sql`case when ${users.studentVerification} = 'approved' then ${users.studentVerification} else 'pending'::"public"."student_verification_status" end`,
+                  verificationDocUrl: matriculaDocUrl,
+                  verificationSubmittedAt: matriculaSubmittedAt,
                 }
               : {}),
             paidAt: new Date(),
@@ -258,7 +271,9 @@ export async function POST(req: Request) {
             license,
             professionalType,
           },
-        });
+        })
+        .returning({ id: users.id, verification: users.studentVerification });
+      upserted = row;
     } catch (err) {
       console.error("[stripe-webhook] users upsert failed", err);
       // The student paid but the portal DB didn't record it — their
@@ -285,6 +300,25 @@ export async function POST(req: Request) {
         error: err,
         accion:
           "Verificar la DB (Neon). El registro está en Stripe/Airtable; reenviar el evento desde el panel de Stripe sana la DB.",
+      });
+    }
+
+    // Email the admin to review the freshly-uploaded matrícula (only when it
+    // landed as pending — never re-pings an already-approved re-enrollment).
+    // The event-level dedup at the top of the handler keeps this to one
+    // email per enrollment.
+    if (
+      upserted &&
+      tier === "student" &&
+      upserted.verification === "pending" &&
+      matriculaSubmittedAt
+    ) {
+      await notifyMatriculaReview({
+        userId: upserted.id,
+        name: record.nombre || null,
+        email,
+        docUrl: matriculaDocUrl,
+        submittedAt: matriculaSubmittedAt,
       });
     }
   }
