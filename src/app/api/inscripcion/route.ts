@@ -40,6 +40,10 @@ const InscripcionSchema = z.object({
   curso_id: z.string().trim().min(1),
   cohorte_id: z.string().trim().min(1),
   tier: z.enum(["profesional", "student"]),
+  // Public Blob URL of the student's matrícula photo, uploaded before
+  // checkout. Required for the student tier (enforced in the handler);
+  // empty/absent for profesional.
+  matricula_doc_url: z.string().trim().max(512).optional().or(z.literal("")),
   // Profession captured for the profesional tier — "farmaceutico" /
   // "tecnico" (ACPE registry), a profession code (medico/…), or the free
   // text typed under "Otro". Free-form string; empty for the student tier.
@@ -174,6 +178,21 @@ export async function POST(req: Request) {
     return NextResponse.json({ error: "Cohorte cerrada para inscripciones." }, { status: 400 });
   }
 
+  // Student tier requires the matrícula photo uploaded before checkout, and
+  // it must be one of our own Blob URLs (the upload route only mints those).
+  // This gates the discounted student price on a document the owner reviews
+  // (then approves via the emailed link), rather than being self-selectable.
+  const BLOB_URL_RE =
+    /^https:\/\/[a-z0-9]+\.public\.blob\.vercel-storage\.com\//;
+  const matriculaDocUrl =
+    data.tier === "student" ? (data.matricula_doc_url ?? "").trim() : "";
+  if (data.tier === "student" && !BLOB_URL_RE.test(matriculaDocUrl)) {
+    return NextResponse.json(
+      { error: "Sube una foto de tu matrícula activa para inscribirte como estudiante." },
+      { status: 400 },
+    );
+  }
+
   // Capture audit-trail facts from the request (server-side, can't be
   // spoofed by the client). The browser-supplied legal-acceptance flag
   // gets timestamped/IP-stamped here. `ip` is the same client IP resolved
@@ -247,6 +266,8 @@ export async function POST(req: Request) {
         curso_id: data.curso_id,
         cohorte_id: data.cohorte_id,
         tier: data.tier,
+        // Empty for profesional; the webhook stores it on the student's row.
+        matricula_doc_url: matriculaDocUrl,
         tipo_profesional: data.tipo_profesional ?? "",
         notas: (data.notas ?? "").slice(0, 480),
         acepto_terminos: "true",

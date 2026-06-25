@@ -611,6 +611,12 @@
         "note": "Solo estudiantes no licenciados (pre-PharmD o en programa de técnico). Requiere email institucional. Si no usas email institucional, escríbenos para verificación manual del Student ID."
       }
     },
+    "matricula": {
+      "label": "Foto de tu matrícula activa",
+      "hint": "Requerido para la tarifa de estudiante. Sube una foto clara y vigente (JPG, PNG, HEIC o PDF). La revisaremos para aprobar tu inscripción.",
+      "required": "Sube una foto de tu matrícula activa para inscribirte como estudiante.",
+      "uploadError": "No pudimos subir tu matrícula. Intenta de nuevo con otra foto."
+    },
     "acceptanceLabel": "He leído y acepto los <terms>Términos y Condiciones</terms>, la <privacy>Política de Privacidad</privacy> y la <refund>Política de Reembolsos</refund>.",
     "summary": {
       "total": "Total a pagar"

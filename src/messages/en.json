@@ -605,6 +605,12 @@
         "note": "Only for non-licensed students (pre-PharmD or in a pharmacy technician program). Requires institutional email. If you don't have one, write to us for manual Student ID verification."
       }
     },
+    "matricula": {
+      "label": "Photo of your active student ID",
+      "hint": "Required for the student rate. Upload a clear, current photo (JPG, PNG, HEIC, or PDF). We'll review it to approve your enrollment.",
+      "required": "Upload a photo of your active student ID to enroll at the student rate.",
+      "uploadError": "We couldn't upload your student ID. Please try again with another photo."
+    },
     "acceptanceLabel": "I have read and accept the <terms>Terms and Conditions</terms>, the <privacy>Privacy Policy</privacy>, and the <refund>Refund Policy</refund>.",
     "summary": {
       "total": "Total to pay"
