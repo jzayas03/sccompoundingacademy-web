@@ -13,6 +13,7 @@ import { users, processedStripeEvents } from "@/lib/db/schema";
 import { initialVerificationFor } from "@/lib/portal/initial-verification";
 import { notifyMatriculaReview } from "@/lib/portal/notify-matricula-review";
 import { sendOpsAlert } from "@/lib/alerts";
+import { webhookUserStrategy, studentPaidUpdate } from "@/lib/inscripcion/webhook-user";
 
 export const runtime = "nodejs";
 
@@ -210,14 +211,77 @@ export async function POST(req: Request) {
     locale,
   };
 
-  // 1) Portal DB — upsert the user row so the dashboard reflects payment
-  //    immediately on the student's next visit. ON CONFLICT (email) DO
-  //    UPDATE so we cleanly handle both "paid before signing in" and
-  //    "signed in before paying" sequences without losing data. Wrapped
-  //    in try/catch so an outage of the DB does not block Airtable +
-  //    confirmation emails — the source of truth at this point is
-  //    Stripe, and the webhook is idempotent so a replay heals the DB.
-  if (email) {
+  // 1) Portal DB — persist payment so the portal dashboard unlocks.
+  //
+  //    Two paths depending on tier + session metadata:
+  //
+  //    A) Student tier with user_id  ("stamp-by-id" — new pre-payment flow):
+  //       The row was created at enrollment and approved by the admin before
+  //       the student paid. Only stamp paidAt/stripeCustomerId/cohortId.
+  //       NEVER touch verification fields — the decision was already made.
+  //       NEVER call notifyMatriculaReview — that email went out at review time.
+  //
+  //    B) Profesional tier, or legacy student without user_id ("upsert-by-email"):
+  //       The original upsert-by-email path, unchanged, including the
+  //       notifyMatriculaReview call for legacy students who arrive here pending.
+  //
+  //    In both cases Airtable + confirmation/internal emails below still run
+  //    (they key off `email`, still set from session.customer_email).
+  //
+  //    Wrapped in try/catch so a DB outage does not block Airtable + emails —
+  //    Stripe is the source of truth; a manual resend heals the DB.
+
+  const userIdFromSession = md.user_id?.trim() || null;
+  const dbStrategy = webhookUserStrategy(tier, userIdFromSession);
+
+  if (dbStrategy === "stamp-by-id") {
+    // ── Path A: Pre-payment review — student row already exists and is
+    // approved. Stamp only payment fields; leave verification untouched.
+    try {
+      const [row] = await db
+        .update(users)
+        .set(studentPaidUpdate({ stripeCustomerId, cohortId: cohort.id }))
+        .where(eq(users.id, userIdFromSession!))
+        .returning({ id: users.id });
+      if (!row) {
+        // The approved row was expected to exist — alert the operator for
+        // manual reconciliation. We still return 200 so Stripe doesn't retry
+        // (the retried event would hit the same missing row).
+        await sendOpsAlert("Pago estudiante sin fila correspondiente", {
+          user_id: userIdFromSession,
+          stripe_session_id: session.id,
+          accion:
+            "Reconciliar manualmente; la fila pendiente no fue hallada en la DB.",
+        });
+      }
+    } catch (err) {
+      console.error("[stripe-webhook] student paidAt update failed", err);
+      // Release the idempotency claim so the operator can resend the event
+      // from the Stripe dashboard to heal the DB.
+      try {
+        await db
+          .delete(processedStripeEvents)
+          .where(eq(processedStripeEvents.eventId, event.id));
+      } catch (releaseErr) {
+        console.error("[stripe-webhook] failed to release dedup claim", releaseErr);
+      }
+      await sendOpsAlert(
+        "Pago estudiante OK pero falló el sello de pago en DB",
+        {
+          user_id: userIdFromSession,
+          stripe_session_id: session.id,
+          error: err,
+          accion:
+            "Reenviar el evento desde Stripe sana la DB.",
+        },
+      );
+    }
+    // notifyMatriculaReview is NOT called here — the review email already went
+    // out when the admin approved the enrollment (before payment).
+  } else if (email) {
+    // ── Path B: Profesional tier, or legacy student without user_id.
+    //    Upsert by email — original behaviour, unchanged.
+
     // ACPE-registry fields. `professionalType` holds the enrollee's
     // profession (farmaceutico / tecnico / a code / free text) for the
     // profesional tier; the student tier leaves it null.
