@@ -72,9 +72,25 @@ describe("buildPendingStudentValues", () => {
     expect(stringParts.some((s) => s.includes("approved"))).toBe(true);
   });
 
-  it("conflictSet clears verifiedAt and rejectedAt on re-submit", () => {
+  it("conflictSet verifiedAt is a SQL CASE that preserves the value for approved rows (I-2 fix)", () => {
+    // An approved student who re-submits must NOT have verifiedAt wiped —
+    // canResendPayLink requires verifiedAt != null, and the resend form only
+    // shows for approved+unpaid students. Setting it unconditionally to null
+    // would leave the row in an approved-but-verifiedAt=null state that the
+    // resend route then refuses (inconsistent). The CASE mirrors the existing
+    // studentVerification CASE so both fields stay consistent on re-submit.
     const { conflictSet } = buildPendingStudentValues(BASE_INPUT);
-    expect(conflictSet.verifiedAt).toBeNull();
+    const node = conflictSet.verifiedAt as {
+      queryChunks?: Array<{ value?: unknown }>;
+    };
+    const stringParts = (node.queryChunks ?? [])
+      .filter((c) => Array.isArray(c.value))
+      .flatMap((c) => c.value as string[]);
+    expect(stringParts.some((s) => s.includes("approved"))).toBe(true);
+  });
+
+  it("conflictSet clears rejectedAt on re-submit (prior rejection superseded)", () => {
+    const { conflictSet } = buildPendingStudentValues(BASE_INPUT);
     expect(conflictSet.rejectedAt).toBeNull();
   });
 });

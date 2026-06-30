@@ -38,6 +38,16 @@ export async function createStudentCheckoutSession(
       paidAt: users.paidAt,
       studentVerification: users.studentVerification,
       cohortId: users.cohortId,
+      // These fields are forwarded into Stripe session metadata so the webhook
+      // can pass the curso_id / cohorte_id guard before reaching the
+      // stamp-by-id branch (without them the webhook bails with "bad metadata"
+      // and paidAt is never set).
+      name: users.name,
+      phone: users.phone,
+      aceptoTimestamp: users.aceptoTimestamp,
+      aceptoIp: users.aceptoIp,
+      aceptoUserAgent: users.aceptoUserAgent,
+      aceptoVersionDocs: users.aceptoVersionDocs,
     })
     .from(users)
     .where(eq(users.id, userId))
@@ -71,7 +81,24 @@ export async function createStudentCheckoutSession(
       allow_promotion_codes: true,
       line_items: [{ price: stripePriceId, quantity: 1 }],
       customer_email: row.email ?? undefined,
-      metadata: { user_id: row.id, tier: "student" },
+      // Full metadata required by the webhook: curso_id / cohorte_id pass the
+      // course-resolution guard; the remaining fields populate the Airtable
+      // record + confirmation email that run after the stamp-by-id path.
+      // All values must be strings (Stripe rejects non-string metadata).
+      metadata: {
+        user_id: row.id,
+        tier: "student",
+        curso_id: cohort.courseId,
+        cohorte_id: cohort.id,
+        nombre: row.name ?? "",
+        telefono: row.phone ?? "",
+        locale: "es",
+        acepto_terminos: "true",
+        acepto_timestamp: row.aceptoTimestamp ? row.aceptoTimestamp.toISOString() : "",
+        acepto_ip: row.aceptoIp ?? "",
+        acepto_user_agent: (row.aceptoUserAgent ?? "").slice(0, 480),
+        acepto_version_docs: row.aceptoVersionDocs ?? "",
+      },
       success_url: successUrl,
       cancel_url: cancelUrl,
       payment_intent_data: { receipt_email: row.email ?? undefined },

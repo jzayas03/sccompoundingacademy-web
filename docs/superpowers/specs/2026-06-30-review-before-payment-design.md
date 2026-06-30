@@ -124,9 +124,18 @@ links.
 
 1. HMAC signature valid.
 2. Row exists, `studentVerification === 'approved'`, `paidAt` is `null`.
-3. Token `approvedAt` matches the row's `verifiedAt`.
-4. `now - approvedAt <= 48h`, else → expired-link page (offer resend).
-5. Cohort still `openForEnrollment`, else → closed page.
+3. `now - approvedAt <= 48h`, else → expired-link page (offer resend).
+4. Cohort still `openForEnrollment`, else → closed page.
+
+**Note (2026-06-30 integration fix):** step 3 in the original design ("token
+`approvedAt` matches the row's `verifiedAt`") is NOT implemented and is
+deliberately NOT being implemented. `/pagar` enforces a 48h freshness window
+on the token's `approvedAt` plus the live row state (approved + unpaid + cohort
+open). Re-decision invalidation comes from the status flip — a rejection makes
+`/pagar` refuse at step 2 because `studentVerification !== 'approved'`, not
+from a timestamp equality check. The resend route (`/api/inscripcion/reenviar-pago`)
+mints a fresh 48h window via `approvedAt: Date.now()` rather than re-using the
+stale `row.verifiedAt`, which would immediately expire the resent link.
 
 On success: create the Stripe Checkout Session with `STRIPE_PRICE_ID_STUDENT`,
 put `userId` in session metadata, 302 to `session.url`.

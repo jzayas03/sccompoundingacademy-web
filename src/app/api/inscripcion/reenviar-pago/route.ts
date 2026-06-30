@@ -5,10 +5,9 @@ import { db } from "@/lib/db";
 import { users } from "@/lib/db/schema";
 import { getCohort } from "@/lib/cohorts";
 import { getSiteUrl } from "@/lib/siteUrl";
-import { signCheckoutToken } from "@/lib/portal/verification-token";
 import { buildCheckoutLinkEmail } from "@/lib/emails/verificacion";
 import { rateLimit, clientIp } from "@/lib/ratelimit";
-import { canResendPayLink } from "@/lib/inscripcion/resend-pay-link";
+import { canResendPayLink, mintResendCheckoutToken } from "@/lib/inscripcion/resend-pay-link";
 
 export const runtime = "nodejs";
 
@@ -63,10 +62,9 @@ export async function POST(req: Request): Promise<Response> {
 
     const key = process.env.RESEND_API_KEY;
     if (eligible && key) {
-      const token = signCheckoutToken({
-        userId: row.id,
-        approvedAt: row.verifiedAt.getTime(),
-      });
+      // mintResendCheckoutToken uses Date.now() so the resent link opens a
+      // fresh 48h window (see resend-pay-link.ts for the full explanation).
+      const token = mintResendCheckoutToken(row.id);
       const payUrl = `${origin}/api/inscripcion/pagar?token=${encodeURIComponent(token)}`;
       const mail = buildCheckoutLinkEmail("es", payUrl);
       try {

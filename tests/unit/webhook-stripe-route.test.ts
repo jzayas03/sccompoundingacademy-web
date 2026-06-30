@@ -119,6 +119,13 @@ import { POST } from "@/app/api/webhooks/stripe/route";
 /**
  * Build a minimal Stripe checkout.session.completed event.
  * Spread `metadataOverrides` to change tier, user_id, etc.
+ *
+ * IMPORTANT — fixture mirrors createStudentCheckoutSession output (C-1 fix):
+ * The metadata keys here (curso_id, cohorte_id, nombre, telefono, acepto_*)
+ * are exactly what createStudentCheckoutSession now emits. If you change the
+ * helper's metadata shape, update this fixture to match — the tests below
+ * exercise the real webhook DB-path routing which requires curso_id/cohorte_id
+ * to pass the course-resolution guard before the stamp-by-id branch runs.
  */
 function makeStripeEvent(
   metadataOverrides: Record<string, string> = {},
@@ -137,6 +144,10 @@ function makeStripeEvent(
         metadata: {
           tier: "student",
           user_id: "u1",
+          // These two keys mirror createStudentCheckoutSession (C-1 fix):
+          // the webhook's getCourseById / getCohort guard runs BEFORE the
+          // tier/stamp-by-id branching — without them the event bails with
+          // "bad metadata" and paidAt is never stamped.
           curso_id: "basic-compounding",
           cohorte_id: "cohort-2026-q1",
           nombre: "Ana Test",

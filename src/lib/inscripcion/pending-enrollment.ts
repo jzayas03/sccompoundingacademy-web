@@ -52,7 +52,11 @@ export function buildPendingStudentValues(input: PendingStudentInput) {
     studentVerification: sql`case when ${users.studentVerification} = 'approved' then ${users.studentVerification} else 'pending'::"public"."student_verification_status" end`,
     verificationDocUrl: input.matriculaDocUrl,
     verificationSubmittedAt: input.submittedAt,
-    verifiedAt: null,
+    // Preserve verifiedAt when the row is already approved so that canResendPayLink
+    // (which requires verifiedAt != null) keeps working after a re-submit.
+    // A re-submit by a non-approved student correctly clears verifiedAt to null.
+    // (rejectedAt is always cleared — a re-submit supersedes any prior rejection.)
+    verifiedAt: sql`case when ${users.studentVerification} = 'approved' then ${users.verifiedAt} else null end`,
     rejectedAt: null,
     aceptoTimestamp: new Date(input.acceptedAt),
     aceptoIp: input.ip,

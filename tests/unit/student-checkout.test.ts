@@ -32,22 +32,29 @@ beforeEach(() => {
   createSessionMock.mockResolvedValue({ url: "https://stripe.test/sess" });
 });
 
+// approvedRow must carry all columns that createStudentCheckoutSession now
+// selects — including the acepto* fields forwarded to Stripe metadata.
 const approvedRow = {
   id: "u1",
   email: "a@b.com",
-  tier: "student",
   paidAt: null,
   studentVerification: "approved",
-  verifiedAt: new Date(),
   cohortId: "c1",
-  curso_id: "basic-compounding",
+  name: "Ana Test",
+  phone: "787-555-0100",
+  aceptoTimestamp: new Date("2026-06-01T12:00:00.000Z"),
+  aceptoIp: "127.0.0.1",
+  aceptoUserAgent: "Vitest/1.0",
+  aceptoVersionDocs: "v2026-06-01",
 };
 
+// Cast via unknown so TypeScript doesn't complain about the partial Cohort shape,
+// but keep the object typed concretely so test assertions can read .courseId / .id.
 const openCohort = {
   id: "c1",
-  courseId: "basic-compounding",
+  courseId: "basic-compounding" as const,
   openForEnrollment: true,
-} as never;
+} as unknown as import("@/lib/cohorts").Cohort;
 
 describe("createStudentCheckoutSession", () => {
   it("returns not-found when the row is missing", async () => {
@@ -89,12 +96,33 @@ describe("createStudentCheckoutSession", () => {
     expect(r).toEqual({ ok: true, url: "https://stripe.test/sess" });
   });
 
-  it("passes the user_id + tier metadata the webhook keys off", async () => {
+  it("passes the FULL metadata set the webhook requires (curso_id + cohorte_id must be present)", async () => {
+    // This test verifies C-1 fix: the webhook runs getCourseById(md.curso_id)
+    // and getCohort(md.cohorte_id) BEFORE the tier/stamp-by-id branching.
+    // Without curso_id/cohorte_id the webhook bails with "bad metadata" and
+    // paidAt is never stamped, so these keys are load-bearing.
     mockRows = [approvedRow];
     vi.mocked(getCohort).mockResolvedValue(openCohort);
     await createStudentCheckoutSession("u1");
     expect(createSessionMock).toHaveBeenCalledWith(
-      expect.objectContaining({ metadata: { user_id: "u1", tier: "student" } }),
+      expect.objectContaining({
+        metadata: expect.objectContaining({
+          user_id: "u1",
+          tier: "student",
+          // Sourced from the cohort the helper already loads:
+          curso_id: openCohort.courseId,
+          cohorte_id: openCohort.id,
+          // Sourced from the acepto* columns now included in the DB select:
+          nombre: approvedRow.name,
+          telefono: approvedRow.phone,
+          locale: "es",
+          acepto_terminos: "true",
+          acepto_timestamp: approvedRow.aceptoTimestamp.toISOString(),
+          acepto_ip: approvedRow.aceptoIp,
+          acepto_user_agent: approvedRow.aceptoUserAgent,
+          acepto_version_docs: approvedRow.aceptoVersionDocs,
+        }),
+      }),
     );
   });
 });

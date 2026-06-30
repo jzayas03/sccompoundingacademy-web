@@ -1,3 +1,5 @@
+import { signCheckoutToken } from "@/lib/portal/verification-token";
+
 /**
  * Pure eligibility check for re-sending a student's payment link.
  *
@@ -27,4 +29,21 @@ export function canResendPayLink({
     !paidAt &&
     cohortOpen
   );
+}
+
+/**
+ * Mint a fresh 48h checkout token for a student whose prior pay link expired.
+ *
+ * Extracted as a pure helper so we can verify (a) the token is signed with a
+ * NOW-ish approvedAt (not the stale row.verifiedAt), and (b) the /pagar
+ * endpoint's 48h freshness check won't immediately reject the resent link.
+ *
+ * The route owns the eligibility gate (canResendPayLink) before calling this.
+ */
+export function mintResendCheckoutToken(userId: string): string {
+  // IMPORTANT: use Date.now(), NOT row.verifiedAt.getTime().
+  // The resend form only appears when the original link is >48h old (reason=expirado).
+  // Re-signing with verifiedAt produces a token /pagar immediately bounces as
+  // expired again — an infinite loop. Date.now() opens a fresh 48h window.
+  return signCheckoutToken({ userId, approvedAt: Date.now() });
 }
