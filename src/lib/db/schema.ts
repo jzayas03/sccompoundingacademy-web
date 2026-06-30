@@ -88,6 +88,12 @@ export const users = pgTable("user", {
   verifiedAt: timestamp("verified_at", { mode: "date" }),
   /** Set when the owner rejects; mutually exclusive with verifiedAt. */
   rejectedAt: timestamp("rejected_at", { mode: "date" }),
+  /** Legal-acceptance audit trail, captured server-side at matrícula submit
+   * (student tier) or checkout (profesional). All nullable. */
+  aceptoTimestamp: timestamp("acepto_timestamp", { mode: "date" }),
+  aceptoIp: text("acepto_ip"),
+  aceptoUserAgent: text("acepto_user_agent"),
+  aceptoVersionDocs: text("acepto_version_docs"),
   createdAt: timestamp("created_at", { mode: "date" }).defaultNow().notNull(),
 });
 
