@@ -28,7 +28,7 @@
 
   --font-heading:
     var(--font-heading-loaded), "ITC Avant Garde Gothic Pro", "Century Gothic", "Futura",
-    "Montserrat", system-ui, sans-serif;
+    "Outfit", system-ui, sans-serif;
   --font-body: var(--font-heading);
   --font-accent: var(--font-accent-loaded), "Khmer MN", "Cormorant Garamond", "Garamond", serif;
 
