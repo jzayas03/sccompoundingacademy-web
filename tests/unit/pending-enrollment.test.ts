@@ -55,10 +55,21 @@ describe("buildPendingStudentValues", () => {
     expect(insertValues.aceptoUserAgent!.length).toBe(480);
   });
 
-  it("includes a conflictSet with a non-null studentVerification SQL expression", () => {
+  it("conflictSet studentVerification SQL CASE references 'approved' to preserve approved rows", () => {
     const { conflictSet } = buildPendingStudentValues(BASE_INPUT);
-    // This is a Drizzle SQL AST node (the CASE expression that preserves 'approved' rows).
-    expect(conflictSet.studentVerification).toBeTruthy();
+    // Drizzle sql`` builds a SQL AST where queryChunks is an array of mixed
+    // chunk types. StringChunk objects carry `value: string[]` for the literal
+    // SQL text parts; Column/Table references have different shapes (and are
+    // circular, so JSON.stringify would fail on them).
+    // Filter to only string-array chunks, flatten, then verify "approved" appears —
+    // proving the CASE expression won't reset an already-approved row to pending.
+    const node = conflictSet.studentVerification as {
+      queryChunks?: Array<{ value?: unknown }>;
+    };
+    const stringParts = (node.queryChunks ?? [])
+      .filter((c) => Array.isArray(c.value))
+      .flatMap((c) => c.value as string[]);
+    expect(stringParts.some((s) => s.includes("approved"))).toBe(true);
   });
 
   it("conflictSet clears verifiedAt and rejectedAt on re-submit", () => {
