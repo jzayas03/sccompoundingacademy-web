@@ -182,8 +182,11 @@ export async function POST(req: Request) {
   // it must be one of our own Blob URLs (the upload route only mints those).
   // This gates the discounted student price on a document the owner reviews
   // (then approves via the emailed link), rather than being self-selectable.
+  // Accept both public and private Blob hosts. The matrícula store is private
+  // (identity document), so fresh uploads land on `…private.blob…`; `public`
+  // stays accepted for backward compatibility.
   const BLOB_URL_RE =
-    /^https:\/\/[a-z0-9]+\.public\.blob\.vercel-storage\.com\//;
+    /^https:\/\/[a-z0-9]+\.(?:public|private)\.blob\.vercel-storage\.com\//;
   const matriculaDocUrl =
     data.tier === "student" ? (data.matricula_doc_url ?? "").trim() : "";
   if (data.tier === "student" && !BLOB_URL_RE.test(matriculaDocUrl)) {

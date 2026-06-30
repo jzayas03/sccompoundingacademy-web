@@ -157,7 +157,10 @@ export function InscripcionForm({
         let blob;
         try {
           blob = await upload(matriculaFile.name, matriculaFile, {
-            access: "public",
+            // Private store: the matrícula is an identity document, so it is not
+            // publicly accessible by URL. The admin views it via a signed URL
+            // (see lib/portal/blob-read.ts).
+            access: "private",
             handleUploadUrl: "/api/inscripcion/matricula-upload",
             abortSignal: controller.signal,
           });

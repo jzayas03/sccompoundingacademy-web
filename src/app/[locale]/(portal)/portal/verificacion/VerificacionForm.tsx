@@ -36,7 +36,8 @@ export function VerificacionForm() {
     setBusy(true);
     try {
       const blob = await upload(`${VERIFICATION_BLOB_PREFIX}/${file.name}`, file, {
-        access: "public",
+        // Private store — identity document, viewed by the admin via signed URL.
+        access: "private",
         handleUploadUrl: "/api/portal/verificacion/upload",
       });
       await submitVerificationDoc(blob.url);
