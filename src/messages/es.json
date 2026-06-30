@@ -654,6 +654,25 @@
       "enfermero": "Enfermero/a",
       "dentista": "Dentista",
       "otro": "Otra (especificar)"
+    },
+    "revision": {
+      "title": "Recibimos tu matrícula",
+      "body": "La revisaremos y te enviaremos un correo con el enlace para completar tu pago. Esto suele tardar poco.",
+      "contact": "¿Dudas? Escríbenos a info@sccompoundingacademy.com"
+    },
+    "pagoCerrado": {
+      "title": "Enlace de pago no disponible",
+      "emailPlaceholder": "tu@correo.com",
+      "resend": "Reenviar enlace de pago",
+      "contact": "¿Necesitas ayuda? Escríbenos a info@sccompoundingacademy.com",
+      "reasons": {
+        "expirado": "Tu enlace de pago venció (válido 48 horas). Pide uno nuevo abajo.",
+        "invalido": "Este enlace no es válido. Escríbenos para ayudarte.",
+        "pagado": "Esta inscripción ya está pagada. ¡Nos vemos en clase!",
+        "cerrada": "La cohorte cerró inscripciones. Escríbenos para la próxima fecha.",
+        "error": "No pudimos procesar el pago. Intenta más tarde o escríbenos.",
+        "reenviado": "Te enviamos un enlace nuevo si tu matrícula está aprobada. Revisa tu correo."
+      }
     }
   },
   "ctaFinal": {

@@ -648,6 +648,25 @@
       "enfermero": "Nurse",
       "dentista": "Dentist",
       "otro": "Other (specify)"
+    },
+    "revision": {
+      "title": "We received your matrícula",
+      "body": "We'll review it and send you an email with the link to complete your payment. This usually takes just a short while.",
+      "contact": "Questions? Write to us at info@sccompoundingacademy.com"
+    },
+    "pagoCerrado": {
+      "title": "Payment link unavailable",
+      "emailPlaceholder": "you@email.com",
+      "resend": "Resend payment link",
+      "contact": "Need help? Write to us at info@sccompoundingacademy.com",
+      "reasons": {
+        "expirado": "Your payment link expired (valid for 48 hours). Request a new one below.",
+        "invalido": "This link is not valid. Write to us and we'll help you.",
+        "pagado": "This enrollment is already paid. See you in class!",
+        "cerrada": "This cohort has closed enrollment. Write to us for the next date.",
+        "error": "We couldn't process your payment. Try again later or write to us.",
+        "reenviado": "We sent you a new link if your matrícula is approved. Check your email."
+      }
     }
   },
   "ctaFinal": {

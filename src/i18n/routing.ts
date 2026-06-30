@@ -13,6 +13,8 @@ export const routing = defineRouting({
     "/inscripcion": { es: "/inscripcion", en: "/enroll" },
     "/inscripcion/exito": { es: "/inscripcion/exito", en: "/enroll/success" },
     "/inscripcion/cancelada": { es: "/inscripcion/cancelada", en: "/enroll/cancelled" },
+    "/inscripcion/revision": { es: "/inscripcion/revision", en: "/enroll/review" },
+    "/inscripcion/pago-cerrado": { es: "/inscripcion/pago-cerrado", en: "/enroll/payment-closed" },
     "/legal/privacidad": { es: "/legal/privacidad", en: "/legal/privacy" },
     "/legal/terminos": { es: "/legal/terminos", en: "/legal/terms" },
     "/legal/reembolso": { es: "/legal/reembolso", en: "/legal/refund" },
