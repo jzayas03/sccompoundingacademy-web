@@ -7,6 +7,10 @@ import { getCohort } from "@/lib/cohorts";
 import { getSiteUrl } from "@/lib/siteUrl";
 import { rateLimit, clientIp } from "@/lib/ratelimit";
 import { verifyTurnstile } from "@/lib/turnstile";
+import { db } from "@/lib/db";
+import { users } from "@/lib/db/schema";
+import { notifyMatriculaReview } from "@/lib/portal/notify-matricula-review";
+import { buildPendingStudentValues } from "@/lib/inscripcion/pending-enrollment";
 
 export const runtime = "nodejs";
 
@@ -202,6 +206,62 @@ export async function POST(req: Request) {
   // at the top of the handler for rate limiting.
   const userAgent = req.headers.get("user-agent") ?? "unknown";
   const acceptedAt = new Date().toISOString();
+
+  // ── Student tier: review BEFORE payment ──────────────────────────────
+  // Persist a pending row (paidAt stays null) carrying every datum the
+  // post-approval checkout + webhook need, then email the admin to review.
+  // No Stripe session is created here; the student receives a pay link only
+  // after the owner approves (see applyVerificationDecision + /api/inscripcion/pagar).
+  if (data.tier === "student") {
+    const submittedAt = new Date();
+    const { insertValues, conflictSet } = buildPendingStudentValues({
+      email: data.email,
+      name: data.nombre,
+      telefono: data.telefono,
+      cohortId: cohort.id,
+      matriculaDocUrl,
+      submittedAt,
+      acceptedAt,
+      ip,
+      userAgent,
+      aceptoVersionDocs: data.acepto_version_docs,
+    });
+    try {
+      const [row] = await db
+        .insert(users)
+        .values(insertValues)
+        .onConflictDoUpdate({
+          target: users.email,
+          set: conflictSet,
+        })
+        .returning({ id: users.id, studentVerification: users.studentVerification, paidAt: users.paidAt });
+
+      // Guard: already paid → don't reopen review (student already enrolled).
+      if (row?.paidAt) {
+        return NextResponse.json(
+          { error: "Ya tienes una inscripción registrada con este correo. Escríbenos si necesitas ayuda." },
+          { status: 409 },
+        );
+      }
+
+      if (row) {
+        await notifyMatriculaReview({
+          userId: row.id,
+          name: data.nombre || null,
+          email: data.email.trim().toLowerCase(),
+          docUrl: matriculaDocUrl,
+          submittedAt,
+        });
+      }
+    } catch (err) {
+      console.error("[inscripcion] student pending upsert failed", err);
+      return NextResponse.json(
+        { error: "No pudimos registrar tu matrícula. Intenta nuevamente o escríbenos." },
+        { status: 500 },
+      );
+    }
+    return NextResponse.json({ pending: true });
+  }
 
   const pricing = getPricingByTier(course, data.tier);
   if (!pricing) {

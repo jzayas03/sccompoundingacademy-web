@@ -1,4 +1,17 @@
-import { describe, expect, it } from "vitest";
+import { describe, expect, it, vi } from "vitest";
+
+// The route now imports notifyMatriculaReview (server-only) and db; mock
+// those transitive dependencies so the pure checkoutIdempotencyKey function
+// can be exercised without a server-side or DB context.
+vi.mock("server-only", () => ({}));
+vi.mock("@/lib/db", () => ({ db: {} }));
+vi.mock("@/lib/portal/notify-matricula-review", () => ({
+  notifyMatriculaReview: vi.fn(),
+}));
+vi.mock("@/lib/stripe", () => ({
+  stripe: () => ({ checkout: { sessions: { create: vi.fn() } } }),
+}));
+
 import { checkoutIdempotencyKey } from "@/app/api/inscripcion/route";
 
 /**
