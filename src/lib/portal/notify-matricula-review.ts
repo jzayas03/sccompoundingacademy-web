@@ -3,6 +3,7 @@ import "server-only";
 import { Resend } from "resend";
 import { buildVerificationSubmittedEmail } from "@/lib/emails/verificacion";
 import { signVerificationDecision } from "./verification-token";
+import { signedMatriculaUrl } from "./blob-read";
 import { getSiteUrl } from "@/lib/siteUrl";
 
 const FROM_ADDRESS =
@@ -45,10 +46,14 @@ export async function notifyMatriculaReview(p: {
       submittedAt: p.submittedAt.getTime(),
     })}`;
 
+  // The photo lives in a private store; embed a signed URL the owner can open
+  // for a week (the review email may sit in the inbox for days).
+  const previewUrl = await signedMatriculaUrl(p.docUrl, 7 * 24 * 60 * 60 * 1000);
+
   const mail = buildVerificationSubmittedEmail({
     nombre: p.name ?? "",
     email: p.email,
-    docUrl: p.docUrl,
+    docUrl: previewUrl,
     approveUrl: link("approved"),
     rejectUrl: link("rejected"),
   });

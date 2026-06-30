@@ -8,6 +8,7 @@ import { auth } from "@/lib/auth";
 import { db } from "@/lib/db";
 import { users, reviews, certificates } from "@/lib/db/schema";
 import { isAdminEmail } from "@/lib/admin";
+import { signedMatriculaUrl } from "@/lib/portal/blob-read";
 import { listCohorts, formatCohortLabel, type Cohort } from "@/lib/cohorts";
 import { professionLabel } from "@/lib/professions";
 import { Link } from "@/i18n/routing";
@@ -139,6 +140,15 @@ export default async function AdminPage({
     )
     .orderBy(desc(users.verificationSubmittedAt));
 
+  // The matrícula photos live in a private store — sign a short-lived URL per
+  // row so the inline preview/link actually loads.
+  const pendingWithPreview = await Promise.all(
+    pendingVerifications.map(async (v) => ({
+      ...v,
+      previewUrl: await signedMatriculaUrl(v.docUrl),
+    })),
+  );
+
   const cohortList = await listCohorts();
   const cohortById = new Map(
     cohortList.map((c): [string, Cohort] => [c.id, c]),
@@ -256,20 +266,20 @@ export default async function AdminPage({
       )}
 
       {/* Pending student verifications — matrícula uploaded, awaiting decision */}
-      {pendingVerifications.length > 0 && (
+      {pendingWithPreview.length > 0 && (
         <section aria-labelledby="verif-pendientes-heading" className="mt-12">
           <h2
             id="verif-pendientes-heading"
             className="font-heading text-teal-deep text-xl font-semibold sm:text-2xl"
           >
-            Verificación de estudiantes ({pendingVerifications.length})
+            Verificación de estudiantes ({pendingWithPreview.length})
           </h2>
           <p className="text-gray-700 mt-2 text-sm">
             Estos estudiantes subieron su matrícula. Aprueba para darles acceso,
             o rechaza para pedir otra foto. La imagen se elimina al decidir.
           </p>
           <ul className="mt-6 grid grid-cols-1 gap-4 sm:grid-cols-2">
-            {pendingVerifications.map((v) => (
+            {pendingWithPreview.map((v) => (
               <li
                 key={v.id}
                 className="border-gray-300 rounded-lg border bg-white p-5 shadow-sm"
@@ -281,9 +291,9 @@ export default async function AdminPage({
                 <p className="text-gray-700 mt-1 text-xs">
                   Subida: {fmtDate(v.submittedAt)}
                 </p>
-                {v.docUrl && (
+                {v.previewUrl && (
                   <a
-                    href={v.docUrl}
+                    href={v.previewUrl}
                     target="_blank"
                     rel="noopener noreferrer"
                     className="mt-3 block"
@@ -291,7 +301,7 @@ export default async function AdminPage({
                     {/* Image OR a PDF link, depending on the upload. */}
                     {/* eslint-disable-next-line @next/next/no-img-element */}
                     <img
-                      src={v.docUrl}
+                      src={v.previewUrl}
                       alt={`Matrícula de ${v.name ?? v.email}`}
                       className="border-gray-300 max-h-64 w-full rounded-md border object-contain"
                     />

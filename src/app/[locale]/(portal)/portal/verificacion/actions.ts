@@ -18,8 +18,13 @@ export async function submitVerificationDoc(blobUrl: string): Promise<void> {
   const session = await auth();
   if (!session?.user?.email) throw new Error("Unauthorized");
 
-  // Guard: only accept our own Blob URLs.
-  if (!/^https:\/\/[a-z0-9]+\.public\.blob\.vercel-storage\.com\//.test(blobUrl)) {
+  // Guard: only accept our own Blob URLs (private store for the identity doc;
+  // public kept for backward compatibility).
+  if (
+    !/^https:\/\/[a-z0-9]+\.(?:public|private)\.blob\.vercel-storage\.com\//.test(
+      blobUrl,
+    )
+  ) {
     throw new Error("Invalid upload URL");
   }
 
