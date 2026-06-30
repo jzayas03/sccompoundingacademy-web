@@ -14,11 +14,16 @@ Every choice must be specific to SCCA's world (compounding under standard), not 
 
 ## Concept: "El Formulario" (compounding as a craft of precision)
 
-The landing is treated like a precise compounding formulary: editorial, measured, clinical-premium. Authority comes from **deep teal as a clinical floor**, the **geometry of ITC Avant Garde** in large tight headlines, and **chartreuse as the single "active ingredient"** accent — one precise mark per view, never slathered.
+The landing is treated like a precise compounding formulary: editorial, measured, **precise AND warm** — clinical-premium without going cold. Authority comes from **deep teal as a clinical floor**, the **geometry of ITC Avant Garde** in large tight headlines, and **chartreuse as the single "active ingredient"** accent — one precise mark per view, never slathered. Warmth comes from the brand's own DNA: the friendly rounded mark (the chartreuse vessel + mortar), the warm `sand` neutral used with intention, and moderate (not razor) radii.
 
-### Signature element — the spec-tag system
+### Signature — spec-tags + the brand's own iconography
 
-Small **monospace** labels annotate content the way a compounded prescription is labeled: `USP ⟨795⟩ · ⟨800⟩`, `18 h`, `ACPE 0151`, `presencial · Bayamón`. These **encode something true** (the curriculum genuinely is standards-driven) — they are structure, not decoration. This is the one memorable element no generic "courses" site would have. Aligned consistently on a left **spec-rail**.
+Two complementary devices, both grounded in SCCA's real vernacular (per the brandsheet):
+
+1. **Spec-tag system (monospace):** small labels annotate content the way a compounded prescription is labeled — `USP ⟨795⟩ · ⟨800⟩`, `18 h`, `ACPE 0151`, `presencial · Bayamón`. They **encode something true** (the curriculum is standards-driven), so they are structure, not decoration. Aligned consistently on a left **spec-rail**.
+2. **Brand iconography (the mortar & pestle / shield monogram):** the mortar & pestle IS the compounding instrument and the heart of the logo — lean on it. The **chartreuse uppercase + italic slogan lockup** from the brandsheet (`EDUCAMOS PARA FORMAR` roman + *`BIENESTAR Y SALUD.`* italic, chartreuse on teal) is reused as the device for the final CTA / one key moment. The **tonal SCCA-shield pattern tile** (teal-on-teal) gives a subtle, human brand texture — used **once**, sparingly, never as noise.
+
+Together: the spec-tags supply precision, the mortar/shield + slogan lockup supply brand warmth and memorability. No generic "courses" site has either.
 
 ### The one aesthetic risk
 
@@ -45,7 +50,7 @@ Brand hexes are unchanged (they live in `src/lib/brand.ts` + `globals.css @theme
 - **Display — ITC Avant Garde Gothic**, large, tight tracking (−0.02 / −0.03em). Leans into its geometry; this is the personality.
 - **Body — ITC Avant Garde**, `line-height 1.6`, max measure ~65ch (the geometric face tires in long blocks; solved with air + measure, not a new face — brand type is fixed).
 - **Utility/data — a monospace (NEW)** for spec-tags and data (hours, dates, ACPE #, USP chapters). Candidate: **IBM Plex Mono** or **Geist Mono** (light, geometric, complements Avant Garde) — final pick during implementation.
-- **Accent — Cormorant Garamond** (already in brand) used **once**: the instructor pull-quote. One warm serif breath against the geometry.
+- **Accent — Khmer MN** (the brandsheet's accent face; Cormorant Garamond is only the web fallback). This is the elegant italic of the slogan lockup (*BIENESTAR Y SALUD.*). Used sparingly — the slogan lockup + one instructor pull-quote. The one warm, distinctive breath against the geometry.
 
 ### Type scale
 ```
@@ -60,9 +65,10 @@ Eyebrow            mono or Avant Garde small-caps
 ### Spacing / shape
 - Base **8px** scale; generous whitespace.
 - Section rhythm via **alternating grounds** (off-white / sand / teal-deep), not identical cards.
-- **Tighter radii**: 10–12px on surfaces (the current 20–28px reads soft/generic); `pill` only for tags + CTAs.
+- **Moderate radii**: 12–14px on surfaces (the current 20–28px reads soft/generic, but razor-tight would fight the brand's friendly rounded mark — 12–14px is the precise-but-warm middle); `pill` only for tags + CTAs.
 - **Depth by restraint**: a hairline (`gray-300`) or a single-direction subtle shadow — never blur.
 - Consistent **left spec-rail** alignment for the mono annotations.
+- `sand` is the warmth lever — used with intention on alternating grounds and warm callouts so the clean direction never reads cold. The tonal shield pattern can texture one section.
 
 ### Motion — deliberate, minimal
 One orchestrated hero load (spec-tags tick in → headline → the chartreuse "measure" draws once), subtle scroll-reveal on section entrances. `prefers-reduced-motion` fully respected. No scattered effects — over-animation is exactly what reads as AI-generated.
@@ -76,13 +82,13 @@ One orchestrated hero load (spec-tags tick in → headline → the chartreuse "m
   - the 3 days as a **numbered sequence 01/02/03** (numbering is justified — the days ARE a sequence)
   - the two tiers as a **precise comparison** (Profesional $2,350 / Estudiante $495, hairline-separated), one chartreuse CTA.
 - **Nav/Header** (replace `glass-nav`): solid off-white with a bottom hairline, logo + 3–4 links + one chartreuse CTA; solidifies subtly on scroll (no heavy blur).
-- **Section bands / dividers** (replace `MeshBackground`): alternating solid grounds; the Amapola gradient appears **once** as a 2px "measure" rule between two key sections.
+- **Section bands / dividers** (replace `MeshBackground`): alternating solid grounds; the Amapola gradient appears **once** as a 2px "measure" rule between two key sections; the tonal SCCA-shield pattern textures **one** section (e.g. the CTA band) — sparingly, low-contrast.
 - **Forms** (inscripción / contacto — they convert, so clinical-premium matters): Avant Garde labels, inputs with hairline + tight radius + a crisp **chartreuse focus ring**, a spec-tag for tier/price, generous spacing. Feels like filling a precise order, not a SaaS form.
-- **Footer** (anchor on teal-deep): wordmark, the slogan in Cormorant (the one serif breath), contact/legal in mono spec-tags.
+- **Footer** (anchor on teal-deep): wordmark, the slogan lockup (chartreuse uppercase + Khmer MN italic), contact/legal in mono spec-tags.
 
 ## Landing application (section by section)
 
-The current landing sections (keep the content/IA; restyle): Hero, Aprenderás, Especialidades / ParaQuienEs, CursosGrid → "El curso" formulary entry, Confianza, Instructor (with the Cormorant pull-quote), Galería / InstagramFeatured (photography on solid teal per the brandsheet), Reseñas, Ubicación, FAQ (FaqClean — editorial accordion, generous), CtaFinal (teal-deep ground + one chartreuse CTA), Footer.
+The current landing sections (keep the content/IA; restyle): Hero, Aprenderás, Especialidades / ParaQuienEs, CursosGrid → "El curso" formulary entry, Confianza, Instructor (with the Khmer MN pull-quote), Galería / InstagramFeatured (real pharmacist photography + chartreuse callouts, on solid teal/sky per the brandsheet's billboard treatment), Reseñas, Ubicación, FAQ (FaqClean — editorial accordion, generous), CtaFinal (teal-deep ground textured with the shield pattern + the chartreuse-uppercase / Khmer-MN-italic slogan lockup + one chartreuse CTA), Footer.
 
 Each section picks a ground from the alternation set and carries at most one chartreuse accent. The spec-rail annotations recur where standards/facts exist (course, ACPE, hours, location).
 
@@ -96,7 +102,8 @@ Responsive to mobile; `focus-visible` everywhere (chartreuse ring); `prefers-red
 
 ## Implementation notes (for the plan)
 - Tokens are CSS-first (Tailwind v4 `@theme` in `globals.css`) + mirrored in `src/lib/brand.ts`; the `scca-brand/no-hex-literal` lint rule stays in force — new values go through tokens.
-- Add the monospace utility face via `next/font` with a `--font-mono` variable + a `@theme` token; add a `.spec-tag` component utility.
+- Add the monospace utility face via `next/font` with a `--font-mono` variable + a `@theme` token; add a `.spec-tag` component utility. Add a `.slogan-lockup` utility for the chartreuse-uppercase + accent-italic device.
+- **Accent face caveat:** Khmer MN is an Apple *system* font — it won't render for most web visitors, who fall back to the loaded **Cormorant Garamond** italic. Decide during the plan: accept Cormorant as the faithful web stand-in (recommended — it carries the same elegant-italic role), or source a web font closer to Khmer MN. Verify the rendered slogan-lockup italic matches the brand intent on a non-Apple device.
 - Remove/retire the glass utilities (`.glass-card`, `.glass-nav`, `.glass-modal`, `MeshBackground`, `GlassCard`) **only after** their consumers are migrated — track each consumer.
 - Build prototypes and self-critique with screenshots before finalizing each section (per frontend-design); compare 2 hero variants before committing one.
 
