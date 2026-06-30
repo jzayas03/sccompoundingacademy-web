@@ -82,3 +82,33 @@ export function buildVerificationRejectedEmail(
   const html = `<p style="font-family:system-ui,sans-serif;font-size:15px;line-height:1.6;">${c.body.replace(/\n/g, "<br>")}</p>`;
   return { subject: c.subject, text: c.body, html };
 }
+
+/**
+ * Sent to the student when the owner APPROVES a pre-payment matrícula. Carries
+ * the signed 48-hour "Pagar ahora" link. (The already-paid approval path keeps
+ * using buildVerificationApprovedEmail.)
+ */
+export function buildCheckoutLinkEmail(
+  locale: Locale,
+  payUrl: string,
+): { subject: string; text: string; html: string } {
+  const es = {
+    subject: "Matrícula aprobada — completa tu pago · SCCA",
+    body: `¡Tu matrícula fue aprobada! Completa tu inscripción con el pago seguro.\n\nEste enlace vence en 48 horas:\n${payUrl}`,
+  };
+  const en = {
+    subject: "Matrícula approved — complete your payment · SCCA",
+    body: `Your matrícula was approved! Complete your enrollment with secure payment.\n\nThis link expires in 48 hours:\n${payUrl}`,
+  };
+  const c = locale === "en" ? en : es;
+  const esc = (s: string) => s.replace(/&/g, "&amp;").replace(/</g, "&lt;");
+  const label = locale === "en" ? "Pay now" : "Pagar ahora";
+  const html = `<div style="font-family:system-ui,sans-serif;font-size:15px;line-height:1.6;color:#404040;max-width:520px;">
+  <p>${esc(c.body.split("\n")[0] ?? "")}</p>
+  <p style="margin:18px 0;">
+    <a href="${esc(payUrl)}" style="display:inline-block;background:#E6EA82;color:#195561;font-weight:600;text-decoration:none;padding:12px 22px;border-radius:8px;font-size:15px;">${label}</a>
+  </p>
+  <p style="color:#666666;font-size:13px;">${locale === "en" ? "This link expires in 48 hours." : "Este enlace vence en 48 horas."}</p>
+</div>`;
+  return { subject: c.subject, text: c.body, html };
+}
