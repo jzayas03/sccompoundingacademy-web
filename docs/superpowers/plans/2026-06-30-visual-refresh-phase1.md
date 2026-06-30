@@ -24,8 +24,7 @@
 
 ## File Structure
 
-- `src/app/fonts.ts` — **modify**: replace Montserrat heading stand-in with self-hosted ITC Avant Garde (`next/font/local`); add the monospace utility face.
-- `public/fonts/` — **create**: the licensed ITC Avant Garde `.woff2` files (provided by the owner).
+- `src/app/fonts.ts` — **modify**: replace the Montserrat heading stand-in with a free geometric look-alike (Outfit or Jost, `next/font/google`); add the IBM Plex Mono utility face.
 - `src/app/globals.css` — **modify**: `--font-mono` + `--radius-card` tokens; `.spec-tag`, `.spec-rail`, `.slogan-lockup`, `.shield-pattern`, `.editorial-card` component utilities. (Glass `@layer components` block untouched.)
 - `src/lib/brand.ts` — **modify**: mirror the new radii usage + a `mono` type role (keep as the TS reference; no hex changes).
 - `src/components/ui/SpecTag.tsx`, `SpecRail.tsx`, `SloganLockup.tsx` — **create**: shared signature primitives.
@@ -35,41 +34,39 @@
 - `src/components/marketing/inscripcion/InscripcionForm.tsx`, `src/components/marketing/ContactForm.tsx` — **modify**: premium-clinical form styling.
 - `tests/unit/spec-primitives.test.tsx` — **create**: render tests for the primitives.
 
-**Prerequisite (Task 1 blocker):** the owner provides the licensed ITC Avant Garde Gothic web font files (`.woff2`, ideally Book/Demi/Bold + italics). Until then, Task 1 cannot complete; the rest of the plan can be drafted but the type personality depends on it.
+**Decision (heading font):** ITC Avant Garde is a commercial face and the owner opted out of licensing it for web. Phase 1 instead replaces the generic **Montserrat** stand-in with a **free geometric look-alike** closer to ITC Avant Garde's circular character + far less overused. Task 1 compares **Outfit vs Jost** (both Google Fonts, free/OFL) on a real heading and picks one. No `.woff2`/licensing needed — no blocker.
 
 ---
 
-### Task 1: Self-host ITC Avant Garde + add the monospace utility face
+### Task 1: Swap heading look-alike (Outfit/Jost) + add the monospace utility face
 
 **Files:**
-- Create: `public/fonts/itc-avant-garde-*.woff2` (owner-provided)
-- Modify: `src/app/fonts.ts`
+- Modify: `src/app/fonts.ts`, `src/app/layout.tsx`
 
 **Interfaces:**
-- Produces: `heading` (CSS var `--font-heading-loaded` = ITC Avant Garde), `mono` (CSS var `--font-mono-loaded`), `accent` (unchanged, Cormorant).
+- Produces: `heading` (CSS var `--font-heading-loaded` = the chosen geometric look-alike), `mono` (CSS var `--font-mono-loaded` = IBM Plex Mono), `accent` (unchanged, Cormorant).
 
-- [ ] **Step 1: Place the font files**
+- [ ] **Step 1: Wire both candidates + mono in fonts.ts**
 
-Put the owner-provided files in `public/fonts/`, e.g. `itc-avant-garde-book.woff2`, `itc-avant-garde-demi.woff2`, `itc-avant-garde-bold.woff2`.
-
-- [ ] **Step 2: Replace Montserrat with local ITC Avant Garde + add mono**
-
-`src/app/fonts.ts`:
+`src/app/fonts.ts` — temporarily load BOTH candidates to compare, plus the mono face:
 
 ```ts
-import localFont from "next/font/local";
-import { IBM_Plex_Mono, Cormorant_Garamond } from "next/font/google";
+import { Outfit, Jost, IBM_Plex_Mono, Cormorant_Garamond } from "next/font/google";
 
-// Brand heading/body face, self-hosted (licensed). Replaces the Montserrat
-// stand-in so the web renders the real ITC Avant Garde geometry.
-export const heading = localFont({
-  src: [
-    { path: "../../public/fonts/itc-avant-garde-book.woff2", weight: "400", style: "normal" },
-    { path: "../../public/fonts/itc-avant-garde-demi.woff2", weight: "600", style: "normal" },
-    { path: "../../public/fonts/itc-avant-garde-bold.woff2", weight: "700", style: "normal" },
-  ],
+// Heading/body — a free geometric sans standing in for ITC Avant Garde (the
+// brand face is commercial/unlicensed for web). Outfit and Jost are compared
+// in Step 2; the loser is deleted and the winner keeps `--font-heading-loaded`.
+export const outfit = Outfit({
+  subsets: ["latin", "latin-ext"],
+  weight: ["400", "500", "600", "700"],
   display: "swap",
   variable: "--font-heading-loaded",
+});
+export const jost = Jost({
+  subsets: ["latin", "latin-ext"],
+  weight: ["400", "500", "600", "700"],
+  display: "swap",
+  variable: "--font-heading-alt",
 });
 
 // Utility/data face for spec-tags + figures (hours, dates, ACPE #, USP chapters).
@@ -88,21 +85,26 @@ export const accent = Cormorant_Garamond({
   variable: "--font-accent-loaded",
 });
 ```
+Keep the existing `heading` export name working: re-export `export const heading = outfit;` so `layout.tsx` keeps importing `heading` unchanged.
+
+- [ ] **Step 2: Compare Outfit vs Jost, pick one**
+
+In `layout.tsx` add `${mono.variable} ${jost.variable}` to the root className (alongside the existing heading/accent vars). `pnpm dev`; on `/es`, screenshot the Hero headline rendered with `font-family: var(--font-heading-loaded)` (Outfit) and again with `--font-heading-alt` (Jost) — temporarily swap the heading H1's font-family to compare. Judge against the brandsheet's ITC Avant Garde sample (circular O, large x-height, geometric). **Pick the closer/more distinctive one.** Then delete the loser's export + its `@theme`/className wiring; the winner stays as `--font-heading-loaded`.
 
 - [ ] **Step 3: Wire the mono variable on `<html>`**
 
-In `src/app/layout.tsx` (or wherever `heading.variable`/`accent.variable` are applied to the root element), add `mono.variable` to the className list. Read the file first; append `${mono.variable}` alongside the existing `${heading.variable} ${accent.variable}`.
+In `src/app/layout.tsx` add `${mono.variable}` to the root element className (alongside `${heading.variable} ${accent.variable}`). Read the file first.
 
 - [ ] **Step 4: Verify build + fonts load**
 
 Run: `pnpm build`
-Expected: builds clean. Then `pnpm dev`, open `/es`, confirm headings render in ITC Avant Garde (not Montserrat) via DevTools computed `font-family`.
+Expected: builds clean. `pnpm dev`, open `/es`, confirm headings render in the chosen look-alike (not Montserrat) via DevTools computed `font-family`.
 
 - [ ] **Step 5: Commit**
 
 ```bash
-git add public/fonts src/app/fonts.ts src/app/layout.tsx
-git commit -m "feat(design): self-host ITC Avant Garde heading + add IBM Plex Mono utility face"
+git add src/app/fonts.ts src/app/layout.tsx
+git commit -m "feat(design): swap Montserrat heading for a geometric look-alike (Outfit/Jost) + add IBM Plex Mono utility"
 ```
 
 ---
@@ -371,10 +373,10 @@ git commit -m "polish(design): landing coherence pass + a11y audit (focus-visibl
 
 ## Self-Review
 
-**Spec coverage:** concept/signature → Tasks 2–4,6,9 (spec-tags, slogan-lockup, shield-pattern, mortar via Hero/CTA); tokens (color roles, type roles, scale, radii, depth, motion) → Tasks 1–2; Khmer MN→Cormorant accent → Tasks 1,9; component language (cards, Cursos formulary, nav, bands, forms, footer) → Tasks 3,5,6,10,5; section-by-section landing → Tasks 4–9; a11y floor → Task 11; "no glass removal in Phase 1 / portal untouched" → Global Constraints + the grep in Task 11; self-host ITC Avant Garde (decision) → Task 1.
+**Spec coverage:** concept/signature → Tasks 2–4,6,9 (spec-tags, slogan-lockup, shield-pattern, mortar via Hero/CTA); tokens (color roles, type roles, scale, radii, depth, motion) → Tasks 1–2; Khmer MN→Cormorant accent → Tasks 1,9; component language (cards, Cursos formulary, nav, bands, forms, footer) → Tasks 3,5,6,10,5; section-by-section landing → Tasks 4–9; a11y floor → Task 11; "no glass removal in Phase 1 / portal untouched" → Global Constraints + the grep in Task 11; heading look-alike decision (free Outfit/Jost, no licensing) → Task 1.
 
 **Placeholder scan:** foundation Tasks 1–3 carry full code; section Tasks 4–10 intentionally carry acceptance bullets + the shared design loop instead of pre-written pixels (designing the final markup IS the deliverable for a visual refresh — pre-writing it would be fabrication). The loop + bullets are the complete contract a reviewer gates on.
 
 **Type consistency:** `SpecTag`/`SpecRail`/`SloganLockup` signatures defined in Task 3 are consumed verbatim in Tasks 4–9; token names (`--font-mono`, `--radius-card`, `.spec-tag`, `.slogan-lockup`, `.editorial-card`, `.shield-pattern`) defined in Task 2 are used consistently downstream.
 
-**Open dependency:** Task 1 needs the owner's licensed ITC Avant Garde files before it can complete.
+**No external dependency:** Task 1 uses free Google Fonts (Outfit/Jost + IBM Plex Mono) — nothing to procure; the plan can start immediately.
