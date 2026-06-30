@@ -3,6 +3,8 @@ import { beforeAll, describe, it, expect } from "vitest";
 import {
   signVerificationDecision,
   verifyVerificationDecision,
+  signCheckoutToken,
+  verifyCheckoutToken,
 } from "@/lib/portal/verification-token";
 
 // The HMAC key. Set before importing-time calls run (functions read it lazily).
@@ -39,5 +41,26 @@ describe("verification-token", () => {
     expect(verifyVerificationDecision("garbage")).toBeNull();
     expect(verifyVerificationDecision("")).toBeNull();
     expect(verifyVerificationDecision(".")).toBeNull();
+  });
+});
+
+describe("checkout token", () => {
+  it("round-trips a valid payload", () => {
+    const token = signCheckoutToken({ userId: "u1", approvedAt: 1_700_000_000_000 });
+    expect(verifyCheckoutToken(token)).toEqual({
+      userId: "u1",
+      approvedAt: 1_700_000_000_000,
+    });
+  });
+
+  it("rejects a tampered signature", () => {
+    const token = signCheckoutToken({ userId: "u1", approvedAt: 1 });
+    const tampered = token.slice(0, -2) + (token.endsWith("a") ? "bb" : "aa");
+    expect(verifyCheckoutToken(tampered)).toBeNull();
+  });
+
+  it("rejects a malformed token", () => {
+    expect(verifyCheckoutToken("nodot")).toBeNull();
+    expect(verifyCheckoutToken("")).toBeNull();
   });
 });

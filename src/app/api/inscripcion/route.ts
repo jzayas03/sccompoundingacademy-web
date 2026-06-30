@@ -1,4 +1,5 @@
 import { createHash } from "node:crypto";
+import { eq } from "drizzle-orm";
 import { NextResponse } from "next/server";
 import { z } from "zod";
 import { stripe } from "@/lib/stripe";
@@ -7,29 +8,30 @@ import { getCohort } from "@/lib/cohorts";
 import { getSiteUrl } from "@/lib/siteUrl";
 import { rateLimit, clientIp } from "@/lib/ratelimit";
 import { verifyTurnstile } from "@/lib/turnstile";
+import { db } from "@/lib/db";
+import { users } from "@/lib/db/schema";
+import { notifyMatriculaReview } from "@/lib/portal/notify-matricula-review";
+import { buildPendingStudentValues } from "@/lib/inscripcion/pending-enrollment";
 
 export const runtime = "nodejs";
 
 /**
- * POST /api/inscripcion — student-data form submission.
+ * POST /api/inscripcion — enrollment form submission (two distinct paths).
  *
- * Validates the form payload, creates a Stripe Checkout Session that
- * carries every datum needed by the webhook (legal acceptance audit
- * trail included) in session metadata, and returns the hosted-checkout
- * URL for the client to redirect to.
+ * **Student tier** (`tier === "student"`):
+ *   Persists a pending DB row (paidAt stays null) carrying every datum the
+ *   post-approval checkout + webhook will need, then emails the admin to
+ *   review the uploaded matrícula photo. No Stripe session is created here.
+ *   The student receives a pay link only after the owner approves via
+ *   `applyVerificationDecision` → POST /api/inscripcion/pagar.
  *
- * No DB write happens here — the webhook (POST /api/webhooks/stripe)
- * persists to Airtable only after `checkout.session.completed` fires.
- * This guarantees Airtable rows correspond 1:1 to paid enrollments,
- * never to abandoned-checkout intents.
- *
- * Tier selection ("pharmacist" $2,350 vs "student" $495): the client
- * sends `tier`, this route resolves the corresponding Stripe Price ID
- * via the course catalogue. Tier-eligibility checks (institutional
- * email allowlist for the student tier) live in Phase A of the portal
- * PR; for landing-page MVP the form trusts the client choice and the
- * tier travels through to the webhook so it can be persisted on
- * `users.tier` once the portal DB exists.
+ * **Profesional tier** (`tier === "profesional"`):
+ *   No DB write before payment. Creates a Stripe Checkout Session that
+ *   carries every datum needed by the webhook (legal-acceptance audit trail
+ *   included) in session metadata, and returns the hosted-checkout URL for
+ *   the client to redirect to. The webhook (POST /api/webhooks/stripe)
+ *   persists the row only after `checkout.session.completed` fires, so DB
+ *   rows correspond 1:1 to paid enrollments.
  */
 
 const InscripcionSchema = z.object({
@@ -202,6 +204,79 @@ export async function POST(req: Request) {
   // at the top of the handler for rate limiting.
   const userAgent = req.headers.get("user-agent") ?? "unknown";
   const acceptedAt = new Date().toISOString();
+
+  // ── Student tier: review BEFORE payment ──────────────────────────────
+  // Persist a pending row (paidAt stays null) carrying every datum the
+  // post-approval checkout + webhook need, then email the admin to review.
+  // No Stripe session is created here; the student receives a pay link only
+  // after the owner approves (see applyVerificationDecision + /api/inscripcion/pagar).
+  if (data.tier === "student") {
+    const submittedAt = new Date();
+    const lowercasedEmail = data.email.trim().toLowerCase();
+    const { insertValues, conflictSet } = buildPendingStudentValues({
+      email: data.email,
+      name: data.nombre,
+      telefono: data.telefono,
+      cohortId: cohort.id,
+      matriculaDocUrl,
+      submittedAt,
+      acceptedAt,
+      ip,
+      userAgent,
+      aceptoVersionDocs: data.acepto_version_docs,
+    });
+    try {
+      // Pre-check: if a paid row exists, return 409 BEFORE running the upsert.
+      // The onConflictDoUpdate would overwrite verifiedAt / rejectedAt / audit
+      // columns even for a paid+approved enrollment — corrupting the record.
+      // paidAt is only ever set by the Stripe webhook and is never unset, so
+      // a non-null value means the student has already completed checkout.
+      const existingRows = await db
+        .select({ id: users.id, paidAt: users.paidAt })
+        .from(users)
+        .where(eq(users.email, lowercasedEmail))
+        .limit(1);
+      const [existingRow] = existingRows;
+      if (existingRow?.paidAt) {
+        return NextResponse.json(
+          { error: "Ya tienes una inscripción registrada con este correo. Escríbenos si necesitas ayuda." },
+          { status: 409 },
+        );
+      }
+
+      const [row] = await db
+        .insert(users)
+        .values(insertValues)
+        .onConflictDoUpdate({
+          target: users.email,
+          set: conflictSet,
+        })
+        .returning({ id: users.id, studentVerification: users.studentVerification });
+
+      if (!row) {
+        // Defensive: onConflictDoUpdate should always return a row.
+        return NextResponse.json(
+          { error: "No pudimos registrar tu matrícula. Intenta nuevamente o escríbenos." },
+          { status: 500 },
+        );
+      }
+
+      await notifyMatriculaReview({
+        userId: row.id,
+        name: data.nombre || null,
+        email: lowercasedEmail,
+        docUrl: matriculaDocUrl,
+        submittedAt,
+      });
+    } catch (err) {
+      console.error("[inscripcion] student pending upsert failed", err);
+      return NextResponse.json(
+        { error: "No pudimos registrar tu matrícula. Intenta nuevamente o escríbenos." },
+        { status: 500 },
+      );
+    }
+    return NextResponse.json({ pending: true });
+  }
 
   const pricing = getPricingByTier(course, data.tier);
   if (!pricing) {

@@ -200,9 +200,18 @@ export function InscripcionForm({
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(payload),
       });
-      const json = (await res.json()) as { url?: string; error?: string };
-      if (!res.ok || !json.url) {
+      const json = (await res.json()) as { url?: string; pending?: boolean; error?: string };
+      if (!res.ok) {
         setError(json.error ?? t("errors.generic"));
+        setSubmitting(false);
+        return;
+      }
+      if (json.pending) {
+        window.location.assign(`/${locale}/${locale === "en" ? "enroll/review" : "inscripcion/revision"}`);
+        return;
+      }
+      if (!json.url) {
+        setError(t("errors.generic"));
         setSubmitting(false);
         return;
       }

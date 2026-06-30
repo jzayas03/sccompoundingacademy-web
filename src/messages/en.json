@@ -245,7 +245,7 @@
         },
         {
           "heading": "7. Cases not covered by this policy",
-          "body": "This policy does not apply to, nor cover: (a) charges for optional services, additional materials, or equipment purchased separately; (b) enrollments in special events (one-off workshops, seminars) whose individual policy is published on its registration page; (c) partial absences of the student for own causes without prior notification; (d) issuing-bank charges (currency conversion, international transaction, intermediation), which are the sole responsibility of the student; nor (e) partial refunds for individual sessions of the cohort once the program has begun.\n\nChargebacks: if the student initiates a chargeback with their issuing bank without first contacting SCCA and exhausting the procedure under this policy, SCCA will submit the corresponding documentation to the issuing bank to dispute the chargeback and reserves the right to seek from the student the associated administrative costs, without prejudice to applicable legal actions.\n\nIn any scenario not expressly contemplated in this policy, SCCA will evaluate the situation in good faith prioritizing a fair resolution for both parties.\n\nStudent eligibility verification: if you pay the student rate and your matrícula cannot be verified or is rejected, SCCA will refund 100% of the amount paid within ten (10) business days, or you may choose to enroll at the professional rate by paying the difference. The matrícula photo is deleted after the decision, whether approval or rejection."
+          "body": "This policy does not apply to, nor cover: (a) charges for optional services, additional materials, or equipment purchased separately; (b) enrollments in special events (one-off workshops, seminars) whose individual policy is published on its registration page; (c) partial absences of the student for own causes without prior notification; (d) issuing-bank charges (currency conversion, international transaction, intermediation), which are the sole responsibility of the student; nor (e) partial refunds for individual sessions of the cohort once the program has begun.\n\nChargebacks: if the student initiates a chargeback with their issuing bank without first contacting SCCA and exhausting the procedure under this policy, SCCA will submit the corresponding documentation to the issuing bank to dispute the chargeback and reserves the right to seek from the student the associated administrative costs, without prejudice to applicable legal actions.\n\nIn any scenario not expressly contemplated in this policy, SCCA will evaluate the situation in good faith prioritizing a fair resolution for both parties.\n\nStudent eligibility verification: the student matrícula is reviewed before payment is processed. Accordingly, if your matrícula cannot be verified or is rejected, no charge is made for the student rate and there is therefore no amount to refund; if you wish, you may enroll at the professional rate. The matrícula photo is deleted after the decision, whether approval or rejection."
         },
         {
           "heading": "8. Contact",
@@ -648,6 +648,25 @@
       "enfermero": "Nurse",
       "dentista": "Dentist",
       "otro": "Other (specify)"
+    },
+    "revision": {
+      "title": "We received your matrícula",
+      "body": "We'll review it and send you an email with the link to complete your payment. This usually takes just a short while.",
+      "contact": "Questions? Write to us at info@sccompoundingacademy.com"
+    },
+    "pagoCerrado": {
+      "title": "Payment link unavailable",
+      "emailPlaceholder": "you@email.com",
+      "resend": "Resend payment link",
+      "contact": "Need help? Write to us at info@sccompoundingacademy.com",
+      "reasons": {
+        "expirado": "Your payment link expired (valid for 48 hours). Request a new one below.",
+        "invalido": "This link is not valid. Write to us and we'll help you.",
+        "pagado": "This enrollment is already paid. See you in class!",
+        "cerrada": "This cohort has closed enrollment. Write to us for the next date.",
+        "error": "We couldn't process your payment. Try again later or write to us.",
+        "reenviado": "We sent you a new link if your matrícula is approved. Check your email."
+      }
     }
   },
   "ctaFinal": {
