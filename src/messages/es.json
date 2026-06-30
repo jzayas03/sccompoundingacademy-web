@@ -613,9 +613,11 @@
     },
     "matricula": {
       "label": "Foto de tu matrícula activa",
-      "hint": "Requerido para la tarifa de estudiante. Sube una foto clara y vigente (JPG, PNG, HEIC o PDF). La revisaremos para aprobar tu inscripción.",
+      "hint": "Requerido para la tarifa de estudiante. Sube una foto clara y vigente (JPG, PNG, HEIC, WEBP o PDF, hasta 15 MB). La revisaremos para aprobar tu inscripción.",
       "required": "Sube una foto de tu matrícula activa para inscribirte como estudiante.",
-      "uploadError": "No pudimos subir tu matrícula. Intenta de nuevo con otra foto."
+      "uploadError": "No pudimos subir tu matrícula. Intenta de nuevo con otra foto.",
+      "tooLarge": "La foto es muy grande (máx. 15 MB). Sube una más liviana.",
+      "badType": "Formato no admitido. Sube una imagen (JPG, PNG, HEIC o WEBP) o un PDF."
     },
     "acceptanceLabel": "He leído y acepto los <terms>Términos y Condiciones</terms>, la <privacy>Política de Privacidad</privacy> y la <refund>Política de Reembolsos</refund>.",
     "summary": {

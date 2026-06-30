@@ -607,9 +607,11 @@
     },
     "matricula": {
       "label": "Photo of your active student ID",
-      "hint": "Required for the student rate. Upload a clear, current photo (JPG, PNG, HEIC, or PDF). We'll review it to approve your enrollment.",
+      "hint": "Required for the student rate. Upload a clear, current photo (JPG, PNG, HEIC, WEBP, or PDF, up to 15 MB). We'll review it to approve your enrollment.",
       "required": "Upload a photo of your active student ID to enroll at the student rate.",
-      "uploadError": "We couldn't upload your student ID. Please try again with another photo."
+      "uploadError": "We couldn't upload your student ID. Please try again with another photo.",
+      "tooLarge": "That photo is too large (max 15 MB). Please upload a smaller one.",
+      "badType": "Unsupported format. Upload an image (JPG, PNG, HEIC, or WEBP) or a PDF."
     },
     "acceptanceLabel": "I have read and accept the <terms>Terms and Conditions</terms>, the <privacy>Privacy Policy</privacy>, and the <refund>Refund Policy</refund>.",
     "summary": {

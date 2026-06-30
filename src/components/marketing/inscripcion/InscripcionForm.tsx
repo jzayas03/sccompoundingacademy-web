@@ -5,6 +5,10 @@ import Script from "next/script";
 import { useTranslations } from "next-intl";
 import { Link } from "@/i18n/routing";
 import { COURSES, DEFAULT_TIER, type Tier } from "@/lib/courses";
+import {
+  VERIFICATION_ACCEPTED_TYPES,
+  matriculaFileIssue,
+} from "@/lib/portal/verification";
 
 // Cloudflare Turnstile public site key. When unset (local dev, or before
 // the widget is provisioned) the widget is not rendered and the server
@@ -130,11 +134,36 @@ export function InscripcionForm({
     // and is re-validated server-side before checkout.
     let matriculaDocUrl = "";
     if (tier === "student" && matriculaFile) {
+      // Fail fast on an oversize/unsupported file. Without this the Blob client
+      // would still request a token, then stall in its retry loop when the PUT
+      // is rejected — surfacing to the student as a checkout stuck forever on
+      // "Procesando…".
+      const issue = matriculaFileIssue(matriculaFile.size, matriculaFile.type);
+      if (issue === "too-large") {
+        setError(t("matricula.tooLarge"));
+        setSubmitting(false);
+        return;
+      }
+      if (issue === "bad-type") {
+        setError(t("matricula.badType"));
+        setSubmitting(false);
+        return;
+      }
       try {
-        const blob = await upload(matriculaFile.name, matriculaFile, {
-          access: "public",
-          handleUploadUrl: "/api/inscripcion/matricula-upload",
-        });
+        // Hard ceiling on the upload so an unexpected network stall can never
+        // hang the button indefinitely — it aborts and shows the error path.
+        const controller = new AbortController();
+        const timer = setTimeout(() => controller.abort(), 45_000);
+        let blob;
+        try {
+          blob = await upload(matriculaFile.name, matriculaFile, {
+            access: "public",
+            handleUploadUrl: "/api/inscripcion/matricula-upload",
+            abortSignal: controller.signal,
+          });
+        } finally {
+          clearTimeout(timer);
+        }
         matriculaDocUrl = blob.url;
       } catch {
         setError(t("matricula.uploadError"));
@@ -234,7 +263,7 @@ export function InscripcionForm({
           <input
             id="matricula"
             type="file"
-            accept="image/jpeg,image/png,image/heic,image/webp,application/pdf"
+            accept={VERIFICATION_ACCEPTED_TYPES.join(",")}
             required
             onChange={(e) => setMatriculaFile(e.target.files?.[0] ?? null)}
             className="border-gray-300 file:bg-teal-deep file:text-off-white hover:file:bg-teal mt-1.5 block w-full rounded-md border bg-white px-3 py-2.5 text-base text-gray-900 file:mr-3 file:cursor-pointer file:rounded file:border-0 file:px-3 file:py-1.5 file:text-sm file:font-semibold"
