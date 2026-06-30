@@ -219,7 +219,6 @@ describe("POST /api/webhooks/stripe — DB path routing", () => {
     // db.update.set() must have been called exactly once.
     expect(mocks.updateSetCapture).toHaveBeenCalledOnce();
 
-    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
     const setArg = mocks.updateSetCapture.mock.calls[0]![0] as Record<
       string,
       unknown

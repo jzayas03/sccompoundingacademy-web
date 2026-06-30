@@ -21,12 +21,13 @@ function adminRecipients(): string[] {
 }
 
 /**
- * Email the admin(s) that a matrícula is waiting, with the photo and signed
- * one-click Aprobar/Rechazar links (see `verification-token.ts`). Shared by
- * the portal upload action and the webhook (pre-payment upload), so both
- * paths produce the same reviewable email. Best-effort — a send failure is
- * logged, never thrown (the row is already `pending` and reviewable in the
- * admin panel regardless).
+ * Email the admin(s) that a matrícula is waiting, with the photo (a signed
+ * read URL — the store is private) and one-click Aprobar/Rechazar links (see
+ * `verification-token.ts`). Called when a student SUBMITS their matrícula, so
+ * the owner reviews BEFORE payment: the enrollment route (`/api/inscripcion`,
+ * student tier) and the in-portal re-upload action both call it, producing the
+ * same reviewable email. Best-effort — a send failure is logged, never thrown
+ * (the row is already `pending` and reviewable in the admin panel regardless).
  */
 export async function notifyMatriculaReview(p: {
   userId: string;
