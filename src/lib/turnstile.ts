@@ -19,6 +19,8 @@
  * and Secret Key (TURNSTILE_SECRET_KEY, server-only).
  */
 
+import { warnUnconfigured } from "@/lib/abuse-shield-warn";
+
 const SITEVERIFY_URL =
   "https://challenges.cloudflare.com/turnstile/v0/siteverify";
 
@@ -35,7 +37,14 @@ export async function verifyTurnstile(
 ): Promise<VerifyResult> {
   const secret = process.env.TURNSTILE_SECRET_KEY;
   if (!secret) {
-    // Not configured → skip the gate so enrollment keeps working.
+    // Not configured → skip the gate so enrollment keeps working. In
+    // production an absent secret means the CAPTCHA is silently OFF — a
+    // deploy misconfiguration; surface it (once per instance) rather than
+    // failing open in silence.
+    warnUnconfigured(
+      "turnstile",
+      "TURNSTILE_SECRET_KEY absent — CAPTCHA is OFF. Set TURNSTILE_SECRET_KEY + NEXT_PUBLIC_TURNSTILE_SITE_KEY.",
+    );
     return { success: true };
   }
 
