@@ -17,20 +17,24 @@ import { Reveal } from "@/components/ui/Reveal";
  * shots). Missing files hide their foreground via onError, so the
  * section degrades to a neutral teal stage until the photos are added.
  */
+// `?v=` cache-buster: several of these filenames were reused across deploys
+// with different image contents, so returning visitors had stale copies
+// cached. Bumping the version changes every URL, forcing a fresh fetch.
+// Bump this if the photos change again under the same filenames.
 const PHOTOS = [
-  "/photos/cohort/01-grupo.jpg",
-  "/photos/cohort/02-estudiante.jpg",
-  "/photos/cohort/03-estudiante.jpg",
-  "/photos/cohort/04-estudiante.jpg",
-  "/photos/cohort/05-estudiante.jpg",
-  "/photos/cohort/06-estudiante.jpg",
-  "/photos/cohort/07-estudiante.jpg",
-  "/photos/cohort/08-estudiante.jpg",
-  "/photos/cohort/09-estudiante.jpg",
-  "/photos/cohort/10-estudiante.jpg",
-  "/photos/cohort/11-estudiante.jpg",
-  "/photos/cohort/12-laboratorio.jpg",
-  "/photos/cohort/13-instruccion.jpg",
+  "/photos/cohort/01-grupo.jpg?v=2",
+  "/photos/cohort/02-estudiante.jpg?v=2",
+  "/photos/cohort/03-estudiante.jpg?v=2",
+  "/photos/cohort/04-estudiante.jpg?v=2",
+  "/photos/cohort/05-estudiante.jpg?v=2",
+  "/photos/cohort/06-estudiante.jpg?v=2",
+  "/photos/cohort/07-estudiante.jpg?v=2",
+  "/photos/cohort/08-estudiante.jpg?v=2",
+  "/photos/cohort/09-estudiante.jpg?v=2",
+  "/photos/cohort/10-estudiante.jpg?v=2",
+  "/photos/cohort/11-estudiante.jpg?v=2",
+  "/photos/cohort/12-laboratorio.jpg?v=2",
+  "/photos/cohort/13-instruccion.jpg?v=2",
 ] as const;
 
 export function ConfianzaCarousel() {
