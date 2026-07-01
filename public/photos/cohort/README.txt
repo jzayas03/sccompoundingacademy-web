@@ -1,18 +1,17 @@
 First-cohort photos for the "El primer cohorte" homepage carousel
 (src/components/marketing/ConfianzaCarousel.tsx).
 
-Drop the real photos here with EXACTLY these filenames — the carousel
-maps each to its caption in that order (missing files are hidden
-automatically, so you can add fewer than 7):
+The carousel maps these filenames, in order, to the captions in
+src/messages/{en,es}.json → confianzaCarousel.captions (edit captions
+there; keep the two arrays the same length as this list):
 
-  01-grupo.jpg         → "The full first cohort, alongside instructor Jorge L. Reyes"
-  02-laboratorio.jpg   → "Instruction in the Santa Cruz Pharma Care laboratory, Bayamón"
-  03-graduacion.jpg    → "Certificates of completion in hand"
-  04-graduacion.jpg    → "The academy's first generation of graduates"
-  05-graduacion.jpg    → "Recognition after 18 hours of supervised practice"
-  06-graduacion.jpg    → "Certificate presentation for the first cohort"
-  07-graduacion.jpg    → "Celebrating the first group of graduates"
+  01-grupo.jpg          — full first-cohort group shot (shown first)
+  02-laboratorio.jpg    — wide lab / instruction shot
+  03-instruccion.jpg    — instructor teaching at the whiteboard
+  04-duo.jpg            — two graduates with certificates
+  05-estudiante.jpg … 13-estudiante.jpg — individual graduate portraits
 
 Any aspect ratio is fine — the carousel blurs a copy of each image as a
-backdrop and shows the original object-contain on top. Captions are
-editable in src/messages/{en,es}.json → confianzaCarousel.captions.
+backdrop and shows the original object-contain on top. To add/remove
+photos: drop the file here, update the PHOTOS array in ConfianzaCarousel
+and add/remove a matching caption in both message files.
