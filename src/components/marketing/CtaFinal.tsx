@@ -2,18 +2,16 @@ import { useTranslations } from "next-intl";
 import { Link } from "@/i18n/routing";
 import { Container } from "@/components/ui/Container";
 import { Reveal } from "@/components/ui/Reveal";
-import { LogoShield } from "@/components/brand/LogoShield";
+import { Eyebrow } from "./_shared/Eyebrow";
 
 /**
- * CtaFinal — closing call to action.
+ * CtaFinal — closing call to action over a photographic field.
  *
- * One strong color statement at the bottom of the page (teal-deep band)
- * to anchor the visual rhythm — every other section is white or
- * off-white, so this becomes the page's "punctuation."
- *
- * Centered: h2 in off-white, single-line subcopy, primary chartreuse
- * CTA, and a small "or contact us" secondary link. No urgency banner,
- * no countdown, no badge — just a clear ask.
+ * Recreated from the SCCA Design System handoff: a pharmacy photograph
+ * under a solid teal wash, a centered eyebrow + headline, and two CTAs
+ * (Enroll → /inscripcion, Contact → /contacto). Anchors the bottom of
+ * the page. The photo is a decorative background; the heading carries
+ * the accessible name.
  */
 export function CtaFinal() {
   const t = useTranslations("ctaFinal");
@@ -21,47 +19,43 @@ export function CtaFinal() {
     <section
       id="reservar"
       aria-labelledby="cta-final-heading"
-      className="bg-teal-deep text-off-white"
+      className="text-off-white relative isolate overflow-hidden"
     >
-      <Container className="py-20 sm:py-24 lg:py-28">
+      <div
+        aria-hidden
+        className="absolute inset-0"
+        style={{
+          backgroundImage: "url(/photos/photo-pills-counter.png)",
+          backgroundSize: "cover",
+          backgroundPosition: "center",
+        }}
+      />
+      <div aria-hidden className="absolute inset-0" style={{ background: "rgba(25,85,97,0.72)" }} />
+      <Container className="relative z-[1] py-20 sm:py-24 lg:py-28">
         <Reveal className="mx-auto max-w-2xl text-center">
-          {/* SCCA shield mark — brand seal that closes the page, like a
-              signature at the bottom of a document. The shield carries
-              its own aria-label "SCCA" so screen readers identify the
-              brand once before reading the headline. */}
-          <span className="mb-6 flex justify-center">
-            <LogoShield className="h-14 w-auto" />
-          </span>
-          <p className="font-heading text-chartreuse flex items-center justify-center text-xs font-semibold tracking-[0.18em] uppercase sm:text-sm">
-            <span aria-hidden className="bg-chartreuse mr-3 inline-block h-4 w-1 shrink-0 rounded-sm" />
+          <Eyebrow className="justify-center [&_.eyebrow-bar]:bg-chartreuse text-chartreuse/80">
             {t("eyebrow")}
-          </p>
+          </Eyebrow>
           <h2
             id="cta-final-heading"
-            className="font-heading text-off-white mt-4 text-3xl font-bold leading-[1.15] tracking-[-0.015em] text-balance sm:text-4xl lg:text-5xl"
+            className="font-heading text-off-white mt-4 text-3xl font-bold leading-[1.1] tracking-[-0.02em] text-balance sm:text-4xl lg:text-5xl"
           >
             {t("headline")}
           </h2>
-          <p className="text-off-white/85 mt-5 text-base leading-relaxed sm:text-lg">
-            {t("subheadline")}
-          </p>
 
-          <div className="mt-8 flex flex-col items-center justify-center gap-4 sm:flex-row sm:gap-6">
+          <div className="mt-9 flex flex-col items-center justify-center gap-4 sm:flex-row">
             <Link
               href="/inscripcion"
-              className="bg-chartreuse text-teal-deep ring-chartreuse/40 shadow-lift hover:bg-chartreuse/95 hover:shadow-lift focus-visible:ring-chartreuse font-heading inline-flex h-12 items-center justify-center rounded-md px-7 text-sm font-semibold ring-1 transition-[color,background-color,box-shadow,transform] duration-200 ease-out focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-offset-teal-deep focus-visible:outline-none motion-safe:hover:-translate-y-px sm:h-14 sm:px-8 sm:text-base"
+              className="bg-chartreuse text-teal-deep ring-teal-deep/15 shadow-lift hover:bg-chartreuse/95 focus-visible:ring-chartreuse font-heading inline-flex h-14 items-center justify-center rounded-[13px] px-8 text-base font-semibold ring-1 transition-[background-color,box-shadow,transform] duration-200 ease-out focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-offset-teal-deep focus-visible:outline-none motion-safe:hover:-translate-y-px"
             >
               {t("primaryCta")}
             </Link>
-            <p className="text-off-white/80 text-sm sm:text-base">
-              {t("secondaryNote")}{" "}
-              <Link
-                href="/contacto"
-                className="text-off-white border-off-white/40 hover:border-chartreuse hover:text-chartreuse border-b font-semibold transition-colors"
-              >
-                {t("secondaryCta")}
-              </Link>
-            </p>
+            <Link
+              href="/contacto"
+              className="bg-off-white text-teal-deep shadow-soft hover:bg-white focus-visible:ring-off-white font-heading inline-flex h-14 items-center justify-center rounded-[13px] px-8 text-base font-semibold transition-[background-color,box-shadow,transform] duration-200 ease-out focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-offset-teal-deep focus-visible:outline-none motion-safe:hover:-translate-y-px"
+            >
+              {t("secondaryCta")}
+            </Link>
           </div>
         </Reveal>
       </Container>

@@ -1,11 +1,11 @@
-import { Outfit, IBM_Plex_Mono, Cormorant_Garamond } from "next/font/google";
+import { Montserrat, IBM_Plex_Mono, Cormorant_Garamond } from "next/font/google";
 
-// Heading/body — a free geometric sans standing in for ITC Avant Garde (the
-// brand display face is commercial/unlicensed for web). Outfit's circular
-// forms + large x-height are the closest free match.
-export const heading = Outfit({
+// Heading/body — Montserrat, per the SCCA Design System handoff. The brand
+// display face (ITC Avant Garde) is commercial/unlicensed for web; Montserrat
+// is the handoff's named brand substitute (geometric, wide weight range).
+export const heading = Montserrat({
   subsets: ["latin", "latin-ext"],
-  weight: ["400", "500", "600", "700"],
+  weight: ["400", "500", "600", "700", "800"],
   display: "swap",
   variable: "--font-heading-loaded",
 });

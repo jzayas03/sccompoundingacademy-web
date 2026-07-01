@@ -312,6 +312,20 @@
       "Materiales incluidos",
       "Almuerzo incluido"
     ],
+    "professionalHighlights": [
+      "18 horas de contacto · 3 días · 6 hrs/día",
+      "CE con auspicio ACPE · 1.8 CEUs · Knowledge-based",
+      "Currículo completo USP 〈795〉 + 〈800〉",
+      "Cohortes pequeñas · materiales y almuerzo incluidos",
+      "Práctica supervisada en laboratorio · portafolio documentado"
+    ],
+    "studentHighlights": [
+      "Módulo 1 — USP 〈795〉 Compounding No Estéril",
+      "Módulo 2 — USP 〈800〉 Manejo de Drogas Peligrosas",
+      "Acceso al portal de estudiantes + quiz por módulo",
+      "Certificado de finalización emitido",
+      "Sin crédito CE de ACPE — reservado a profesionales licenciados"
+    ],
     "items": [
       {
         "id": "basic-compounding",
@@ -403,7 +417,26 @@
       "Premio Emeterio Betances por contribución a la educación en compounding no estéril; premio epónimo «Jorge L. Reyes Award» en Nova Southeastern University para excelencia en rotación de compounding",
       "Preceptor of the Year 2025 — Creighton University School of Pharmacy; Clinical Affiliate Assistant Professor, Nova Southeastern University; Fellow del American College of Veterinary Pharmacists"
     ],
-    "photoAlt": "Lcdo. Jorge L. Reyes Quiñones, RPh, FACA, FACVP — retrato profesional"
+    "photoAlt": "Lcdo. Jorge L. Reyes Quiñones, RPh, FACA, FACVP — retrato profesional",
+    "timelineLabel": "Trayectoria profesional",
+    "timeline": [
+      {
+        "year": "1980",
+        "text": "Licenciado en Puerto Rico. Fundó Santa Cruz Pharma Care — aún en operación tras 45 años de práctica en compounding."
+      },
+      {
+        "year": "1985",
+        "text": "Fundó el primer programa académico de Técnico de Farmacia de Puerto Rico en la Universidad Ana G. Méndez (1985–88)."
+      },
+      {
+        "year": "2000s",
+        "text": "Formación avanzada en PCCA y USP Convention. Especializado en terapia de restauración hormonal, veterinaria y manejo del dolor."
+      },
+      {
+        "year": "2025",
+        "text": "Preceptor of the Year, Creighton University School of Pharmacy. Premio epónimo «Jorge L. Reyes Award» en Nova Southeastern University."
+      }
+    ]
   },
   "aprenderas": {
     "eyebrow": "Qué aprenderás",
@@ -676,12 +709,35 @@
     }
   },
   "ctaFinal": {
-    "eyebrow": "Cohorte inaugural · Junio 2026",
-    "headline": "Reserva tu plaza para la próxima cohorte.",
+    "eyebrow": "Tu próxima certificación",
+    "headline": "Fórmate con la facultad de compounding más experimentada de Puerto Rico.",
     "subheadline": "Plazas limitadas a doce participantes. La inscripción cierra cuando la cohorte se completa.",
-    "primaryCta": "Reservar plaza",
+    "primaryCta": "Inscríbete ahora",
     "secondaryNote": "¿Tienes preguntas antes de decidir?",
     "secondaryCta": "Escríbenos"
+  },
+  "photoBand": {
+    "quote": "Formación dentro de una farmacia activa. No en un salón de clases."
+  },
+  "contactHome": {
+    "eyebrow": "Contacto",
+    "heading": "¿Preguntas sobre nuestros cursos?",
+    "intro": "Escríbenos. Respondemos en un máximo de 48 horas laborables.",
+    "officeLabel": "Oficina",
+    "name": "Nombre",
+    "namePlaceholder": "Tu nombre completo",
+    "email": "Correo electrónico",
+    "emailPlaceholder": "tu@farmacia.com",
+    "phone": "Teléfono (opcional)",
+    "subject": "Asunto",
+    "subjectPlaceholder": "Consulta de curso, precios, etc.",
+    "message": "Mensaje",
+    "messagePlaceholder": "Tu pregunta o nota…",
+    "submit": "Enviar mensaje",
+    "submitting": "Enviando…",
+    "success": "Mensaje enviado — te contactaremos en breve.",
+    "error": "Algo salió mal. Inténtalo de nuevo.",
+    "mapTitle": "Santa Cruz Compounding Academy — sede en Bayamón"
   },
   "verificar": {
     "eyebrow": "Verificación de certificado",

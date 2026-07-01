@@ -7,7 +7,19 @@ export function Footer() {
   const t = useTranslations("footer");
   const year = new Date().getFullYear();
   return (
-    <footer className="bg-teal-deep text-off-white">
+    <footer className="bg-teal-deep text-off-white relative isolate overflow-hidden">
+      {/* Signature shield-pattern wash — SCCA Design System footer. Very
+          low contrast, decorative, behind all content. */}
+      <div
+        aria-hidden
+        className="pointer-events-none absolute inset-0 -z-10 opacity-[0.10]"
+        style={{
+          backgroundImage: "url(/brand/pattern-scca.png)",
+          backgroundSize: "2600px",
+          backgroundPosition: "center bottom",
+          backgroundRepeat: "repeat",
+        }}
+      />
       <Container className="grid gap-10 py-12 sm:grid-cols-12 sm:gap-x-12">
         {/* Brand + tagline */}
         <div className="sm:col-span-5">
