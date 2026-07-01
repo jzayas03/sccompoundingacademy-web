@@ -2,8 +2,7 @@ import type { Metadata } from "next";
 import { redirect } from "next/navigation";
 import { useTranslations } from "next-intl";
 import { setRequestLocale } from "next-intl/server";
-import { Container } from "@/components/ui/Container";
-import { GlassCard } from "@/components/glass/GlassCard";
+import { LogoFull } from "@/components/brand";
 import { Link } from "@/i18n/routing";
 import { auth } from "@/lib/auth";
 import { LoginForm } from "./login-form";
@@ -33,30 +32,26 @@ export default async function PortalLoginPage({
 function LoginPanel({ locale }: { locale: string }) {
   const t = useTranslations("portal.login");
   return (
-    <Container className="max-w-lg py-20 sm:py-24 lg:py-28">
-      <GlassCard className="p-8 sm:p-10">
-        <p className="font-heading text-teal-deep/80 flex items-center text-xs font-semibold tracking-[0.18em] uppercase">
-          <span aria-hidden className="bg-chartreuse mr-3 inline-block h-4 w-1 shrink-0 rounded-sm" />
-          {t("eyebrow")}
-        </p>
-        <h1 className="font-heading text-teal-deep mt-3 text-3xl font-bold tracking-[-0.015em] sm:text-4xl">
+    <div className="flex min-h-screen items-center justify-center px-6 py-16">
+      {/* Centered glass modal over the shared portal backdrop. */}
+      <div
+        className="glass-modal relative z-[1] w-full max-w-[400px] rounded-[20px] border border-white/50 p-8 sm:p-10"
+        style={{ boxShadow: "var(--shadow-deep)" }}
+      >
+        <LogoFull shieldClass="h-9 w-auto" className="mb-7" />
+        <h1 className="font-heading text-teal-deep text-2xl font-extrabold tracking-[-0.02em]">
           {t("title")}
         </h1>
-        <p className="text-gray-900 mt-3 text-base leading-relaxed">
-          {t("subtitle")}
-        </p>
+        <p className="text-gray-700 mt-2 text-sm leading-relaxed">{t("subtitle")}</p>
 
         <LoginForm locale={locale} />
 
-        <p className="mt-8 text-center text-sm">
-          <Link
-            href="/"
-            className="text-teal-deep hover:text-teal underline underline-offset-2"
-          >
+        <p className="mt-6 text-center text-sm">
+          <Link href="/" className="text-teal-deep hover:text-teal underline underline-offset-2">
             ← {t("backToHome")}
           </Link>
         </p>
-      </GlassCard>
-    </Container>
+      </div>
+    </div>
   );
 }

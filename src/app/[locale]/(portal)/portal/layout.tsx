@@ -1,5 +1,6 @@
-import { MeshBackground } from "@/components/glass/MeshBackground";
+import { PortalBackdrop } from "@/components/glass/PortalBackdrop";
 import { GlassNav } from "@/components/portal/GlassNav";
+import { auth } from "@/lib/auth";
 
 /**
  * Portal namespace layout. Replaces the marketing Header + Footer (now
@@ -16,15 +17,18 @@ import { GlassNav } from "@/components/portal/GlassNav";
  * no extra padding — so the dashboard / module / certificate canvases
  * feel like a workspace rather than a marketing page.
  */
-export default function PortalLayout({
+export default async function PortalLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
+  // Nav only renders for signed-in learners; the login + verify pages are
+  // unauthenticated and read as clean glass modals over the backdrop.
+  const session = await auth();
   return (
     <>
-      <MeshBackground />
-      <GlassNav />
+      <PortalBackdrop />
+      {session?.user ? <GlassNav /> : null}
       <div className="relative">{children}</div>
     </>
   );
