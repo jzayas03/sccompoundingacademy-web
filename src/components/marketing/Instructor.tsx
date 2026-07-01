@@ -30,13 +30,13 @@ export function Instructor() {
       <div className="mx-auto grid w-full max-w-7xl grid-cols-1 md:grid-cols-2 md:items-stretch">
         {/* Portrait — fades into the teal field on md+ */}
         <div className="relative min-h-[22rem] md:min-h-[36rem]">
-          <div className="bg-sand absolute inset-0">
+          <div className="bg-teal-deep absolute inset-0">
             <Image
               src="/photos/jorge-reyes.jpg"
               alt={t("photoAlt")}
               fill
               sizes="(min-width: 768px) 50vw, 100vw"
-              className="object-cover object-top md:object-contain md:object-[center_top]"
+              className="object-cover object-top"
               priority={false}
             />
           </div>
