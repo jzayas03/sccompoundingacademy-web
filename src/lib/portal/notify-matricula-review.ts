@@ -57,6 +57,7 @@ export async function notifyMatriculaReview(p: {
     docUrl: previewUrl,
     approveUrl: link("approved"),
     rejectUrl: link("rejected"),
+    submittedAt: p.submittedAt,
   });
 
   try {

@@ -1,17 +1,13 @@
-import { brand } from "@/lib/brand";
+import { E, FONT, button, bodyCell, renderEmail, esc } from "./_shell";
 
 /**
  * Confirmation email sent to the newly-enrolled student after payment.
  *
- * Hand-written HTML (no React Email dependency) — at 2 templates the
- * dep cost outweighs the convenience. Inline styles only, no external
- * CSS, no <link> tags — that's what email clients (Gmail, Outlook,
- * Apple Mail, GMX, etc.) reliably render.
- *
- * Brand colours are interpolated from `lib/brand.ts` at build time so
- * this file stays free of hex literals (the brand-lint e2e test scans
- * all of src/ for raw hex). The compiled HTML carries actual hex values
- * because email clients can't read TS constants.
+ * Restyled to the SCCA Design System email shell (`_shell.ts`) — pale-teal
+ * hero, tinted cohort-detail card, and (kept from the live email) the
+ * day-one logistics: campus, hours, what-to-bring, PPE note, and the
+ * Stripe receipt link. Adds a portal CTA per the handoff. Hand-written
+ * table HTML, inline styles only.
  */
 type ConfirmationParams = {
   nombre: string;
@@ -24,14 +20,9 @@ type ConfirmationParams = {
   locale: "es" | "en";
 };
 
-const c = brand.colors;
 const SEDE = "73 Santa Cruz Medical Building, Suite 201, Bayamón, PR 00961";
 const HORARIO = "Lunes a Viernes · 7:30 a.m. – 5:00 p.m.";
 const SUPPORT_EMAIL = "info@sccompoundingacademy.com";
-// Absolute URL — email clients cannot resolve relative paths. Always
-// the canonical production domain so the asset loads even when the
-// mail is dispatched from a preview deployment.
-const LOGO_URL = "https://www.sccompoundingacademy.com/brand/logo-email.png";
 
 export function buildConfirmationEmail(p: ConfirmationParams): {
   subject: string;
@@ -42,6 +33,8 @@ export function buildConfirmationEmail(p: ConfirmationParams): {
   const subject = es
     ? `Confirmación de inscripción · ${p.cursoTitulo}`
     : `Enrollment confirmation · ${p.cursoTitulo}`;
+
+  const portalUrl = `https://sccompoundingacademy.com/${p.locale}/portal`;
 
   const text = es
     ? `Hola ${p.nombre},
@@ -63,7 +56,9 @@ Qué traer al primer día:
 
 El equipo de protección personal (PPE) se provee en las facilidades — no necesitas traer bata blanca.
 
-${p.receiptUrl ? `Recibo de pago: ${p.receiptUrl}\n\n` : ""}Cualquier pregunta antes del inicio, escríbenos a ${SUPPORT_EMAIL}.
+Portal del estudiante: ${portalUrl}
+${p.receiptUrl ? `Recibo de pago: ${p.receiptUrl}\n` : ""}
+Cualquier pregunta antes del inicio, escríbenos a ${SUPPORT_EMAIL}.
 
 Santa Cruz Compounding Academy, LLC
 Bayamón, Puerto Rico
@@ -87,130 +82,91 @@ What to bring on day one:
 
 Personal protective equipment (PPE) is provided on-site — you don't need to bring a lab coat.
 
-${p.receiptUrl ? `Payment receipt: ${p.receiptUrl}\n\n` : ""}For any questions before the start, write to ${SUPPORT_EMAIL}.
+Student portal: ${portalUrl}
+${p.receiptUrl ? `Payment receipt: ${p.receiptUrl}\n` : ""}
+For any questions before the start, write to ${SUPPORT_EMAIL}.
 
 Santa Cruz Compounding Academy, LLC
 Bayamón, Puerto Rico
 `;
 
-  const html = `<!DOCTYPE html>
-<html lang="${p.locale}">
-  <head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>${subject}</title>
-  </head>
-  <body style="margin:0;padding:0;background:${c.gray[100]};font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;color:${c.gray[900]};">
-    <table role="presentation" cellpadding="0" cellspacing="0" border="0" width="100%" style="background:${c.gray[100]};padding:32px 0;">
+  const eyebrow = es ? "Matrícula confirmada" : "Enrollment confirmed";
+  const headline = es ? "¡Bienvenido a SCCA!" : "Welcome to SCCA!";
+
+  const label = (txt: string) =>
+    `<p style="margin:0 0 4px;font-family:${FONT};font-size:10px;font-weight:700;letter-spacing:0.09em;text-transform:uppercase;color:${E.teal};">${txt}</p>`;
+  const detailRow = (k: string, v: string) =>
+    `<tr>
+       <td style="padding:6px 0;font-family:${FONT};font-size:14px;color:${E.muted};width:120px;">${k}</td>
+       <td style="padding:6px 0;font-family:${FONT};font-size:14px;color:${E.ink};font-weight:600;">${esc(v)}</td>
+     </tr>`;
+
+  const inner = `
+    <p style="margin:0 0 14px;font-family:${FONT};font-size:16px;color:${E.ink};line-height:1.6;">
+      ${es ? `Hola <strong>${esc(p.nombre)}</strong>,` : `Hi <strong>${esc(p.nombre)}</strong>,`}
+    </p>
+    <p style="margin:0 0 26px;font-family:${FONT};font-size:15px;color:${E.bodyText};line-height:1.7;">
+      ${es
+        ? `Gracias por inscribirte. Tu cupo en <strong>${esc(p.cursoTitulo)}</strong> está confirmado.`
+        : `Thank you for enrolling. Your seat in <strong>${esc(p.cursoTitulo)}</strong> is confirmed.`}
+    </p>
+
+    <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="background:${E.tint};border-radius:10px;overflow:hidden;border:1px solid ${E.tintLine};border-left:4px solid ${E.teal};margin-bottom:26px;">
       <tr>
-        <td align="center">
-          <table role="presentation" cellpadding="0" cellspacing="0" border="0" width="600" style="max-width:600px;background:${c.white};border-radius:12px;overflow:hidden;">
-
-            <!-- Header band -->
-            <tr>
-              <td style="background:${c.tealDeep};padding:26px 32px;text-align:left;">
-                <img src="${LOGO_URL}" alt="Santa Cruz Compounding Academy" width="150" style="display:block;border:0;outline:none;margin:0 0 14px;" />
-                <p style="margin:0;color:${c.chartreuse};font-size:11px;font-weight:600;letter-spacing:0.18em;text-transform:uppercase;">
-                  ${es ? "Confirmación de inscripción" : "Enrollment confirmation"}
-                </p>
-                <p style="margin:8px 0 0;color:${c.offWhite};font-size:22px;font-weight:700;line-height:1.25;">
-                  Santa Cruz Compounding Academy
-                </p>
-              </td>
-            </tr>
-
-            <!-- Greeting + summary -->
-            <tr>
-              <td style="padding:32px;">
-                <p style="margin:0 0 16px;font-size:16px;line-height:1.6;">
-                  ${es ? `Hola <strong>${p.nombre}</strong>,` : `Hi <strong>${p.nombre}</strong>,`}
-                </p>
-                <p style="margin:0 0 24px;font-size:16px;line-height:1.6;">
-                  ${es ? `Gracias por inscribirte. Tu cupo en <strong>${p.cursoTitulo}</strong> está confirmado.` : `Thank you for enrolling. Your seat in <strong>${p.cursoTitulo}</strong> is confirmed.`}
-                </p>
-
-                <!-- Cohort detail card -->
-                <table role="presentation" cellpadding="0" cellspacing="0" border="0" width="100%" style="border:1px solid ${c.gray[300]};border-radius:8px;">
-                  <tr>
-                    <td style="padding:20px 22px;">
-                      <p style="margin:0;color:${c.tealDeep};font-size:11px;font-weight:600;letter-spacing:0.18em;text-transform:uppercase;">
-                        ${es ? "Detalles de la cohorte" : "Cohort details"}
-                      </p>
-                      <table role="presentation" cellpadding="0" cellspacing="0" border="0" width="100%" style="margin-top:12px;">
-                        <tr>
-                          <td style="padding:6px 0;font-size:14px;color:${c.gray[700]};width:120px;">${es ? "Cohorte" : "Cohort"}</td>
-                          <td style="padding:6px 0;font-size:14px;color:${c.gray[900]};font-weight:600;">${p.cohorteEtiqueta}</td>
-                        </tr>
-                        <tr>
-                          <td style="padding:6px 0;font-size:14px;color:${c.gray[700]};">${es ? "Inicio" : "Start"}</td>
-                          <td style="padding:6px 0;font-size:14px;color:${c.gray[900]};font-weight:600;">${p.cohorteFechaInicio}</td>
-                        </tr>
-                        <tr>
-                          <td style="padding:6px 0;font-size:14px;color:${c.gray[700]};">${es ? "Cierre" : "End"}</td>
-                          <td style="padding:6px 0;font-size:14px;color:${c.gray[900]};font-weight:600;">${p.cohorteFechaFin}</td>
-                        </tr>
-                        <tr>
-                          <td style="padding:6px 0;font-size:14px;color:${c.gray[700]};">${es ? "Monto" : "Amount"}</td>
-                          <td style="padding:6px 0;font-size:14px;color:${c.gray[900]};font-weight:600;">${p.montoFormatted}</td>
-                        </tr>
-                      </table>
-                    </td>
-                  </tr>
-                </table>
-
-                <!-- Logistics -->
-                <p style="margin:28px 0 8px;font-size:14px;font-weight:600;color:${c.tealDeep};letter-spacing:0.06em;text-transform:uppercase;">
-                  ${es ? "Sede" : "Campus"}
-                </p>
-                <p style="margin:0 0 4px;font-size:15px;line-height:1.6;">${SEDE}</p>
-                <p style="margin:0;font-size:13px;line-height:1.6;color:${c.gray[700]};">${es ? "Horario administrativo" : "Office hours"}: ${HORARIO}</p>
-
-                <p style="margin:28px 0 8px;font-size:14px;font-weight:600;color:${c.tealDeep};letter-spacing:0.06em;text-transform:uppercase;">
-                  ${es ? "Qué traer el primer día" : "What to bring on day one"}
-                </p>
-                <ul style="margin:0;padding-left:20px;font-size:15px;line-height:1.6;">
-                  <li>${es ? "Identificación con foto" : "Photo ID"}</li>
-                  <li>${es ? "Bolígrafo y libreta" : "Pen and notebook"}</li>
-                  <li>${es ? "Computadora portátil" : "Laptop computer"}</li>
-                </ul>
-                <p style="margin:12px 0 0;font-size:13px;line-height:1.6;color:${c.gray[700]};">
-                  ${
-                    es
-                      ? "El equipo de protección personal (PPE) se provee en las facilidades — no necesitas traer bata blanca."
-                      : "Personal protective equipment (PPE) is provided on-site — you don't need to bring a lab coat."
-                  }
-                </p>
-
-                ${
-                  p.receiptUrl
-                    ? `<p style="margin:28px 0 0;font-size:14px;">
-                         <a href="${p.receiptUrl}" style="color:${c.tealDeep};font-weight:600;text-decoration:underline;">
-                           ${es ? "Ver recibo de pago" : "View payment receipt"} →
-                         </a>
-                       </p>`
-                    : ""
-                }
-
-                <p style="margin:32px 0 0;font-size:14px;line-height:1.6;color:${c.gray[700]};">
-                  ${es ? `¿Preguntas antes del inicio? Escríbenos a <a href="mailto:${SUPPORT_EMAIL}" style="color:${c.tealDeep};">${SUPPORT_EMAIL}</a>.` : `Questions before the start? Write to <a href="mailto:${SUPPORT_EMAIL}" style="color:${c.tealDeep};">${SUPPORT_EMAIL}</a>.`}
-                </p>
-              </td>
-            </tr>
-
-            <!-- Footer -->
-            <tr>
-              <td style="background:${c.gray[100]};padding:20px 32px;text-align:center;">
-                <p style="margin:0;font-size:12px;color:${c.gray[700]};">
-                  Santa Cruz Compounding Academy, LLC · Bayamón, Puerto Rico
-                </p>
-              </td>
-            </tr>
+        <td style="padding:22px 26px;">
+          ${label(es ? "Detalles de la cohorte" : "Cohort details")}
+          <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="margin-top:8px;">
+            ${detailRow(es ? "Cohorte" : "Cohort", p.cohorteEtiqueta)}
+            ${detailRow(es ? "Inicio" : "Start", p.cohorteFechaInicio)}
+            ${detailRow(es ? "Cierre" : "End", p.cohorteFechaFin)}
+            ${detailRow(es ? "Monto" : "Amount", p.montoFormatted)}
           </table>
         </td>
       </tr>
     </table>
-  </body>
-</html>`;
 
+    <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="background:${E.cardBg};border-radius:10px;border:1px solid ${E.cardLine};margin-bottom:26px;">
+      <tr>
+        <td style="padding:22px 26px;">
+          ${label(es ? "Sede" : "Campus")}
+          <p style="margin:2px 0 2px;font-family:${FONT};font-size:15px;color:${E.ink};line-height:1.6;">${SEDE}</p>
+          <p style="margin:0 0 16px;font-family:${FONT};font-size:13px;color:${E.muted};line-height:1.6;">${es ? "Horario administrativo" : "Office hours"}: ${HORARIO}</p>
+          ${label(es ? "Qué traer el primer día" : "What to bring on day one")}
+          <ul style="margin:6px 0 0;padding-left:20px;font-family:${FONT};font-size:14px;color:${E.bodyText};line-height:1.7;">
+            <li>${es ? "Identificación con foto" : "Photo ID"}</li>
+            <li>${es ? "Bolígrafo y libreta" : "Pen and notebook"}</li>
+            <li>${es ? "Computadora portátil" : "Laptop computer"}</li>
+          </ul>
+          <p style="margin:12px 0 0;font-family:${FONT};font-size:13px;color:${E.muted};line-height:1.6;">
+            ${es
+              ? "El equipo de protección personal (PPE) se provee en las facilidades — no necesitas traer bata blanca."
+              : "Personal protective equipment (PPE) is provided on-site — you don't need to bring a lab coat."}
+          </p>
+        </td>
+      </tr>
+    </table>
+
+    <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0"><tr><td align="center" style="padding-bottom:20px;">${button(portalUrl, es ? "Acceder al portal →" : "Access portal →")}</td></tr></table>
+
+    ${p.receiptUrl
+      ? `<p style="margin:0 0 18px;font-family:${FONT};font-size:14px;text-align:center;">
+           <a href="${esc(p.receiptUrl)}" style="color:${E.teal};font-weight:600;text-decoration:underline;">${es ? "Ver recibo de pago" : "View payment receipt"} →</a>
+         </p>`
+      : ""}
+
+    <p style="margin:0;font-family:${FONT};font-size:13px;color:${E.muted};line-height:1.65;text-align:center;">
+      ${es
+        ? `¿Preguntas antes del inicio? Escríbenos a <a href="mailto:${SUPPORT_EMAIL}" style="color:${E.teal};">${SUPPORT_EMAIL}</a>.`
+        : `Questions before the start? Write to <a href="mailto:${SUPPORT_EMAIL}" style="color:${E.teal};">${SUPPORT_EMAIL}</a>.`}
+    </p>
+  `;
+
+  const html = renderEmail({
+    locale: p.locale,
+    title: subject,
+    eyebrow,
+    headline,
+    content: bodyCell(inner, "40px 44px 40px"),
+  });
   return { subject, html, text };
 }
