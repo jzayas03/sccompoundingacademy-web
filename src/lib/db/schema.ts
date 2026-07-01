@@ -224,6 +224,20 @@ export const reviewInvites = pgTable("review_invites", {
 });
 
 /**
+ * Dedupe ledger for the certificate-ready email — one row per user the
+ * moment we send their "your certificate is ready" note (fired from the
+ * post-test submit action when the final module is passed). The send is
+ * gated on the ABSENCE of a row here, so retakes / re-passes never
+ * re-send. Cascades on user deletion.
+ */
+export const certificateEmails = pgTable("certificate_emails", {
+  userId: text("user_id")
+    .primaryKey()
+    .references(() => users.id, { onDelete: "cascade" }),
+  sentAt: timestamp("sent_at", { mode: "date" }).defaultNow().notNull(),
+});
+
+/**
  * Stripe webhook idempotency ledger — one row per Stripe event we have
  * fully processed, keyed by Stripe's own `event.id` (evt_…).
  *
@@ -251,4 +265,5 @@ export type Certificate = typeof certificates.$inferSelect;
 export type Review = typeof reviews.$inferSelect;
 export type ReviewInvite = typeof reviewInvites.$inferSelect;
 export type NewReviewInvite = typeof reviewInvites.$inferInsert;
+export type CertificateEmail = typeof certificateEmails.$inferSelect;
 export type ProcessedStripeEvent = typeof processedStripeEvents.$inferSelect;

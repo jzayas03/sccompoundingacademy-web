@@ -13,6 +13,7 @@ import {
 } from "@/lib/quizzes";
 import { resolveViewableModule } from "@/lib/curriculum";
 import { isAdminEmail } from "@/lib/admin";
+import { notifyCertificateReadyIfEligible } from "@/lib/portal/notify-certificate-ready";
 
 /**
  * Submit a post-test attempt.
@@ -86,5 +87,19 @@ export async function submitQuizAction(args: {
   });
 
   void total;
+
+  // If this pass completes the certificate, send the "certificate ready"
+  // email once. Best-effort — the helper swallows every error, so it can
+  // never block the results redirect. Only worth checking on a pass.
+  if (passed) {
+    await notifyCertificateReadyIfEligible({
+      userId: user.id,
+      name: user.name,
+      email: user.email,
+      tier: user.tier,
+      locale: locale === "en" ? "en" : "es",
+    });
+  }
+
   redirect(`/${locale}/portal/modulos/${moduleId}/post-test/resultados`);
 }
