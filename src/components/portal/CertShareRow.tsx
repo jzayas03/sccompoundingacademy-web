@@ -58,11 +58,13 @@ export function CertShareRow({
     }
     try {
       await navigator.clipboard.writeText(url);
+      // Only confirm once the copy actually succeeded — otherwise the
+      // "link copied" toast would lie on a blocked/denied clipboard.
+      setCopied(true);
+      window.setTimeout(() => setCopied(false), 3000);
     } catch {
-      /* clipboard blocked — the note still tells them the link */
+      /* clipboard blocked — no confirmation shown; buttons stay usable */
     }
-    setCopied(true);
-    window.setTimeout(() => setCopied(false), 3000);
   };
 
   const base =

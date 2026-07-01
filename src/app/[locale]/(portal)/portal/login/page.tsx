@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import { redirect } from "next/navigation";
 import { useTranslations } from "next-intl";
 import { setRequestLocale } from "next-intl/server";
-import { LogoFull } from "@/components/brand";
+import { LogoFullInverse } from "@/components/brand";
 import { Link } from "@/i18n/routing";
 import { auth } from "@/lib/auth";
 import { LoginForm } from "./login-form";
@@ -38,7 +38,7 @@ function LoginPanel({ locale }: { locale: string }) {
         className="glass-modal relative z-[1] w-full max-w-[400px] rounded-[20px] border border-white/50 p-8 sm:p-10"
         style={{ boxShadow: "var(--shadow-deep)" }}
       >
-        <LogoFull shieldClass="h-9 w-auto" className="mb-7" />
+        <LogoFullInverse shieldClass="h-9 w-auto" className="mb-7" />
         <h1 className="font-heading text-teal-deep text-2xl font-extrabold tracking-[-0.02em]">
           {t("title")}
         </h1>

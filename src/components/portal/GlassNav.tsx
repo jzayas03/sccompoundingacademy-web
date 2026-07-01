@@ -1,7 +1,7 @@
 import { useTranslations } from "next-intl";
 import { getLocale } from "next-intl/server";
 import { Link } from "@/i18n/routing";
-import { LogoFull } from "@/components/brand";
+import { LogoFullInverse } from "@/components/brand";
 import { auth } from "@/lib/auth";
 import { isAdminEmail } from "@/lib/admin";
 import { logoutAction } from "@/app/[locale]/(portal)/portal/actions";
@@ -60,7 +60,9 @@ function GlassNavView({
     <header className="glass-nav sticky top-0 z-50 w-full border-b border-[rgba(25,85,97,0.10)]">
       <div className="mx-auto flex h-16 max-w-7xl items-center justify-between px-4 sm:px-6 lg:px-8">
         <Link href="/portal" className="flex items-center" aria-label={t("homeAria")}>
-          <LogoFull shieldClass="h-8 w-auto" />
+          {/* Inverse (dark-ink) lockup — the colored LogoFull ghosts out on
+              the light glass-nav surface. */}
+          <LogoFullInverse shieldClass="h-8 w-auto" />
         </Link>
 
         <div className="flex items-center gap-3">
