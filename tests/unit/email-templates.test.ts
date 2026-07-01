@@ -104,8 +104,8 @@ describe("SCCA email templates", () => {
       }).html,
     ];
     for (const html of htmls) {
-      expect(html).toContain("Montserrat");
-      expect(html).toContain("#E6EA82"); // chartreuse rule/accent
+      expect(html).toContain("Montserrat"); // shell font
+      expect(html).toContain("sccompoundingacademy.com"); // shell footer
     }
   });
 

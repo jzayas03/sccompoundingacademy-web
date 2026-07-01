@@ -48,21 +48,28 @@ export function Hero() {
           style={{ backgroundImage: `url(${src})` }}
         />
       ))}
-      {/* Angled teal scrim: dark where the headline sits, clearing to the
-          right so the photograph still breathes. */}
+      {/* Two stacked scrims: a strong angled teal wash on the left for
+          headline legibility (clearing right so the photo breathes), plus a
+          bottom-up lift so the CTA edge stays grounded. */}
       <div
         aria-hidden
         className="absolute inset-0 z-[1]"
         style={{
           background:
-            "linear-gradient(105deg, rgba(25,85,97,0.72) 0%, rgba(25,85,97,0.52) 50%, rgba(25,85,97,0.28) 100%)",
+            "linear-gradient(100deg, rgba(20,68,78,0.94) 0%, rgba(22,76,86,0.82) 34%, rgba(25,85,97,0.55) 62%, rgba(25,85,97,0.32) 100%)",
         }}
+      />
+      <div
+        aria-hidden
+        className="absolute inset-0 z-[1]"
+        style={{ background: "linear-gradient(to top, rgba(20,68,78,0.5) 0%, transparent 40%)" }}
       />
       <Container className="relative z-[2] py-24 sm:py-28 lg:py-32">
         <div className="max-w-2xl">
           <h1
             id="hero-heading"
             className="font-heading text-off-white text-4xl font-extrabold leading-[1.03] tracking-[-0.035em] text-balance sm:text-5xl lg:text-6xl"
+            style={{ textShadow: "0 2px 24px rgba(15,52,60,0.55)" }}
           >
             {t("headline")}
           </h1>

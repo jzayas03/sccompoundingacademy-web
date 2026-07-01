@@ -306,6 +306,10 @@
     "ceBody": "{contactHours} horas de contacto · {ceus} CEUs · Knowledge-based, Level 1 · ACPE Provider {providerNumber} vía {provider}",
     "includesLabel": "Incluye",
     "credentialLabel": "Credencial",
+    "perParticipant": "/ participante",
+    "perStudent": "/ estudiante",
+    "priceNoteProfessional": "Materiales, almuerzo y certificado CE de ACPE incluidos",
+    "priceNoteStudent": "Acceso al portal, quizzes y certificado de finalización",
     "includesItems": [
       "Taller práctico supervisado",
       "Grupos pequeños",
@@ -407,6 +411,27 @@
     "eyebrow": "Instructor",
     "heading": "Lcdo. Jorge L. Reyes Quiñones, RPh, FACA, FACVP",
     "title": "Chief Pharmacist y propietario · Santa Cruz Pharma Care",
+    "name": "Jorge L. Reyes Quiñones",
+    "credLine": "RPh, FACA, FACVP",
+    "roleLine": "Chief Pharmacist y propietario — Santa Cruz Pharma Care, Bayamón",
+    "rows": [
+      {
+        "label": "Fundador",
+        "text": "Fundó Santa Cruz Pharma Care en Bayamón — una farmacia de compounding aún en práctica diaria activa."
+      },
+      {
+        "label": "Educador",
+        "text": "Estableció el primer programa académico de Técnico de Farmacia de Puerto Rico en la Universidad Ana G. Méndez."
+      },
+      {
+        "label": "Especialista",
+        "text": "Formación avanzada en PCCA y USP Convention; experto en terapia hormonal, veterinaria y formulaciones para el manejo del dolor."
+      },
+      {
+        "label": "Reconocido",
+        "text": "Preceptor of the Year en Creighton University, con un premio epónimo «Jorge L. Reyes Award» en Nova Southeastern University."
+      }
+    ],
     "bio": "Lcdo. Jorge L. Reyes Quiñones, RPh, FACA, FACVP — Chief Pharmacist y propietario de Santa Cruz Pharma Care. Farmacéutico licenciado en Puerto Rico desde 1980 con más de 45 años de práctica profesional, formación especializada en compounding por PCCA y USP Convention, y reconocimientos como Preceptor of the Year 2025 (Creighton University) y un premio epónimo «Jorge L. Reyes Award» en Nova Southeastern University. Fundador del primer programa académico de Técnico de Farmacia en Puerto Rico (Ana G. Méndez, 1985–88).",
     "credentialsLabel": "Credenciales y formación",
     "credentials": [
@@ -567,7 +592,12 @@
   "faqClean": {
     "eyebrow": "Preguntas frecuentes",
     "heading": "Lo que los farmacéuticos preguntan antes de inscribirse.",
-    "intro": "Si tu pregunta no está aquí, escríbenos. Respondemos en menos de 48 horas laborables."
+    "intro": "Si tu pregunta no está aquí, escríbenos. Respondemos en menos de 48 horas laborables.",
+    "badges": [
+      { "title": "1.8 créditos CE", "sub": "Auspiciado por ACPE · Provider 0151" },
+      { "title": "Reembolso 100%", "sub": "Con 30+ días de aviso" },
+      { "title": "Certificado para LinkedIn", "sub": "PDF para tu perfil" }
+    ]
   },
   "ubicacion": {
     "eyebrow": "Ubicación",
@@ -718,6 +748,59 @@
   },
   "photoBand": {
     "quote": "Formación dentro de una farmacia activa. No en un salón de clases."
+  },
+  "confianzaCarousel": {
+    "eyebrow": "Nuestra academia",
+    "heading": "El primer cohorte",
+    "subhead": "Nuestra primera generación estuvo compuesta en su totalidad por estudiantes de farmacia.",
+    "prev": "Anterior",
+    "next": "Siguiente",
+    "dotAria": "Foto {n}",
+    "captions": [
+      "El primer cohorte completo, junto al instructor Jorge L. Reyes",
+      "Instrucción en el laboratorio de Santa Cruz Pharma Care, Bayamón",
+      "Certificados de finalización en mano",
+      "Primera generación de graduados de la academia",
+      "Reconocimiento tras 18 horas de práctica supervisada",
+      "Entrega de certificados de la primera cohorte",
+      "Celebrando el primer grupo de graduados"
+    ]
+  },
+  "videoIntro": {
+    "eyebrow": "En sus propias palabras",
+    "heading": "Escucha sobre el curso, directamente de Jorge",
+    "quote": "Un breve recorrido por lo que cubrirás, para quién es, y la práctica supervisada que harás dentro del laboratorio de Bayamón.",
+    "watchCta": "Ver el reel completo en Instagram",
+    "frameTitle": "Reel de introducción del instructor"
+  },
+  "cohort": {
+    "eyebrow": "Próxima cohorte",
+    "headingFallback": "La próxima cohorte",
+    "description": "Tres días consecutivos en nuestro laboratorio de Bayamón. Cohorte pequeña por diseño — los cupos son limitados para que cada participante reciba revisión individual del instructor.",
+    "seatsTotal": "{total} cupos en total",
+    "remaining": "{remaining} disponibles",
+    "closesNote": "La inscripción cierra cuando la cohorte se llena o dos semanas antes de la fecha de inicio.",
+    "form": {
+      "heading": "Reserva tu cupo",
+      "subnote": "Sin pago ahora — te contactaremos para confirmar.",
+      "name": "Nombre completo",
+      "email": "Correo electrónico",
+      "rolePlaceholder": "Soy…",
+      "roles": [
+        "Farmacéutico licenciado",
+        "Técnico de farmacia",
+        "Estudiante de farmacia",
+        "Otro"
+      ],
+      "submit": "Unirme a la lista",
+      "submitting": "Enviando…",
+      "successTitle": "Estás en la lista.",
+      "successBody": "Te enviaremos un correo tan pronto se confirme un cupo.",
+      "error": "Algo salió mal. Inténtalo de nuevo."
+    }
+  },
+  "floatingCta": {
+    "label": "Reservar un cupo"
   },
   "contactHome": {
     "eyebrow": "Contacto",

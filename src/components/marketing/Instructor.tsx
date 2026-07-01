@@ -2,24 +2,24 @@ import Image from "next/image";
 import { useTranslations, useMessages } from "next-intl";
 import { Reveal } from "@/components/ui/Reveal";
 
-type Milestone = { year: string; text: string };
-type InstructorMessages = { instructor: { timeline: Milestone[] } };
+type Row = { label: string; text: string };
+type InstructorMessages = { instructor: { rows: Row[] } };
 
 /**
- * Instructor — course director, photo + career timeline.
+ * Instructor — course director, portrait + role facets (v2 handoff §6).
  *
- * Recreated from the SCCA Design System handoff: a full-height portrait
- * on the left fading into the teal-deep field, and a four-milestone
- * career timeline on the right (year marker + rule + note). Name, title,
- * and the milestone copy come from `messages → instructor`.
+ * A full-height portrait on the left fading into the teal-deep field, and
+ * on the right the name + credential line + role, followed by four
+ * labeled facets (Founder / Educator / Specialist / Honored), each a
+ * chartreuse label + short rule + note. Copy from `messages → instructor`.
  *
- * Portrait: /public/photos/jorge-reyes.jpg (from the handoff bundle),
- * server-loaded via next/image so it stays optimized.
+ * Portrait: /public/photos/jorge-reyes.jpg (handoff bundle), server-loaded
+ * via next/image so it stays optimized.
  */
 export function Instructor() {
   const t = useTranslations("instructor");
   const messages = useMessages() as unknown as InstructorMessages;
-  const timeline = messages.instructor.timeline;
+  const rows = messages.instructor.rows;
 
   return (
     <section
@@ -57,24 +57,25 @@ export function Instructor() {
               id="instructor-heading"
               className="font-heading text-off-white text-3xl font-bold leading-[1.05] tracking-[-0.03em] sm:text-4xl"
             >
-              {t("heading")}
+              {t("name")}
             </h2>
-            <p className="text-off-white/60 mt-2 text-sm tracking-wide">{t("title")}</p>
+            <p className="text-chartreuse mt-2 text-sm font-semibold tracking-wide">{t("credLine")}</p>
+            <p className="text-off-white/55 mt-1 text-[13px] tracking-wide">{t("roleLine")}</p>
           </div>
 
-          <ol aria-label={t("timelineLabel")} className="flex flex-col gap-7">
-            {timeline.map((m) => (
-              <li key={m.year} className="grid grid-cols-[3.25rem_1fr] items-start gap-5">
-                <span className="font-heading text-chartreuse text-base font-extrabold leading-relaxed">
-                  {m.year}
+          <div className="flex flex-col gap-6">
+            {rows.map((row) => (
+              <div key={row.label} className="grid grid-cols-[110px_1fr] items-start gap-5">
+                <span className="text-chartreuse font-heading pt-0.5 text-[0.7rem] font-bold tracking-[0.12em] uppercase">
+                  {row.label}
                 </span>
                 <div>
                   <span aria-hidden className="bg-chartreuse/35 mb-2.5 block h-px w-6" />
-                  <p className="text-off-white/80 text-sm leading-relaxed">{m.text}</p>
+                  <p className="text-off-white/80 text-sm leading-relaxed">{row.text}</p>
                 </div>
-              </li>
+              </div>
             ))}
-          </ol>
+          </div>
         </Reveal>
       </div>
     </section>
