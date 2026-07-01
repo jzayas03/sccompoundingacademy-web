@@ -2,113 +2,72 @@ import Image from "next/image";
 import { useTranslations, useMessages } from "next-intl";
 import { Link } from "@/i18n/routing";
 import { Container } from "@/components/ui/Container";
+import { SpecRail } from "@/components/ui/SpecRail";
 
 /**
- * Hero — top of the landing page.
+ * Hero — top of the landing page. "El Formulario" direction:
  *
- * Clean medical-pharma direction: white surface, no decoration,
- * left-aligned 2-line eyebrow + display heading + 2-line subcopy +
- * two CTAs (primary chartreuse + secondary outline-teal) + trust
- * signals row.
+ * Deep-teal clinical floor (authority), a monospace spec-rail of standards
+ * (the signature — encodes USP chapters, ACPE #, hours, location), an Outfit
+ * XL headline with a SINGLE chartreuse "measure" mark, one strong chartreuse
+ * CTA + one quiet link, and a framed real bench photograph — proof, not
+ * decoration. Asymmetric on lg (7/5). No glass, no gradient blob.
  *
- * Asymmetric on lg: ~7/12 text column, ~5/12 photograph (frontispiece
- * photo from the gallery — bench composition, treated as proof not
- * decoration). Mobile stacks vertical, photo last so the message + CTAs
- * stay above the fold.
- *
- * Not wrapped in <Reveal> — it's above the fold, no scroll needed.
+ * Not wrapped in <Reveal> — above the fold.
  */
 export function Hero() {
   const t = useTranslations("hero");
   const messages = useMessages() as unknown as { hero: { trustItems: string[] } };
-  const trustItems = messages.hero.trustItems;
+  const specs = messages.hero.trustItems;
 
   return (
     <section
       id="hero"
       aria-labelledby="hero-heading"
-      className="bg-white relative isolate"
+      className="bg-teal-deep text-off-white relative isolate"
     >
-      <Container className="grid grid-cols-1 gap-12 py-16 sm:py-20 lg:grid-cols-12 lg:gap-x-12 lg:py-28">
+      <Container className="grid grid-cols-1 items-center gap-12 py-16 sm:py-20 lg:grid-cols-12 lg:gap-x-14 lg:py-28">
         {/* Text column */}
-        <div className="lg:col-span-7 flex flex-col justify-center">
-          {/* Tagline — institutional slogan in the accent serif italic so
-              it sits visually above the regulatory eyebrow row without
-              competing with it. Uses the brand `font-accent` (Cormorant
-              Garamond / Khmer MN per brand.ts). */}
-          <p className="font-accent text-teal-deep/80 italic text-base sm:text-lg">
-            {t("slogan")}
-          </p>
-          <p className="font-heading text-teal-deep/80 mt-3 flex items-center text-xs font-semibold tracking-[0.18em] uppercase sm:text-sm">
-            <span aria-hidden className="bg-chartreuse mr-3 inline-block h-4 w-1 shrink-0 rounded-sm" />
-            {t("eyebrow")}
-          </p>
+        <div className="lg:col-span-7 flex flex-col">
+          {/* Signature: the standards spec-rail (mono, muted off-white). */}
+          <SpecRail items={specs} className="text-off-white/60 [&_.spec-tag]:text-off-white/60" />
+
           <h1
             id="hero-heading"
-            className="font-heading text-teal-deep mt-5 text-4xl font-bold leading-[1.05] tracking-[-0.02em] text-balance sm:text-5xl lg:text-6xl xl:text-[3.75rem]"
+            className="font-heading mt-7 text-4xl font-bold leading-[1.03] tracking-[-0.03em] text-balance sm:text-5xl lg:text-[3.5rem] xl:text-6xl"
           >
             {t("headline")}
           </h1>
-          <p className="text-gray-900 mt-6 max-w-2xl text-base leading-relaxed sm:text-lg">
+
+          {/* The one chartreuse "measure" — a single precise mark. */}
+          <span aria-hidden className="bg-chartreuse mt-6 block h-1 w-16 rounded-full" />
+
+          <p className="text-off-white/85 mt-6 max-w-xl text-base leading-relaxed sm:text-lg">
             {t("subheadline")}
           </p>
 
-          {/* CTA row — primary chartreuse + secondary outline-teal.
-              Both rendered as link-styled buttons (Link → button-class span)
-              so they keep button affordance + correct routing. */}
-          {/* Crystalline CTAs — same vocabulary as ui/Button:
-                ring + shadow-soft at rest, shadow-lift + translate-y-px on
-                hover. Inlined here (not the Button component) because the
-                next-intl <Link> needs to render as an <a>, not a <button>. */}
-          <div className="mt-8 flex flex-wrap items-center gap-3 sm:gap-4">
+          {/* One strong CTA + one quiet link — a single accent per view. */}
+          <div className="mt-9 flex flex-wrap items-center gap-x-7 gap-y-4">
             <Link
               href="/cursos"
-              className="bg-chartreuse text-teal-deep ring-teal-deep/15 shadow-soft hover:bg-chartreuse/95 hover:shadow-lift focus-visible:ring-chartreuse font-heading inline-flex h-12 items-center justify-center rounded-md px-6 text-sm font-semibold ring-1 transition-[color,background-color,box-shadow,transform] duration-200 ease-out focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-offset-white focus-visible:outline-none motion-safe:hover:-translate-y-px sm:h-14 sm:px-7 sm:text-base"
+              className="bg-chartreuse text-teal-deep ring-chartreuse/20 shadow-soft hover:bg-chartreuse/95 hover:shadow-lift focus-visible:ring-chartreuse font-heading inline-flex h-12 items-center justify-center rounded-[13px] px-7 text-sm font-semibold ring-1 transition-[background-color,box-shadow,transform] duration-200 ease-out focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-offset-teal-deep focus-visible:outline-none motion-safe:hover:-translate-y-px sm:h-14 sm:text-base"
             >
               {t("primaryCta")}
             </Link>
             <Link
               href="/contacto"
-              className="border-teal-deep text-teal-deep bg-white shadow-soft hover:bg-teal-deep hover:text-off-white hover:shadow-lift focus-visible:ring-chartreuse font-heading inline-flex h-12 items-center justify-center rounded-md border-2 px-6 text-sm font-semibold transition-[color,background-color,box-shadow,transform] duration-200 ease-out focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-offset-white focus-visible:outline-none motion-safe:hover:-translate-y-px sm:h-14 sm:px-7 sm:text-base"
+              className="text-off-white/90 hover:text-chartreuse focus-visible:ring-chartreuse font-heading inline-flex items-center gap-1.5 rounded-sm text-sm font-semibold underline-offset-4 transition-colors hover:underline focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-offset-teal-deep focus-visible:outline-none sm:text-base"
             >
               {t("secondaryCta")}
+              <span aria-hidden>→</span>
             </Link>
           </div>
-
-          {/* Trust signals row — small inline items with check marks.
-              Wraps onto multiple rows on mobile; single row on desktop. */}
-          <ul className="border-gray-300 mt-10 grid grid-cols-1 gap-3 border-t pt-6 sm:grid-cols-2">
-            {trustItems.map((item) => (
-              <li key={item} className="flex items-start gap-2.5">
-                <svg
-                  aria-hidden
-                  viewBox="0 0 20 20"
-                  fill="none"
-                  className="text-teal-deep mt-0.5 h-4 w-4 shrink-0"
-                >
-                  <path
-                    d="M4 10.5l3.5 3.5L16 6"
-                    stroke="currentColor"
-                    strokeWidth="2"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                  />
-                </svg>
-                <span className="text-gray-700 text-sm leading-snug">{item}</span>
-              </li>
-            ))}
-          </ul>
         </div>
 
-        {/* Photograph column — proof not decoration. No `order-*` classes
-            so the natural DOM order applies at every breakpoint: text
-            column first, photo column second. On mobile that stacks
-            text → photo (so the first viewport communicates "what is
-            this" before showing a lab photo without context). On lg+
-            the grid puts text on the left (col-span-7) and photo on
-            the right (col-span-5). */}
-        <div className="lg:col-span-5 lg:flex lg:items-center">
-          <div className="border-gray-300 relative aspect-[4/5] w-full overflow-hidden rounded-lg border sm:aspect-[16/10] lg:aspect-[4/5]">
+        {/* Photograph — proof, framed on teal. DOM order after text so mobile
+            reads message → photo. */}
+        <div className="lg:col-span-5">
+          <div className="border-off-white/15 relative aspect-[4/5] w-full overflow-hidden rounded-[13px] border sm:aspect-[16/10] lg:aspect-[4/5]">
             <Image
               src="/photos/photo-frontispiece.jpg"
               alt={t("imageAlt")}

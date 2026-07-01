@@ -31,6 +31,7 @@ export const brand = {
     lg: "20px",
     xl: "28px",
     pill: "9999px",
+    card: "13px",
   },
   shadows: {
     // rgba derived from tealDeep #195561 = rgb(25, 85, 97)
@@ -42,7 +43,7 @@ export const brand = {
       "ITC Avant Garde Gothic Pro",
       "Century Gothic",
       "Futura",
-      "Montserrat",
+      "Outfit",
       "system-ui",
       "sans-serif",
     ],
@@ -50,11 +51,12 @@ export const brand = {
       "ITC Avant Garde Gothic Pro",
       "Century Gothic",
       "Futura",
-      "Montserrat",
+      "Outfit",
       "system-ui",
       "sans-serif",
     ],
     accent: ["Khmer MN", "Cormorant Garamond", "Garamond", "serif"],
+    mono: ["IBM Plex Mono", "ui-monospace", "SF Mono", "monospace"],
   },
 } as const;
 

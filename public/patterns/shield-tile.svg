@@ -1,0 +1,21 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 220 220" width="220" height="220">
+  <!--
+    SCCA shield tile — tonal texture, NOT a logo.
+    Single simplified shield silhouette at low opacity for repeat background.
+    Derived from SCCA brand shield shape: rounded top corners, pointed base.
+    Fill #228698 (teal) at 11% opacity on transparent background.
+  -->
+  <path
+    d="M110 28
+       L44 52
+       C42 53 40 55 40 58
+       L40 110
+       C40 152 70 183 110 196
+       C150 183 180 152 180 110
+       L180 58
+       C180 55 178 53 176 52
+       Z"
+    fill="#228698"
+    fill-opacity="0.11"
+  />
+</svg>

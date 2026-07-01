@@ -2,7 +2,7 @@ import { notFound } from "next/navigation";
 import { NextIntlClientProvider } from "next-intl";
 import { getMessages, setRequestLocale } from "next-intl/server";
 import { routing } from "@/i18n/routing";
-import { heading, accent } from "@/app/fonts";
+import { heading, accent, mono } from "@/app/fonts";
 import { SkipLink } from "@/components/layout/SkipLink";
 
 /**
@@ -36,7 +36,7 @@ export default async function LocaleLayout({
   setRequestLocale(locale);
   const messages = await getMessages();
   return (
-    <html lang={locale} className={`${heading.variable} ${accent.variable}`}>
+    <html lang={locale} className={`${heading.variable} ${accent.variable} ${mono.variable}`}>
       <body>
         <NextIntlClientProvider messages={messages} locale={locale}>
           <SkipLink />
