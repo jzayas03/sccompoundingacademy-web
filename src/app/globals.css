@@ -28,6 +28,8 @@
   /* rgba derived from tealDeep #195561 = rgb(25, 85, 97) */
   --shadow-soft: 0 4px 12px rgba(25, 85, 97, 0.08);
   --shadow-lift: 0 8px 24px rgba(25, 85, 97, 0.12);
+  /* Deep shadow — floating glass modals over the portal backdrop. */
+  --shadow-deep: 0 18px 45px rgba(17, 17, 17, 0.12);
 
   --font-heading:
     var(--font-heading-loaded), "Montserrat", "Century Gothic", "Futura",
@@ -215,4 +217,18 @@
       transition: none;
     }
   }
+}
+
+/* Portal backdrop — slowly drifting colour blobs behind the glass UI.
+   Paused for users who prefer reduced motion. */
+@keyframes portal-drift1 {
+  0%, 100% { transform: translate(0, 0); }
+  50% { transform: translate(40px, -30px); }
+}
+@keyframes portal-drift2 {
+  0%, 100% { transform: translate(0, 0); }
+  50% { transform: translate(-50px, 25px); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .portal-blob { animation: none !important; }
 }
