@@ -3,20 +3,21 @@ import type { Question } from "./types";
 /**
  * Día 3 — Hormonales tópicos, veterinaria y regulación.
  *
- * Banco de 15 preguntas transcrito verbatim del PDF del Lcdo. Reyes
- * ("PRE POST TEST -SCCA Día # 3.pages.pdf", 2026).
+ * Banco de 15 preguntas — pre/post-test del tier profesional, versión
+ * actualizada 2026 (docx "Post-Test Preguntas y Respuestas" del Lcdo.
+ * Reyes).
  *
  * Estructura del banco:
  *   - Q1-Q5  : Rx Bi-est 80/20 2.5 mg/G + Testosterone 3.0 mg/G,
  *              Disp 35 G, Sig 0.5 G behind knees q.d., Refill 5.
- *   - Q6-Q10 : Rx Testosterone 1 mg/0.1 G, Disp in microclick,
- *              Sig 1 mg q.d.
- *   - Q11-Q15: True/False sobre clasificación 503A/503B, shortages,
- *              alergias y reconstitución vs compounding.
+ *   - Q6-Q7  : Rx Testosterone 1 mg/0.1 G, Disp in microclick, Sig 1 mg q.d.
+ *   - Q8-Q10 : Escenarios veterinarios (fenobarbital canino, contra-
+ *              indicación felina, vía alterna para methimazole).
+ *   - Q11-Q15: Rx Enalapril 1 mg/mL O.S., Sig II mg P.O q.d. (movido desde
+ *              Día 2 en la versión actualizada).
  *
- * Cada `prompt` re-inline-a la prescripción correspondiente para que la
- * UI siga sin necesitar un modelo de contexto compartido entre preguntas
- * (mismo patrón que en `dia-2.ts` Q11-15).
+ * Cada `prompt` re-inline-a el escenario correspondiente para que la UI
+ * siga sin necesitar un modelo de contexto compartido entre preguntas.
  */
 export const dia3: readonly Question[] = [
   {
@@ -112,7 +113,7 @@ export const dia3: readonly Question[] = [
   {
     id: "M3-Q7",
     prompt:
-      "Rx — Testosterone 1 mg/0.1 G, Disp. in microclick, Sig 1 mg q.d. When you do one microclick, how much of the preparation is:",
+      "Rx — Testosterone 1 mg/0.1 G, Disp. in microclick, Sig 1 mg q.d. When you do one microclick, how much of the preparation is dispensed:",
     type: "multiple-choice",
     options: [
       { letter: "A", text: "0.025 cc" },
@@ -127,106 +128,120 @@ export const dia3: readonly Question[] = [
   {
     id: "M3-Q8",
     prompt:
-      "Rx — Testosterone 1 mg/0.1 G, Disp. in microclick, Sig 1 mg q.d. How much testosterone is necessary to prepare this formulation if you decide to make an excess of 12 G:",
+      "Paciente: canino de 8 kg. Rx veterinaria — Phenobarbital suspensión 10 mg/mL, Sig 2 mg/kg PO c/12 h. VCPR documentada. How many mL per dose should the owner administer?",
     type: "multiple-choice",
     options: [
-      { letter: "A", text: "1.2 mg" },
-      { letter: "B", text: "12 mg" },
-      { letter: "C", text: "120 mg" },
-      { letter: "D", text: "10 mg" },
+      { letter: "A", text: "0.8 mL" },
+      { letter: "B", text: "1.6 mL" },
+      { letter: "C", text: "3.2 mL" },
+      { letter: "D", text: "16 mL" },
+      { letter: "E", text: "none of above is correct" },
+    ],
+    correctAnswer: "B",
+    explanation: "",
+  },
+  {
+    id: "M3-Q9",
+    prompt: "When compounding for cats, which statement is correct?",
+    type: "multiple-choice",
+    options: [
+      { letter: "A", text: "acetaminophen is safe in cats" },
+      { letter: "B", text: "propylene glycol is the preferred vehicle in cats" },
+      { letter: "C", text: "never use acetaminophen or propylene glycol in cats" },
+      { letter: "D", text: "cats glucuronidate drugs better than dogs" },
       { letter: "E", text: "none of above is correct" },
     ],
     correctAnswer: "C",
     explanation: "",
   },
   {
-    id: "M3-Q9",
-    prompt:
-      "Rx — Testosterone 1 mg/0.1 G, Disp. in microclick, Sig 1 mg q.d. What will be the most appropriate penetration enhancer for this formulation:",
-    type: "multiple-choice",
-    options: [
-      { letter: "A", text: "ethoxy diglycol" },
-      { letter: "B", text: "propylene glycol" },
-      { letter: "C", text: "versabase" },
-      { letter: "D", text: "glycerin" },
-      { letter: "E", text: "none of above is correct" },
-    ],
-    correctAnswer: "B",
-    explanation: "",
-  },
-  {
     id: "M3-Q10",
     prompt:
-      "Rx — Testosterone 1 mg/0.1 G, Disp. in microclick, Sig 1 mg q.d. The formule to make 100 ml requiere 5 ml of the penetration enhancer. If you decide to make only 12 G of the formula, how much of the penetration enhancer you will use:",
+      "Paciente: gato que rechaza la administración oral; el veterinario necesita una vía alterna para methimazole. VCPR documentada. Which compounded dosage form/route is most appropriate?",
     type: "multiple-choice",
     options: [
-      { letter: "A", text: "0.5 mL" },
-      { letter: "B", text: "0.6 mL" },
-      { letter: "C", text: "5 mL" },
-      { letter: "D", text: "6 mL" },
+      { letter: "A", text: "transdermal PLO/Lipoderm en la pinna auricular interna" },
+      { letter: "B", text: "supositorio rectal" },
+      { letter: "C", text: "tableta oral grande" },
+      { letter: "D", text: "inyección IV por el dueño en casa" },
       { letter: "E", text: "none of above is correct" },
     ],
-    correctAnswer: "B",
+    correctAnswer: "A",
     explanation: "",
   },
   {
     id: "M3-Q11",
     prompt:
-      "If a pharmacist make an antibiotic reconstitution following the manufacturer instructions, that is considered “compounding”:",
-    type: "true-false",
+      "Rx — Enalapril 1 mg/mL O.S., Sig II mg P.O q.d. How much quantity you will dispense:",
+    type: "multiple-choice",
     options: [
-      { letter: "TRUE", text: "True" },
-      { letter: "FALSE", text: "False" },
+      { letter: "A", text: "30 mL" },
+      { letter: "B", text: "60 mL" },
+      { letter: "C", text: "90 mL" },
+      { letter: "D", text: "180 mL" },
+      { letter: "E", text: "none of above is correct" },
     ],
-    correctAnswer: "FALSE",
+    correctAnswer: "B",
     explanation: "",
   },
   {
     id: "M3-Q12",
     prompt:
-      "Compounding pharmacies are not allowed to make commercially available products. If a commercially available product is in shortage then compounding pharmacy can duplicate the product until the shortage ends:",
-    type: "true-false",
+      "Rx — Enalapril 1 mg/mL O.S., Sig II mg P.O q.d. How many mL the patient will have to take daily.",
+    type: "multiple-choice",
     options: [
-      { letter: "TRUE", text: "True" },
-      { letter: "FALSE", text: "False" },
+      { letter: "A", text: "0.5 mL" },
+      { letter: "B", text: "1 mL" },
+      { letter: "C", text: "4 mL" },
+      { letter: "D", text: "8 mL" },
+      { letter: "E", text: "none of above is correct" },
     ],
-    correctAnswer: "TRUE",
+    correctAnswer: "E",
     explanation: "",
   },
   {
     id: "M3-Q13",
     prompt:
-      "If a patient is allergic to any of the excipients of a commercially available product, then the pharmacist can make the product without the excipient to which the patient is allergic:",
-    type: "true-false",
+      "Rx — Enalapril 1 mg/mL O.S., Sig II mg P.O q.d. With reference to storage, what label will you attach?",
+    type: "multiple-choice",
     options: [
-      { letter: "TRUE", text: "True" },
-      { letter: "FALSE", text: "False" },
+      { letter: "A", text: "keep frozen" },
+      { letter: "B", text: "keep at room temperature" },
+      { letter: "C", text: "keep in the safety cabinet" },
+      { letter: "D", text: "keep in refrigerator" },
+      { letter: "E", text: "none of above is correct" },
     ],
-    correctAnswer: "TRUE",
+    correctAnswer: "D",
     explanation: "",
   },
   {
     id: "M3-Q14",
     prompt:
-      "If a pharmacist compound a product following USP standards then he may claim efficacy and security of the compounded product:",
-    type: "true-false",
+      "Rx — Enalapril 1 mg/mL O.S., Sig II mg P.O q.d. What other label will you attach:",
+    type: "multiple-choice",
     options: [
-      { letter: "TRUE", text: "True" },
-      { letter: "FALSE", text: "False" },
+      { letter: "A", text: "shake well before use" },
+      { letter: "B", text: "take 1 hour before meals" },
+      { letter: "C", text: "take 1 hour after meals" },
+      { letter: "D", text: "A and B are correct" },
+      { letter: "E", text: "none of above is correct" },
     ],
-    correctAnswer: "FALSE",
+    correctAnswer: "A",
     explanation: "",
   },
   {
     id: "M3-Q15",
     prompt:
-      "Compounding Pharmacies are classified 503 A and 503 B: 503 A Compound Sterile products; 503 B Compound Non-Sterile products.",
-    type: "true-false",
+      "Rx — Enalapril 1 mg/mL O.S., Sig II mg P.O q.d. What else will you provide with this prescription:",
+    type: "multiple-choice",
     options: [
-      { letter: "TRUE", text: "True" },
-      { letter: "FALSE", text: "False" },
+      { letter: "A", text: "press in adapter" },
+      { letter: "B", text: "two ounces amber bottle" },
+      { letter: "C", text: "3 mL oral syringe" },
+      { letter: "D", text: "all of above" },
+      { letter: "E", text: "none of above is correct" },
     ],
-    correctAnswer: "FALSE",
+    correctAnswer: "D",
     explanation: "",
   },
 ] as const;

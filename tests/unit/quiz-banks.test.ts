@@ -1,6 +1,9 @@
 import { describe, it, expect } from "vitest";
 import { usp795 } from "@/lib/quizzes/usp-795";
 import { usp800 } from "@/lib/quizzes/usp-800";
+import { dia1 } from "@/lib/quizzes/dia-1";
+import { dia2 } from "@/lib/quizzes/dia-2";
+import { dia3 } from "@/lib/quizzes/dia-3";
 import type { Question } from "@/lib/quizzes/types";
 
 /**
@@ -51,3 +54,61 @@ describe.each(banks)("quiz bank %s", (_name, bank) => {
     }
   });
 });
+
+/**
+ * Professional (Día 1-3) banks. Same certificate-critical integrity guard,
+ * but with two differences from the student banks above: explanations are
+ * intentionally blank (the owner has not written them), and the banks mix
+ * multiple-choice with true/false (2 options). Counts are pinned to the
+ * 2026 "versión actualizada" — Día 2 is 10 (the Enalapril block moved to
+ * Día 3); Día 1 and Día 3 are 15.
+ */
+const proBanks: ReadonlyArray<
+  readonly [string, readonly Question[], number]
+> = [
+  ["dia-1", dia1, 15],
+  ["dia-2", dia2, 10],
+  ["dia-3", dia3, 15],
+];
+
+describe.each(proBanks)(
+  "professional quiz bank %s",
+  (_name, bank, expectedCount) => {
+    it(`has exactly ${expectedCount} questions`, () => {
+      expect(bank).toHaveLength(expectedCount);
+    });
+
+    it("has unique question ids", () => {
+      const ids = bank.map((q) => q.id);
+      expect(new Set(ids).size).toBe(ids.length);
+    });
+
+    it("every question's correctAnswer is one of its options", () => {
+      for (const q of bank) {
+        const letters = q.options.map((o) => o.letter);
+        expect(letters, q.id).toContain(q.correctAnswer);
+      }
+    });
+
+    it("options are well-formed for the question type", () => {
+      for (const q of bank) {
+        const letters = q.options.map((o) => o.letter);
+        expect(new Set(letters).size, q.id).toBe(letters.length);
+        if (q.type === "true-false") {
+          expect(letters, q.id).toEqual(["TRUE", "FALSE"]);
+        } else {
+          expect(q.options.length, q.id).toBeGreaterThanOrEqual(3);
+        }
+      }
+    });
+
+    it("every question has a non-empty prompt and option texts", () => {
+      for (const q of bank) {
+        expect(q.prompt.trim(), q.id).not.toBe("");
+        for (const o of q.options) {
+          expect(o.text.trim(), `${q.id}/${o.letter}`).not.toBe("");
+        }
+      }
+    });
+  },
+);
