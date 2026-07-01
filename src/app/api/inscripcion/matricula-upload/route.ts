@@ -4,6 +4,7 @@ import {
   VERIFICATION_ACCEPTED_TYPES,
   VERIFICATION_MAX_BYTES,
 } from "@/lib/portal/verification";
+import { rateLimit, clientIp } from "@/lib/ratelimit";
 
 /**
  * Public client-upload token for the matrícula photo collected on the
@@ -11,13 +12,26 @@ import {
  * so unlike the in-portal upload route this one is unauthenticated by
  * necessity.
  *
- * It is still constrained: only image/PDF content types and an 8 MB cap
- * (via `onBeforeGenerateToken`), with a random suffix. The enrollment POST
- * that consumes the resulting URL is Turnstile- and rate-limit-protected and
- * re-validates that the URL is one of our own Blob URLs, so a stray token
- * here can at most orphan a small file in the bucket.
+ * It is still constrained: only image/PDF content types and a 15 MB cap
+ * (`VERIFICATION_MAX_BYTES`, via `onBeforeGenerateToken`), with a random
+ * suffix, AND a per-IP rate limit on the token mint below — without that a
+ * script could loop this endpoint to spray unbounded 15 MB orphan blobs
+ * (a storage/bandwidth cost-DoS, since the abuse never needs to reach the
+ * rate-limited enrollment POST). The enrollment POST that consumes the URL
+ * is Turnstile- + rate-limit-protected and re-validates the Blob-URL host.
  */
 export async function POST(request: Request): Promise<NextResponse> {
+  const rl = await rateLimit("matricula-upload", clientIp(request), 12, 600);
+  if (!rl.success) {
+    return NextResponse.json(
+      { error: "rate_limited" },
+      {
+        status: 429,
+        headers: { "Retry-After": String(rl.retryAfterSeconds) },
+      },
+    );
+  }
+
   const body = (await request.json()) as HandleUploadBody;
   try {
     const json = await handleUpload({
