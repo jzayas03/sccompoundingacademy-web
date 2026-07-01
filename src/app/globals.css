@@ -31,6 +31,8 @@
     "Outfit", system-ui, sans-serif;
   --font-body: var(--font-heading);
   --font-accent: var(--font-accent-loaded), "Khmer MN", "Cormorant Garamond", "Garamond", serif;
+  --font-mono: var(--font-mono-loaded), "IBM Plex Mono", ui-monospace, "SF Mono", monospace;
+  --radius-card: 13px;
 
   --background-image-brand-gradient: linear-gradient(
     90deg,
@@ -93,5 +95,59 @@
     background: rgba(245, 246, 247, 0.85);
     -webkit-backdrop-filter: blur(24px);
     backdrop-filter: blur(24px);
+  }
+}
+
+/* Signature landing utilities — visual-refresh-phase1.
+   All colors use var(--color-*) tokens; the one documented fallback is
+   var(--color-white, #fff) in .editorial-card (CSS-only, not linted). */
+@layer components {
+  /* Monospace standards annotation — the brandsheet "spec-tag". */
+  .spec-tag {
+    font-family: var(--font-mono);
+    font-size: 0.78rem;
+    line-height: 1;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--color-teal);
+  }
+  /* A horizontal rail of spec-tags separated by middots. */
+  .spec-rail {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem 1rem;
+    align-items: center;
+  }
+  /* Brand slogan device: chartreuse uppercase + accent italic, on teal. */
+  .slogan-lockup {
+    font-family: var(--font-heading);
+    text-transform: uppercase;
+    color: var(--color-chartreuse);
+    letter-spacing: -0.01em;
+    line-height: 1.05;
+  }
+  .slogan-lockup em {
+    font-family: var(--font-accent);
+    font-style: italic;
+    text-transform: none;
+    font-weight: 600;
+  }
+  /* Solid editorial card — replaces glass for the landing. */
+  .editorial-card {
+    background: var(--color-white, #fff);
+    border: 1px solid var(--color-gray-300);
+    border-radius: var(--radius-card);
+    box-shadow: var(--shadow-soft);
+  }
+  /* Subtle tonal SCCA-shield texture (used ONCE, low contrast). The svg is a
+     teal-on-teal shield tile in public/patterns/shield-tile.svg. */
+  .shield-pattern {
+    background-color: var(--color-teal-deep);
+    background-image: url("/patterns/shield-tile.svg");
+    background-size: 220px;
+    background-repeat: repeat;
+  }
+  @media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after { animation-duration: 0.001ms !important; transition-duration: 0.001ms !important; }
   }
 }
