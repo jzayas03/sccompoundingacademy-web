@@ -30,7 +30,7 @@ describe("brand tokens", () => {
 
   it("exposes type stacks with Avant Garde first", () => {
     expect(brand.type.heading[0]).toBe("ITC Avant Garde Gothic Pro");
-    expect(brand.type.heading).toContain("Montserrat");
+    expect(brand.type.heading).toContain("Outfit");
     expect(brand.type.accent[0]).toBe("Khmer MN");
   });
 });
