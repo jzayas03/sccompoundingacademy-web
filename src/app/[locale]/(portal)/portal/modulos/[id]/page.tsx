@@ -1,5 +1,3 @@
-import { existsSync } from "node:fs";
-import { join } from "node:path";
 import type { Metadata } from "next";
 import { notFound, redirect } from "next/navigation";
 import { and, eq } from "drizzle-orm";
@@ -15,6 +13,7 @@ import { resolveViewableModule, getModuleCatalogue } from "@/lib/curriculum";
 import { isAdminEmail } from "@/lib/admin";
 import { resolveModuleAccess } from "@/lib/portal/module-access";
 import { resolveVerificationGate } from "@/lib/portal/verification-gate";
+import { moduloPdfExists } from "@/lib/portal/module-pdf";
 import { ModulePdfViewer } from "@/components/portal/ModulePdfViewer";
 
 export const metadata: Metadata = {
@@ -146,15 +145,16 @@ export default async function ModulePage({
     );
   }
 
-  // Module material lives at public/modulos/{basename}.pdf (Spanish) and,
-  // once the owner produces them, {basename}-en.pdf (English). The viewer
-  // shows a language toggle only when both files are present.
-  const modulosDir = join(process.cwd(), "public", "modulos");
-  const esPdfHref = existsSync(join(modulosDir, `${mod.pdfBasename}.pdf`))
-    ? `/modulos/${mod.pdfBasename}.pdf`
+  // Module material lives at private/modulos/{basename}.pdf (Spanish) and,
+  // once the owner produces them, {basename}-en.pdf (English) — OUTSIDE
+  // /public, served only through the authenticated + payment-gated
+  // /api/portal/modulo/[id]/pdf route. The viewer shows a language toggle
+  // only when both files are present.
+  const esPdfHref = moduloPdfExists(mod.pdfBasename, "es")
+    ? `/api/portal/modulo/${id}/pdf`
     : null;
-  const enPdfHref = existsSync(join(modulosDir, `${mod.pdfBasename}-en.pdf`))
-    ? `/modulos/${mod.pdfBasename}-en.pdf`
+  const enPdfHref = moduloPdfExists(mod.pdfBasename, "en")
+    ? `/api/portal/modulo/${id}/pdf?lang=en`
     : null;
 
   return (
