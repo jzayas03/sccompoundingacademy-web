@@ -19,8 +19,6 @@ import { Reveal } from "@/components/ui/Reveal";
  */
 const PHOTOS = [
   "/photos/cohort/01-grupo.jpg",
-  "/photos/cohort/02-laboratorio.jpg",
-  "/photos/cohort/03-instruccion.jpg",
   "/photos/cohort/04-duo.jpg",
   "/photos/cohort/05-estudiante.jpg",
   "/photos/cohort/06-estudiante.jpg",
@@ -31,6 +29,8 @@ const PHOTOS = [
   "/photos/cohort/11-estudiante.jpg",
   "/photos/cohort/12-estudiante.jpg",
   "/photos/cohort/13-estudiante.jpg",
+  "/photos/cohort/02-laboratorio.jpg",
+  "/photos/cohort/03-instruccion.jpg",
 ] as const;
 
 export function ConfianzaCarousel() {
