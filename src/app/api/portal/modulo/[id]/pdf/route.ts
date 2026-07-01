@@ -7,6 +7,8 @@ import { users } from "@/lib/db/schema";
 import { resolveViewableModule } from "@/lib/curriculum";
 import { resolveVerificationGate } from "@/lib/portal/verification-gate";
 import { readModuloPdf } from "@/lib/portal/module-pdf";
+import { getCohort } from "@/lib/cohorts";
+import { isCourseAccessActive } from "@/lib/portal/course-access";
 
 // fs read of the private course material — Node runtime, not edge.
 export const runtime = "nodejs";
@@ -40,6 +42,7 @@ export async function GET(
       tier: users.tier,
       paidAt: users.paidAt,
       studentVerification: users.studentVerification,
+      cohortId: users.cohortId,
     })
     .from(users)
     .where(eq(users.email, session.user.email))
@@ -67,6 +70,20 @@ export async function GET(
   // Paywall — the whole point of this route.
   if (!user.paidAt && !isOwner) {
     return new NextResponse("Pago requerido", { status: 402 });
+  }
+
+  // Access window — material access ends 30 days after the cohort closes
+  // (the certificate stays available). Graduates don't keep the paid PDFs
+  // forever.
+  const cohort = user.cohortId ? await getCohort(user.cohortId) : null;
+  if (
+    !isCourseAccessActive({
+      isOwner,
+      cohortEndDate: cohort?.endDate ?? null,
+      now: new Date(),
+    })
+  ) {
+    return new NextResponse("Acceso al material vencido", { status: 403 });
   }
 
   const bytes = await readModuloPdf(viewable.module.pdfBasename, lang);

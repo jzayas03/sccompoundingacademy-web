@@ -14,6 +14,8 @@ import { isAdminEmail } from "@/lib/admin";
 import { resolveModuleAccess } from "@/lib/portal/module-access";
 import { resolveVerificationGate } from "@/lib/portal/verification-gate";
 import { moduloPdfExists } from "@/lib/portal/module-pdf";
+import { getCohort } from "@/lib/cohorts";
+import { isCourseAccessActive } from "@/lib/portal/course-access";
 import { ModulePdfViewer } from "@/components/portal/ModulePdfViewer";
 
 export const metadata: Metadata = {
@@ -143,6 +145,21 @@ export default async function ModulePage({
         ? `/${locale}/portal/modulos/${id}/pre-test`
         : `/${locale}/portal`,
     );
+  }
+
+  // Access window — material access ends 30 days after the cohort closes.
+  // A graduate past the window is bounced to the dashboard, which shows the
+  // "access ended" notice (their certificate stays available). Owners never
+  // gate.
+  const cohort = user.cohortId ? await getCohort(user.cohortId) : null;
+  if (
+    !isCourseAccessActive({
+      isOwner,
+      cohortEndDate: cohort?.endDate ?? null,
+      now: new Date(),
+    })
+  ) {
+    redirect(`/${locale}/portal`);
   }
 
   // Module material lives at private/modulos/{basename}.pdf (Spanish) and,
