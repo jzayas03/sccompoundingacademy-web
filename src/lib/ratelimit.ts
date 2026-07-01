@@ -1,5 +1,6 @@
 import { Ratelimit } from "@upstash/ratelimit";
 import { Redis } from "@upstash/redis";
+import { warnUnconfigured } from "@/lib/abuse-shield-warn";
 
 /**
  * Shared, distributed rate limiter backed by Upstash Redis.
@@ -74,7 +75,14 @@ export async function rateLimit(
 ): Promise<Decision> {
   const redis = getRedis();
   if (!redis) {
-    // Fail OPEN: no Upstash configured → don't block legitimate users.
+    // Fail OPEN: no Upstash configured → don't block legitimate users. But
+    // in PRODUCTION an absent limiter means the abuse shield is silently
+    // OFF, which is a deploy misconfiguration — surface it loudly (once per
+    // instance, so it can't spam) instead of failing open in silence.
+    warnUnconfigured(
+      "ratelimit",
+      "Upstash env vars absent — all rate limits are OFF. Set UPSTASH_REDIS_REST_URL + UPSTASH_REDIS_REST_TOKEN.",
+    );
     return { success: true, retryAfterSeconds: 0 };
   }
 
