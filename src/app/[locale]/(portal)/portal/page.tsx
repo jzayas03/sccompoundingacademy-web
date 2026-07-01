@@ -16,6 +16,11 @@ import {
   type UserTier,
 } from "@/lib/curriculum";
 import { isAdminEmail } from "@/lib/admin";
+import { getCohort } from "@/lib/cohorts";
+import {
+  courseAccessExpiresAt,
+  isCourseAccessActive,
+} from "@/lib/portal/course-access";
 import { resolveVerificationGate } from "@/lib/portal/verification-gate";
 import { AcpeDisclosure } from "@/components/portal/AcpeDisclosure";
 import { InstructorHero } from "@/components/portal/InstructorHero";
@@ -93,6 +98,17 @@ export default async function PortalDashboardPage({
       : { eligible: false, passedModules: {} as Record<number, boolean> };
   const certEligible = isOwner || report.eligible;
 
+  // Course-material access ends 30 days after the cohort closes; the
+  // dashboard shows an "access ended" notice + locks the module strip past
+  // that (the certificate stays available). Owners never gate.
+  const cohort = user.cohortId ? await getCohort(user.cohortId) : null;
+  const accessExpiresAt = courseAccessExpiresAt(cohort?.endDate ?? null);
+  const accessActive = isCourseAccessActive({
+    isOwner,
+    cohortEndDate: cohort?.endDate ?? null,
+    now: new Date(),
+  });
+
   return (
     <Dashboard
       user={user}
@@ -102,6 +118,8 @@ export default async function PortalDashboardPage({
       isOwner={isOwner}
       effectiveTier={effectiveTier}
       preview={effectivePreview}
+      accessActive={accessActive}
+      accessExpiresAt={accessExpiresAt}
     />
   );
 }
@@ -114,6 +132,8 @@ function Dashboard({
   isOwner,
   effectiveTier,
   preview,
+  accessActive,
+  accessExpiresAt,
 }: {
   user: User;
   sessionEmail: string;
@@ -122,6 +142,8 @@ function Dashboard({
   isOwner: boolean;
   effectiveTier: UserTier;
   preview?: "profesional" | "student";
+  accessActive: boolean;
+  accessExpiresAt: Date | null;
 }) {
   const t = useTranslations("portal.dashboard");
   const locale = useLocale() === "en" ? "en" : "es";
@@ -129,6 +151,19 @@ function Dashboard({
   const displayName = user.name?.trim() || sessionEmail.split("@")[0] || t("fallbackName");
   // Owners get the full unlocked layout without a real Stripe payment.
   const isPaid = Boolean(user.paidAt) || isOwner;
+  // Course-material access ends 30 days after the cohort closes. Past that a
+  // paid student can still see the dashboard + get their certificate, but the
+  // module strip locks. `materialLocked` = paid but past the window.
+  const canOpenModules = isPaid && accessActive;
+  const materialLocked = isPaid && !accessActive;
+  const accessEndedLabel = accessExpiresAt
+    ? new Intl.DateTimeFormat(locale === "en" ? "en-US" : "es-PR", {
+        day: "numeric",
+        month: "long",
+        year: "numeric",
+        timeZone: "UTC",
+      }).format(accessExpiresAt)
+    : "";
   // Catalogue order matches curriculum ordinals (1..N), so the module at
   // index `idx` is completed iff its ordinal (idx+1) passed.
   const isCompleted = (idx: number) => passedModules[idx + 1] === true;
@@ -219,10 +254,32 @@ function Dashboard({
         </div>
       )}
 
-      {/* Module strip — locked decorative cards until `paidAt` is set, then
-          each card becomes a Link into /portal/modulos/[id]. Middleware
-          still does the redirect-to-login pass; the module page itself
-          re-checks paidAt as defense in depth. */}
+      {/* Access-ended notice — a paid student past the 30-day post-cohort
+          window keeps the dashboard + certificate, but the module material
+          locks. */}
+      {materialLocked && (
+        <GlassCard interactive={false} className="mt-10 p-6 sm:p-8">
+          <p className="font-heading text-teal-deep text-xs font-semibold tracking-[0.18em] uppercase">
+            {t("accessEndedTitle")}
+          </p>
+          <p className="text-gray-900 mt-3 text-base leading-relaxed">
+            {t("accessEndedBody", { date: accessEndedLabel })}
+          </p>
+          <div className="mt-6">
+            <Link
+              href="/portal/certificado"
+              className="border-teal-deep text-teal-deep hover:bg-teal-deep hover:text-off-white focus-visible:ring-chartreuse font-heading inline-flex h-11 items-center rounded-md border px-5 text-sm font-semibold transition-colors focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-offset-white focus-visible:outline-none"
+            >
+              {t("accessEndedCta")} →
+            </Link>
+          </div>
+        </GlassCard>
+      )}
+
+      {/* Module strip — locked decorative cards until `paidAt` is set (and
+          while the access window is open), then each card becomes a Link
+          into /portal/modulos/[id]. The module page + PDF route re-check the
+          paywall AND the access window as defense in depth. */}
       <section aria-labelledby="modules-heading" className="mt-12">
         <div className="flex items-end justify-between">
           <h2
@@ -232,7 +289,7 @@ function Dashboard({
             {t("modulesTitle")}
           </h2>
           <p className="text-gray-700 text-xs italic">
-            {isPaid ? t("modulesUnlockedHint") : t("modulesLockedHint")}
+            {canOpenModules ? t("modulesUnlockedHint") : t("modulesLockedHint")}
           </p>
         </div>
 
@@ -258,7 +315,7 @@ function Dashboard({
         >
           {modules.map((mod, idx) => (
             <li key={mod.id}>
-              {isPaid ? (
+              {canOpenModules ? (
                 <Link
                   href={{
                     pathname: "/portal/modulos/[id]",
