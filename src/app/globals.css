@@ -6,6 +6,9 @@
 @theme {
   --color-teal-deep: #195561;
   --color-teal: #228698;
+  /* Mid teal — footer surface + the "Nuestra academia"/badge eyebrows in
+     the v2 homepage. Sits between teal-deep and teal. */
+  --color-teal-mid: #2e7a87;
   --color-chartreuse: #e6ea82;
   --color-sand: #eae1d6;
   --color-off-white: #f3f3f4;

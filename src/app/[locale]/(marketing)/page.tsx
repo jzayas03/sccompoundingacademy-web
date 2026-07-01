@@ -2,16 +2,18 @@ import type { Metadata } from "next";
 import { setRequestLocale } from "next-intl/server";
 import { pageMetadata } from "@/lib/seo";
 import { homepageJsonLd } from "@/lib/structuredData";
-import { listOpenCohortsSafe } from "@/lib/cohorts";
+import { listOpenCohortsSafe, enrollmentCountByCohort, formatCohortLabel } from "@/lib/cohorts";
 import { Hero } from "@/components/marketing/Hero";
-import { Confianza } from "@/components/marketing/Confianza";
+import { ConfianzaCarousel } from "@/components/marketing/ConfianzaCarousel";
 import { CursosHome } from "@/components/marketing/CursosHome";
+import { CohortWaitlist } from "@/components/marketing/CohortWaitlist";
 import { Instructor } from "@/components/marketing/Instructor";
-import { Resenas } from "@/components/marketing/Resenas";
+import { VideoIntro } from "@/components/marketing/VideoIntro";
 import { FaqClean } from "@/components/marketing/FaqClean";
 import { HomeContact } from "@/components/marketing/HomeContact";
 import { PhotoBand } from "@/components/marketing/PhotoBand";
 import { CtaFinal } from "@/components/marketing/CtaFinal";
+import { FloatingCta } from "@/components/marketing/FloatingCta";
 
 export async function generateMetadata({
   params,
@@ -48,6 +50,24 @@ export default async function LandingPage({ params }: { params: Promise<{ locale
   // Production has the migrated DB; admin cohort edits revalidate this page.
   const openCohorts = await listOpenCohortsSafe();
   const next = openCohorts[0];
+
+  // Seat-scarcity meter for the waitlist section, from real data: total =
+  // the next cohort's capacity, remaining = capacity − paid enrollees. All
+  // best-effort — if the count query fails, the meter is simply hidden.
+  let seatTotal: number | null = null;
+  let seatRemaining: number | null = null;
+  let cohortLabel: string | null = null;
+  if (next) {
+    seatTotal = next.capacity;
+    cohortLabel = formatCohortLabel(next, locale as "es" | "en");
+    try {
+      const counts = await enrollmentCountByCohort();
+      seatRemaining = Math.max(0, next.capacity - (counts.get(next.id) ?? 0));
+    } catch {
+      seatRemaining = null;
+    }
+  }
+
   const jsonLd = homepageJsonLd(
     locale as "es" | "en",
     next
@@ -65,29 +85,32 @@ export default async function LandingPage({ params }: { params: Promise<{ locale
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
       />
-      {/* SCCA Design System handoff — Marketing Homepage. Section order
-          matches the handoff's ui_kit exactly:
-            Hero        — full-bleed working-lab slideshow + one CTA
-            Confianza   — three tonal trust cards (affiliated · supervised · USP)
-            CursosGrid  — two-track course cards (professional + student)
-            Instructor  — course director portrait + career timeline
-            Resenas     — testimonials band (real, consented reviews only)
-            FaqClean    — accordion FAQ (faq.items[])
-            HomeContact — on-page contact form + details + campus map
-            PhotoBand   — full-bleed photographic quote break
-            CtaFinal    — closing CTA over a pharmacy photograph
-          The handoff drops the prior Aprenderás / ParaQuiénEs /
-          Especialidades / Galería / Instagram sections (components remain
-          in the repo; simply no longer composed on '/'). */}
+      {/* SCCA marketing homepage — v2 handoff (design_handoff_scca_website).
+          Section order matches the prototype's App():
+            Hero            — working-lab slideshow + one CTA
+            ConfianzaCarousel — "El primer cohorte" photo carousel
+            CursosHome      — two-track course cards, with pricing
+            CohortWaitlist  — seat-scarcity meter + waitlist form
+            Instructor      — portrait + role facets
+            VideoIntro      — instructor Instagram reel + pull-quote
+            FaqClean        — assurance badges + accordion FAQ
+            HomeContact     — on-page contact form + details + campus map
+            PhotoBand       — full-bleed photographic quote break
+            CtaFinal        — closing CTA over a pharmacy photograph
+            FloatingCta     — fixed "Reserve a seat" pill → #cohort
+          v2 drops the real-reviews testimonials band (its credibility role
+          is carried by the FAQ assurance badges). */}
       <Hero />
-      <Confianza />
+      <ConfianzaCarousel />
       <CursosHome />
+      <CohortWaitlist total={seatTotal} remaining={seatRemaining} cohortLabel={cohortLabel} />
       <Instructor />
-      <Resenas locale={locale as "es" | "en"} />
+      <VideoIntro />
       <FaqClean />
       <HomeContact />
       <PhotoBand />
       <CtaFinal />
+      <FloatingCta />
     </>
   );
 }

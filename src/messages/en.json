@@ -306,6 +306,10 @@
     "ceBody": "{contactHours} contact hours · {ceus} CEUs · Knowledge-based, Level 1 · ACPE Provider {providerNumber} via {provider}",
     "includesLabel": "Includes",
     "credentialLabel": "Credential",
+    "perParticipant": "/ participant",
+    "perStudent": "/ student",
+    "priceNoteProfessional": "Materials, lunch & ACPE CE certificate included",
+    "priceNoteStudent": "Portal access, quizzes & certificate of completion",
     "includesItems": [
       "Supervised hands-on workshop",
       "Small-group format",
@@ -407,6 +411,27 @@
     "eyebrow": "Instructor",
     "heading": "Jorge L. Reyes Quiñones, RPh, FACA, FACVP",
     "title": "Chief Pharmacist and owner · Santa Cruz Pharma Care",
+    "name": "Jorge L. Reyes Quiñones",
+    "credLine": "RPh, FACA, FACVP",
+    "roleLine": "Chief Pharmacist & Owner — Santa Cruz Pharma Care, Bayamón",
+    "rows": [
+      {
+        "label": "Founder",
+        "text": "Founded Santa Cruz Pharma Care in Bayamón — a compounding pharmacy still in active daily practice."
+      },
+      {
+        "label": "Educator",
+        "text": "Established Puerto Rico's first academic Pharmacy Technician program at Ana G. Méndez University."
+      },
+      {
+        "label": "Specialist",
+        "text": "Advanced training at PCCA and the USP Convention; expert in hormonal therapy, veterinary, and pain-management formulations."
+      },
+      {
+        "label": "Honored",
+        "text": "Preceptor of the Year at Creighton University, with an eponymous \"Jorge L. Reyes Award\" at Nova Southeastern University."
+      }
+    ],
     "bio": "Jorge L. Reyes Quiñones, RPh, FACA, FACVP — Chief Pharmacist and owner of Santa Cruz Pharma Care. Licensed pharmacist in Puerto Rico since 1980 with more than 45 years of professional practice, specialized compounding training through PCCA and the USP Convention, and recognitions including Preceptor of the Year 2025 (Creighton University) and the eponymous \"Jorge L. Reyes Award\" at Nova Southeastern University. Founder of Puerto Rico's first academic Pharmacy Technician program (Ana G. Méndez, 1985–88).",
     "credentialsLabel": "Credentials and training",
     "credentials": [
@@ -561,7 +586,12 @@
   "faqClean": {
     "eyebrow": "Frequently asked questions",
     "heading": "What pharmacists ask before enrolling.",
-    "intro": "If your question isn't here, write to us. We respond within 48 business hours."
+    "intro": "If your question isn't here, write to us. We respond within 48 business hours.",
+    "badges": [
+      { "title": "1.8 CE credits", "sub": "ACPE-sponsored · Provider 0151" },
+      { "title": "100% refund", "sub": "With 30+ days notice" },
+      { "title": "LinkedIn-ready certificate", "sub": "PDF for your profile" }
+    ]
   },
   "ubicacion": {
     "eyebrow": "Location",
@@ -712,6 +742,59 @@
   },
   "photoBand": {
     "quote": "Training inside a working pharmacy. Not a classroom."
+  },
+  "confianzaCarousel": {
+    "eyebrow": "Our academy",
+    "heading": "The first cohort",
+    "subhead": "Our first generation was made up entirely of pharmacy students.",
+    "prev": "Previous",
+    "next": "Next",
+    "dotAria": "Photo {n}",
+    "captions": [
+      "The full first cohort, alongside instructor Jorge L. Reyes",
+      "Instruction in the Santa Cruz Pharma Care laboratory, Bayamón",
+      "Certificates of completion in hand",
+      "The academy's first generation of graduates",
+      "Recognition after 18 hours of supervised practice",
+      "Certificate presentation for the first cohort",
+      "Celebrating the first group of graduates"
+    ]
+  },
+  "videoIntro": {
+    "eyebrow": "In his own words",
+    "heading": "Hear about the course, straight from Jorge",
+    "quote": "A short walkthrough of what you'll cover, who it's for, and the hands-on practice you'll do inside the Bayamón laboratory.",
+    "watchCta": "Watch the full reel on Instagram",
+    "frameTitle": "Instructor introduction reel"
+  },
+  "cohort": {
+    "eyebrow": "Next cohort",
+    "headingFallback": "The next cohort",
+    "description": "Three consecutive days at our Bayamón laboratory. Small cohort by design — seats are limited so every participant gets individual instructor review.",
+    "seatsTotal": "{total} seats total",
+    "remaining": "{remaining} remaining",
+    "closesNote": "Enrollment closes when the cohort fills or two weeks before the start date.",
+    "form": {
+      "heading": "Reserve your seat",
+      "subnote": "No payment now — we'll reach out to confirm.",
+      "name": "Full name",
+      "email": "Email address",
+      "rolePlaceholder": "I am a…",
+      "roles": [
+        "Licensed pharmacist",
+        "Pharmacy technician",
+        "Pharmacy student",
+        "Other"
+      ],
+      "submit": "Join the waitlist",
+      "submitting": "Sending…",
+      "successTitle": "You're on the list.",
+      "successBody": "We'll email you as soon as a seat is confirmed.",
+      "error": "Something went wrong. Please try again."
+    }
+  },
+  "floatingCta": {
+    "label": "Reserve a seat"
   },
   "contactHome": {
     "eyebrow": "Contact",

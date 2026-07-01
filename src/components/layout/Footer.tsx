@@ -7,7 +7,7 @@ export function Footer() {
   const t = useTranslations("footer");
   const year = new Date().getFullYear();
   return (
-    <footer className="bg-teal-deep text-off-white relative isolate overflow-hidden">
+    <footer className="bg-teal-mid text-off-white relative isolate overflow-hidden">
       {/* Signature shield-pattern wash — SCCA Design System footer. Very
           low contrast, decorative, behind all content. */}
       <div
