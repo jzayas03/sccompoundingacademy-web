@@ -2,14 +2,19 @@ import type { Metadata } from "next";
 import { redirect } from "next/navigation";
 import { and, desc, eq, isNotNull } from "drizzle-orm";
 import { setRequestLocale } from "next-intl/server";
-import { Container } from "@/components/ui/Container";
 import { GlassCard } from "@/components/glass/GlassCard";
+import { SectionBanner } from "@/components/portal/SectionBanner";
 import { auth } from "@/lib/auth";
 import { db } from "@/lib/db";
 import { users, reviews, certificates } from "@/lib/db/schema";
 import { isAdminEmail } from "@/lib/admin";
 import { signedMatriculaUrl } from "@/lib/portal/blob-read";
-import { listCohorts, formatCohortLabel, type Cohort } from "@/lib/cohorts";
+import {
+  listCohorts,
+  enrollmentCountByCohort,
+  formatCohortLabel,
+  type Cohort,
+} from "@/lib/cohorts";
 import { professionLabel } from "@/lib/professions";
 import { Link } from "@/i18n/routing";
 import {
@@ -154,29 +159,43 @@ export default async function AdminPage({
     cohortList.map((c): [string, Cohort] => [c.id, c]),
   );
 
+  // Real stat-card figures — no placeholders. Seats come from the sum of
+  // cohort capacities minus paid enrollments; completion rate is issued
+  // certificates over paid enrollments. (Waitlist has no DB table — those
+  // signups go straight to the ops inbox — so there is no card for it.)
+  const enrolledByCohort = await enrollmentCountByCohort();
+  const totalSeats = cohortList.reduce((s, c) => s + c.capacity, 0);
+  const seatsTaken = [...enrolledByCohort.values()].reduce((s, n) => s + n, 0);
+  const seatsRemaining = Math.max(0, totalSeats - seatsTaken);
+  const completionRate =
+    roster.length > 0 ? Math.round((certRows.length / roster.length) * 100) : 0;
+
   return (
-    <Container className="max-w-6xl py-12 sm:py-16">
-      <div>
-        <p className="font-heading text-teal-deep/80 flex items-center text-xs font-semibold tracking-[0.18em] uppercase">
-          <span aria-hidden className="bg-chartreuse mr-3 inline-block h-4 w-1 shrink-0 rounded-sm" />
-          Administración
-        </p>
-        <h1 className="font-heading text-teal-deep mt-3 text-3xl font-bold tracking-[-0.015em] sm:text-4xl">
-          Panel del owner
-        </h1>
-        <p className="text-gray-700 mt-2 text-sm">
-          {roster.length} inscrito{roster.length === 1 ? "" : "s"} ·{" "}
-          {reviewRows.length} reseña{reviewRows.length === 1 ? "" : "s"} ·{" "}
-          {certRows.length} certificado{certRows.length === 1 ? "" : "s"}
-        </p>
-        <div className="mt-4">
-          <Link
-            href="/portal/admin/cohortes"
-            className="bg-teal-deep text-off-white hover:bg-teal focus-visible:ring-chartreuse font-heading inline-flex h-10 items-center rounded-md px-4 text-sm font-semibold transition-colors focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-offset-white focus-visible:outline-none"
-          >
-            Gestionar cohortes →
-          </Link>
-        </div>
+    <>
+      <SectionBanner
+        photo="/photos/photo-chemo-hood.jpg"
+        eyebrow="Cuenta maestra"
+        title="Panel de administración"
+      />
+
+      {/* Real stat cards */}
+      <div className="grid grid-cols-2 gap-4 lg:grid-cols-4">
+        <StatCard label="Inscritos" value={String(roster.length)} />
+        <StatCard
+          label="Cupos disponibles"
+          value={totalSeats > 0 ? `${seatsRemaining} / ${totalSeats}` : "—"}
+        />
+        <StatCard label="Certificados" value={String(certRows.length)} />
+        <StatCard label="Tasa de finalización" value={`${completionRate}%`} />
+      </div>
+
+      <div className="mt-6">
+        <Link
+          href="/portal/admin/cohortes"
+          className="bg-teal-deep text-off-white hover:bg-teal focus-visible:ring-chartreuse font-heading inline-flex h-10 items-center rounded-md px-4 text-sm font-semibold transition-colors focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-offset-white focus-visible:outline-none"
+        >
+          Gestionar cohortes →
+        </Link>
       </div>
 
       {/* Roster */}
@@ -414,7 +433,24 @@ export default async function AdminPage({
           </table>
         )}
       </GlassCard>
-    </Container>
+    </>
+  );
+}
+
+/** Glass metric tile for the admin overview row. */
+function StatCard({ label, value }: { label: string; value: string }) {
+  return (
+    <div
+      className="glass-card rounded-[18px] border border-white/40 p-5"
+      style={{ boxShadow: "var(--shadow-soft)" }}
+    >
+      <p className="font-heading text-teal-deep/55 text-[11px] font-semibold tracking-[0.14em] uppercase">
+        {label}
+      </p>
+      <p className="font-heading text-teal-deep mt-2 text-3xl font-bold tracking-[-0.01em]">
+        {value}
+      </p>
+    </div>
   );
 }
 
