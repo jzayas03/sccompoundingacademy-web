@@ -1,3 +1,4 @@
+import { randomBytes } from "node:crypto";
 import { and, desc, eq, inArray, sql } from "drizzle-orm";
 import { db } from "@/lib/db";
 import { certificates, quizAttempts } from "@/lib/db/schema";
@@ -138,7 +139,16 @@ export async function getOrCreateCertificate(
   const MAX_RETRIES = 3;
   for (let attempt = 0; attempt < MAX_RETRIES; attempt++) {
     const nextNum = await nextSequenceNumber(prefix, startSeq);
-    const certNo = `${prefix}${String(nextNum).padStart(3, "0")}`;
+    // Human-sequential number for the owner's records + an UNGUESSABLE
+    // random suffix so the public verification URL can't be enumerated by
+    // walking 001, 002, 003…: a valid lookup returns the graduate's name, so
+    // without the suffix someone could harvest the whole roster. 3 bytes =
+    // 16.7M combinations per sequence number, which with the /verificar rate
+    // limit makes brute-forcing a single certificate infeasible. `parseInt`
+    // in nextSequenceNumber stops at the "-", so the suffix doesn't perturb
+    // the sequence, and old suffix-less certs still verify by their number.
+    const suffix = randomBytes(3).toString("hex").toUpperCase();
+    const certNo = `${prefix}${String(nextNum).padStart(3, "0")}-${suffix}`;
     const issuedAt = new Date();
     try {
       await db.insert(certificates).values({ certNo, userId, issuedAt });
