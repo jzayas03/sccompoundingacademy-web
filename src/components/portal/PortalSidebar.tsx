@@ -83,7 +83,7 @@ export function PortalSidebar({ isAdmin }: { isAdmin: boolean }) {
       href={href as never}
       aria-current={active ? "page" : undefined}
       className={cn(
-        "font-heading flex items-center gap-2.5 rounded-[10px] px-3.5 py-2.5 text-[13.5px] transition-colors",
+        "font-heading flex shrink-0 items-center gap-2.5 whitespace-nowrap rounded-[10px] px-3.5 py-2.5 text-[13.5px] transition-colors",
         active
           ? "bg-chartreuse/30 text-teal-deep font-bold"
           : "text-teal-deep/60 hover:text-teal-deep hover:bg-teal-deep/5 font-medium",
@@ -99,13 +99,13 @@ export function PortalSidebar({ isAdmin }: { isAdmin: boolean }) {
   return (
     <aside
       aria-label={t("nav")}
-      className="glass-card sticky top-[88px] hidden w-[222px] shrink-0 flex-col gap-0.5 self-start rounded-[20px] border border-white/40 p-3.5 lg:flex"
+      className="glass-card flex w-full shrink-0 gap-1 self-start overflow-x-auto rounded-[20px] border border-white/40 p-2.5 lg:sticky lg:top-[88px] lg:w-[222px] lg:flex-col lg:gap-0.5 lg:overflow-visible lg:p-3.5"
       style={{ boxShadow: "var(--shadow-soft)" }}
     >
       {items.map(renderItem)}
       {isAdmin && (
         <>
-          <div className="bg-teal-deep/12 mx-1 my-2 h-px" />
+          <div className="bg-teal-deep/12 mx-1 my-auto h-6 w-px shrink-0 lg:my-2 lg:h-px lg:w-auto" />
           {renderItem(adminItem)}
         </>
       )}
