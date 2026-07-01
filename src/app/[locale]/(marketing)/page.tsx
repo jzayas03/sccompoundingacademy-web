@@ -15,6 +15,12 @@ import { PhotoBand } from "@/components/marketing/PhotoBand";
 import { CtaFinal } from "@/components/marketing/CtaFinal";
 import { FloatingCta } from "@/components/marketing/FloatingCta";
 
+// The seat meter reads live cohort capacity − paid enrollments. On-demand
+// revalidation (Stripe webhook on payment; admin cohort create/edit/delete)
+// keeps it fresh the instant anything changes; this ISR window is the
+// backstop for out-of-band edits (e.g. a manual DB change / refund).
+export const revalidate = 300;
+
 export async function generateMetadata({
   params,
 }: {

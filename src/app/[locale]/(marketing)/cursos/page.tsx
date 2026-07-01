@@ -2,6 +2,11 @@ import { setRequestLocale } from "next-intl/server";
 import { CursosGrid, type CohortBrief } from "@/components/marketing/CursosGrid";
 import { listOpenCohortsSafe } from "@/lib/cohorts";
 
+// Same freshness contract as the landing: on-demand revalidation (payment
+// webhook + admin cohort actions) keeps open-cohort references current; this
+// ISR window is the backstop. See (marketing)/page.tsx.
+export const revalidate = 300;
+
 /**
  * /cursos (es) and /courses (en) — full catalogue page.
  *

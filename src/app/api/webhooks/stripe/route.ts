@@ -1,4 +1,5 @@
 import { NextResponse } from "next/server";
+import { revalidatePath } from "next/cache";
 import type Stripe from "stripe";
 import { Resend } from "resend";
 import { stripe } from "@/lib/stripe";
@@ -385,6 +386,19 @@ export async function POST(req: Request) {
         submittedAt: matriculaSubmittedAt,
       });
     }
+  }
+
+  // A paid enrollment just consumed a seat in this cohort. Purge the
+  // statically-rendered marketing tree so the landing + /cursos "cupos
+  // disponibles" reflect it on the very next visit (the admin cohort
+  // actions already do the same on capacity/open-state changes). Best-
+  // effort: a cache-revalidation hiccup must never fail the webhook — the
+  // payment is already recorded and the ISR `revalidate` window is the
+  // backstop.
+  try {
+    revalidatePath("/", "layout");
+  } catch (err) {
+    console.error("[stripe-webhook] revalidatePath failed", err);
   }
 
   // 2) Airtable (graceful: returns null if not configured).
