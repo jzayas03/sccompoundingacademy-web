@@ -3,7 +3,6 @@ import { redirect } from "next/navigation";
 import { eq } from "drizzle-orm";
 import { useTranslations, useMessages, useLocale } from "next-intl";
 import { setRequestLocale } from "next-intl/server";
-import { Container } from "@/components/ui/Container";
 import { GlassCard } from "@/components/glass/GlassCard";
 import { Link } from "@/i18n/routing";
 import { auth } from "@/lib/auth";
@@ -20,6 +19,7 @@ import { isAdminEmail } from "@/lib/admin";
 import { resolveVerificationGate } from "@/lib/portal/verification-gate";
 import { AcpeDisclosure } from "@/components/portal/AcpeDisclosure";
 import { InstructorHero } from "@/components/portal/InstructorHero";
+import { SectionBanner } from "@/components/portal/SectionBanner";
 
 export const metadata: Metadata = {
   title: "Portal · SCCA",
@@ -85,15 +85,20 @@ export default async function PortalDashboardPage({
     isOwner && (preview === "student" || preview === "profesional")
       ? preview
       : undefined;
-  const certEligible =
-    isOwner ||
-    (user.paidAt ? (await isEligibleForCertificate(user.id, effectiveTier)).eligible : false);
+  // Full eligibility report (when paid or owner) drives both the
+  // cert-ready banner AND the per-module "completed" state + progress bar.
+  const report =
+    user.paidAt || isOwner
+      ? await isEligibleForCertificate(user.id, effectiveTier)
+      : { eligible: false, passedModules: {} as Record<number, boolean> };
+  const certEligible = isOwner || report.eligible;
 
   return (
     <Dashboard
       user={user}
       sessionEmail={session.user.email}
       certEligible={certEligible}
+      passedModules={report.passedModules}
       isOwner={isOwner}
       effectiveTier={effectiveTier}
       preview={effectivePreview}
@@ -105,6 +110,7 @@ function Dashboard({
   user,
   sessionEmail,
   certEligible,
+  passedModules,
   isOwner,
   effectiveTier,
   preview,
@@ -112,6 +118,7 @@ function Dashboard({
   user: User;
   sessionEmail: string;
   certEligible: boolean;
+  passedModules: Record<number, boolean>;
   isOwner: boolean;
   effectiveTier: UserTier;
   preview?: "profesional" | "student";
@@ -122,23 +129,20 @@ function Dashboard({
   const displayName = user.name?.trim() || sessionEmail.split("@")[0] || t("fallbackName");
   // Owners get the full unlocked layout without a real Stripe payment.
   const isPaid = Boolean(user.paidAt) || isOwner;
+  // Catalogue order matches curriculum ordinals (1..N), so the module at
+  // index `idx` is completed iff its ordinal (idx+1) passed.
+  const isCompleted = (idx: number) => passedModules[idx + 1] === true;
+  const completedCount = modules.filter((_, idx) => isCompleted(idx)).length;
 
   return (
-    <Container className="max-w-4xl py-12 sm:py-16 lg:py-20">
-      {/* Header row — `Salir` lives in the GlassNav above, so the
-          dashboard owns just the eyebrow + greeting block. */}
-      <div>
-        <p className="font-heading text-teal-deep/80 flex items-center text-xs font-semibold tracking-[0.18em] uppercase">
-          <span
-            aria-hidden
-            className="bg-chartreuse mr-3 inline-block h-4 w-1 shrink-0 rounded-sm"
-          />
-          {t("eyebrow")}
-        </p>
-        <h1 className="font-heading text-teal-deep mt-3 text-3xl font-bold tracking-[-0.015em] sm:text-4xl">
-          {t("greeting", { name: displayName })}
-        </h1>
-      </div>
+    <>
+      {/* Photo section banner — replaces the old eyebrow + greeting block;
+          the greeting is now the banner title (glassmorphism redesign). */}
+      <SectionBanner
+        photo="/photos/photo-cursos-bench.jpg"
+        eyebrow={t("eyebrow")}
+        title={t("greeting", { name: displayName })}
+      />
 
       {/* Instructor hero — compact glass card right under the greeting
           so paid students see the human anchor for the course before
@@ -232,6 +236,21 @@ function Dashboard({
           </p>
         </div>
 
+        {/* Progress meter — completed post-tests / total modules. */}
+        {isPaid && modules.length > 0 && (
+          <div className="mt-4 flex items-center gap-3">
+            <div className="bg-teal-deep/10 h-[3px] flex-1 rounded-full">
+              <div
+                className="bg-chartreuse h-full rounded-full"
+                style={{ width: `${(completedCount / modules.length) * 100}%` }}
+              />
+            </div>
+            <span className="text-teal-deep/55 text-[13px] font-medium tabular-nums whitespace-nowrap">
+              {completedCount} / {modules.length}
+            </span>
+          </div>
+        )}
+
         <ul
           className={`mt-6 grid grid-cols-1 gap-4 ${
             modules.length === 2 ? "sm:grid-cols-2" : "md:grid-cols-3"
@@ -249,24 +268,41 @@ function Dashboard({
                   aria-label={t("moduleOpenAria", { n: idx + 1 })}
                   className="focus-visible:ring-chartreuse block h-full rounded-lg focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-offset-off-white focus-visible:outline-none"
                 >
-                  <GlassCard
-                    interactive
-                    className="relative flex h-full flex-col p-5"
-                  >
-                    <p className="font-heading text-teal-deep/80 text-xs font-semibold tracking-wide uppercase">
-                      {mod.day}
-                    </p>
-                    <p className="font-heading text-gray-900 mt-2 text-base font-semibold leading-snug">
-                      {mod.title}
-                    </p>
-                    <p className="text-gray-700 mt-3 text-sm leading-relaxed">
-                      {mod.summary}
-                    </p>
-                    {/* Available badge — chartreuse accent. */}
-                    <span className="bg-chartreuse text-teal-deep absolute right-3 top-3 inline-flex items-center gap-1 rounded-full px-2 py-1 text-[10px] font-semibold tracking-wide uppercase">
-                      {t("openBadge")} →
-                    </span>
-                  </GlassCard>
+                  {isCompleted(idx) ? (
+                    /* Completed — solid teal-deep fill + chartreuse check. */
+                    <div className="bg-teal-deep shadow-lift relative flex h-full flex-col rounded-lg p-5">
+                      <div className="flex items-start justify-between gap-2">
+                        <p className="text-chartreuse font-heading text-xs font-semibold tracking-wide uppercase">
+                          {mod.day}
+                        </p>
+                        <svg aria-hidden viewBox="0 0 20 20" fill="none" className="text-chartreuse h-4 w-4 shrink-0">
+                          <path d="M4 10.5l3.5 3.5L16 6" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+                        </svg>
+                      </div>
+                      <p className="text-off-white font-heading mt-2 text-base font-semibold leading-snug">
+                        {mod.title}
+                      </p>
+                      <p className="text-off-white/70 mt-3 text-sm leading-relaxed">
+                        {mod.summary}
+                      </p>
+                    </div>
+                  ) : (
+                    <GlassCard interactive className="relative flex h-full flex-col p-5">
+                      <p className="font-heading text-teal-deep/80 text-xs font-semibold tracking-wide uppercase">
+                        {mod.day}
+                      </p>
+                      <p className="font-heading text-gray-900 mt-2 text-base font-semibold leading-snug">
+                        {mod.title}
+                      </p>
+                      <p className="text-gray-700 mt-3 text-sm leading-relaxed">
+                        {mod.summary}
+                      </p>
+                      {/* Available badge — chartreuse accent. */}
+                      <span className="bg-chartreuse text-teal-deep absolute right-3 top-3 inline-flex items-center gap-1 rounded-full px-2 py-1 text-[10px] font-semibold tracking-wide uppercase">
+                        {t("openBadge")} →
+                      </span>
+                    </GlassCard>
+                  )}
                 </Link>
               ) : (
                 <GlassCard
@@ -307,6 +343,6 @@ function Dashboard({
           ))}
         </ul>
       </section>
-    </Container>
+    </>
   );
 }

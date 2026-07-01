@@ -1,6 +1,8 @@
 import { PortalBackdrop } from "@/components/glass/PortalBackdrop";
 import { GlassNav } from "@/components/portal/GlassNav";
+import { PortalSidebar } from "@/components/portal/PortalSidebar";
 import { auth } from "@/lib/auth";
+import { isAdminEmail } from "@/lib/admin";
 
 /**
  * Portal namespace layout. Replaces the marketing Header + Footer (now
@@ -22,14 +24,26 @@ export default async function PortalLayout({
 }: {
   children: React.ReactNode;
 }) {
-  // Nav only renders for signed-in learners; the login + verify pages are
-  // unauthenticated and read as clean glass modals over the backdrop.
+  // Nav + sidebar only render for signed-in learners; the login + verify
+  // pages are unauthenticated and read as clean glass modals over the
+  // backdrop. The sidebar is `lg`-only; content stays full-width on mobile.
   const session = await auth();
+  const isSignedIn = Boolean(session?.user);
+  const isAdmin = isAdminEmail(session?.user?.email);
   return (
     <>
       <PortalBackdrop />
-      {session?.user ? <GlassNav /> : null}
-      <div className="relative">{children}</div>
+      {isSignedIn ? (
+        <>
+          <GlassNav />
+          <div className="relative mx-auto flex w-full max-w-7xl gap-6 px-4 py-8 sm:px-6 lg:gap-8 lg:px-8">
+            <PortalSidebar isAdmin={isAdmin} />
+            <main className="min-w-0 flex-1">{children}</main>
+          </div>
+        </>
+      ) : (
+        <div className="relative">{children}</div>
+      )}
     </>
   );
 }

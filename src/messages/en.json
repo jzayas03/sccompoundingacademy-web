@@ -930,7 +930,15 @@
       "homeAria": "SCCA portal home",
       "previewLabel": "View portal:",
       "previewProfesional": "Professional",
-      "previewEstudiante": "Student"
+      "previewEstudiante": "Student",
+      "adminBadge": "Admin"
+    },
+    "sidebar": {
+      "nav": "Portal navigation",
+      "modules": "Modules",
+      "reviews": "Reviews",
+      "certificate": "Certificate",
+      "admin": "Admin panel"
     },
     "reviews": {
       "eyebrow": "Your feedback",

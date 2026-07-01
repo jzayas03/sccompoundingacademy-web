@@ -936,7 +936,15 @@
       "homeAria": "Ir al inicio del portal SCCA",
       "previewLabel": "Ver portal:",
       "previewProfesional": "Profesional",
-      "previewEstudiante": "Estudiante"
+      "previewEstudiante": "Estudiante",
+      "adminBadge": "Admin"
+    },
+    "sidebar": {
+      "nav": "Navegación del portal",
+      "modules": "Módulos",
+      "reviews": "Reseñas",
+      "certificate": "Certificado",
+      "admin": "Panel de administración"
     },
     "reviews": {
       "eyebrow": "Tu opinión",

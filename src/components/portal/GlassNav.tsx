@@ -1,7 +1,7 @@
 import { useTranslations } from "next-intl";
 import { getLocale } from "next-intl/server";
 import { Link } from "@/i18n/routing";
-import { LogoFullInverse } from "@/components/brand";
+import { LogoFull } from "@/components/brand";
 import { auth } from "@/lib/auth";
 import { isAdminEmail } from "@/lib/admin";
 import { logoutAction } from "@/app/[locale]/(portal)/portal/actions";
@@ -34,7 +34,12 @@ export async function GlassNav() {
   const isAdmin = isAdminEmail(session?.user?.email);
   const locale = (await getLocale()) === "en" ? "en" : "es";
   return (
-    <GlassNavView isSignedIn={isSignedIn} isAdmin={isAdmin} locale={locale} />
+    <GlassNavView
+      isSignedIn={isSignedIn}
+      isAdmin={isAdmin}
+      locale={locale}
+      email={session?.user?.email ?? ""}
+    />
   );
 }
 
@@ -42,21 +47,20 @@ function GlassNavView({
   isSignedIn,
   isAdmin,
   locale,
+  email,
 }: {
   isSignedIn: boolean;
   isAdmin: boolean;
   locale: "es" | "en";
+  email: string;
 }) {
   const t = useTranslations("portal.nav");
+  const initials = email.slice(0, 2).toUpperCase();
   return (
-    <header className="glass-nav sticky top-0 z-50 w-full">
+    <header className="glass-nav sticky top-0 z-50 w-full border-b border-[rgba(25,85,97,0.10)]">
       <div className="mx-auto flex h-16 max-w-7xl items-center justify-between px-4 sm:px-6 lg:px-8">
-        <Link
-          href="/portal"
-          className="flex items-center"
-          aria-label={t("homeAria")}
-        >
-          <LogoFullInverse shieldClass="h-10 w-auto" />
+        <Link href="/portal" className="flex items-center" aria-label={t("homeAria")}>
+          <LogoFull shieldClass="h-8 w-auto" />
         </Link>
 
         <div className="flex items-center gap-3">
@@ -69,22 +73,27 @@ function GlassNavView({
             />
           ) : null}
           {isAdmin ? (
-            <Link
-              href="/portal/admin"
-              className="bg-teal-deep text-off-white hover:bg-teal focus-visible:ring-chartreuse font-heading inline-flex h-10 items-center rounded-md px-4 text-sm font-semibold transition-colors focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-offset-white focus-visible:outline-none"
-            >
-              Admin
-            </Link>
+            <span className="bg-chartreuse text-teal-deep font-heading rounded-full px-2.5 py-1 text-[11px] font-bold tracking-[0.06em] uppercase">
+              {t("adminBadge")}
+            </span>
           ) : null}
           {isSignedIn ? (
-            <form action={logoutAction}>
-              <button
-                type="submit"
-                className="border-teal-deep text-teal-deep hover:bg-teal-deep hover:text-off-white focus-visible:ring-chartreuse font-heading inline-flex h-10 items-center rounded-md border px-4 text-sm font-semibold transition-colors focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-offset-white focus-visible:outline-none"
-              >
-                {t("logout")}
-              </button>
-            </form>
+            <>
+              <div className="hidden items-center gap-2 sm:flex">
+                <span className="bg-teal-deep text-chartreuse font-heading flex h-[30px] w-[30px] items-center justify-center rounded-full text-[11.5px] font-bold">
+                  {initials}
+                </span>
+                <span className="text-gray-700 max-w-[150px] truncate text-[13px]">{email}</span>
+              </div>
+              <form action={logoutAction}>
+                <button
+                  type="submit"
+                  className="text-teal-deep hover:text-teal focus-visible:ring-chartreuse font-heading rounded-sm border-b border-[rgba(25,85,97,0.3)] pb-px text-[13px] font-semibold transition-colors focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-offset-white focus-visible:outline-none"
+                >
+                  {t("logout")}
+                </button>
+              </form>
+            </>
           ) : (
             <Link
               href="/"
