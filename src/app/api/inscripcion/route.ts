@@ -4,7 +4,7 @@ import { NextResponse } from "next/server";
 import { z } from "zod";
 import { stripe } from "@/lib/stripe";
 import { getCourseById, getPricingByTier } from "@/lib/courses";
-import { getCohort } from "@/lib/cohorts";
+import { getCohort, committedSeatsByCohort } from "@/lib/cohorts";
 import { getSiteUrl } from "@/lib/siteUrl";
 import { rateLimit, clientIp } from "@/lib/ratelimit";
 import { verifyTurnstile } from "@/lib/turnstile";
@@ -302,6 +302,29 @@ export async function POST(req: Request) {
   // pathnames map): `/inscripcion/...` for ES, `/enroll/...` for EN.
   // Using the matching segment avoids the next-intl middleware rewrite
   // that an EN user would otherwise see post-checkout.
+  // Capacity guard — the profesional tier pays immediately with no human
+  // approval gate, so this is the only thing between a full cohort and an
+  // oversell. "Committed" = paid + admin-approved (same count the public
+  // seat meter shows). If the cohort is already at capacity, refuse before
+  // opening a Stripe session. There is still a tiny time-of-check/pay race
+  // (two simultaneous payments) — acceptable at this scale — but this
+  // closes the ordinary case. Best-effort: a count-query failure falls
+  // through to Stripe rather than hard-blocking a legitimate enrollment.
+  try {
+    const committed = (await committedSeatsByCohort()).get(cohort.id) ?? 0;
+    if (committed >= cohort.capacity) {
+      return NextResponse.json(
+        {
+          error:
+            "Este cohorte ya está lleno. Escríbenos y te avisamos del próximo cupo disponible.",
+        },
+        { status: 409 },
+      );
+    }
+  } catch (err) {
+    console.error("[inscripcion] capacity check failed, allowing", err);
+  }
+
   const origin = getSiteUrl();
   const isEn = data.locale === "en";
   const successPath = isEn ? "enroll/success" : "inscripcion/exito";

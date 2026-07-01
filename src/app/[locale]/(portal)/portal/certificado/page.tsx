@@ -6,6 +6,7 @@ import { setRequestLocale } from "next-intl/server";
 import { GlassCard } from "@/components/glass/GlassCard";
 import { SectionBanner } from "@/components/portal/SectionBanner";
 import { CertShareRow } from "@/components/portal/CertShareRow";
+import { CertPreview } from "@/components/portal/CertPreview";
 import { Link } from "@/i18n/routing";
 import { auth } from "@/lib/auth";
 import { db } from "@/lib/db";
@@ -146,51 +147,61 @@ function CertPanel({
       />
 
       <div className="grid items-start gap-6 lg:grid-cols-[1.1fr_0.9fr]">
-        {/* Blurred-preview certificate mock — sharpens once eligible. */}
-        <div className="shadow-lift relative aspect-[1.42/1] overflow-hidden rounded-[20px] border border-white/40">
-          <div
-            className="absolute inset-0 flex flex-col items-center justify-center p-8 text-center transition-all duration-300"
-            style={{
-              background: "linear-gradient(160deg, var(--color-teal-deep), #123f48)",
-              filter: eligible ? "none" : "blur(6px) grayscale(0.3)",
-              opacity: eligible ? 1 : 0.55,
-            }}
-          >
-            <p className="text-chartreuse text-[11px] font-bold tracking-[0.22em] uppercase">
-              Certificate of Completion
-            </p>
-            <h2 className="font-heading text-off-white mt-3.5 mb-1.5 text-[22px] font-extrabold">
-              {mock.title}
-            </h2>
-            <p className="text-[12.5px] text-[rgba(243,243,244,0.75)]">
-              Santa Cruz Compounding Academy · {mock.credit}
-            </p>
-            <div className="mt-5 h-px w-16 bg-[rgba(230,234,130,0.6)]" />
-            <p className="mt-2.5 text-[12px] text-[rgba(243,243,244,0.6)]">
-              {mock.sub}
-            </p>
-            <p className="mt-1 text-[12px] text-[rgba(243,243,244,0.6)]">
-              Jorge L. Reyes Quiñones, RPh — Program Director
-            </p>
-          </div>
-          {!eligible && (
-            <div className="absolute inset-0 flex flex-col items-center justify-center gap-2.5 bg-[rgba(18,60,69,0.35)]">
-              <svg
-                aria-hidden
-                viewBox="0 0 24 24"
-                fill="none"
-                className="text-off-white h-7 w-7"
+        {/* Once eligible, render the REAL certificate PDF (page 1) so the
+            card is a live preview of the download; until then, a blurred
+            tier-accurate mock behind a lock. */}
+        <div className="shadow-lift bg-teal-deep relative aspect-[1.42/1] overflow-hidden rounded-[20px] border border-white/40">
+          {eligible ? (
+            <CertPreview
+              pdfUrl={
+                preview ? `/api/certificate?preview=${preview}` : "/api/certificate"
+              }
+            />
+          ) : (
+            <>
+              <div
+                className="absolute inset-0 flex flex-col items-center justify-center p-8 text-center"
+                style={{
+                  background: "linear-gradient(160deg, var(--color-teal-deep), #123f48)",
+                  filter: "blur(6px) grayscale(0.3)",
+                  opacity: 0.55,
+                }}
               >
-                <rect x="4.5" y="10.5" width="15" height="10" rx="2" stroke="currentColor" strokeWidth="1.7" />
-                <path d="M8 10.5V7.5a4 4 0 018 0v3" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" />
-              </svg>
-              <p
-                className="text-off-white text-[13px] font-semibold"
-                style={{ textShadow: "0 2px 10px rgba(0,0,0,0.4)" }}
-              >
-                {t("mockLockOverlay", { count: modules.length })}
-              </p>
-            </div>
+                <p className="text-chartreuse text-[11px] font-bold tracking-[0.22em] uppercase">
+                  Certificate of Completion
+                </p>
+                <h2 className="font-heading text-off-white mt-3.5 mb-1.5 text-[22px] font-extrabold">
+                  {mock.title}
+                </h2>
+                <p className="text-[12.5px] text-[rgba(243,243,244,0.75)]">
+                  Santa Cruz Compounding Academy · {mock.credit}
+                </p>
+                <div className="mt-5 h-px w-16 bg-[rgba(230,234,130,0.6)]" />
+                <p className="mt-2.5 text-[12px] text-[rgba(243,243,244,0.6)]">
+                  {mock.sub}
+                </p>
+                <p className="mt-1 text-[12px] text-[rgba(243,243,244,0.6)]">
+                  Jorge L. Reyes Quiñones, RPh — Program Director
+                </p>
+              </div>
+              <div className="absolute inset-0 flex flex-col items-center justify-center gap-2.5 bg-[rgba(18,60,69,0.35)]">
+                <svg
+                  aria-hidden
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  className="text-off-white h-7 w-7"
+                >
+                  <rect x="4.5" y="10.5" width="15" height="10" rx="2" stroke="currentColor" strokeWidth="1.7" />
+                  <path d="M8 10.5V7.5a4 4 0 018 0v3" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" />
+                </svg>
+                <p
+                  className="text-off-white text-[13px] font-semibold"
+                  style={{ textShadow: "0 2px 10px rgba(0,0,0,0.4)" }}
+                >
+                  {t("mockLockOverlay", { count: modules.length })}
+                </p>
+              </div>
+            </>
           )}
         </div>
 

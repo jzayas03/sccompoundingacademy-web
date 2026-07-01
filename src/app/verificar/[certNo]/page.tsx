@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { headers } from "next/headers";
 import { eq } from "drizzle-orm";
 import { useTranslations } from "next-intl";
 import { setRequestLocale } from "next-intl/server";
@@ -7,6 +8,7 @@ import { GlassCard } from "@/components/glass/GlassCard";
 import { MeshBackground } from "@/components/glass/MeshBackground";
 import { db } from "@/lib/db";
 import { certificates, users } from "@/lib/db/schema";
+import { rateLimit } from "@/lib/ratelimit";
 
 export const metadata: Metadata = {
   title: "Verificación de certificado · SCCA",
@@ -40,6 +42,34 @@ export default async function VerificarPage({
 }) {
   const { certNo } = await params;
   setRequestLocale("es");
+
+  // Cert numbers are sequential (SCCA-{YYYY}-{NNN}), and a valid lookup
+  // returns the graduate's NAME + issue date — so an unthrottled endpoint
+  // lets a script walk 001, 002, 003… and harvest the whole roster. Cap
+  // lookups per IP so bulk enumeration is impractical. Best-effort (no-op
+  // when Upstash isn't configured); a legitimate single verification is far
+  // under the limit.
+  const ip =
+    ((await headers()).get("x-forwarded-for") ?? "").split(",")[0]?.trim() ||
+    "unknown";
+  const rl = await rateLimit("verificar", ip, 20, 60);
+  if (!rl.success) {
+    return (
+      <>
+        <MeshBackground />
+        <Container className="max-w-2xl py-20 text-center sm:py-24">
+          <GlassCard className="p-8 sm:p-10">
+            <h1 className="font-heading text-teal-deep text-2xl font-bold">
+              Demasiadas solicitudes
+            </h1>
+            <p className="text-gray-900 mt-3 leading-relaxed">
+              Espera un momento e intenta verificar el certificado de nuevo.
+            </p>
+          </GlassCard>
+        </Container>
+      </>
+    );
+  }
 
   const [row] = await db
     .select({
