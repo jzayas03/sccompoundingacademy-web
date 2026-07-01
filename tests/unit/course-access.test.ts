@@ -2,6 +2,7 @@ import { describe, it, expect } from "vitest";
 import {
   COURSE_ACCESS_GRACE_DAYS,
   courseAccessExpiresAt,
+  effectiveAccessExpiresAt,
   isCourseAccessActive,
 } from "@/lib/portal/course-access";
 
@@ -49,5 +50,42 @@ describe("course-access window", () => {
     expect(
       isCourseAccessActive({ isOwner: false, cohortEndDate: null, now: afterWindow }),
     ).toBe(true);
+  });
+
+  it("admin override keeps access open past the window (until it too lapses)", () => {
+    const extendedUntil = new Date("2026-08-01T00:00:00Z");
+    // afterWindow (Jul 2) is past the 30-day window but before the override.
+    expect(
+      isCourseAccessActive({
+        isOwner: false,
+        cohortEndDate: end,
+        accessExtendedUntil: extendedUntil,
+        now: afterWindow,
+      }),
+    ).toBe(true);
+    // Past the override too → blocked again.
+    expect(
+      isCourseAccessActive({
+        isOwner: false,
+        cohortEndDate: end,
+        accessExtendedUntil: extendedUntil,
+        now: new Date("2026-08-02T00:00:00Z"),
+      }),
+    ).toBe(false);
+  });
+
+  it("effective expiry is the later of the window and the override", () => {
+    // Override after the window → override wins.
+    expect(
+      effectiveAccessExpiresAt(end, new Date("2026-08-01T00:00:00Z"))?.toISOString(),
+    ).toBe("2026-08-01T00:00:00.000Z");
+    // Override before the window → window wins.
+    expect(
+      effectiveAccessExpiresAt(end, new Date("2026-06-10T00:00:00Z"))?.toISOString(),
+    ).toBe("2026-07-01T00:00:00.000Z");
+    // No override → the plain window.
+    expect(effectiveAccessExpiresAt(end, null)?.toISOString()).toBe(
+      "2026-07-01T00:00:00.000Z",
+    );
   });
 });

@@ -43,6 +43,7 @@ export async function GET(
       paidAt: users.paidAt,
       studentVerification: users.studentVerification,
       cohortId: users.cohortId,
+      accessExtendedUntil: users.accessExtendedUntil,
     })
     .from(users)
     .where(eq(users.email, session.user.email))
@@ -80,6 +81,7 @@ export async function GET(
     !isCourseAccessActive({
       isOwner,
       cohortEndDate: cohort?.endDate ?? null,
+      accessExtendedUntil: user.accessExtendedUntil,
       now: new Date(),
     })
   ) {

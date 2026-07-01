@@ -27,13 +27,43 @@ export function courseAccessExpiresAt(
   return expires;
 }
 
+/**
+ * Effective access-end instant: the later of the default window
+ * (cohort end + grace) and any admin override (`accessExtendedUntil`).
+ * Null when neither dates the access (never expires). Used for the
+ * dashboard's "access ended on {date}" copy.
+ */
+export function effectiveAccessExpiresAt(
+  cohortEndDate: Date | null | undefined,
+  accessExtendedUntil?: Date | null,
+): Date | null {
+  const windowEnd = courseAccessExpiresAt(cohortEndDate);
+  if (
+    accessExtendedUntil &&
+    (!windowEnd || accessExtendedUntil.getTime() > windowEnd.getTime())
+  ) {
+    return accessExtendedUntil;
+  }
+  return windowEnd;
+}
+
 export function isCourseAccessActive(params: {
   isOwner: boolean;
   cohortEndDate: Date | null | undefined;
+  /** Admin per-student override; keeps access open while in the future. */
+  accessExtendedUntil?: Date | null;
   now: Date;
 }): boolean {
   if (params.isOwner) return true;
+  const nowT = params.now.getTime();
+  // Admin override wins whenever it's still in the future.
+  if (
+    params.accessExtendedUntil &&
+    nowT <= params.accessExtendedUntil.getTime()
+  ) {
+    return true;
+  }
   const expires = courseAccessExpiresAt(params.cohortEndDate);
   if (!expires) return true; // undatable → don't lock out
-  return params.now.getTime() <= expires.getTime();
+  return nowT <= expires.getTime();
 }

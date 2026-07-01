@@ -68,6 +68,10 @@ export const users = pgTable("user", {
   paidAt: timestamp("paid_at", { mode: "date" }),
   stripeCustomerId: text("stripe_customer_id"),
   cohortId: text("cohort_id"),
+  /** Admin override for the course-material access window: when set and in
+   * the future, keeps module/PDF access open past the default cohort-end +
+   * grace expiry (see lib/portal/course-access.ts). Null = no override. */
+  accessExtendedUntil: timestamp("access_extended_until", { mode: "date" }),
   // Captured at inscription, persisted from the Stripe webhook. Feed the
   // ACPE "Registro de Educación Continua" export. All nullable: rows
   // created before these columns existed, and student-tier enrollees

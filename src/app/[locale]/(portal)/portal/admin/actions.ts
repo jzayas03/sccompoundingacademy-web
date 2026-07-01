@@ -70,6 +70,29 @@ export async function rejectStudentVerification(userId: string): Promise<void> {
   await decideVerification(userId, "rejected");
 }
 
+/**
+ * Admin: extend (or clear) a student's course-material access override.
+ * `until` is a YYYY-MM-DD date — access stays open through the end of that
+ * day (UTC); an empty value clears the override, reverting to the default
+ * cohort-end + 30-day window. See lib/portal/course-access.ts.
+ */
+export async function extendStudentAccess(formData: FormData): Promise<void> {
+  await requireAdmin();
+  const userId = String(formData.get("userId") ?? "");
+  const until = String(formData.get("until") ?? "").trim();
+  if (!userId) throw new Error("Falta el usuario.");
+  let value: Date | null = null;
+  if (until) {
+    value = new Date(`${until}T23:59:59.000Z`);
+    if (Number.isNaN(value.getTime())) throw new Error("Fecha inválida.");
+  }
+  await db
+    .update(users)
+    .set({ accessExtendedUntil: value })
+    .where(eq(users.id, userId));
+  revalidatePath("/es/portal/admin");
+}
+
 const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
 export type EditEmailState = { ok: boolean; message: string };
