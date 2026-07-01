@@ -1,4 +1,4 @@
-import { and, asc, count, eq, isNotNull } from "drizzle-orm";
+import { and, asc, count, eq, isNotNull, or } from "drizzle-orm";
 import { db } from "@/lib/db";
 import { cohorts, users, type Cohort } from "@/lib/db/schema";
 
@@ -92,6 +92,33 @@ export async function enrollmentCountByCohort(): Promise<Map<string, number>> {
     .select({ cohortId: users.cohortId, n: count() })
     .from(users)
     .where(isNotNull(users.paidAt))
+    .groupBy(users.cohortId);
+  const map = new Map<string, number>();
+  for (const r of rows) {
+    if (r.cohortId) map.set(r.cohortId, r.n);
+  }
+  return map;
+}
+
+/**
+ * Map of cohort id → COMMITTED seat count, for the public seat meter and
+ * the admin availability stat.
+ *
+ * "Committed" = a seat the academy has effectively promised: a PAID
+ * enrollee OR a student the admin has APPROVED (they hold a live pay
+ * link). Students still in review (`pending`) and `rejected` ones do NOT
+ * count — an unvetted or declined submission must never make a cohort read
+ * as full. This is what prevents overselling: once the admin approves N
+ * students for an N-seat cohort, availability hits zero even before they
+ * pay. (`enrollmentCountByCohort` above stays paid-only for the roster.)
+ */
+export async function committedSeatsByCohort(): Promise<Map<string, number>> {
+  const rows = await db
+    .select({ cohortId: users.cohortId, n: count() })
+    .from(users)
+    .where(
+      or(isNotNull(users.paidAt), eq(users.studentVerification, "approved")),
+    )
     .groupBy(users.cohortId);
   const map = new Map<string, number>();
   for (const r of rows) {
