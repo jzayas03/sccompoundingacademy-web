@@ -1,6 +1,7 @@
 import { desc, eq, isNotNull, and, isNull } from "drizzle-orm";
 import { useTranslations } from "next-intl";
 import { Container } from "@/components/ui/Container";
+import { Reveal } from "@/components/ui/Reveal";
 import { db } from "@/lib/db";
 import { reviews, users, cohorts } from "@/lib/db/schema";
 import { formatReviewerName } from "@/lib/reviews/format";
@@ -19,7 +20,7 @@ type Card = {
   cohortLabel: string;
 };
 
-async function loadApprovedReviews(locale: Locale, limit = 5): Promise<Card[]> {
+async function loadApprovedReviews(locale: Locale, limit = 4): Promise<Card[]> {
   try {
     const rows = await db
       .select({
@@ -39,7 +40,7 @@ async function loadApprovedReviews(locale: Locale, limit = 5): Promise<Card[]> {
           isNotNull(reviews.publishedAt),
           isNull(reviews.archivedAt),
           // Exclude rows with NULL best_comment at the SQL layer so the
-          // `limit(5)` isn't silently eaten by empty entries. The JS
+          // `limit` isn't silently eaten by empty entries. The JS
           // `.trim()` filter below still catches whitespace-only edge.
           isNotNull(reviews.bestComment),
         ),
@@ -72,11 +73,21 @@ async function loadApprovedReviews(locale: Locale, limit = 5): Promise<Card[]> {
   }
 }
 
+/**
+ * Resenas — testimonials band, teal-deep surface.
+ *
+ * Recreated from the SCCA Design System handoff (Testimonials section):
+ * translucent quote cards on the brand-teal field, each with the review
+ * text, a reviewer name in chartreuse, and a mono role line.
+ *
+ * IMPORTANT: cards come exclusively from *real, consented, published*
+ * reviews in the DB — the handoff's placeholder named quotes are NOT
+ * used (publishing invented endorsements would be deceptive). The
+ * section renders nothing until at least three approved reviews exist,
+ * matching the owner's "never show an anaemic section" constraint.
+ */
 export async function Resenas({ locale }: { locale: Locale }) {
   const cards = await loadApprovedReviews(locale);
-  // ACPE-credibility constraint + owner preference: never render an
-  // anaemic section. Require ≥3 approved reviews before showing
-  // anything publicly.
   if (cards.length < 3) return null;
   return <ResenasView cards={cards} />;
 }
@@ -86,33 +97,22 @@ function ResenasView({ cards }: { cards: Card[] }) {
   return (
     <section
       aria-labelledby="resenas-heading"
-      className="bg-off-white border-gray-300 border-t"
+      className="bg-teal-deep border-t border-white/10"
     >
-      <Container className="max-w-5xl py-20 sm:py-24 lg:py-28">
-        <p className="font-heading text-teal-deep/80 flex items-center text-xs font-semibold tracking-[0.18em] uppercase sm:text-sm">
-          <span
-            aria-hidden
-            className="bg-chartreuse mr-3 inline-block h-4 w-1 shrink-0 rounded-sm"
-          />
-          {t("eyebrow")}
-        </p>
-        <h2
-          id="resenas-heading"
-          className="font-heading text-teal-deep mt-3 text-3xl font-bold tracking-[-0.015em] sm:text-4xl"
-        >
+      <Container className="py-16 sm:py-20 lg:py-24">
+        <h2 id="resenas-heading" className="sr-only">
           {t("heading")}
         </h2>
-        <p className="text-gray-700 mt-3 max-w-2xl text-base leading-relaxed">
-          {t("subheading")}
-        </p>
-
-        <ul className="mt-10 grid grid-cols-1 gap-5 md:grid-cols-2 lg:grid-cols-3">
+        <Reveal
+          as="ul"
+          className="grid grid-cols-1 gap-5 md:grid-cols-2 md:items-stretch"
+        >
           {cards.map((card) => (
             <li key={card.id}>
               <ResenaCard card={card} />
             </li>
           ))}
-        </ul>
+        </Reveal>
       </Container>
     </section>
   );
@@ -127,41 +127,20 @@ function ResenaCard({ card }: { card: Card }) {
       : card.tier === "student"
         ? t("tierStudent")
         : "";
-  const clampedRating = Math.max(0, Math.min(5, Math.round(card.rating)));
+  const role = [tierLabel, card.cohortLabel && `${t("cohortPrefix")} ${card.cohortLabel}`]
+    .filter(Boolean)
+    .join(" · ");
   return (
-    <article className="border-gray-300 rounded-xl border bg-white p-5 shadow-sm sm:p-6">
-      <Stars
-        clampedRating={clampedRating}
-        ariaLabel={t("starsAriaLabel", { rating: clampedRating })}
-      />
-      <p className="text-gray-900 mt-4 text-sm leading-relaxed">&ldquo;{card.bestComment}&rdquo;</p>
-      <p className="font-heading text-teal-deep mt-5 text-sm font-semibold">{card.displayName}</p>
-      <p className="text-gray-700 mt-1 text-xs">
-        {[tierLabel, card.cohortLabel && `${t("cohortPrefix")} ${card.cohortLabel}`]
-          .filter(Boolean)
-          .join(" · ")}
-      </p>
+    <article className="flex h-full flex-col rounded-[13px] border border-white/10 bg-white/[0.07] p-8 sm:p-9">
+      <p className="text-off-white/90 text-base leading-relaxed">&ldquo;{card.bestComment}&rdquo;</p>
+      <div className="mt-6 border-t border-white/10 pt-4">
+        <p className="font-heading text-chartreuse text-sm font-semibold">{card.displayName}</p>
+        {role && (
+          <p className="font-mono text-off-white/50 mt-1 text-[0.62rem] tracking-[0.08em] uppercase">
+            {role}
+          </p>
+        )}
+      </div>
     </article>
-  );
-}
-
-/**
- * Presentational only. The caller owns the aria-label string so it can
- * be locale-aware (next-intl `t()` is in scope on `ResenaCard` but not
- * here). `clampedRating` is expected to already be in [0,5].
- */
-function Stars({ clampedRating, ariaLabel }: { clampedRating: number; ariaLabel: string }) {
-  return (
-    <div aria-label={ariaLabel} className="flex gap-0.5">
-      {Array.from({ length: 5 }).map((_, i) => (
-        <span
-          key={i}
-          aria-hidden
-          className={i < clampedRating ? "text-chartreuse" : "text-gray-300"}
-        >
-          ★
-        </span>
-      ))}
-    </div>
   );
 }

@@ -27,8 +27,8 @@
   --shadow-lift: 0 8px 24px rgba(25, 85, 97, 0.12);
 
   --font-heading:
-    var(--font-heading-loaded), "ITC Avant Garde Gothic Pro", "Century Gothic", "Futura",
-    "Outfit", system-ui, sans-serif;
+    var(--font-heading-loaded), "Montserrat", "Century Gothic", "Futura",
+    system-ui, sans-serif;
   --font-body: var(--font-heading);
   --font-accent: var(--font-accent-loaded), "Khmer MN", "Cormorant Garamond", "Garamond", serif;
   --font-mono: var(--font-mono-loaded), "IBM Plex Mono", ui-monospace, "SF Mono", monospace;
@@ -149,5 +149,67 @@
   }
   @media (prefers-reduced-motion: reduce) {
     *, *::before, *::after { animation-duration: 0.001ms !important; transition-duration: 0.001ms !important; }
+  }
+}
+
+/* Handoff homepage utilities — SCCA Design System (Marketing Homepage).
+   Eyebrow label, scroll-reveal, hero slideshow crossfade, and the
+   sticky-header shrink-on-scroll state. */
+@layer components {
+  /* Eyebrow: teal uppercase micro-label with a chartreuse tick. */
+  .eyebrow {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-family: var(--font-heading);
+    font-size: 0.72rem;
+    font-weight: 600;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--color-teal);
+  }
+  .eyebrow-bar {
+    display: inline-block;
+    width: 4px;
+    height: 16px;
+    background: var(--color-chartreuse);
+    border-radius: 3px;
+    flex-shrink: 0;
+  }
+  /* Scroll-reveal: rises + fades in when it enters the viewport. The
+     `.visible` class is toggled by the <Reveal> client wrapper. */
+  .reveal {
+    opacity: 0;
+    transform: translateY(20px);
+    transition:
+      opacity 0.85s cubic-bezier(0.4, 0, 0.2, 1),
+      transform 0.85s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+  .reveal.visible {
+    opacity: 1;
+    transform: none;
+  }
+  /* Hero slideshow crossfade — stacked cover images, only `.active` shows. */
+  .hero-slide {
+    position: absolute;
+    inset: 0;
+    background-size: cover;
+    background-position: center;
+    opacity: 0;
+    transition: opacity 2.2s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+  .hero-slide.active {
+    opacity: 1;
+  }
+  /* Sticky header shrink + shadow once the page scrolls. */
+  .header-scrolled {
+    box-shadow: 0 2px 20px rgba(25, 85, 97, 0.25);
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .reveal {
+      opacity: 1;
+      transform: none;
+      transition: none;
+    }
   }
 }
