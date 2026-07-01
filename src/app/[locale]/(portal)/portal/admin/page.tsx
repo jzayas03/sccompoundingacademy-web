@@ -8,7 +8,6 @@ import { auth } from "@/lib/auth";
 import { db } from "@/lib/db";
 import { users, reviews, certificates } from "@/lib/db/schema";
 import { isAdminEmail } from "@/lib/admin";
-import { signedMatriculaUrl } from "@/lib/portal/blob-read";
 import {
   listCohorts,
   enrollmentCountByCohort,
@@ -145,15 +144,6 @@ export default async function AdminPage({
     )
     .orderBy(desc(users.verificationSubmittedAt));
 
-  // The matrícula photos live in a private store — sign a short-lived URL per
-  // row so the inline preview/link actually loads.
-  const pendingWithPreview = await Promise.all(
-    pendingVerifications.map(async (v) => ({
-      ...v,
-      previewUrl: await signedMatriculaUrl(v.docUrl),
-    })),
-  );
-
   const cohortList = await listCohorts();
   const cohortById = new Map(
     cohortList.map((c): [string, Cohort] => [c.id, c]),
@@ -285,20 +275,20 @@ export default async function AdminPage({
       )}
 
       {/* Pending student verifications — matrícula uploaded, awaiting decision */}
-      {pendingWithPreview.length > 0 && (
+      {pendingVerifications.length > 0 && (
         <section aria-labelledby="verif-pendientes-heading" className="mt-12">
           <h2
             id="verif-pendientes-heading"
             className="font-heading text-teal-deep text-xl font-semibold sm:text-2xl"
           >
-            Verificación de estudiantes ({pendingWithPreview.length})
+            Verificación de estudiantes ({pendingVerifications.length})
           </h2>
           <p className="text-gray-700 mt-2 text-sm">
             Estos estudiantes subieron su matrícula. Aprueba para darles acceso,
             o rechaza para pedir otra foto. La imagen se elimina al decidir.
           </p>
           <ul className="mt-6 grid grid-cols-1 gap-4 sm:grid-cols-2">
-            {pendingWithPreview.map((v) => (
+            {pendingVerifications.map((v) => (
               <li
                 key={v.id}
                 className="border-gray-300 rounded-lg border bg-white p-5 shadow-sm"
@@ -310,21 +300,31 @@ export default async function AdminPage({
                 <p className="text-gray-700 mt-1 text-xs">
                   Subida: {fmtDate(v.submittedAt)}
                 </p>
-                {v.previewUrl && (
-                  <a
-                    href={v.previewUrl}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="mt-3 block"
-                  >
-                    {/* Image OR a PDF link, depending on the upload. */}
-                    {/* eslint-disable-next-line @next/next/no-img-element */}
-                    <img
-                      src={v.previewUrl}
-                      alt={`Matrícula de ${v.name ?? v.email}`}
-                      className="border-gray-300 max-h-64 w-full rounded-md border object-contain"
-                    />
-                  </a>
+                {v.docUrl && (
+                  <>
+                    {/* Served through the admin proxy, which converts iPhone
+                        HEIC/HEIF → JPEG so it renders here and downloads
+                        viewable (raw Blob URL would be an unopenable .heic). */}
+                    <a
+                      href={`/api/admin/matricula?u=${v.id}`}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="mt-3 block"
+                    >
+                      {/* eslint-disable-next-line @next/next/no-img-element */}
+                      <img
+                        src={`/api/admin/matricula?u=${v.id}`}
+                        alt={`Matrícula de ${v.name ?? v.email}`}
+                        className="border-gray-300 max-h-64 w-full rounded-md border object-contain"
+                      />
+                    </a>
+                    <a
+                      href={`/api/admin/matricula?u=${v.id}&dl=1`}
+                      className="text-teal-deep hover:text-teal mt-2 inline-block text-xs font-semibold underline underline-offset-2"
+                    >
+                      Descargar ↓
+                    </a>
+                  </>
                 )}
                 <div className="mt-4 flex flex-wrap gap-3">
                   <form action={approveStudentVerification.bind(null, v.id)}>

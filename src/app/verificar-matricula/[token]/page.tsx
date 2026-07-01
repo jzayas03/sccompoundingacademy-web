@@ -3,7 +3,6 @@ import { eq } from "drizzle-orm";
 import { db } from "@/lib/db";
 import { users } from "@/lib/db/schema";
 import { verifyVerificationDecision } from "@/lib/portal/verification-token";
-import { signedMatriculaUrl } from "@/lib/portal/blob-read";
 import { confirmVerificationDecision } from "./actions";
 
 export const metadata: Metadata = {
@@ -106,8 +105,6 @@ export default async function VerificarMatriculaPage({
   }
 
   const approving = payload.decision === "approved";
-  // Private store → sign a short-lived URL for the inline preview.
-  const previewUrl = await signedMatriculaUrl(user.docUrl);
 
   return (
     <Shell>
@@ -123,10 +120,13 @@ export default async function VerificarMatriculaPage({
         <span className="text-gray-700">{user.email}</span>
       </p>
 
-      {previewUrl && (
+      {user.docUrl && (
+        // Served through the token-scoped proxy, which converts iPhone
+        // HEIC/HEIF → JPEG so the matrícula actually renders (the raw Blob
+        // URL would be an unopenable .heic on most devices).
         // eslint-disable-next-line @next/next/no-img-element
         <img
-          src={previewUrl}
+          src={`/verificar-matricula/${encodeURIComponent(token)}/imagen`}
           alt="Matrícula subida por el estudiante"
           className="border-gray-300 mt-4 max-h-80 w-full rounded-md border object-contain"
         />
