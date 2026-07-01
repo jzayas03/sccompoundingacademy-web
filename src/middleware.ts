@@ -12,20 +12,14 @@ import { routing } from "@/i18n/routing";
  * cookie — sufficient to gate authenticated routes; per-route payment
  * status is enforced at the page level where DB queries are cheap.
  *
- * Two classes of requests are gated:
+ * Gated requests: `/[locale]/portal/...` — every portal page except login
+ * and verify (public). Per-route payment status is enforced at the page
+ * level (and, for the course-material bytes, by the authenticated
+ * `/api/portal/modulo/[id]/pdf` route — the PDFs no longer live under
+ * `/public`, so there is nothing statically served to gate here).
  *
- *   1. `/[locale]/portal/...`        — every portal page except login
- *                                      and verify (public).
- *   2. `/modulos/dia-{1,2,3}.pdf`    — the module PDFs themselves; the
- *                                      page-level paidAt gate stops
- *                                      authenticated-but-unpaid users
- *                                      from discovering the URL through
- *                                      the dashboard, and this Edge
- *                                      check stops anonymous direct
- *                                      access.
- *
- * Anything that does not match those rules falls through to the next-intl
- * middleware, which handles locale prefixing for the marketing site.
+ * Anything that does not match falls through to the next-intl middleware,
+ * which handles locale prefixing for the marketing site.
  */
 
 const { auth: authCheck } = NextAuth(authConfig);
@@ -40,30 +34,18 @@ function isPublicPortalPath(pathname: string): boolean {
 
 function requiresSession(pathname: string): boolean {
   // /es/portal/*, /en/portal/* — but not /portal/login or /portal/verify.
-  if (/^\/(es|en)\/portal(\/|$)/.test(pathname) && !isPublicPortalPath(pathname)) {
-    return true;
-  }
-  // Module PDFs served from /public/modulos/ — block anonymous direct hits.
-  if (pathname.startsWith("/modulos/")) {
-    return true;
-  }
-  return false;
+  return (
+    /^\/(es|en)\/portal(\/|$)/.test(pathname) && !isPublicPortalPath(pathname)
+  );
 }
 
 export default authCheck((req) => {
   const { pathname } = req.nextUrl;
 
   if (requiresSession(pathname) && !req.auth) {
-    // Preserve the user's chosen locale across the auth bounce. The
-    // `/modulos/...` PDF guard has no locale segment, so default to
-    // `es` (the canonical portal locale per pathnames config).
+    // Preserve the user's chosen locale across the auth bounce.
     const locale = pathname.startsWith("/en/") ? "en" : "es";
     return NextResponse.redirect(new URL(`/${locale}/portal/login`, req.url));
-  }
-
-  // PDF requests skip i18n routing entirely (no locale prefix needed).
-  if (pathname.startsWith("/modulos/")) {
-    return NextResponse.next();
   }
 
   // Everything else: hand off to next-intl for locale resolution.
@@ -76,7 +58,5 @@ export const config = {
     // (public certificate verification — keeps the cert URL clean of any
     // locale prefix), and any path with a file extension.
     "/((?!api|_next|_vercel|verificar|.*\\..*).*)",
-    // Module PDFs — extension match so the previous pattern misses them.
-    "/modulos/:path*",
   ],
 };
