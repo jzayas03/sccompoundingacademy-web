@@ -3,11 +3,11 @@ import type { Question } from "./types";
 /**
  * Día 2 — Supositorios, líquidos orales y dermatología.
  *
- * Banco de 15 preguntas transcrito verbatim del PDF del Lcdo. Reyes
- * ("PRE POST TEST -SCCA Día # 2.pages.pdf", 2026). Preguntas 11-15
- * comparten un escenario de prescripción (Enalapril 1 mg/mL O.S., II mg
- * P.O. q.d.) que se incluye en cada `prompt` para que la UI no necesite
- * lógica de contexto compartido entre preguntas.
+ * Banco de 10 preguntas — pre/post-test del tier profesional, versión
+ * actualizada 2026 (docx "Post-Test Preguntas y Respuestas" del Lcdo.
+ * Reyes). El bloque de Enalapril que antes vivía aquí (Q11-15) se movió a
+ * `dia-3.ts` en la versión actualizada; este módulo ahora califica sobre
+ * 10 preguntas (el umbral es porcentual, ver `getPassingThreshold`).
  */
 export const dia2: readonly Question[] = [
   {
@@ -147,81 +147,6 @@ export const dia2: readonly Question[] = [
       { letter: "B", text: "finasteride" },
       { letter: "C", text: "dutasteride" },
       { letter: "D", text: "all of above are correct" },
-      { letter: "E", text: "none of above is correct" },
-    ],
-    correctAnswer: "D",
-    explanation: "",
-  },
-  {
-    id: "M2-Q11",
-    prompt:
-      "Rx — Enalapril 1 mg/mL O.S., Sig II mg P.O q.d. How much quantity you will dispense:",
-    type: "multiple-choice",
-    options: [
-      { letter: "A", text: "30 mL" },
-      { letter: "B", text: "60 mL" },
-      { letter: "C", text: "90 mL" },
-      { letter: "D", text: "180 mL" },
-      { letter: "E", text: "none of above is correct" },
-    ],
-    correctAnswer: "B",
-    explanation: "",
-  },
-  {
-    id: "M2-Q12",
-    prompt:
-      "Rx — Enalapril 1 mg/mL O.S., Sig II mg P.O q.d. How many mL the patient will have to take daily.",
-    type: "multiple-choice",
-    options: [
-      { letter: "A", text: "0.5 mL" },
-      { letter: "B", text: "1 mL" },
-      { letter: "C", text: "4 mL" },
-      { letter: "D", text: "8 mL" },
-      { letter: "E", text: "none of above is correct" },
-    ],
-    correctAnswer: "E",
-    explanation: "",
-  },
-  {
-    id: "M2-Q13",
-    prompt:
-      "Rx — Enalapril 1 mg/mL O.S., Sig II mg P.O q.d. With reference to storage, what label will you attach?",
-    type: "multiple-choice",
-    options: [
-      { letter: "A", text: "keep frozen" },
-      { letter: "B", text: "keep at room temperature" },
-      { letter: "C", text: "keep in the safety cabinet" },
-      { letter: "D", text: "keep in refrigerator" },
-      { letter: "E", text: "none of above is correct" },
-    ],
-    correctAnswer: "D",
-    explanation: "",
-  },
-  {
-    id: "M2-Q14",
-    prompt:
-      "Rx — Enalapril 1 mg/mL O.S., Sig II mg P.O q.d. What other label will you attach:",
-    type: "multiple-choice",
-    options: [
-      { letter: "A", text: "shake well before use" },
-      { letter: "B", text: "take 1 hour before meals" },
-      { letter: "C", text: "take 1 hour after meals" },
-      { letter: "D", text: "A and B are correct" },
-      { letter: "E", text: "none of above is correct" },
-    ],
-    correctAnswer: "A",
-    explanation: "",
-  },
-  {
-    id: "M2-Q15",
-    prompt:
-      "Rx — Enalapril 1 mg/mL O.S., Sig II mg P.O q.d. What else will you provide with this prescription:",
-    type: "multiple-choice",
-    options: [
-      { letter: "A", text: "press in adapter" },
-      { letter: "B", text: "two ounces amber bottle" },
-      { letter: "C", text: "3 mL oral syringe" },
-      { letter: "D", text: "all of above" },
       { letter: "E", text: "none of above is correct" },
     ],
     correctAnswer: "D",
