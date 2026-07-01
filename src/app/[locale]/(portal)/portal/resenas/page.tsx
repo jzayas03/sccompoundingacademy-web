@@ -3,8 +3,8 @@ import { redirect } from "next/navigation";
 import { eq } from "drizzle-orm";
 import { useTranslations } from "next-intl";
 import { setRequestLocale } from "next-intl/server";
-import { Container } from "@/components/ui/Container";
 import { GlassCard } from "@/components/glass/GlassCard";
+import { SectionBanner } from "@/components/portal/SectionBanner";
 import { Link } from "@/i18n/routing";
 import { auth } from "@/lib/auth";
 import { db } from "@/lib/db";
@@ -96,28 +96,16 @@ function ReviewsPanel({
   const t = useTranslations("portal.reviews");
 
   return (
-    <Container className="max-w-3xl py-12 sm:py-16 lg:py-20">
-      <p className="text-sm">
-        <Link
-          href="/portal"
-          className="text-teal-deep hover:text-teal underline underline-offset-2"
-        >
-          ← {t("backToDashboard")}
-        </Link>
-      </p>
+    <>
+      <SectionBanner
+        photo="/photos/photo-cursos-bench.jpg"
+        eyebrow={t("eyebrow")}
+        title={t("title")}
+      />
 
-      <div className="mt-6">
-        <p className="font-heading text-teal-deep/80 flex items-center text-xs font-semibold tracking-[0.18em] uppercase">
-          <span aria-hidden className="bg-chartreuse mr-3 inline-block h-4 w-1 shrink-0 rounded-sm" />
-          {t("eyebrow")}
-        </p>
-        <h1 className="font-heading text-teal-deep mt-3 text-3xl font-bold tracking-[-0.015em] sm:text-4xl">
-          {t("title")}
-        </h1>
-        <p className="text-gray-900 mt-3 text-base leading-relaxed sm:text-lg">
-          {t("subtitle")}
-        </p>
-      </div>
+      <p className="text-gray-900 -mt-2 mb-2 max-w-2xl text-base leading-relaxed sm:text-lg">
+        {t("subtitle")}
+      </p>
 
       {alreadySubmitted ? (
         <GlassCard className="mt-10 p-8 sm:p-10 text-center">
@@ -165,6 +153,6 @@ function ReviewsPanel({
           <ReviewForm tier={tier} />
         </GlassCard>
       )}
-    </Container>
+    </>
   );
 }

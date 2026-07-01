@@ -3,8 +3,9 @@ import { redirect } from "next/navigation";
 import { eq } from "drizzle-orm";
 import { useTranslations, useMessages } from "next-intl";
 import { setRequestLocale } from "next-intl/server";
-import { Container } from "@/components/ui/Container";
 import { GlassCard } from "@/components/glass/GlassCard";
+import { SectionBanner } from "@/components/portal/SectionBanner";
+import { CertShareRow } from "@/components/portal/CertShareRow";
 import { Link } from "@/i18n/routing";
 import { auth } from "@/lib/auth";
 import { db } from "@/lib/db";
@@ -75,12 +76,21 @@ export default async function CertificadoPage({
     ? await findCertificateByUser(user.id)
     : null;
 
+  // Public verification URL the share buttons point at. A real cert row
+  // deep-links to its own SCCA-{YYYY}-{NNN} page; owners previewing (no
+  // row) fall back to the verification index.
+  const shareUrl = cert?.certNo
+    ? `https://sccompoundingacademy.com/verificar/${cert.certNo}`
+    : "https://sccompoundingacademy.com/verificar";
+
   return (
     <CertPanel
       passedModules={passedModules}
       eligible={eligible}
-      certNo={cert?.certNo ?? null}
-      certIssuedAt={cert?.issuedAt ?? null}
+      completedCount={
+        requiredOrdinals(effectiveTier).filter((o) => passedModules[o]).length
+      }
+      shareUrl={shareUrl}
       modules={getCurriculum(effectiveTier)}
       tier={effectiveTier}
       preview={effectivePreview}
@@ -88,76 +98,140 @@ export default async function CertificadoPage({
   );
 }
 
+/** Tier-accurate preview of the real (English) certificate PDF — the
+ *  same course + credit lines `certificates/render.ts` prints. Kept in
+ *  English on purpose: it mirrors the actual credential, not the UI. */
+const CERT_MOCK = {
+  profesional: {
+    title: "Basic Non-Sterile Compounding",
+    sub: "for Pharmacists & Pharmacy Technicians",
+    credit: "18 contact hours · 1.8 CEUs",
+  },
+  student: {
+    title: "Nonsterile Compounding — Student Program",
+    sub: "Student Track — Foundations of Nonsterile Compounding",
+    credit: "Certificate of Completion · USP <795> & <800>",
+  },
+} as const;
+
 function CertPanel({
   passedModules,
   eligible,
-  certNo,
-  certIssuedAt,
+  completedCount,
+  shareUrl,
   modules,
   tier,
   preview,
 }: {
   passedModules: Record<number, boolean>;
   eligible: boolean;
-  certNo: string | null;
-  certIssuedAt: Date | null;
+  completedCount: number;
+  shareUrl: string;
   modules: readonly { id: string; ordinal: number }[];
   tier: UserTier;
   preview?: "profesional" | "student";
 }) {
   const t = useTranslations("portal.cert");
   const moduleList = getModuleCatalogue(useMessages(), tier);
-
-  void certNo;
-  void certIssuedAt;
+  // Matches render.ts's student-vs-everything-else split (pharmacist +
+  // profesional both print the CE-bearing "Basic Non-Sterile" credential).
+  const mock = tier === "student" ? CERT_MOCK.student : CERT_MOCK.profesional;
 
   return (
-    <Container className="max-w-3xl py-12 sm:py-16 lg:py-20">
-      <p className="text-sm">
-        <Link
-          href="/portal"
-          className="text-teal-deep hover:text-teal underline underline-offset-2"
-        >
-          ← {t("backToDashboard")}
-        </Link>
-      </p>
+    <>
+      <SectionBanner
+        photo="/photos/photo-mortar.jpg"
+        eyebrow={t("eyebrow")}
+        title={t("title")}
+      />
 
-      <div className="mt-6">
-        <p className="font-heading text-teal-deep/80 flex items-center text-xs font-semibold tracking-[0.18em] uppercase">
-          <span aria-hidden className="bg-chartreuse mr-3 inline-block h-4 w-1 shrink-0 rounded-sm" />
-          {t("eyebrow")}
-        </p>
-        <h1 className="font-heading text-teal-deep mt-3 text-3xl font-bold tracking-[-0.015em] sm:text-4xl">
-          {t("title")}
-        </h1>
-      </div>
-
-      {eligible ? (
-        <GlassCard className="mt-10 p-8 sm:p-10">
-          <p className="font-heading text-teal-deep text-xs font-semibold tracking-[0.18em] uppercase">
-            {t("readyTitle")}
-          </p>
-          <p className="text-gray-900 mt-3 text-base leading-relaxed sm:text-lg">
-            {t("readyBody")}
-          </p>
-          <a
-            href={preview ? `/api/certificate?preview=${preview}` : "/api/certificate"}
-            download
-            className="bg-chartreuse text-teal-deep ring-teal-deep/15 shadow-soft hover:bg-chartreuse/95 hover:shadow-lift focus-visible:ring-chartreuse font-heading mt-6 inline-flex h-12 items-center rounded-md px-6 text-sm font-semibold ring-1 transition-[color,background-color,box-shadow,transform] duration-200 sm:text-base motion-safe:hover:-translate-y-px"
+      <div className="grid items-start gap-6 lg:grid-cols-[1.1fr_0.9fr]">
+        {/* Blurred-preview certificate mock — sharpens once eligible. */}
+        <div className="shadow-lift relative aspect-[1.42/1] overflow-hidden rounded-[20px] border border-white/40">
+          <div
+            className="absolute inset-0 flex flex-col items-center justify-center p-8 text-center transition-all duration-300"
+            style={{
+              background: "linear-gradient(160deg, var(--color-teal-deep), #123f48)",
+              filter: eligible ? "none" : "blur(6px) grayscale(0.3)",
+              opacity: eligible ? 1 : 0.55,
+            }}
           >
-            {t("downloadCta")} ↓
+            <p className="text-chartreuse text-[11px] font-bold tracking-[0.22em] uppercase">
+              Certificate of Completion
+            </p>
+            <h2 className="font-heading text-off-white mt-3.5 mb-1.5 text-[22px] font-extrabold">
+              {mock.title}
+            </h2>
+            <p className="text-[12.5px] text-[rgba(243,243,244,0.75)]">
+              Santa Cruz Compounding Academy · {mock.credit}
+            </p>
+            <div className="mt-5 h-px w-16 bg-[rgba(230,234,130,0.6)]" />
+            <p className="mt-2.5 text-[12px] text-[rgba(243,243,244,0.6)]">
+              {mock.sub}
+            </p>
+            <p className="mt-1 text-[12px] text-[rgba(243,243,244,0.6)]">
+              Jorge L. Reyes Quiñones, RPh — Program Director
+            </p>
+          </div>
+          {!eligible && (
+            <div className="absolute inset-0 flex flex-col items-center justify-center gap-2.5 bg-[rgba(18,60,69,0.35)]">
+              <svg
+                aria-hidden
+                viewBox="0 0 24 24"
+                fill="none"
+                className="text-off-white h-7 w-7"
+              >
+                <rect x="4.5" y="10.5" width="15" height="10" rx="2" stroke="currentColor" strokeWidth="1.7" />
+                <path d="M8 10.5V7.5a4 4 0 018 0v3" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" />
+              </svg>
+              <p
+                className="text-off-white text-[13px] font-semibold"
+                style={{ textShadow: "0 2px 10px rgba(0,0,0,0.4)" }}
+              >
+                {t("mockLockOverlay", { count: modules.length })}
+              </p>
+            </div>
+          )}
+        </div>
+
+        {/* Status + download + share. */}
+        <div
+          className="glass-card rounded-[20px] border border-white/40 p-7"
+          style={{ boxShadow: "var(--shadow-soft)" }}
+        >
+          <p className="text-gray-700 text-[13px] leading-[1.7]">
+            {eligible
+              ? t("readyBody")
+              : t("progressBody", { done: completedCount, total: modules.length })}
+          </p>
+
+          <a
+            href={
+              eligible
+                ? preview
+                  ? `/api/certificate?preview=${preview}`
+                  : "/api/certificate"
+                : undefined
+            }
+            download={eligible ? true : undefined}
+            aria-disabled={eligible ? undefined : true}
+            className={
+              eligible
+                ? "bg-chartreuse text-teal-deep ring-teal-deep/15 shadow-soft hover:bg-chartreuse/95 hover:shadow-lift focus-visible:ring-chartreuse font-heading mt-5 inline-flex h-12 w-full items-center justify-center rounded-md px-6 text-sm font-semibold ring-1 transition-[color,background-color,box-shadow,transform] duration-200 motion-safe:hover:-translate-y-px"
+                : "border-teal-deep/20 text-teal-deep/50 font-heading pointer-events-none mt-5 inline-flex h-12 w-full cursor-not-allowed items-center justify-center rounded-md border px-6 text-sm font-semibold opacity-60"
+            }
+          >
+            {t("downloadCta")} {eligible ? "↓" : ""}
           </a>
-        </GlassCard>
-      ) : (
-        <GlassCard className="mt-10 p-8 sm:p-10">
-          <p className="font-heading text-teal-deep text-xs font-semibold tracking-[0.18em] uppercase">
-            {t("lockedTitle")}
-          </p>
-          <p className="text-gray-900 mt-3 text-base leading-relaxed">
-            {t("lockedBody")}
-          </p>
-        </GlassCard>
-      )}
+
+          <div className="mt-5">
+            <p className="text-teal-deep mb-2.5 text-[12.5px] font-semibold">
+              {t("shareTitle")}
+            </p>
+            <CertShareRow url={shareUrl} disabled={!eligible} />
+          </div>
+        </div>
+      </div>
 
       <section aria-labelledby="cert-checklist" className="mt-10">
         <h2
@@ -256,6 +330,6 @@ function CertPanel({
           </Link>
         </p>
       )}
-    </Container>
+    </>
   );
 }
