@@ -1,8 +1,8 @@
 import type { Metadata } from "next";
 import { redirect } from "next/navigation";
 import { setRequestLocale } from "next-intl/server";
-import { Container } from "@/components/ui/Container";
 import { GlassCard } from "@/components/glass/GlassCard";
+import { SectionBanner } from "@/components/portal/SectionBanner";
 import { Link } from "@/i18n/routing";
 import { auth } from "@/lib/auth";
 import { isAdminEmail } from "@/lib/admin";
@@ -135,8 +135,8 @@ export default async function CohortesAdminPage({
   const counts = await enrollmentCountByCohort();
 
   return (
-    <Container className="max-w-3xl py-12 sm:py-16">
-      <p className="text-sm">
+    <div className="mx-auto max-w-3xl">
+      <p className="mb-4 text-sm">
         <Link
           href="/portal/admin"
           className="text-teal-deep hover:text-teal underline underline-offset-2"
@@ -145,20 +145,17 @@ export default async function CohortesAdminPage({
         </Link>
       </p>
 
-      <div className="mt-6">
-        <p className="font-heading text-teal-deep/80 flex items-center text-xs font-semibold tracking-[0.18em] uppercase">
-          <span aria-hidden className="bg-chartreuse mr-3 inline-block h-4 w-1 shrink-0 rounded-sm" />
-          Administración
-        </p>
-        <h1 className="font-heading text-teal-deep mt-3 text-3xl font-bold tracking-[-0.015em] sm:text-4xl">
-          Cohortes
-        </h1>
-        <p className="text-gray-700 mt-2 text-sm leading-relaxed">
-          Crea y edita las fechas de los cohortes. La etiqueta que ven los
-          estudiantes en el formulario de inscripción se genera sola a partir
-          de las fechas — no hay nada que traducir.
-        </p>
-      </div>
+      <SectionBanner
+        photo="/photos/photo-chemo-hood.jpg"
+        eyebrow="Administración"
+        title="Cohortes"
+      />
+
+      <p className="text-gray-700 -mt-2 mb-2 text-sm leading-relaxed">
+        Crea y edita las fechas de los cohortes. La etiqueta que ven los
+        estudiantes en el formulario de inscripción se genera sola a partir
+        de las fechas — no hay nada que traducir.
+      </p>
 
       {/* Create */}
       <GlassCard className="mt-10 p-6 sm:p-8">
@@ -227,6 +224,6 @@ export default async function CohortesAdminPage({
           })
         )}
       </div>
-    </Container>
+    </div>
   );
 }
