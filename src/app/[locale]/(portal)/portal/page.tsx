@@ -18,7 +18,7 @@ import {
 import { isAdminEmail } from "@/lib/admin";
 import { getCohort } from "@/lib/cohorts";
 import {
-  courseAccessExpiresAt,
+  effectiveAccessExpiresAt,
   isCourseAccessActive,
 } from "@/lib/portal/course-access";
 import { resolveVerificationGate } from "@/lib/portal/verification-gate";
@@ -102,10 +102,14 @@ export default async function PortalDashboardPage({
   // dashboard shows an "access ended" notice + locks the module strip past
   // that (the certificate stays available). Owners never gate.
   const cohort = user.cohortId ? await getCohort(user.cohortId) : null;
-  const accessExpiresAt = courseAccessExpiresAt(cohort?.endDate ?? null);
+  const accessExpiresAt = effectiveAccessExpiresAt(
+    cohort?.endDate ?? null,
+    user.accessExtendedUntil,
+  );
   const accessActive = isCourseAccessActive({
     isOwner,
     cohortEndDate: cohort?.endDate ?? null,
+    accessExtendedUntil: user.accessExtendedUntil,
     now: new Date(),
   });
 

@@ -156,6 +156,7 @@ export default async function ModulePage({
     !isCourseAccessActive({
       isOwner,
       cohortEndDate: cohort?.endDate ?? null,
+      accessExtendedUntil: user.accessExtendedUntil,
       now: new Date(),
     })
   ) {

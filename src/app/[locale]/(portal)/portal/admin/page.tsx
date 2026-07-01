@@ -17,10 +17,15 @@ import {
 import { professionLabel } from "@/lib/professions";
 import { Link } from "@/i18n/routing";
 import {
+  effectiveAccessExpiresAt,
+  isCourseAccessActive,
+} from "@/lib/portal/course-access";
+import {
   approveReview,
   archiveReview,
   approveStudentVerification,
   rejectStudentVerification,
+  extendStudentAccess,
 } from "./actions";
 import { AdminEditEmail } from "@/components/portal/AdminEditEmail";
 
@@ -87,6 +92,7 @@ export default async function AdminPage({
       phone: users.phone,
       paidAt: users.paidAt,
       cohortId: users.cohortId,
+      accessExtendedUntil: users.accessExtendedUntil,
     })
     .from(users)
     .where(isNotNull(users.paidAt))
@@ -148,6 +154,8 @@ export default async function AdminPage({
   const cohortById = new Map(
     cohortList.map((c): [string, Cohort] => [c.id, c]),
   );
+  // Single clock for the roster's per-student access-window status column.
+  const now = new Date();
 
   // Real stat-card figures — no placeholders. "Cupos disponibles" mirrors
   // the public landing: only OPEN cohorts count, and seats taken are
@@ -224,12 +232,25 @@ export default async function AdminPage({
                 <th className="py-2 pr-4 font-semibold">Celular</th>
                 <th className="py-2 pr-4 font-semibold">Tier</th>
                 <th className="py-2 pr-4 font-semibold">Pago</th>
-                <th className="py-2 font-semibold">Cohorte</th>
+                <th className="py-2 pr-4 font-semibold">Cohorte</th>
+                <th className="py-2 font-semibold">Acceso al material</th>
               </tr>
             </thead>
             <tbody>
-              {roster.map((r) => (
-                <tr key={r.id} className="border-gray-300/60 border-b last:border-0">
+              {roster.map((r) => {
+                const rowCohort = r.cohortId ? cohortById.get(r.cohortId) : undefined;
+                const accessActive = isCourseAccessActive({
+                  isOwner: false,
+                  cohortEndDate: rowCohort?.endDate ?? null,
+                  accessExtendedUntil: r.accessExtendedUntil,
+                  now,
+                });
+                const accessEndsAt = effectiveAccessExpiresAt(
+                  rowCohort?.endDate ?? null,
+                  r.accessExtendedUntil,
+                );
+                return (
+                <tr key={r.id} className="border-gray-300/60 border-b align-top last:border-0">
                   <td className="py-2 pr-4 text-gray-900">{r.name ?? "—"}</td>
                   <td className="py-2 pr-4">
                     <AdminEditEmail userId={r.id} email={r.email} />
@@ -239,9 +260,46 @@ export default async function AdminPage({
                   <td className="py-2 pr-4 text-gray-700">{r.phone ?? "—"}</td>
                   <td className="py-2 pr-4 text-gray-700">{r.tier ?? "—"}</td>
                   <td className="py-2 pr-4 text-gray-700">{fmtDate(r.paidAt)}</td>
-                  <td className="py-2 text-gray-700">{cohortLabel(r.cohortId, cohortById)}</td>
+                  <td className="py-2 pr-4 text-gray-700">{cohortLabel(r.cohortId, cohortById)}</td>
+                  <td className="py-2">
+                    <p className="text-xs">
+                      {accessActive ? (
+                        <span className="text-teal-deep font-semibold">
+                          Activo{accessEndsAt ? ` · hasta ${fmtDate(accessEndsAt)}` : " · sin fecha"}
+                        </span>
+                      ) : (
+                        <span className="text-gray-700">
+                          Vencido{accessEndsAt ? ` ${fmtDate(accessEndsAt)}` : ""}
+                        </span>
+                      )}
+                      {r.accessExtendedUntil ? (
+                        <span className="text-gray-700"> · extendido</span>
+                      ) : null}
+                    </p>
+                    <form action={extendStudentAccess} className="mt-1 flex flex-wrap items-center gap-1">
+                      <input type="hidden" name="userId" value={r.id} />
+                      <input
+                        type="date"
+                        name="until"
+                        title="Extender el acceso al material hasta esta fecha. Vacío = quitar la extensión (vuelve a la ventana normal)."
+                        defaultValue={
+                          r.accessExtendedUntil
+                            ? r.accessExtendedUntil.toISOString().slice(0, 10)
+                            : ""
+                        }
+                        className="border-gray-300 rounded border bg-white px-1.5 py-0.5 text-xs text-gray-900"
+                      />
+                      <button
+                        type="submit"
+                        className="border-teal-deep text-teal-deep hover:bg-teal-deep hover:text-off-white font-heading rounded-md border px-2 py-0.5 text-xs font-semibold transition-colors"
+                      >
+                        Guardar
+                      </button>
+                    </form>
+                  </td>
                 </tr>
-              ))}
+                );
+              })}
             </tbody>
           </table>
         )}
