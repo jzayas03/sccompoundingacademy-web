@@ -8,6 +8,7 @@ import { COURSES, DEFAULT_TIER, type Tier } from "@/lib/courses";
 import {
   VERIFICATION_ACCEPTED_TYPES,
   matriculaFileIssue,
+  matriculaContentType,
 } from "@/lib/portal/verification";
 
 // Cloudflare Turnstile public site key. When unset (local dev, or before
@@ -161,6 +162,14 @@ export function InscripcionForm({
             // publicly accessible by URL. The admin views it via a signed URL
             // (see lib/portal/blob-read.ts).
             access: "private",
+            // Declare an explicit, allow-listed content-type. iOS Safari reports
+            // an empty File.type for HEIC photos; without this the PUT would go
+            // out with no Content-Type, fail the server's allowedContentTypes
+            // check, and surface as "No pudimos subir tu matrícula".
+            contentType: matriculaContentType(
+              matriculaFile.name,
+              matriculaFile.type,
+            ),
             handleUploadUrl: "/api/inscripcion/matricula-upload",
             abortSignal: controller.signal,
           });
