@@ -2,7 +2,12 @@ import { describe, it, expect } from "vitest";
 import { mkdirSync, writeFileSync } from "node:fs";
 import { buildMagicLinkEmail } from "@/lib/emails/magic-link";
 import { buildConfirmationEmail } from "@/lib/emails/inscripcion-confirmacion";
-import { buildVerificationSubmittedEmail } from "@/lib/emails/verificacion";
+import {
+  buildVerificationSubmittedEmail,
+  buildVerificationApprovedEmail,
+  buildVerificationRejectedEmail,
+  buildCheckoutLinkEmail,
+} from "@/lib/emails/verificacion";
 import { buildCertificateReadyEmail } from "@/lib/emails/certificado";
 
 /**
@@ -18,6 +23,8 @@ import { buildCertificateReadyEmail } from "@/lib/emails/certificado";
 
 const MAGIC_URL = "https://sccompoundingacademy.com/auth/callback?token=abc123";
 const CERT_URL = "https://sccompoundingacademy.com/es/portal/certificado";
+// Mirrors the module-internal PORTAL_URL + /es locale segment.
+const PORTAL_URL_ES = "https://sccompoundingacademy.com/es";
 
 describe("SCCA email templates", () => {
   it("magic link — bilingual, fallback URL in html + text", () => {
@@ -82,6 +89,31 @@ describe("SCCA email templates", () => {
     expect(out.html).toContain("Cohorte 1");
   });
 
+  it("matrícula decision emails — bilingual, on the shell, CTA + link in html + text", () => {
+    const PAY_URL = "https://sccompoundingacademy.com/api/inscripcion/pagar?token=abc";
+
+    const approved = buildVerificationApprovedEmail("es");
+    expect(approved.html).toContain("Ya tienes acceso"); // hero headline
+    expect(approved.html).toContain(`${PORTAL_URL_ES}/portal`); // portal CTA
+    expect(approved.text).toContain(`${PORTAL_URL_ES}/portal`);
+
+    const rejected = buildVerificationRejectedEmail("es");
+    expect(rejected.html).toContain("No pudimos verificarla"); // hero headline
+    expect(rejected.html).toContain(`${PORTAL_URL_ES}/portal/verificacion`); // re-upload CTA
+    expect(rejected.text).toContain("foto clara y vigente"); // copy left as-is
+
+    const checkout = buildCheckoutLinkEmail("en", PAY_URL);
+    expect(checkout.html).toContain("Complete your payment"); // hero headline
+    expect(checkout.html).toContain(PAY_URL); // signed pay link
+    expect(checkout.html).toContain("48 hours"); // expiry note kept
+    expect(checkout.text).toContain(PAY_URL);
+    // The off-brand chartreuse pay button is gone — CTA now uses the teal shell
+    // button. (The hero's chartreuse bottom-rule still legitimately uses #E6EA82,
+    // so target the old button's chartreuse *background* specifically.)
+    expect(checkout.html).not.toContain("background:#E6EA82;color:");
+    expect(checkout.html).toContain("background:#195561;border-radius:8px"); // teal shell button
+  });
+
   it("all templates share the handoff shell (Montserrat + chartreuse rule)", () => {
     const htmls = [
       buildMagicLinkEmail({ url: MAGIC_URL, locale: "es" }).html,
@@ -102,6 +134,9 @@ describe("SCCA email templates", () => {
         approveUrl: "https://a",
         rejectUrl: "https://r",
       }).html,
+      buildVerificationApprovedEmail("es").html,
+      buildVerificationRejectedEmail("en").html,
+      buildCheckoutLinkEmail("es", "https://sccompoundingacademy.com/pay").html,
     ];
     for (const html of htmls) {
       expect(html).toContain("Montserrat"); // shell font

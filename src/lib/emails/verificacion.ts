@@ -1,8 +1,9 @@
-/* eslint-disable scca-brand/no-hex-literal -- email HTML needs inline hex
-   colors; mail clients can't use the Tailwind brand tokens. Values mirror
-   @/lib/brand (tealDeep #195561, chartreuse #E6EA82, grays). */
+/* All email colors/typography come from the shared shell (`_shell.ts`), which
+   is the single source of truth for the SCCA transactional palette and holds
+   the no-hex-literal exception. This module interpolates the shell's `E`
+   tokens, so it needs no inline hex of its own. */
 
-import { E, FONT, bodyCell, renderEmail, esc } from "./_shell";
+import { E, FONT, bodyCell, button, renderEmail, esc } from "./_shell";
 
 /**
  * Emails for the matrícula verification flow. One internal notification to
@@ -107,20 +108,59 @@ Rechazar: ${p.rejectUrl}
   return { subject, text, html };
 }
 
+/**
+ * Body for a simple student-facing notice: one centered paragraph, a solid-teal
+ * CTA, and an optional muted note underneath — all on the shared shell. Keeps
+ * the three matrícula-decision emails visually identical to the rest of the
+ * SCCA transactional set.
+ */
+function noticeBody(opts: {
+  paragraph: string;
+  ctaHref: string;
+  ctaLabel: string;
+  note?: string;
+}): string {
+  const noteHtml = opts.note
+    ? `<p style="margin:22px auto 0;max-width:440px;font-family:${FONT};font-size:12px;color:${E.muted};line-height:1.65;text-align:center;">${esc(opts.note)}</p>`
+    : "";
+  return bodyCell(`
+    <p style="margin:0 auto 26px;max-width:440px;font-family:${FONT};font-size:15px;color:${E.bodyText};line-height:1.75;text-align:center;">${esc(opts.paragraph)}</p>
+    ${button(opts.ctaHref, opts.ctaLabel)}
+    ${noteHtml}
+  `);
+}
+
 export function buildVerificationApprovedEmail(
   locale: Locale,
 ): { subject: string; text: string; html: string } {
   const es = {
     subject: "Verificación aprobada · SCCA",
-    body: `Tu matrícula fue verificada. Ya tienes acceso completo al portal del curso.\n\nEntra aquí: ${PORTAL_URL}/es/portal`,
+    eyebrow: "Matrícula verificada",
+    headline: "Ya tienes acceso",
+    paragraph:
+      "Tu matrícula fue verificada. Ya tienes acceso completo al portal del curso.",
+    cta: "Entrar al portal",
+    href: `${PORTAL_URL}/es/portal`,
   };
   const en = {
     subject: "Verification approved · SCCA",
-    body: `Your student ID was verified. You now have full access to the course portal.\n\nSign in here: ${PORTAL_URL}/en/portal`,
+    eyebrow: "Student ID verified",
+    headline: "You're all set",
+    paragraph:
+      "Your student ID was verified. You now have full access to the course portal.",
+    cta: "Go to portal",
+    href: `${PORTAL_URL}/en/portal`,
   };
   const c = locale === "en" ? en : es;
-  const html = `<p style="font-family:system-ui,sans-serif;font-size:15px;line-height:1.6;">${c.body.replace(/\n/g, "<br>")}</p>`;
-  return { subject: c.subject, text: c.body, html };
+  const text = `${c.paragraph}\n\n${locale === "en" ? "Sign in here" : "Entra aquí"}: ${c.href}`;
+  const html = renderEmail({
+    locale,
+    title: c.subject,
+    eyebrow: c.eyebrow,
+    headline: c.headline,
+    content: noticeBody({ paragraph: c.paragraph, ctaHref: c.href, ctaLabel: c.cta }),
+  });
+  return { subject: c.subject, text, html };
 }
 
 export function buildVerificationRejectedEmail(
@@ -128,15 +168,32 @@ export function buildVerificationRejectedEmail(
 ): { subject: string; text: string; html: string } {
   const es = {
     subject: "No pudimos verificar tu matrícula · SCCA",
-    body: `No pudimos verificar la foto de matrícula que subiste. Por favor sube una foto clara y vigente desde el portal.\n\nSubir de nuevo: ${PORTAL_URL}/es/portal/verificacion`,
+    eyebrow: "Matrícula",
+    headline: "No pudimos verificarla",
+    paragraph:
+      "No pudimos verificar la foto de matrícula que subiste. Por favor sube una foto clara y vigente desde el portal.",
+    cta: "Subir de nuevo",
+    href: `${PORTAL_URL}/es/portal/verificacion`,
   };
   const en = {
     subject: "We couldn't verify your student ID · SCCA",
-    body: `We couldn't verify the student-ID photo you uploaded. Please upload a clear, current photo from the portal.\n\nUpload again: ${PORTAL_URL}/en/portal/verificacion`,
+    eyebrow: "Student ID",
+    headline: "We couldn't verify it",
+    paragraph:
+      "We couldn't verify the student-ID photo you uploaded. Please upload a clear, current photo from the portal.",
+    cta: "Upload again",
+    href: `${PORTAL_URL}/en/portal/verificacion`,
   };
   const c = locale === "en" ? en : es;
-  const html = `<p style="font-family:system-ui,sans-serif;font-size:15px;line-height:1.6;">${c.body.replace(/\n/g, "<br>")}</p>`;
-  return { subject: c.subject, text: c.body, html };
+  const text = `${c.paragraph}\n\n${c.cta}: ${c.href}`;
+  const html = renderEmail({
+    locale,
+    title: c.subject,
+    eyebrow: c.eyebrow,
+    headline: c.headline,
+    content: noticeBody({ paragraph: c.paragraph, ctaHref: c.href, ctaLabel: c.cta }),
+  });
+  return { subject: c.subject, text, html };
 }
 
 /**
@@ -150,21 +207,35 @@ export function buildCheckoutLinkEmail(
 ): { subject: string; text: string; html: string } {
   const es = {
     subject: "Matrícula aprobada — completa tu pago · SCCA",
-    body: `¡Tu matrícula fue aprobada! Completa tu inscripción con el pago seguro.\n\nEste enlace vence en 48 horas:\n${payUrl}`,
+    eyebrow: "Matrícula aprobada",
+    headline: "Completa tu pago",
+    paragraph:
+      "¡Tu matrícula fue aprobada! Completa tu inscripción con el pago seguro.",
+    cta: "Pagar ahora",
+    note: "Este enlace vence en 48 horas.",
   };
   const en = {
     subject: "Matrícula approved — complete your payment · SCCA",
-    body: `Your matrícula was approved! Complete your enrollment with secure payment.\n\nThis link expires in 48 hours:\n${payUrl}`,
+    eyebrow: "Matrícula approved",
+    headline: "Complete your payment",
+    paragraph:
+      "Your matrícula was approved! Complete your enrollment with secure payment.",
+    cta: "Pay now",
+    note: "This link expires in 48 hours.",
   };
   const c = locale === "en" ? en : es;
-  const esc = (s: string) => s.replace(/&/g, "&amp;").replace(/</g, "&lt;");
-  const label = locale === "en" ? "Pay now" : "Pagar ahora";
-  const html = `<div style="font-family:system-ui,sans-serif;font-size:15px;line-height:1.6;color:#404040;max-width:520px;">
-  <p>${esc(c.body.split("\n")[0] ?? "")}</p>
-  <p style="margin:18px 0;">
-    <a href="${esc(payUrl)}" style="display:inline-block;background:#E6EA82;color:#195561;font-weight:600;text-decoration:none;padding:12px 22px;border-radius:8px;font-size:15px;">${label}</a>
-  </p>
-  <p style="color:#666666;font-size:13px;">${locale === "en" ? "This link expires in 48 hours." : "Este enlace vence en 48 horas."}</p>
-</div>`;
-  return { subject: c.subject, text: c.body, html };
+  const text = `${c.paragraph}\n\n${c.note}\n${payUrl}`;
+  const html = renderEmail({
+    locale,
+    title: c.subject,
+    eyebrow: c.eyebrow,
+    headline: c.headline,
+    content: noticeBody({
+      paragraph: c.paragraph,
+      ctaHref: payUrl,
+      ctaLabel: c.cta,
+      note: c.note,
+    }),
+  });
+  return { subject: c.subject, text, html };
 }

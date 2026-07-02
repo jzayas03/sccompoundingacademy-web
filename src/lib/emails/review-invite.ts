@@ -1,4 +1,4 @@
-import { brand } from "@/lib/brand";
+import { E, FONT, bodyCell, button, renderEmail, esc } from "./_shell";
 
 /**
  * Review-invite email sent 24h after a student becomes cert-eligible
@@ -6,17 +6,16 @@ import { brand } from "@/lib/brand";
  * warm tone the portal uses elsewhere — the email reads as if signed
  * by Lcdo. Reyes, not as a faceless transactional notification.
  *
- * No-React-Email convention: hand-written HTML with inline styles,
- * brand colours interpolated from lib/brand.ts at build time so the
- * no-hex-literal lint rule does not fail.
+ * Rendered on the shared SCCA email shell (`_shell.ts`) so it matches the
+ * rest of the transactional set: pale-teal hero, Montserrat, solid-teal
+ * CTA, SCCA footer. The personal letter lives in the body; the "why you
+ * received this" disclosure sits in a muted band above the footer.
  */
 type InviteParams = {
   nombre: string;
   reviewUrl: string;
 };
 
-const c = brand.colors;
-const LOGO_URL = "https://www.sccompoundingacademy.com/brand/logo-email.png";
 const FOOTER_NOTE =
   "Recibes este mensaje porque completaste recientemente el curso Basic Compounding No Estéril en SCCA.";
 
@@ -54,53 +53,42 @@ Santa Cruz Compounding Academy
 ${FOOTER_NOTE}
 `;
 
-  const html = `<!DOCTYPE html>
-<html lang="es">
-  <body style="margin:0;padding:0;background-color:${c.offWhite};font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,Arial,sans-serif;color:${c.gray[900]};">
-    <table role="presentation" width="100%" cellspacing="0" cellpadding="0" border="0" style="background-color:${c.offWhite};padding:24px 0;">
-      <tr>
-        <td align="center">
-          <table role="presentation" width="600" cellspacing="0" cellpadding="0" border="0" style="max-width:600px;background-color:${c.white};border-radius:12px;overflow:hidden;">
-            <tr>
-              <td style="background-color:${c.tealDeep};padding:24px 32px;text-align:left;">
-                <img src="${LOGO_URL}" alt="Santa Cruz Compounding Academy" width="160" style="display:block;height:auto;" />
-              </td>
-            </tr>
-            <tr>
-              <td style="padding:32px;">
-                <p style="margin:0 0 16px 0;font-size:16px;line-height:1.6;">${greeting},</p>
-                <p style="margin:0 0 16px 0;font-size:16px;line-height:1.6;">
-                  Acabas de completar el curso <strong>Basic Compounding No Estéril</strong> en Santa Cruz Compounding Academy. ¡Felicidades!
-                </p>
-                <p style="margin:0 0 16px 0;font-size:16px;line-height:1.6;">
-                  Si tienes un minuto, me ayudaría muchísimo si compartes una reseña corta. Cualquier cosa que aprendiste, algo que cambiarías, lo que más te llevaste. Tu feedback nos ayuda a mejorar el curso para las próximas cohortes — y, si das tu consentimiento, lo mostramos en el sitio para que otros farmacéuticos sepan qué esperar.
-                </p>
-                <p style="margin:24px 0;">
-                  <a href="${p.reviewUrl}"
-                     style="background-color:${c.chartreuse};color:${c.tealDeep};display:inline-block;padding:14px 28px;border-radius:8px;font-weight:700;font-size:15px;text-decoration:none;">
-                    Dejar mi reseña
-                  </a>
-                </p>
-                <p style="margin:0 0 8px 0;font-size:16px;line-height:1.6;">
-                  Gracias por confiar en nosotros para esta etapa.
-                </p>
-                <p style="margin:0;font-size:15px;line-height:1.6;color:${c.gray[900]};">
-                  —Lcdo. Jorge L. Reyes Quiñones, RPh, FACA, FACVP<br/>
-                  <span style="color:${c.gray[700]};font-size:13px;">Santa Cruz Compounding Academy</span>
-                </p>
-              </td>
-            </tr>
-            <tr>
-              <td style="padding:16px 32px 24px 32px;font-size:12px;color:${c.gray[700]};line-height:1.5;">
-                ${FOOTER_NOTE}
-              </td>
-            </tr>
-          </table>
-        </td>
-      </tr>
-    </table>
-  </body>
-</html>`;
+  // The personal letter — left-aligned, warm, signed. Montserrat comes from
+  // the shell FONT so it matches the rest of the transactional emails.
+  const letter = `
+    <p style="margin:0 0 16px;font-family:${FONT};font-size:16px;line-height:1.7;color:${E.bodyText};">${esc(greeting)},</p>
+    <p style="margin:0 0 16px;font-family:${FONT};font-size:16px;line-height:1.7;color:${E.bodyText};">
+      Acabas de completar el curso <strong style="color:${E.ink};">Basic Compounding No Estéril</strong> en Santa Cruz Compounding Academy. ¡Felicidades!
+    </p>
+    <p style="margin:0 0 24px;font-family:${FONT};font-size:16px;line-height:1.7;color:${E.bodyText};">
+      Si tienes un minuto, me ayudaría muchísimo si compartes una reseña corta. Cualquier cosa que aprendiste, algo que cambiarías, lo que más te llevaste. Tu feedback nos ayuda a mejorar el curso para las próximas cohortes — y, si das tu consentimiento, lo mostramos en el sitio para que otros farmacéuticos sepan qué esperar.
+    </p>
+    ${button(p.reviewUrl, "Dejar mi reseña")}
+    <p style="margin:26px 0 16px;font-family:${FONT};font-size:16px;line-height:1.7;color:${E.bodyText};">
+      Gracias por confiar en nosotros para esta etapa.
+    </p>
+    <p style="margin:0;font-family:${FONT};font-size:15px;line-height:1.6;color:${E.ink};">
+      —Lcdo. Jorge L. Reyes Quiñones, RPh, FACA, FACVP<br />
+      <span style="color:${E.muted};font-size:13px;">Santa Cruz Compounding Academy</span>
+    </p>`;
+
+  // "Why you received this" disclosure — a muted band just above the footer.
+  const disclosure = `
+  <tr>
+    <td style="background:${E.white};padding:0 44px 34px;">
+      <p style="margin:0;font-family:${FONT};font-size:12px;line-height:1.6;color:${E.muted};border-top:1px solid ${E.cardLine};padding-top:18px;">
+        ${FOOTER_NOTE}
+      </p>
+    </td>
+  </tr>`;
+
+  const html = renderEmail({
+    locale: "es",
+    title: subject,
+    eyebrow: "¡Felicidades!",
+    headline: "Completaste el curso",
+    content: bodyCell(letter) + disclosure,
+  });
 
   return { subject, html, text };
 }

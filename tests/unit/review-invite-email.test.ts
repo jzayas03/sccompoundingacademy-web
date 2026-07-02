@@ -38,4 +38,18 @@ describe("buildReviewInviteEmail", () => {
     expect(out.text).toMatch(/Lcdo\.\s*Jorge\s*L\.\s*Reyes/i);
     expect(out.html).toMatch(/Lcdo\.\s*Jorge\s*L\.\s*Reyes/i);
   });
+
+  it("renders on the shared SCCA shell and keeps the disclosure", () => {
+    const out = buildReviewInviteEmail({
+      nombre: "Juan",
+      reviewUrl: "https://sccompoundingacademy.com/es/portal/resenas",
+    });
+    expect(out.html).toContain("Montserrat"); // shell font
+    expect(out.html).toContain("sccompoundingacademy.com"); // shell footer band
+    expect(out.html).toContain("Completaste el curso"); // hero headline
+    expect(out.html).toContain("completaste recientemente el curso"); // disclosure kept
+    // Old off-brand markup is gone.
+    expect(out.html).not.toContain("logo-email.png");
+    expect(out.html).not.toContain("-apple-system");
+  });
 });
