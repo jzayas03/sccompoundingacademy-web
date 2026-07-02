@@ -68,15 +68,26 @@ export async function POST(req: Request): Promise<Response> {
       const payUrl = `${origin}/api/inscripcion/pagar?token=${encodeURIComponent(token)}`;
       const mail = buildCheckoutLinkEmail("es", payUrl);
       try {
-        await new Resend(key).emails.send({
+        // Resend resolves with `{ error }` on API failures rather than
+        // throwing — check it, or a rejected resend is invisible (no email,
+        // no log), the same silent failure fixed in applyVerificationDecision.
+        const { error } = await new Resend(key).emails.send({
           from: FROM_ADDRESS,
           to: email,
           subject: mail.subject,
           html: mail.html,
           text: mail.text,
         });
+        if (error) {
+          console.error("[reenviar-pago] email rejected by Resend", {
+            to: email,
+            error,
+          });
+        } else {
+          console.log("[reenviar-pago] pay link resent", { to: email });
+        }
       } catch (err) {
-        console.error("[reenviar-pago] email failed", err);
+        console.error("[reenviar-pago] email threw", { to: email, err });
       }
     }
   }
