@@ -18,7 +18,14 @@ const FROM_ADDRESS =
   process.env.EMAIL_FROM ?? "SCCA <info@sccompoundingacademy.com>";
 
 export type DecisionResult =
-  | { status: "applied"; email: string | null }
+  | {
+      status: "applied";
+      email: string | null;
+      /** Whether the student notification email was accepted by Resend. */
+      emailSent: boolean;
+      /** Resend's error message when the send was rejected, for surfacing. */
+      emailError?: string;
+    }
   | { status: "already-decided"; email: string | null }
   | { status: "not-found" };
 
@@ -75,14 +82,21 @@ export async function applyVerificationDecision(
   }
 
   const key = process.env.RESEND_API_KEY;
+  let emailSent = false;
+  let emailError: string | undefined;
   if (key && row.email) {
     let mail;
+    // `kind` labels the branch in logs so we can tell, for a given approval,
+    // which email was attempted (pay-link vs portal-access vs rejection).
+    let kind: string;
     if (decision === "rejected") {
       // Rejection path — unchanged.
       mail = buildVerificationRejectedEmail("es");
+      kind = "rejected";
     } else if (row.paidAt) {
       // Already paid (in-portal verificacion path) — confirm portal access.
       mail = buildVerificationApprovedEmail("es");
+      kind = "approved-paid";
     } else {
       // Pre-payment approval — send the signed 48h pay link.
       const token = signCheckoutToken({
@@ -91,19 +105,51 @@ export async function applyVerificationDecision(
       });
       const payUrl = `${getSiteUrl()}/api/inscripcion/pagar?token=${encodeURIComponent(token)}`;
       mail = buildCheckoutLinkEmail("es", payUrl);
+      kind = "pay-link";
     }
     try {
-      await new Resend(key).emails.send({
+      // The Resend SDK does NOT throw on API errors — it resolves with
+      // `{ data, error }`. The old code awaited the send but discarded the
+      // result, so a rejected send (unverified sender, bad recipient, rate
+      // limit) failed silently: no email, no log, approval reported success.
+      // Capture the error, log it, and surface it via the return value.
+      const { error } = await new Resend(key).emails.send({
         from: FROM_ADDRESS,
         to: row.email,
         subject: mail.subject,
         html: mail.html,
         text: mail.text,
       });
+      if (error) {
+        emailError =
+          typeof error === "string"
+            ? error
+            : (error.message ?? JSON.stringify(error));
+        console.error("[verificacion] student email rejected by Resend", {
+          kind,
+          to: row.email,
+          error,
+        });
+      } else {
+        emailSent = true;
+        console.log("[verificacion] student email sent", {
+          kind,
+          to: row.email,
+        });
+      }
     } catch (err) {
-      console.error("[verificacion] student email failed", err);
+      emailError = (err as Error).message;
+      console.error("[verificacion] student email threw", {
+        kind,
+        to: row.email,
+        err,
+      });
     }
+  } else if (!key) {
+    console.error(
+      "[verificacion] RESEND_API_KEY missing — student email skipped",
+    );
   }
 
-  return { status: "applied", email: row.email };
+  return { status: "applied", email: row.email, emailSent, emailError };
 }

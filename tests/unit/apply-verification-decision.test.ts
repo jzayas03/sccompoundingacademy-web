@@ -82,7 +82,11 @@ describe("applyVerificationDecision", () => {
     // Task 5: pre-payment path — paidAt null → send signed 48h checkout URL.
     mockRows = [unpaidRow];
     const result = await applyVerificationDecision("u1", "approved");
-    expect(result).toEqual({ status: "applied", email: "student@example.com" });
+    expect(result).toEqual({
+      status: "applied",
+      email: "student@example.com",
+      emailSent: true,
+    });
 
     expect(mockEmailSend).toHaveBeenCalledOnce();
     const sentArgs = mockEmailSend.mock.calls[0]![0] as {
@@ -94,11 +98,39 @@ describe("applyVerificationDecision", () => {
     expect(sentArgs.text).toContain("/api/inscripcion/pagar?token=");
   });
 
+  it("reports emailSent=false + emailError when Resend rejects the send", async () => {
+    // The exact silent-failure this fixes: Resend resolves with `{ error }`
+    // (it does NOT throw), so the old code reported a successful approval with
+    // no email and no log. Now the rejection is captured and surfaced.
+    mockRows = [unpaidRow];
+    mockEmailSend.mockResolvedValueOnce({
+      data: null,
+      error: { name: "validation_error", message: "domain is not verified" },
+    });
+    const errSpy = vi.spyOn(console, "error").mockImplementation(() => {});
+    const result = await applyVerificationDecision("u1", "approved");
+    expect(result).toEqual({
+      status: "applied",
+      email: "student@example.com",
+      emailSent: false,
+      emailError: "domain is not verified",
+    });
+    expect(errSpy).toHaveBeenCalledWith(
+      "[verificacion] student email rejected by Resend",
+      expect.objectContaining({ kind: "pay-link", to: "student@example.com" }),
+    );
+    errSpy.mockRestore();
+  });
+
   it("approval of a paid row emails the portal-access note", async () => {
     // Existing in-portal path — paidAt is set → confirm portal access (unchanged).
     mockRows = [paidRow];
     const result = await applyVerificationDecision("u2", "approved");
-    expect(result).toEqual({ status: "applied", email: "student@example.com" });
+    expect(result).toEqual({
+      status: "applied",
+      email: "student@example.com",
+      emailSent: true,
+    });
 
     expect(mockEmailSend).toHaveBeenCalledOnce();
     const sentArgs = mockEmailSend.mock.calls[0]![0] as {
@@ -112,7 +144,11 @@ describe("applyVerificationDecision", () => {
   it("rejection sends the rejection email (unchanged)", async () => {
     mockRows = [unpaidRow];
     const result = await applyVerificationDecision("u1", "rejected");
-    expect(result).toEqual({ status: "applied", email: "student@example.com" });
+    expect(result).toEqual({
+      status: "applied",
+      email: "student@example.com",
+      emailSent: true,
+    });
 
     expect(mockEmailSend).toHaveBeenCalledOnce();
     const sentArgs = mockEmailSend.mock.calls[0]![0] as {
