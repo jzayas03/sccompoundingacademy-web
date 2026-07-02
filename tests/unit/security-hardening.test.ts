@@ -20,9 +20,15 @@ describe("Content-Security-Policy", () => {
   const directive = (name: string): string =>
     CSP_DIRECTIVES.find((d) => d.startsWith(`${name} `)) ?? "";
 
-  it("allows the Vercel Blob host in connect-src (matrícula upload PUT)", () => {
-    // Without this the browser blocks the client-upload PUT and student
-    // enrollment hangs on "Procesando…".
+  it("allows the Vercel Blob API host in connect-src (matrícula upload PUT)", () => {
+    // The @vercel/blob client `upload()` PUTs to https://vercel.com/api/blob
+    // (its default API base). Without this host in connect-src the browser
+    // blocks the upload and student enrollment fails with "No pudimos subir tu
+    // matrícula" / hangs on "Procesando…".
+    expect(directive("connect-src")).toContain("https://vercel.com");
+  });
+
+  it("allows the Blob store host in connect-src (upload redirect + multipart parts)", () => {
     expect(directive("connect-src")).toContain(
       "https://*.blob.vercel-storage.com",
     );
