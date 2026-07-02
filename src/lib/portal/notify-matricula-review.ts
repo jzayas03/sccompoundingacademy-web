@@ -61,14 +61,22 @@ export async function notifyMatriculaReview(p: {
   });
 
   try {
-    await new Resend(key).emails.send({
+    // Resend resolves with `{ error }` on API failures rather than throwing,
+    // so check it explicitly — otherwise a rejected review email is invisible.
+    const { error } = await new Resend(key).emails.send({
       from: FROM_ADDRESS,
       to: adminRecipients(),
       subject: mail.subject,
       html: mail.html,
       text: mail.text,
     });
+    if (error) {
+      console.error("[verificacion] admin review email rejected by Resend", {
+        to: adminRecipients(),
+        error,
+      });
+    }
   } catch (err) {
-    console.error("[verificacion] admin review email failed", err);
+    console.error("[verificacion] admin review email threw", err);
   }
 }
