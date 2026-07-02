@@ -1,6 +1,55 @@
 import { afterEach, describe, expect, it, vi } from "vitest";
 import { verifyTurnstile } from "@/lib/turnstile";
 import { rateLimit, clientIp } from "@/lib/ratelimit";
+import { CSP_DIRECTIVES, CSP_VALUE } from "@/lib/security/csp";
+
+/**
+ * CSP regression guards. The Content-Security-Policy is structural hardening,
+ * but a too-tight directive silently breaks browser features (the app talks to
+ * these hosts via fetch/XHR/iframes). These pin the directives that a browser
+ * feature depends on so a future edit can't quietly drop one.
+ *
+ * The `connect-src` + Blob-host case is a real incident: the matrícula upload
+ * (student enrollment) PUTs the photo straight to `*.blob.vercel-storage.com`
+ * from the browser. When that host was present in `img-src` but missing from
+ * `connect-src`, the upload PUT was CSP-blocked — the same-origin token mint
+ * still returned 200, but the form hung forever on "Procesando…" and no
+ * enrollment was ever created.
+ */
+describe("Content-Security-Policy", () => {
+  const directive = (name: string): string =>
+    CSP_DIRECTIVES.find((d) => d.startsWith(`${name} `)) ?? "";
+
+  it("allows the Vercel Blob host in connect-src (matrícula upload PUT)", () => {
+    // Without this the browser blocks the client-upload PUT and student
+    // enrollment hangs on "Procesando…".
+    expect(directive("connect-src")).toContain(
+      "https://*.blob.vercel-storage.com",
+    );
+  });
+
+  it("keeps the Blob host in img-src too (matrícula preview / OG images)", () => {
+    expect(directive("img-src")).toContain(
+      "https://*.blob.vercel-storage.com",
+    );
+  });
+
+  it("allows the Turnstile origin in script-src and connect-src", () => {
+    expect(directive("script-src")).toContain(
+      "https://challenges.cloudflare.com",
+    );
+    expect(directive("connect-src")).toContain(
+      "https://challenges.cloudflare.com",
+    );
+  });
+
+  it("keeps the structural lockdowns intact", () => {
+    expect(CSP_VALUE).toContain("frame-ancestors 'none'");
+    expect(CSP_VALUE).toContain("object-src 'none'");
+    expect(CSP_VALUE).toContain("base-uri 'self'");
+    expect(directive("form-action")).toContain("https://checkout.stripe.com");
+  });
+});
 
 /**
  * These guard the most important property of the hardening work: it must

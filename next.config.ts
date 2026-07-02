@@ -1,39 +1,12 @@
 import type { NextConfig } from "next";
 import createNextIntlPlugin from "next-intl/plugin";
+// CSP lives in its own module so it can be unit-tested (regression guard) and
+// stays the single source of truth. See src/lib/security/csp.ts.
+import { CSP_VALUE } from "./src/lib/security/csp";
 
 const withNextIntl = createNextIntlPlugin("./src/i18n/request.ts");
 
-/**
- * Content-Security-Policy for the whole site. Enumerated from what the app
- * actually loads in the browser:
- *   - Turnstile   → script + iframe on challenges.cloudflare.com
- *   - Instagram   → the instructor reel <iframe> (VideoIntro)
- *   - Google Maps → the location <iframe> (Ubicacion / HomeContact)
- *   - Vercel Blob → OG/other images
- *   - pdf.js      → a blob: web worker for the module PDF viewer
- *   - Stripe      → checkout is a top-level redirect (no embedded stripe.js),
- *                   so only form-action needs it
- *
- * `'unsafe-inline'`/`'unsafe-eval'` on script-src are kept because Next.js
- * ships inline hydration scripts (no nonce pipeline here) and pdf.js needs
- * eval; the real value of this policy is the structural hardening —
- * `frame-ancestors 'none'` (clickjacking), `object-src 'none'` (no plugins),
- * `base-uri 'self'` (no <base> injection), and a locked `form-action`.
- */
-const csp = [
-  "default-src 'self'",
-  "script-src 'self' 'unsafe-inline' 'unsafe-eval' https://challenges.cloudflare.com",
-  "style-src 'self' 'unsafe-inline'",
-  "img-src 'self' data: blob: https://*.blob.vercel-storage.com",
-  "font-src 'self' data:",
-  "frame-src 'self' https://challenges.cloudflare.com https://www.instagram.com https://www.google.com https://maps.google.com",
-  "worker-src 'self' blob:",
-  "connect-src 'self' https://challenges.cloudflare.com",
-  "frame-ancestors 'none'",
-  "base-uri 'self'",
-  "object-src 'none'",
-  "form-action 'self' https://checkout.stripe.com",
-].join("; ");
+const csp = CSP_VALUE;
 
 const securityHeaders = [
   // Belt-and-suspenders with `frame-ancestors 'none'` above — covers older
