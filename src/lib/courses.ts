@@ -16,9 +16,9 @@
  * SCCA offers a single integrated course — "Basic Compounding No Estéril"
  * — split into three on-site modules (one per day). Two pricing tiers
  * share the same Stripe Product:
- *   - profesional: $2,500 (default) — covers both RPh pharmacists and
+ *   - profesional: $2,395 (default) — covers both RPh pharmacists and
  *                  licensed pharmacy technicians (per the brochure
- *                  audience, 2026-05-19)
+ *                  audience, 2026-05-19; price updated 2026-07-02)
  *   - student:     $495 (gated via institutional email allowlist or
  *                  Stripe coupon issued manually after Student-ID review)
  *                  — only for non-licensed students (pre-PharmD / tech
@@ -98,7 +98,7 @@ export const COURSES: readonly Course[] = [
       {
         tier: "profesional",
         stripePriceEnvKey: "STRIPE_PRICE_ID_PROFESIONAL",
-        priceUsdCents: 250_000,
+        priceUsdCents: 239_500,
       },
       {
         tier: "student",

@@ -84,7 +84,7 @@ export function InscripcionForm({
   );
   // Profession — captured for the profesional tier. Farmacéutico/Técnico
   // feed the ACPE registry; "otro" lets non-pharmacy professionals
-  // self-identify without changing the price (they stay on the $2,500
+  // self-identify without changing the price (they stay on the $2,395
   // profesional tier — the $495 student price is students-only).
   const [tipoProfesional, setTipoProfesional] = useState<
     "farmaceutico" | "tecnico" | "otro" | ""
@@ -289,7 +289,7 @@ export function InscripcionForm({
       {/* Profession — only for the profesional tier. Farmacéutico/Técnico
           feed the ACPE "Registro de Educación Continua"; "Otro" lets
           non-pharmacy professionals self-identify. All stay on the
-          profesional ($2,350) tier — it does not unlock the student price. */}
+          profesional ($2,395) tier — it does not unlock the student price. */}
       {tier === "profesional" && (
         <div>
           <p className={labelCls}>{t("fields.tipoProfesional")}</p>
