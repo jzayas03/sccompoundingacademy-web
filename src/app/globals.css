@@ -194,12 +194,14 @@
     opacity: 1;
     transform: none;
   }
-  /* Hero slideshow crossfade — stacked cover images, only `.active` shows. */
+  /* Hero slideshow crossfade — stacked cover images, only `.active` shows.
+     Anchored `right center` so the compounded-product shots breathe on the
+     right of the frame while the bottom-left headline band stays clear. */
   .hero-slide {
     position: absolute;
     inset: 0;
     background-size: cover;
-    background-position: center;
+    background-position: right center;
     opacity: 0;
     transition: opacity 2.2s cubic-bezier(0.4, 0, 0.2, 1);
   }
