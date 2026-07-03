@@ -10,7 +10,7 @@ import { users, reviews, certificates } from "@/lib/db/schema";
 import { isAdminEmail } from "@/lib/admin";
 import {
   listCohorts,
-  committedSeatsByCohort,
+  enrollmentCountByCohort,
   formatCohortLabel,
   type Cohort,
 } from "@/lib/cohorts";
@@ -158,16 +158,16 @@ export default async function AdminPage({
   const now = new Date();
 
   // Real stat-card figures — no placeholders. "Cupos disponibles" mirrors
-  // the public landing: only OPEN cohorts count, and seats taken are
-  // COMMITTED seats (paid + admin-approved, via committedSeatsByCohort) so
-  // the two never disagree. Completion rate is issued certificates over
-  // paid enrollments. (Waitlist has no DB table — those signups go straight
-  // to the ops inbox — so there is no card for it.)
-  const committedByCohort = await committedSeatsByCohort();
+  // the public landing: only OPEN cohorts count, and seats taken are PAID
+  // enrollees (via enrollmentCountByCohort) so the two never disagree.
+  // Completion rate is issued certificates over paid enrollments. (Waitlist
+  // has no DB table — those signups go straight to the ops inbox — so there
+  // is no card for it.)
+  const paidByCohort = await enrollmentCountByCohort();
   const openCohorts = cohortList.filter((c) => c.openForEnrollment);
   const totalSeats = openCohorts.reduce((s, c) => s + c.capacity, 0);
   const seatsTaken = openCohorts.reduce(
-    (s, c) => s + (committedByCohort.get(c.id) ?? 0),
+    (s, c) => s + (paidByCohort.get(c.id) ?? 0),
     0,
   );
   const seatsRemaining = Math.max(0, totalSeats - seatsTaken);

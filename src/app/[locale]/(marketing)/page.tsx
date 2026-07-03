@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import { setRequestLocale } from "next-intl/server";
 import { pageMetadata } from "@/lib/seo";
 import { homepageJsonLd } from "@/lib/structuredData";
-import { listOpenCohortsSafe, committedSeatsByCohort, formatCohortLabel } from "@/lib/cohorts";
+import { listOpenCohortsSafe, enrollmentCountByCohort, formatCohortLabel } from "@/lib/cohorts";
 import { Hero } from "@/components/marketing/Hero";
 import { ConfianzaCarousel } from "@/components/marketing/ConfianzaCarousel";
 import { CursosHome } from "@/components/marketing/CursosHome";
@@ -58,9 +58,9 @@ export default async function LandingPage({ params }: { params: Promise<{ locale
   const next = openCohorts[0];
 
   // Seat-scarcity meter for the waitlist section, from real data: total =
-  // the next cohort's capacity, remaining = capacity − COMMITTED seats
-  // (paid + admin-approved — see committedSeatsByCohort), so the meter can't
-  // oversell once the admin has approved a cohort's worth of students. All
+  // the next cohort's capacity, remaining = capacity − PAID enrollees
+  // (`enrollmentCountByCohort`). Only completed payments consume a seat, so
+  // an approved-but-unpaid student never makes the cohort read as full. All
   // best-effort — if the count query fails, the meter is simply hidden.
   let seatTotal: number | null = null;
   let seatRemaining: number | null = null;
@@ -69,7 +69,7 @@ export default async function LandingPage({ params }: { params: Promise<{ locale
     seatTotal = next.capacity;
     cohortLabel = formatCohortLabel(next, locale as "es" | "en");
     try {
-      const counts = await committedSeatsByCohort();
+      const counts = await enrollmentCountByCohort();
       seatRemaining = Math.max(0, next.capacity - (counts.get(next.id) ?? 0));
     } catch {
       seatRemaining = null;

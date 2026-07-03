@@ -4,7 +4,7 @@ import { NextResponse } from "next/server";
 import { z } from "zod";
 import { stripe } from "@/lib/stripe";
 import { getCourseById, getPricingByTier } from "@/lib/courses";
-import { getCohort, committedSeatsByCohort } from "@/lib/cohorts";
+import { getCohort, enrollmentCountByCohort } from "@/lib/cohorts";
 import { getSiteUrl } from "@/lib/siteUrl";
 import { rateLimit, clientIp } from "@/lib/ratelimit";
 import { verifyTurnstile } from "@/lib/turnstile";
@@ -304,15 +304,16 @@ export async function POST(req: Request) {
   // that an EN user would otherwise see post-checkout.
   // Capacity guard — the profesional tier pays immediately with no human
   // approval gate, so this is the only thing between a full cohort and an
-  // oversell. "Committed" = paid + admin-approved (same count the public
-  // seat meter shows). If the cohort is already at capacity, refuse before
-  // opening a Stripe session. There is still a tiny time-of-check/pay race
-  // (two simultaneous payments) — acceptable at this scale — but this
-  // closes the ordinary case. Best-effort: a count-query failure falls
-  // through to Stripe rather than hard-blocking a legitimate enrollment.
+  // oversell. Seats taken = PAID enrollees (same count the public seat meter
+  // shows, so the two never disagree). If the cohort is already at capacity,
+  // refuse before opening a Stripe session. There is still a tiny
+  // time-of-check/pay race (two simultaneous payments) — acceptable at this
+  // scale — but this closes the ordinary case. Best-effort: a count-query
+  // failure falls through to Stripe rather than hard-blocking a legitimate
+  // enrollment.
   try {
-    const committed = (await committedSeatsByCohort()).get(cohort.id) ?? 0;
-    if (committed >= cohort.capacity) {
+    const paid = (await enrollmentCountByCohort()).get(cohort.id) ?? 0;
+    if (paid >= cohort.capacity) {
       return NextResponse.json(
         {
           error:
