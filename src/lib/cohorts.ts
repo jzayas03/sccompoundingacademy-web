@@ -1,4 +1,4 @@
-import { and, asc, count, eq, isNotNull, or } from "drizzle-orm";
+import { and, asc, count, eq, isNotNull } from "drizzle-orm";
 import { db } from "@/lib/db";
 import { cohorts, users, type Cohort } from "@/lib/db/schema";
 
@@ -86,39 +86,24 @@ export async function deleteCohort(id: string): Promise<void> {
   await db.delete(cohorts).where(eq(cohorts.id, id));
 }
 
-/** Map of cohort id → number of paid enrollees, for the admin roster. */
+/**
+ * Map of cohort id → number of PAID enrollees.
+ *
+ * This is the single seat count used everywhere a cohort's fullness is
+ * shown or enforced: the public seat meter, the admin availability stat,
+ * and the pay-time oversell guard. Only a completed payment consumes a
+ * seat — an admin-approved-but-unpaid student does NOT, so a student who
+ * is approved and then never pays can't leave a cohort reading as full.
+ * (A prior `committedSeatsByCohort` also counted approved-unpaid students;
+ * it was removed because that made cohorts show full while real paid
+ * enrolment was below capacity. Trade-off: two people could in theory pay
+ * for the last seat at the same instant — accepted at this scale.)
+ */
 export async function enrollmentCountByCohort(): Promise<Map<string, number>> {
   const rows = await db
     .select({ cohortId: users.cohortId, n: count() })
     .from(users)
     .where(isNotNull(users.paidAt))
-    .groupBy(users.cohortId);
-  const map = new Map<string, number>();
-  for (const r of rows) {
-    if (r.cohortId) map.set(r.cohortId, r.n);
-  }
-  return map;
-}
-
-/**
- * Map of cohort id → COMMITTED seat count, for the public seat meter and
- * the admin availability stat.
- *
- * "Committed" = a seat the academy has effectively promised: a PAID
- * enrollee OR a student the admin has APPROVED (they hold a live pay
- * link). Students still in review (`pending`) and `rejected` ones do NOT
- * count — an unvetted or declined submission must never make a cohort read
- * as full. This is what prevents overselling: once the admin approves N
- * students for an N-seat cohort, availability hits zero even before they
- * pay. (`enrollmentCountByCohort` above stays paid-only for the roster.)
- */
-export async function committedSeatsByCohort(): Promise<Map<string, number>> {
-  const rows = await db
-    .select({ cohortId: users.cohortId, n: count() })
-    .from(users)
-    .where(
-      or(isNotNull(users.paidAt), eq(users.studentVerification, "approved")),
-    )
     .groupBy(users.cohortId);
   const map = new Map<string, number>();
   for (const r of rows) {
