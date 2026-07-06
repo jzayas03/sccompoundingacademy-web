@@ -12,7 +12,7 @@ import { db } from "@/lib/db";
 import { users } from "@/lib/db/schema";
 import { notifyMatriculaReview } from "@/lib/portal/notify-matricula-review";
 import { buildPendingStudentValues } from "@/lib/inscripcion/pending-enrollment";
-import { inscripcionSchema } from "@/lib/inscripcion/schema";
+import { inscripcionSchema, inscripcionErrorMessage } from "@/lib/inscripcion/schema";
 
 export const runtime = "nodejs";
 
@@ -108,16 +108,19 @@ export async function POST(req: Request) {
 
   const parsed = inscripcionSchema.safeParse(body);
   if (!parsed.success) {
-    // User-facing sentence (consistent with every other error in this
-    // route). `issues` keeps the flattened Zod detail for debugging —
-    // the client ignores it. The raw "validation" code used to leak
-    // straight to the form's error banner.
+    // Field-aware message so the user knows WHICH field to fix (the form is
+    // `noValidate`, so the server is the only validator). `issues` keeps the
+    // flattened Zod detail for debugging. Locale is read loosely from the raw
+    // body since the parse failed; defaults to Spanish.
+    const flattened = parsed.error.flatten();
+    const locale =
+      typeof body === "object" &&
+      body !== null &&
+      (body as { locale?: unknown }).locale === "en"
+        ? "en"
+        : "es";
     return NextResponse.json(
-      {
-        error:
-          "Revisa los datos del formulario — hay un campo incompleto o con formato inválido (por ejemplo el correo electrónico).",
-        issues: parsed.error.flatten(),
-      },
+      { error: inscripcionErrorMessage(flattened, locale), issues: flattened },
       { status: 400 },
     );
   }
