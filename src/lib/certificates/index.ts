@@ -3,6 +3,7 @@ import { and, desc, eq, inArray, sql } from "drizzle-orm";
 import { db } from "@/lib/db";
 import { certificates, quizAttempts } from "@/lib/db/schema";
 import { requiredOrdinals, type UserTier } from "@/lib/curriculum";
+import { isPharmacyRole } from "@/lib/professions";
 
 /**
  * Certificate lifecycle helpers for the SCCA portal.
@@ -39,6 +40,15 @@ export type CertProgram = "profesional" | "student";
 
 export function programForTier(tier: UserTier): CertProgram {
   return tier === "student" ? "student" : "profesional";
+}
+
+/** True only for professional-tier pharmacists/techs — the only enrollees
+ *  who earn ACPE CE. Fail-safe: null/unknown/free-text profession → false. */
+export function isCeEligible(
+  tier: UserTier,
+  professionalType: string | null,
+): boolean {
+  return tier === "profesional" && isPharmacyRole(professionalType);
 }
 
 /** Human-friendly cert-number prefix per program. The two prefixes are

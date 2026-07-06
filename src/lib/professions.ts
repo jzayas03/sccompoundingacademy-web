@@ -24,3 +24,13 @@ export function professionLabel(value: string | null | undefined): string {
   if (!value) return "";
   return PROFESSION_LABELS_ES[value] ?? value;
 }
+
+/**
+ * Pharmacy roles that earn ACPE CE. This is the ONLY positive CE test —
+ * "otro" is never persisted (InscripcionForm discards it into the specific
+ * profession or free text), so we detect CE-eligibility by pharmacy role,
+ * not by the absence of "otro". Fail-safe: unknown/null → false.
+ */
+export function isPharmacyRole(professionalType: string | null | undefined): boolean {
+  return professionalType === "farmaceutico" || professionalType === "tecnico";
+}
