@@ -38,10 +38,10 @@ export type CertRenderInput = {
   verificationUrl: string; // "https://sccompoundingacademy.com/verificar/SCCA-..."
   /**
    * Certificate program. "profesional" prints the ACPE CE credit and
-   * provider line; "student" prints a completion certificate with no
-   * CEUs and no ACPE provider line.
+   * provider line; "profesional-completion" and "student" print a
+   * completion certificate with no CEUs and no ACPE provider line.
    */
-  program: "profesional" | "student";
+  program: "profesional" | "profesional-completion" | "student";
 };
 
 const PAGE_W = 842;
@@ -68,9 +68,9 @@ export async function renderCertificatePdf(input: CertRenderInput): Promise<Uint
 
   const page = pdf.addPage([PAGE_W, PAGE_H]);
 
-  // Legacy boolean derived once from the program: "student" certs are
-  // completion-only (no ACPE CE credit / provider line).
-  const awardsCeus = input.program !== "student";
+  // Only the CE program awards ACPE credit; "profesional-completion"
+  // and "student" certs are completion-only (no CEUs / provider line).
+  const awardsCeus = input.program === "profesional";
 
   // Prefer the vector PDF template (Canva → Share → PDF Print). Falls
   // back to the rasterized PNG, then to a primitive layout if neither
@@ -217,7 +217,9 @@ function drawOverlay(
     page,
     input.program === "student"
       ? "Student Track — Foundations of Nonsterile Compounding"
-      : "for Pharmacists & Pharmacy Technicians",
+      : awardsCeus
+        ? "for Pharmacists & Pharmacy Technicians"
+        : "Professional Program",
     {
       y: 237,
       size: 10,
@@ -231,7 +233,7 @@ function drawOverlay(
       ? "Certificate of Completion · USP <795> & <800>"
       : awardsCeus
         ? "18 contact hours · 1.8 CEUs · Knowledge-based, Level 1"
-        : "18 contact hours · Knowledge-based, Level 1",
+        : "18 contact hours · Certificate of Completion",
     {
       y: 221,
       size: 10,
@@ -239,7 +241,7 @@ function drawOverlay(
       color: COLOR.gray900,
     },
   );
-  if (input.program !== "student") {
+  if (awardsCeus) {
     drawCentered(page, "ACPE Provider 0151 — Puerto Rico College of Pharmacists", {
       y: 205,
       size: 9,
@@ -301,9 +303,9 @@ function drawPlaceholderBody(
   helveticaBold: PDFFont,
   timesItalic: PDFFont,
 ): void {
-  // Legacy boolean derived from the program: "student" certs are
-  // completion-only (no ACPE CE credit / provider line).
-  const awardsCeus = input.program !== "student";
+  // Only the CE program awards ACPE credit; "profesional-completion"
+  // and "student" certs are completion-only (no CEUs / provider line).
+  const awardsCeus = input.program === "profesional";
 
   // Paper-tinted fill so the cert reads as paper rather than glaring
   // white. Off-white sand tone — same family as the landing "sand"
@@ -387,7 +389,9 @@ function drawPlaceholderBody(
     page,
     input.program === "student"
       ? "Compounding No Estéril — Programa de Estudiantes"
-      : "Basic Compounding No Estéril para Farmacéuticos y Técnicos de Farmacia",
+      : awardsCeus
+        ? "Basic Compounding No Estéril para Farmacéuticos y Técnicos de Farmacia"
+        : "Basic Compounding No Estéril — Programa Profesional",
     {
       y: PAGE_H - 360,
       size: 13,
@@ -401,7 +405,7 @@ function drawPlaceholderBody(
       ? "Certificado de Finalización · USP <795> y <800>"
       : awardsCeus
         ? "18 horas de contacto · 1.8 CEUs · Knowledge-based, Level 1"
-        : "18 horas de contacto · Knowledge-based, Level 1",
+        : "18 horas de contacto · Certificado de Finalización",
     {
       y: PAGE_H - 384,
       size: 10,
@@ -409,7 +413,7 @@ function drawPlaceholderBody(
       color: COLOR.gray900,
     },
   );
-  if (input.program !== "student") {
+  if (awardsCeus) {
     drawCentered(
       page,
       "Acreditado por el Colegio de Farmacéuticos de Puerto Rico — ACPE Provider 0151",
