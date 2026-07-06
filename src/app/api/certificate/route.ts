@@ -6,7 +6,7 @@ import { users } from "@/lib/db/schema";
 import {
   getOrCreateCertificate,
   isEligibleForCertificate,
-  programForTier,
+  programFor,
 } from "@/lib/certificates";
 import { renderCertificatePdf } from "@/lib/certificates/render";
 import { requiredOrdinals, resolveEffectiveTier } from "@/lib/curriculum";
@@ -73,7 +73,13 @@ export async function GET(req: Request) {
     userTier: user.tier,
     preview,
   });
-  const program = programForTier(effectiveTier);
+  // Owner may force the no-CE completion variant via ?preview=completion so the
+  // design can be QA'd without a real "otro" enrollee. Real users always get
+  // programFor(their tier, their professional_type).
+  const program =
+    isOwner && preview === "completion"
+      ? "profesional-completion"
+      : programFor(effectiveTier, user.professionalType);
   if (isOwner) {
     const siteUrl = getSiteUrl();
     const previewCertNo = "SCCA-PREVIEW";
