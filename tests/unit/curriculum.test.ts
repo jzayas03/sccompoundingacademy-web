@@ -57,9 +57,13 @@ describe("requiredOrdinals", () => {
 });
 
 describe("showAcpeDisclosure", () => {
-  it("is hidden for students, shown for everyone else", () => {
-    expect(showAcpeDisclosure("student")).toBe(false);
-    expect(showAcpeDisclosure("profesional")).toBe(true);
-    expect(showAcpeDisclosure(null)).toBe(true);
+  it("shows only for professional-tier pharmacists/techs", () => {
+    expect(showAcpeDisclosure("profesional", "farmaceutico")).toBe(true);
+    expect(showAcpeDisclosure("profesional", "tecnico")).toBe(true);
+  });
+  it("is hidden for students and non-pharmacy professionals", () => {
+    expect(showAcpeDisclosure("student", null)).toBe(false);
+    expect(showAcpeDisclosure("profesional", "medico")).toBe(false);
+    expect(showAcpeDisclosure("profesional", null)).toBe(false);
   });
 });
