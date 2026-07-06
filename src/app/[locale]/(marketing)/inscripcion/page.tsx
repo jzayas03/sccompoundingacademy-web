@@ -33,10 +33,10 @@ export default async function Page({
   searchParams,
 }: {
   params: Promise<{ locale: string }>;
-  searchParams: Promise<{ course?: string; tier?: string }>;
+  searchParams: Promise<{ course?: string; tier?: string; prof?: string }>;
 }) {
   const { locale } = await params;
-  const { course, tier } = await searchParams;
+  const { course, tier, prof } = await searchParams;
   setRequestLocale(locale);
   const loc = locale as "es" | "en";
 
@@ -54,6 +54,7 @@ export default async function Page({
       locale={loc}
       preselectedCourseSlug={course}
       preselectedTier={tier === "student" || tier === "profesional" ? tier : undefined}
+      preselectedProf={prof === "farmaceutico" || prof === "tecnico" || prof === "otro" ? prof : undefined}
       cohorts={cohorts}
     />
   );
@@ -63,11 +64,13 @@ function InscripcionPage({
   locale,
   preselectedCourseSlug,
   preselectedTier,
+  preselectedProf,
   cohorts,
 }: {
   locale: "es" | "en";
   preselectedCourseSlug?: string;
   preselectedTier?: Tier;
+  preselectedProf?: "farmaceutico" | "tecnico" | "otro";
   cohorts: CohortOption[];
 }) {
   const t = useTranslations("inscripcion");
@@ -98,6 +101,7 @@ function InscripcionPage({
             locale={locale}
             preselectedCourseId={preselectedCourseSlug}
             preselectedTier={preselectedTier}
+            preselectedProf={preselectedProf}
             cohorts={cohorts}
             docsVersion={docsVersion}
           />
