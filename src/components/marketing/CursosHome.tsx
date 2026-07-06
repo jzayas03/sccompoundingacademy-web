@@ -4,7 +4,7 @@ import { Button } from "@/components/ui/Button";
 import { Container } from "@/components/ui/Container";
 import { Reveal } from "@/components/ui/Reveal";
 import { cn } from "@/lib/cn";
-import { getCourseById, getPricingByTier, formatPrice, type Tier } from "@/lib/courses";
+import { type Tier } from "@/lib/courses";
 
 type CourseItem = {
   id: string;
@@ -42,13 +42,6 @@ export function CursosHome() {
   const student = items.find((c) => c.id === "student-foundations") ?? items[1];
   if (!professional || !student) return null;
 
-  // Prices are the single source of truth in the catalogue (both tracks
-  // share the basic-compounding product; Stripe is authoritative at
-  // checkout — this is the display label only).
-  const base = getCourseById("basic-compounding");
-  const proCents = base ? getPricingByTier(base, "profesional")?.priceUsdCents : undefined;
-  const studentCents = base ? getPricingByTier(base, "student")?.priceUsdCents : undefined;
-
   return (
     <section id="cursos" aria-label={t("heading")} className="bg-off-white">
       <Container className="py-16 sm:py-20 lg:py-24">
@@ -59,8 +52,6 @@ export function CursosHome() {
             highlights={professionalHighlights}
             enrollCta={t("courseCta")}
             enrollAria={t("courseLinkAria")}
-            price={proCents !== undefined ? formatPrice(proCents) : null}
-            perLabel={t("perParticipant")}
             priceNote={t("priceNoteProfessional")}
           />
           <CourseCard
@@ -69,8 +60,6 @@ export function CursosHome() {
             highlights={studentHighlights}
             enrollCta={t("courseCta")}
             enrollAria={t("courseLinkAria")}
-            price={studentCents !== undefined ? formatPrice(studentCents) : null}
-            perLabel={t("perStudent")}
             priceNote={t("priceNoteStudent")}
           />
         </Reveal>
@@ -85,8 +74,6 @@ function CourseCard({
   highlights,
   enrollCta,
   enrollAria,
-  price,
-  perLabel,
   priceNote,
 }: {
   tone: "dark" | "light";
@@ -94,8 +81,6 @@ function CourseCard({
   highlights: string[];
   enrollCta: string;
   enrollAria: string;
-  price: string | null;
-  perLabel: string;
   priceNote: string;
 }) {
   const dark = tone === "dark";
@@ -154,26 +139,9 @@ function CourseCard({
           dark ? "border-white/10" : "border-gray-300",
         )}
       >
-        {price && (
-          <div>
-            <div className="flex items-baseline gap-1.5">
-              <span
-                className={cn(
-                  "font-heading text-3xl font-extrabold tracking-[-0.03em]",
-                  dark ? "text-chartreuse" : "text-teal-deep",
-                )}
-              >
-                {price}
-              </span>
-              <span className={cn("text-xs", dark ? "text-off-white/60" : "text-gray-700")}>
-                {perLabel}
-              </span>
-            </div>
-            <p className={cn("mt-1.5 text-[11.5px]", dark ? "text-off-white/55" : "text-gray-700")}>
-              {priceNote}
-            </p>
-          </div>
-        )}
+        <p className={cn("text-[11.5px]", dark ? "text-off-white/55" : "text-gray-700")}>
+          {priceNote}
+        </p>
         <Link
           href={{
             pathname: "/inscripcion",
