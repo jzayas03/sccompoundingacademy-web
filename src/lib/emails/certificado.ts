@@ -1,4 +1,5 @@
 import { E, FONT, MARK_URL, button, bodyCell, renderEmail, esc } from "./_shell";
+import { certAwardsCeus, type CertProgram } from "@/lib/certificates/program";
 
 /**
  * Certificate-ready email — sent once when a student passes every module
@@ -10,8 +11,6 @@ import { E, FONT, MARK_URL, button, bodyCell, renderEmail, esc } from "./_shell"
  * badge subline is tier-aware (professional carries ACPE CE; the student
  * track is a non-ACPE completion certificate).
  */
-
-type CertProgram = "profesional" | "profesional-completion" | "student";
 
 type CertParams = {
   nombre: string;
@@ -28,7 +27,7 @@ export function buildCertificateReadyEmail(p: CertParams): {
 } {
   const es = p.locale === "es";
   const first = (p.nombre || "").trim().split(/\s+/)[0] ?? "";
-  const awardsCeus = p.program === "profesional";
+  const awardsCeus = certAwardsCeus(p.program);
 
   const subject = es
     ? "Tu certificado está listo · Santa Cruz Compounding Academy"
