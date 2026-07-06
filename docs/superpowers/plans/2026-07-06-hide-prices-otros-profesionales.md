@@ -39,6 +39,20 @@ ORDER BY tier, professional_type;
 
 Expected: a small table. Focus on rows where `tier='profesional'`.
 
+**Also run the certificate-drift query (added after final review — Issue 1).** Certificates re-render from live data, but the cert NUMBER is frozen at first issuance and `/verificar` infers CE purely from the number's prefix. So a pre-existing `tier='profesional'` graduate who is NOT a pharmacy role already holds a `SCCA-{year}-` (CE) number; after deploy their re-downloaded PDF becomes completion while `/verificar` still shows CE from the old prefix — a self-contradicting public credential. Enumerate any such already-issued certs:
+
+```sql
+SELECT u.id, u.tier, u.professional_type, c.cert_no
+FROM "user" u
+JOIN certificates c ON c.user_id = u.id
+WHERE u.tier = 'profesional'
+  AND (u.professional_type IS NULL
+       OR u.professional_type NOT IN ('farmaceutico', 'tecnico'))
+ORDER BY c.cert_no;
+```
+
+For each row returned whose `cert_no` starts with `SCCA-` (not `SCCA-EST-`/`SCCA-COMP-`): the owner decides per graduate — backfill `professional_type` to `farmaceutico`/`tecnico` if they are in fact a pharmacy role (keeps CE, no drift), or accept the prefix/PDF mismatch / reissue. `tier='pharmacist'` legacy rows are CE-eligible by tier and are NOT affected.
+
 - [ ] **Step 2: Interpret**
 
 For every `tier='profesional'` row whose `professional_type` is **not** `farmaceutico` or `tecnico` (null, empty, `medico`, free text, …): after deploy these become no-CE completion certs. Confirm with the owner whether any such row is a real pharmacist/tech who must keep CE.

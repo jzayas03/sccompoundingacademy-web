@@ -45,18 +45,32 @@ export function isPharmacyRole(professionalType: string | null | undefined): boo
 }
 ```
 
-Add to `src/lib/certificates/index.ts`:
+The canonical CE predicate (implemented in the pure leaf `src/lib/professions.ts`,
+re-exported via `src/lib/certificates/program.ts` → `index.ts`):
 
 ```ts
-/** True only for professional-tier pharmacists/techs — the ONLY enrollees
- *  who earn ACPE CE. Fail-safe: null / unknown / free-text profession → false
- *  (completion cert). NEVER test `=== "otro"` — that value is discarded before
- *  persistence (InscripcionForm.tsx:109-118); the specific profession or null
- *  is stored instead. */
-export function isCeEligible(tier: UserTier, professionalType: string | null): boolean {
+/** CE eligibility — the single source of truth. Legacy `tier === "pharmacist"`
+ *  rows (pre-2026-05-19 licensed pharmacists) are CE-eligible by tier alone. New
+ *  `profesional`-tier rows earn CE only when their profession is a pharmacy role.
+ *  Fail-safe: null / unknown / free-text profession → false (completion cert).
+ *  NEVER test `=== "otro"` — that value is discarded before persistence
+ *  (InscripcionForm.tsx:109-118); the specific profession or null is stored. */
+export function isCeEligible(
+  tier: string | null | undefined,
+  professionalType: string | null | undefined,
+): boolean {
+  if (tier === "pharmacist") return true;
   return tier === "profesional" && isPharmacyRole(professionalType);
 }
 ```
+
+> **Note (added during implementation):** the original draft omitted the legacy
+> `tier === "pharmacist"` enum value (`schema.ts` `tierEnum`), which would have
+> stripped CE from real legacy pharmacist accounts. The legacy branch above
+> restores their CE and can never grant CE to a non-pharmacist. To avoid an
+> import cycle and keep the email module DB-free, the predicate and the pure
+> program helpers (`CertProgram`, `programFor`, `certAwardsCeus`, `certPrefix`)
+> live in leaf modules; `@/lib/certificates` re-exports them.
 
 ## Part A — Hide prices (homepage)
 
