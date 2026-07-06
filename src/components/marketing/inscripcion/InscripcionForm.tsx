@@ -5,6 +5,7 @@ import Script from "next/script";
 import { useTranslations } from "next-intl";
 import { Link } from "@/i18n/routing";
 import { COURSES, DEFAULT_TIER, type Tier } from "@/lib/courses";
+import { resolveProfesion } from "@/lib/inscripcion/profesion";
 import {
   VERIFICATION_ACCEPTED_TYPES,
   matriculaFileIssue,
@@ -113,19 +114,15 @@ export function InscripcionForm({
 
   const selectedCourse = COURSES.find((c) => c.id === courseId);
 
-  // Profession value sent to the server: a known code (farmaceutico /
-  // tecnico / medico / …) or the free text typed under "Otro". Empty for
-  // the student tier (not asked) or until a choice is made.
-  const profesion =
-    tier !== "profesional"
-      ? ""
-      : tipoProfesional === "farmaceutico" || tipoProfesional === "tecnico"
-        ? tipoProfesional
-        : tipoProfesional === "otro"
-          ? otraProfesion === "otro"
-            ? otraProfesionTexto.trim()
-            : otraProfesion
-          : "";
+  // Profession value sent to the server as `tipo_profesional`. The "Otros
+  // Profesionales" track (tipoProfesional === "otro") does not force a specific
+  // sub-profession — it falls back to the generic "otro". See resolveProfesion.
+  const profesion = resolveProfesion(
+    tier,
+    tipoProfesional,
+    otraProfesion,
+    otraProfesionTexto,
+  );
 
   async function onSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();

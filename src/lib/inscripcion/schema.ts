@@ -51,3 +51,59 @@ export const inscripcionSchema = z
   });
 
 export type InscripcionInput = z.infer<typeof inscripcionSchema>;
+
+/**
+ * Friendly, field-aware message for a validation failure. The form is
+ * `noValidate` (browser checks disabled), so the server is the sole validator —
+ * a single generic sentence would leave the user guessing which field is wrong.
+ * This names the first user-fixable field instead; fields the user cannot fix
+ * (set programmatically) fall back to the generic sentence.
+ */
+const FIELD_MESSAGES: Record<string, { es: string; en: string }> = {
+  nombre: {
+    es: "Escribe tu nombre completo (mínimo 2 caracteres).",
+    en: "Enter your full name (at least 2 characters).",
+  },
+  email: {
+    es: "El correo electrónico no tiene un formato válido.",
+    en: "The email address is not valid.",
+  },
+  telefono: {
+    es: "El teléfono debe tener al menos 7 dígitos.",
+    en: "The phone number must have at least 7 digits.",
+  },
+  tipo_profesional: {
+    es: "Selecciona tu profesión para la inscripción profesional.",
+    en: "Select your profession to continue.",
+  },
+  acepto_terminos: {
+    es: "Debes aceptar los Términos, la Privacidad y los Reembolsos.",
+    en: "You must accept the Terms, Privacy and Refund policies.",
+  },
+  curso_id: {
+    es: "Selecciona un curso válido.",
+    en: "Select a valid course.",
+  },
+  cohorte_id: {
+    es: "Selecciona una cohorte disponible.",
+    en: "Select an available cohort.",
+  },
+};
+
+const GENERIC_MESSAGE = {
+  es: "Revisa los datos del formulario — hay un campo incompleto o con formato inválido (por ejemplo el correo electrónico).",
+  en: "Please review the form — a field is incomplete or has an invalid format (for example the email address).",
+} as const;
+
+export function inscripcionErrorMessage(
+  flattened: { fieldErrors: Record<string, string[] | undefined> },
+  locale: "es" | "en",
+): string {
+  const failing = Object.keys(flattened.fieldErrors).find(
+    (field) => (flattened.fieldErrors[field]?.length ?? 0) > 0,
+  );
+  if (failing && FIELD_MESSAGES[failing]) {
+    return FIELD_MESSAGES[failing][locale];
+  }
+  return GENERIC_MESSAGE[locale];
+}

@@ -13,6 +13,8 @@ const PROFESSION_LABELS_ES: Record<string, string> = {
   medico: "Médico/a",
   enfermero: "Enfermero/a",
   dentista: "Dentista",
+  // Generic "Otros Profesionales" enrollee who did not specify a sub-profession.
+  otro: "Otro profesional",
 };
 
 /**
