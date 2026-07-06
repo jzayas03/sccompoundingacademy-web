@@ -14,4 +14,13 @@ describe("CursosHome", () => {
     );
     expect(container.textContent).not.toMatch(/\$\s?\d/);
   });
+
+  it("renders three tracks incl. Otros Profesionales", () => {
+    const { getByText } = render(
+      <NextIntlClientProvider locale="es" messages={esMessages}>
+        <CursosHome />
+      </NextIntlClientProvider>,
+    );
+    expect(getByText("Otros Profesionales")).toBeTruthy();
+  });
 });

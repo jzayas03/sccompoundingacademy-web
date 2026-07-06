@@ -12,6 +12,7 @@ type CourseItem = {
   description: string;
   enrollCourseId?: string;
   enrollTier?: Tier;
+  enrollProf?: string;
 };
 
 /**
@@ -35,17 +36,20 @@ export function CursosHome() {
       items: CourseItem[];
       professionalHighlights: string[];
       studentHighlights: string[];
+      otrosProfesionalesHighlights: string[];
     };
   };
-  const { items, professionalHighlights, studentHighlights } = messages.cursosGrid;
+  const { items, professionalHighlights, studentHighlights, otrosProfesionalesHighlights } =
+    messages.cursosGrid as typeof messages.cursosGrid & { otrosProfesionalesHighlights: string[] };
   const professional = items.find((c) => c.id === "basic-compounding") ?? items[0];
   const student = items.find((c) => c.id === "student-foundations") ?? items[1];
+  const otros = items.find((c) => c.id === "otros-profesionales");
   if (!professional || !student) return null;
 
   return (
     <section id="cursos" aria-label={t("heading")} className="bg-off-white">
       <Container className="py-16 sm:py-20 lg:py-24">
-        <Reveal className="grid grid-cols-1 gap-4 md:grid-cols-2 md:items-stretch">
+        <Reveal className="grid grid-cols-1 gap-4 md:grid-cols-3 md:items-stretch">
           <CourseCard
             tone="dark"
             course={professional}
@@ -54,6 +58,16 @@ export function CursosHome() {
             enrollAria={t("courseLinkAria")}
             priceNote={t("priceNoteProfessional")}
           />
+          {otros && (
+            <CourseCard
+              tone="light"
+              course={otros}
+              highlights={otrosProfesionalesHighlights}
+              enrollCta={t("courseCta")}
+              enrollAria={t("courseLinkAria")}
+              priceNote={t("priceNoteStudent")}
+            />
+          )}
           <CourseCard
             tone="light"
             course={student}
@@ -148,6 +162,7 @@ function CourseCard({
             query: {
               course: course.enrollCourseId ?? course.id,
               ...(course.enrollTier ? { tier: course.enrollTier } : {}),
+              ...(course.enrollProf ? { prof: course.enrollProf } : {}),
             },
           }}
           aria-label={`${enrollAria}: ${course.title}`}
