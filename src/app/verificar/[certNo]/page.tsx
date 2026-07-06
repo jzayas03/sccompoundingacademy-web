@@ -85,8 +85,14 @@ export default async function VerificarPage({
 
   const valid = Boolean(row);
   // Program is encoded in the cert-number prefix: student certs mint
-  // "SCCA-EST-..." (Task 9). Everything else is the professional variant.
-  const program = certNo.startsWith("SCCA-EST-") ? "student" : "profesional";
+  // "SCCA-EST-..." (Task 9). Completion certs mint "SCCA-COMP-..." (Task 3).
+  // Everything else is the professional CE variant.
+  const program: "profesional" | "profesional-completion" | "student" =
+    certNo.startsWith("SCCA-EST-")
+      ? "student"
+      : certNo.startsWith("SCCA-COMP-")
+        ? "profesional-completion"
+        : "profesional";
   const studentName = row?.studentName?.trim() || row?.studentEmail || "—";
   const issuedAt = row?.issuedAt ?? null;
 
@@ -113,7 +119,7 @@ function VerifyPanel({
 }: {
   valid: boolean;
   certNo: string;
-  program: "profesional" | "student";
+  program: "profesional" | "profesional-completion" | "student";
   studentName: string;
   issuedAt: Date | null;
 }) {
@@ -129,6 +135,15 @@ function VerifyPanel({
         timeZone: "UTC",
       }).format(issuedAt)
     : "—";
+
+  const titleKey =
+    program === "student" ? "courseTitleStudent" : "courseTitle";
+  const subtitleKey =
+    program === "student"
+      ? "courseSubtitleStudent"
+      : program === "profesional-completion"
+        ? "courseSubtitleCompletion"
+        : "courseSubtitle";
 
   return (
     <Container className="max-w-2xl py-20 sm:py-24 lg:py-28">
@@ -187,10 +202,10 @@ function VerifyPanel({
               {certNo}
             </p>
             <p className="font-heading text-gray-900 mt-2 text-base font-semibold leading-snug sm:text-lg">
-              {t(program === "student" ? "courseTitleStudent" : "courseTitle")}
+              {t(titleKey)}
             </p>
             <p className="text-gray-700 mt-2 text-sm leading-relaxed">
-              {t(program === "student" ? "courseSubtitleStudent" : "courseSubtitle")}
+              {t(subtitleKey)}
             </p>
           </div>
         )}
