@@ -716,7 +716,8 @@
     "submitting": "Procesando…",
     "errors": {
       "generic": "No pudimos procesar tu inscripción. Intenta nuevamente.",
-      "network": "Problema de conexión. Verifica tu internet e intenta de nuevo."
+      "network": "Problema de conexión. Verifica tu internet e intenta de nuevo.",
+      "professionRequired": "Selecciona tu profesión para continuar."
     },
     "success": {
       "title": "Inscripción confirmada",

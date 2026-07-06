@@ -138,6 +138,14 @@ export function InscripcionForm({
       return;
     }
 
+    // Professional tier requires a recorded profession — CE eligibility
+    // (farmacéutico/técnico) keys on this field, so a pharmacist who pays
+    // without it would silently fall to a no-CE completion cert.
+    if (tier === "profesional" && !profesion.trim()) {
+      setError(t("errors.professionRequired"));
+      return;
+    }
+
     const fd = new FormData(e.currentTarget);
     setSubmitting(true);
 

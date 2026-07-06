@@ -710,7 +710,8 @@
     "submitting": "Processing…",
     "errors": {
       "generic": "We couldn't process your enrollment. Please try again.",
-      "network": "Connection problem. Check your internet and try again."
+      "network": "Connection problem. Check your internet and try again.",
+      "professionRequired": "Select your profession to continue."
     },
     "success": {
       "title": "Enrollment confirmed",

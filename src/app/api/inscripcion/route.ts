@@ -12,6 +12,7 @@ import { db } from "@/lib/db";
 import { users } from "@/lib/db/schema";
 import { notifyMatriculaReview } from "@/lib/portal/notify-matricula-review";
 import { buildPendingStudentValues } from "@/lib/inscripcion/pending-enrollment";
+import { inscripcionSchema } from "@/lib/inscripcion/schema";
 
 export const runtime = "nodejs";
 
@@ -34,36 +35,7 @@ export const runtime = "nodejs";
  *   rows correspond 1:1 to paid enrollments.
  */
 
-const InscripcionSchema = z.object({
-  nombre: z.string().trim().min(2).max(120),
-  email: z.string().trim().email().max(254),
-  telefono: z.string().trim().min(7).max(40),
-  licencia: z.string().trim().max(60).optional().or(z.literal("")),
-  curso_id: z.string().trim().min(1),
-  cohorte_id: z.string().trim().min(1),
-  tier: z.enum(["profesional", "student"]),
-  // Public Blob URL of the student's matrícula photo, uploaded before
-  // checkout. Required for the student tier (enforced in the handler);
-  // empty/absent for profesional.
-  matricula_doc_url: z.string().trim().max(512).optional().or(z.literal("")),
-  // Profession captured for the profesional tier — "farmaceutico" /
-  // "tecnico" (ACPE registry), a profession code (medico/…), or the free
-  // text typed under "Otro". Free-form string; empty for the student tier.
-  tipo_profesional: z.string().trim().max(80).optional().or(z.literal("")),
-  notas: z.string().trim().max(1000).optional().or(z.literal("")),
-  acepto_terminos: z.literal(true, {
-    errorMap: () => ({ message: "Debes aceptar los Términos, Privacidad y Reembolsos." }),
-  }),
-  acepto_version_docs: z.string().trim().min(1),
-  locale: z.enum(["es", "en"]),
-  // Cloudflare Turnstile token from the browser widget. Optional in the
-  // schema so the form keeps working before Turnstile is wired up; when
-  // TURNSTILE_SECRET_KEY is configured, `verifyTurnstile` rejects a missing
-  // or invalid token below.
-  turnstile_token: z.string().trim().max(2048).optional().or(z.literal("")),
-});
-
-export type InscripcionPayload = z.infer<typeof InscripcionSchema>;
+export type InscripcionPayload = z.infer<typeof inscripcionSchema>;
 
 /**
  * Stripe idempotency key for a checkout submission.
@@ -134,7 +106,7 @@ export async function POST(req: Request) {
     return NextResponse.json({ error: "Invalid JSON" }, { status: 400 });
   }
 
-  const parsed = InscripcionSchema.safeParse(body);
+  const parsed = inscripcionSchema.safeParse(body);
   if (!parsed.success) {
     // User-facing sentence (consistent with every other error in this
     // route). `issues` keeps the flattened Zod detail for debugging —
