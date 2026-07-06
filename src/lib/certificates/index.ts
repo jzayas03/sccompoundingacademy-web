@@ -32,13 +32,12 @@ export type EligibilityReport = {
   passedModules: Record<number, boolean>;
 };
 
-/** Which certificate program a given portal tier earns. The student
- *  track gets a non-ACPE completion certificate with its own numbering;
- *  everyone else (profesional / pharmacist / owner-null) gets the
- *  professional certificate. */
-export type CertProgram = "profesional" | "student";
+export type CertProgram = "profesional" | "profesional-completion" | "student";
 
-export function programForTier(tier: UserTier): CertProgram {
+/** Legacy tier-only mapping (student vs professional). Kept for callers that
+ *  have no professional_type; NEVER returns the completion program. Prefer
+ *  `programFor` at any site that can read professional_type. */
+export function programForTier(tier: UserTier): "profesional" | "student" {
   return tier === "student" ? "student" : "profesional";
 }
 
@@ -51,12 +50,25 @@ export function isCeEligible(
   return tier === "profesional" && isPharmacyRole(professionalType);
 }
 
-/** Human-friendly cert-number prefix per program. The two prefixes are
- *  deliberately disjoint (`SCCA-` vs `SCCA-EST-`) so the `LIKE ${prefix}%`
- *  numbering query never crosses programs — student numbering and
- *  professional numbering each advance independently. */
+/** Full program resolution. Professional-tier pharmacists/techs earn the CE
+ *  program; every other professional gets the no-CE completion program. */
+export function programFor(tier: UserTier, professionalType: string | null): CertProgram {
+  if (tier === "student") return "student";
+  return isCeEligible(tier, professionalType) ? "profesional" : "profesional-completion";
+}
+
+/** Only the CE professional program prints CEUs + the ACPE provider line. */
+export function certAwardsCeus(program: CertProgram): boolean {
+  return program === "profesional";
+}
+
+/** Human-friendly cert-number prefix per program. The three prefixes are
+ *  deliberately disjoint so each `LIKE ${prefix}%` numbering query stays in
+ *  its own sequence: SCCA- (CE), SCCA-EST- (student), SCCA-COMP- (completion). */
 export function certPrefix(program: CertProgram, year: number): string {
-  return program === "student" ? `SCCA-EST-${year}-` : `SCCA-${year}-`;
+  if (program === "student") return `SCCA-EST-${year}-`;
+  if (program === "profesional-completion") return `SCCA-COMP-${year}-`;
+  return `SCCA-${year}-`;
 }
 
 /** Pure eligibility evaluator: given the ordinals the user has passed and
