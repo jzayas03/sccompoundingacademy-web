@@ -330,6 +330,13 @@
       "Certificado de finalización emitido",
       "Sin crédito CE de ACPE — reservado a profesionales licenciados"
     ],
+    "otrosProfesionalesHighlights": [
+      "18 horas de contacto · 3 días · 6 hrs/día",
+      "Mismo currículo USP 〈795〉 + 〈800〉 que el track profesional",
+      "Certificado de finalización — sin crédito CE de ACPE",
+      "Cohortes pequeñas · materiales y almuerzo incluidos",
+      "Práctica supervisada en laboratorio"
+    ],
     "items": [
       {
         "id": "basic-compounding",
@@ -388,6 +395,25 @@
         "credentialNote": "Certificado de finalización — sin créditos de educación continua (CE) de ACPE. El crédito CE está reservado al track profesional.",
         "enrollCourseId": "basic-compounding",
         "enrollTier": "student"
+      },
+      {
+        "id": "otros-profesionales",
+        "level": "Fundamentos",
+        "uspLabel": "USP 〈795〉 + 〈800〉",
+        "title": "Otros Profesionales",
+        "description": "El mismo curso presencial de 18 horas (USP 〈795〉 y 〈800〉) para otros profesionales licenciados no farmacéuticos. Misma formación y práctica supervisada; certificado de finalización sin créditos CE de ACPE.",
+        "duration": "18 h · 3 días",
+        "courseRef": "basic-compounding",
+        "noCe": true,
+        "modules": [
+          { "id": "modulo-1", "day": "Día 1 · 6 hrs", "title": "Fundamentos regulatorios y cápsulas", "summary": "USP 〈795〉 y 〈800〉, NIOSH, PPE, Ley de Farmacia de PR, DQSA; cálculo de BUD y laboratorio de cápsulas." },
+          { "id": "modulo-2", "day": "Día 2 · 6 hrs", "title": "Supositorios, líquidos orales y dermatología", "summary": "Formulación de supositorios, suspensiones orales, condiciones tópicas y preparaciones para manejo del dolor." },
+          { "id": "modulo-3", "day": "Día 3 · 6 hrs", "title": "Hormonales tópicos, veterinaria y regulación", "summary": "BHRT, Topi-Click, penetration enhancers, 503A/503B y compounding veterinario." }
+        ],
+        "credentialNote": "Certificado de finalización — sin créditos CE de ACPE. El crédito CE está reservado a farmacéuticos y técnicos de farmacia licenciados.",
+        "enrollCourseId": "basic-compounding",
+        "enrollTier": "profesional",
+        "enrollProf": "otro"
       }
     ]
   },
