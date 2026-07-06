@@ -61,6 +61,9 @@ describe("showAcpeDisclosure", () => {
     expect(showAcpeDisclosure("profesional", "farmaceutico")).toBe(true);
     expect(showAcpeDisclosure("profesional", "tecnico")).toBe(true);
   });
+  it("shows unconditionally for the legacy pharmacist tier", () => {
+    expect(showAcpeDisclosure("pharmacist", null)).toBe(true);
+  });
   it("is hidden for students and non-pharmacy professionals", () => {
     expect(showAcpeDisclosure("student", null)).toBe(false);
     expect(showAcpeDisclosure("profesional", "medico")).toBe(false);

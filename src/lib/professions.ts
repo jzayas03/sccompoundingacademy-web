@@ -34,3 +34,18 @@ export function professionLabel(value: string | null | undefined): string {
 export function isPharmacyRole(professionalType: string | null | undefined): boolean {
   return professionalType === "farmaceutico" || professionalType === "tecnico";
 }
+
+/**
+ * CE eligibility — the single source of truth for "does this enrollee earn
+ * ACPE CE". Legacy `tier === "pharmacist"` rows (pre-2026-05-19 licensed
+ * pharmacists) are CE-eligible by tier alone. New `profesional`-tier rows earn
+ * CE only when their profession is a pharmacy role. Everyone else (students,
+ * non-pharmacy professionals, unknown) earns no CE.
+ */
+export function isCeEligible(
+  tier: string | null | undefined,
+  professionalType: string | null | undefined,
+): boolean {
+  if (tier === "pharmacist") return true;
+  return tier === "profesional" && isPharmacyRole(professionalType);
+}

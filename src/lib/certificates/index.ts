@@ -3,7 +3,7 @@ import { and, desc, eq, inArray, sql } from "drizzle-orm";
 import { db } from "@/lib/db";
 import { certificates, quizAttempts } from "@/lib/db/schema";
 import { requiredOrdinals, type UserTier } from "@/lib/curriculum";
-import { isPharmacyRole } from "@/lib/professions";
+import { isCeEligible as isCeEligibleCore } from "@/lib/professions";
 
 /**
  * Certificate lifecycle helpers for the SCCA portal.
@@ -41,13 +41,16 @@ export function programForTier(tier: UserTier): "profesional" | "student" {
   return tier === "student" ? "student" : "profesional";
 }
 
-/** True only for professional-tier pharmacists/techs — the only enrollees
- *  who earn ACPE CE. Fail-safe: null/unknown/free-text profession → false. */
+/** CE-eligible enrollees earn ACPE CE: legacy `tier === "pharmacist"` rows
+ *  (pre-2026-05-19 licensed pharmacists) unconditionally, plus professional-
+ *  tier pharmacists/techs. Delegates to the leaf predicate in
+ *  `@/lib/professions` — the single source of truth. Fail-safe:
+ *  null/unknown/free-text profession → false. */
 export function isCeEligible(
   tier: UserTier,
   professionalType: string | null,
 ): boolean {
-  return tier === "profesional" && isPharmacyRole(professionalType);
+  return isCeEligibleCore(tier, professionalType);
 }
 
 /** Full program resolution. Professional-tier pharmacists/techs earn the CE
