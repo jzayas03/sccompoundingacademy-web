@@ -330,6 +330,13 @@
       "Certificate of completion issued",
       "No ACPE CE credit — reserved for licensed professionals"
     ],
+    "otrosProfesionalesHighlights": [
+      "18 contact hours · 3 days · 6 hrs/day",
+      "Same USP 〈795〉 + 〈800〉 curriculum as the professional track",
+      "Certificate of completion — no ACPE CE credit",
+      "Small cohorts · materials and lunch included",
+      "Supervised lab practice"
+    ],
     "items": [
       {
         "id": "basic-compounding",
@@ -388,6 +395,25 @@
         "credentialNote": "Certificate of completion — no ACPE continuing-education (CE) credit. CE credit is reserved for the professional track.",
         "enrollCourseId": "basic-compounding",
         "enrollTier": "student"
+      },
+      {
+        "id": "otros-profesionales",
+        "level": "Foundations",
+        "uspLabel": "USP 〈795〉 + 〈800〉",
+        "title": "Other Professionals",
+        "description": "The same 18-hour in-person course (USP 〈795〉 and 〈800〉) for other licensed non-pharmacist professionals. Same training and supervised practice; certificate of completion with no ACPE CE credit.",
+        "duration": "18 h · 3 days",
+        "courseRef": "basic-compounding",
+        "noCe": true,
+        "modules": [
+          { "id": "modulo-1", "day": "Day 1 · 6 hrs", "title": "Regulatory foundations and capsules", "summary": "USP 〈795〉 and 〈800〉, NIOSH, PPE, PR Pharmacy Act, DQSA; BUD math and a capsule lab." },
+          { "id": "modulo-2", "day": "Day 2 · 6 hrs", "title": "Suppositories, oral liquids, and dermatology", "summary": "Suppository formulation, oral suspensions, topical conditions, and pain-management preparations." },
+          { "id": "modulo-3", "day": "Day 3 · 6 hrs", "title": "Topical hormones, veterinary, and regulation", "summary": "BHRT, Topi-Click, penetration enhancers, 503A/503B, and veterinary compounding." }
+        ],
+        "credentialNote": "Certificate of completion — no ACPE CE credit. CE credit is reserved for licensed pharmacists and pharmacy technicians.",
+        "enrollCourseId": "basic-compounding",
+        "enrollTier": "profesional",
+        "enrollProf": "otro"
       }
     ]
   },
@@ -684,7 +710,8 @@
     "submitting": "Processing…",
     "errors": {
       "generic": "We couldn't process your enrollment. Please try again.",
-      "network": "Connection problem. Check your internet and try again."
+      "network": "Connection problem. Check your internet and try again.",
+      "professionRequired": "Select your profession to continue."
     },
     "success": {
       "title": "Enrollment confirmed",
@@ -832,6 +859,7 @@
     "courseSubtitle": "18 contact hours · 1.8 CEUs · Knowledge-based, Level 1 · ACPE Provider 0151",
     "courseTitleStudent": "Student Program — Foundations of Nonsterile Compounding",
     "courseSubtitleStudent": "USP 〈795〉 & 〈800〉 · Certificate of completion",
+    "courseSubtitleCompletion": "Certificate of completion · 18 contact hours · no ACPE CE credit",
     "backToHome": "Back to sccompoundingacademy.com"
   },
   "portal": {

@@ -189,3 +189,22 @@ describe("SCCA email templates", () => {
     expect(true).toBe(true);
   });
 });
+
+describe("buildCertificateReadyEmail CE gating", () => {
+  const base = { nombre: "Ana", locale: "es" as const, certUrl: "https://x/y" };
+  it("includes CEUs for the CE professional program", () => {
+    const m = buildCertificateReadyEmail({ ...base, program: "profesional" });
+    expect(m.html).toContain("CEUs");
+  });
+  it("omits CE copy for the completion program", () => {
+    const m = buildCertificateReadyEmail({ ...base, program: "profesional-completion" });
+    expect(m.html).not.toContain("CEUs");
+    expect(m.html).not.toContain("ACPE");
+    expect(m.html).not.toContain("documentación de horas CE");
+    expect(m.text).not.toContain("CEUs");
+  });
+  it("omits CE copy for students", () => {
+    const m = buildCertificateReadyEmail({ ...base, program: "student" });
+    expect(m.html).not.toContain("CEUs");
+  });
+});

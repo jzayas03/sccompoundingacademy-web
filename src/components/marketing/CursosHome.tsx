@@ -4,7 +4,7 @@ import { Button } from "@/components/ui/Button";
 import { Container } from "@/components/ui/Container";
 import { Reveal } from "@/components/ui/Reveal";
 import { cn } from "@/lib/cn";
-import { getCourseById, getPricingByTier, formatPrice, type Tier } from "@/lib/courses";
+import { type Tier } from "@/lib/courses";
 
 type CourseItem = {
   id: string;
@@ -12,21 +12,23 @@ type CourseItem = {
   description: string;
   enrollCourseId?: string;
   enrollTier?: Tier;
+  enrollProf?: string;
 };
 
 /**
- * CursosHome — homepage two-track course cards.
+ * CursosHome — homepage three-track course cards.
  *
  * Recreated from the SCCA Design System handoff (Courses section): the
- * Professional track as a teal-deep card and the Student track as a
- * white card, each with a five-point highlight checklist and an Enroll
- * CTA. Distinct from `CursosGrid` (the detailed /cursos catalogue page)
- * — this is the leaner landing presentation only.
+ * Professional track (Farmacéuticos y Técnicos) as a teal-deep card, the
+ * Otros Profesionales track, and the Student track — the latter two as
+ * white cards — each with a highlight checklist and an Enroll CTA.
+ * Distinct from `CursosGrid` (the detailed /cursos catalogue page) — this
+ * is the leaner landing presentation only.
  *
  * Enrollment wiring (course id + tier → /inscripcion query) mirrors the
- * catalogue so both buttons reach the correct checkout. Copy comes from
- * `cursosGrid.items[]` plus the handoff's professional/student highlight
- * lists.
+ * catalogue so all three buttons reach the correct checkout. Copy comes
+ * from `cursosGrid.items[]` plus the handoff's professional/otros
+ * profesionales/student highlight lists.
  */
 export function CursosHome() {
   const t = useTranslations("cursosGrid");
@@ -35,42 +37,44 @@ export function CursosHome() {
       items: CourseItem[];
       professionalHighlights: string[];
       studentHighlights: string[];
+      otrosProfesionalesHighlights: string[];
     };
   };
-  const { items, professionalHighlights, studentHighlights } = messages.cursosGrid;
+  const { items, professionalHighlights, studentHighlights, otrosProfesionalesHighlights } =
+    messages.cursosGrid;
   const professional = items.find((c) => c.id === "basic-compounding") ?? items[0];
   const student = items.find((c) => c.id === "student-foundations") ?? items[1];
+  const otros = items.find((c) => c.id === "otros-profesionales");
   if (!professional || !student) return null;
-
-  // Prices are the single source of truth in the catalogue (both tracks
-  // share the basic-compounding product; Stripe is authoritative at
-  // checkout — this is the display label only).
-  const base = getCourseById("basic-compounding");
-  const proCents = base ? getPricingByTier(base, "profesional")?.priceUsdCents : undefined;
-  const studentCents = base ? getPricingByTier(base, "student")?.priceUsdCents : undefined;
 
   return (
     <section id="cursos" aria-label={t("heading")} className="bg-off-white">
       <Container className="py-16 sm:py-20 lg:py-24">
-        <Reveal className="grid grid-cols-1 gap-4 md:grid-cols-2 md:items-stretch">
+        <Reveal className="grid grid-cols-1 gap-4 md:grid-cols-3 md:items-stretch">
           <CourseCard
             tone="dark"
             course={professional}
             highlights={professionalHighlights}
             enrollCta={t("courseCta")}
             enrollAria={t("courseLinkAria")}
-            price={proCents !== undefined ? formatPrice(proCents) : null}
-            perLabel={t("perParticipant")}
             priceNote={t("priceNoteProfessional")}
           />
+          {otros && (
+            <CourseCard
+              tone="light"
+              course={otros}
+              highlights={otrosProfesionalesHighlights}
+              enrollCta={t("courseCta")}
+              enrollAria={t("courseLinkAria")}
+              priceNote={t("priceNoteStudent")}
+            />
+          )}
           <CourseCard
             tone="light"
             course={student}
             highlights={studentHighlights}
             enrollCta={t("courseCta")}
             enrollAria={t("courseLinkAria")}
-            price={studentCents !== undefined ? formatPrice(studentCents) : null}
-            perLabel={t("perStudent")}
             priceNote={t("priceNoteStudent")}
           />
         </Reveal>
@@ -85,8 +89,6 @@ function CourseCard({
   highlights,
   enrollCta,
   enrollAria,
-  price,
-  perLabel,
   priceNote,
 }: {
   tone: "dark" | "light";
@@ -94,8 +96,6 @@ function CourseCard({
   highlights: string[];
   enrollCta: string;
   enrollAria: string;
-  price: string | null;
-  perLabel: string;
   priceNote: string;
 }) {
   const dark = tone === "dark";
@@ -154,32 +154,16 @@ function CourseCard({
           dark ? "border-white/10" : "border-gray-300",
         )}
       >
-        {price && (
-          <div>
-            <div className="flex items-baseline gap-1.5">
-              <span
-                className={cn(
-                  "font-heading text-3xl font-extrabold tracking-[-0.03em]",
-                  dark ? "text-chartreuse" : "text-teal-deep",
-                )}
-              >
-                {price}
-              </span>
-              <span className={cn("text-xs", dark ? "text-off-white/60" : "text-gray-700")}>
-                {perLabel}
-              </span>
-            </div>
-            <p className={cn("mt-1.5 text-[11.5px]", dark ? "text-off-white/55" : "text-gray-700")}>
-              {priceNote}
-            </p>
-          </div>
-        )}
+        <p className={cn("text-[11.5px]", dark ? "text-off-white/55" : "text-gray-700")}>
+          {priceNote}
+        </p>
         <Link
           href={{
             pathname: "/inscripcion",
             query: {
               course: course.enrollCourseId ?? course.id,
               ...(course.enrollTier ? { tier: course.enrollTier } : {}),
+              ...(course.enrollProf ? { prof: course.enrollProf } : {}),
             },
           }}
           aria-label={`${enrollAria}: ${course.title}`}

@@ -11,7 +11,11 @@ import { Link } from "@/i18n/routing";
 import { auth } from "@/lib/auth";
 import { db } from "@/lib/db";
 import { users } from "@/lib/db/schema";
-import { findCertificateByUser, isEligibleForCertificate } from "@/lib/certificates";
+import {
+  findCertificateByUser,
+  isCeEligible,
+  isEligibleForCertificate,
+} from "@/lib/certificates";
 import {
   getCurriculum,
   requiredOrdinals,
@@ -94,6 +98,7 @@ export default async function CertificadoPage({
       shareUrl={shareUrl}
       modules={getCurriculum(effectiveTier)}
       tier={effectiveTier}
+      professionalType={user.professionalType}
       preview={effectivePreview}
     />
   );
@@ -101,12 +106,20 @@ export default async function CertificadoPage({
 
 /** Tier-accurate preview of the real (English) certificate PDF — the
  *  same course + credit lines `certificates/render.ts` prints. Kept in
- *  English on purpose: it mirrors the actual credential, not the UI. */
+ *  English on purpose: it mirrors the actual credential, not the UI.
+ *  `ce` (professional-tier pharmacists/techs) is the only variant that
+ *  prints CEUs; `completion` mirrors the no-CE professional credential
+ *  (`programFor` = "profesional-completion") and `student` is unchanged. */
 const CERT_MOCK = {
-  profesional: {
+  ce: {
     title: "Basic Non-Sterile Compounding",
     sub: "for Pharmacists & Pharmacy Technicians",
     credit: "18 contact hours · 1.8 CEUs",
+  },
+  completion: {
+    title: "Basic Non-Sterile Compounding",
+    sub: "Professional Program",
+    credit: "18 contact hours · Certificate of Completion",
   },
   student: {
     title: "Nonsterile Compounding — Student Program",
@@ -122,6 +135,7 @@ function CertPanel({
   shareUrl,
   modules,
   tier,
+  professionalType,
   preview,
 }: {
   passedModules: Record<number, boolean>;
@@ -130,13 +144,21 @@ function CertPanel({
   shareUrl: string;
   modules: readonly { id: string; ordinal: number }[];
   tier: UserTier;
+  professionalType: string | null;
   preview?: "profesional" | "student";
 }) {
   const t = useTranslations("portal.cert");
   const moduleList = getModuleCatalogue(useMessages(), tier);
-  // Matches render.ts's student-vs-everything-else split (pharmacist +
-  // profesional both print the CE-bearing "Basic Non-Sterile" credential).
-  const mock = tier === "student" ? CERT_MOCK.student : CERT_MOCK.profesional;
+  // Matches render.ts's program split: student keeps its own copy;
+  // professional-tier pharmacists/techs (CE-eligible) see the CEU/ACPE
+  // mock, every other professional (no CE) sees the completion mock.
+  const ceEligible = isCeEligible(tier, professionalType);
+  const mock =
+    tier === "student"
+      ? CERT_MOCK.student
+      : ceEligible
+        ? CERT_MOCK.ce
+        : CERT_MOCK.completion;
 
   return (
     <>

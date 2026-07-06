@@ -4,7 +4,7 @@ import { Resend } from "resend";
 import { eq } from "drizzle-orm";
 import { db } from "@/lib/db";
 import { certificateEmails } from "@/lib/db/schema";
-import { isEligibleForCertificate, programForTier } from "@/lib/certificates";
+import { isEligibleForCertificate, programFor } from "@/lib/certificates";
 import { buildCertificateReadyEmail } from "@/lib/emails/certificado";
 import { getSiteUrl } from "@/lib/siteUrl";
 import type { UserTier } from "@/lib/curriculum";
@@ -35,6 +35,7 @@ export async function notifyCertificateReadyIfEligible(p: {
   name: string | null;
   email: string | null;
   tier: UserTier;
+  professionalType: string | null;
   locale: "es" | "en";
 }): Promise<void> {
   try {
@@ -59,7 +60,7 @@ export async function notifyCertificateReadyIfEligible(p: {
         nombre: p.name ?? "",
         locale: p.locale,
         certUrl,
-        program: programForTier(p.tier),
+        program: programFor(p.tier, p.professionalType),
       });
       const resend = new Resend(key);
       await resend.emails.send({

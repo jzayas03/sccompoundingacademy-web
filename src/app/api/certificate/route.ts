@@ -4,9 +4,10 @@ import { auth } from "@/lib/auth";
 import { db } from "@/lib/db";
 import { users } from "@/lib/db/schema";
 import {
+  type CertProgram,
   getOrCreateCertificate,
   isEligibleForCertificate,
-  programForTier,
+  programFor,
 } from "@/lib/certificates";
 import { renderCertificatePdf } from "@/lib/certificates/render";
 import { requiredOrdinals, resolveEffectiveTier } from "@/lib/curriculum";
@@ -60,20 +61,29 @@ export async function GET(req: Request) {
   // number). See src/lib/admin.ts for the allowlist.
   const isOwner = isAdminEmail(session.user.email);
 
-  // Certificate program selects the cert variant: "student" renders a
-  // completion certificate with no ACPE CE credit / provider line, while
-  // "profesional" renders the credit-bearing ACPE variant. A null tier
-  // (owner/admin or legacy row) maps to "profesional". Owners may force
-  // either variant via ?preview= so the preview PDF reflects the chosen
-  // program; for real (non-owner) users effectiveTier === user.tier so
-  // behavior is unchanged.
   const preview = new URL(req.url).searchParams.get("preview");
   const effectiveTier = resolveEffectiveTier({
     isOwner,
     userTier: user.tier,
     preview,
   });
-  const program = programForTier(effectiveTier);
+  // Certificate program selects the cert variant: "student" and
+  // "profesional-completion" render a completion certificate with no ACPE
+  // CE credit / provider line, while "profesional" renders the
+  // credit-bearing ACPE variant. Owner/admin preview is controlled
+  // explicitly by ?preview= so the academy can QA every certificate variant
+  // regardless of their own row's tier/profession; real (non-owner) users
+  // always get programFor(their tier, their professional_type) — preview
+  // never affects a non-owner.
+  const program: CertProgram = isOwner
+    ? preview === "completion"
+      ? "profesional-completion"
+      : preview === "student"
+        ? "student"
+        : preview === "profesional"
+          ? "profesional"
+          : programFor(effectiveTier, user.professionalType)
+    : programFor(effectiveTier, user.professionalType);
   if (isOwner) {
     const siteUrl = getSiteUrl();
     const previewCertNo = "SCCA-PREVIEW";

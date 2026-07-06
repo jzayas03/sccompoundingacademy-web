@@ -12,10 +12,16 @@ import { describe, it, expect } from "vitest";
 import { renderCertificatePdf } from "@/lib/certificates/render";
 
 describe("renderCertificatePdf", () => {
-  for (const program of ["profesional", "student"] as const) {
+  for (const program of ["profesional", "profesional-completion", "student"] as const) {
     it(`produces a valid PDF for the ${program} program`, async () => {
+      const certNo =
+        program === "student"
+          ? "SCCA-EST-2026-001"
+          : program === "profesional-completion"
+            ? "SCCA-COMP-2026-001"
+            : "SCCA-2026-001";
       const bytes = await renderCertificatePdf({
-        certNo: program === "student" ? "SCCA-EST-2026-001" : "SCCA-2026-001",
+        certNo,
         studentName: "Kiara Rivera Santiago",
         issuedAt: new Date("2026-06-24T00:00:00Z"),
         verificationUrl: "https://sccompoundingacademy.com/verificar/X",

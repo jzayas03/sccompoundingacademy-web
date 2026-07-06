@@ -31,6 +31,9 @@ type CourseItem = {
   credentialNote?: string;
   enrollCourseId?: string;
   enrollTier?: Tier;
+  courseRef?: string;
+  enrollProf?: string;
+  noCe?: boolean;
 };
 
 /**
@@ -98,8 +101,8 @@ export function CursosGrid({ openCohorts }: { openCohorts: CohortBrief[] }) {
 
         <Reveal as="ul" className="mt-12 grid grid-cols-1 gap-6 sm:gap-8 lg:mt-16">
           {items.map((course) => {
-            const courseData = getCourseById(course.id);
-            const cohortMonth = nextCohortLabel(course.id);
+            const courseData = getCourseById(course.courseRef ?? course.id);
+            const cohortMonth = nextCohortLabel(course.courseRef ?? course.id);
             const uspLabel = courseData?.uspLabel ?? course.uspLabel;
             const cardIncludes = course.includesItems ?? includesItems;
             return (
@@ -187,7 +190,7 @@ export function CursosGrid({ openCohorts }: { openCohorts: CohortBrief[] }) {
                     </div>
                   )}
 
-                  {courseData?.acpe && (
+                  {courseData?.acpe && !course.noCe && (
                     <div className="border-gray-300 mt-6 border-t pt-6">
                       <p className="font-heading text-teal-deep text-xs font-semibold tracking-[0.18em] uppercase">
                         {t("ceLabel")}
@@ -203,7 +206,7 @@ export function CursosGrid({ openCohorts }: { openCohorts: CohortBrief[] }) {
                     </div>
                   )}
 
-                  {!courseData?.acpe && course.credentialNote && (
+                  {(course.noCe || !courseData?.acpe) && course.credentialNote && (
                     <div className="border-gray-300 mt-6 border-t pt-6">
                       <p className="font-heading text-teal-deep text-xs font-semibold tracking-[0.18em] uppercase">
                         {t("credentialLabel")}
@@ -237,6 +240,7 @@ export function CursosGrid({ openCohorts }: { openCohorts: CohortBrief[] }) {
                             query: {
                               course: course.enrollCourseId ?? course.id,
                               ...(course.enrollTier ? { tier: course.enrollTier } : {}),
+                              ...(course.enrollProf ? { prof: course.enrollProf } : {}),
                             },
                           }}
                           className="font-heading text-teal-deep group-hover:text-teal inline-flex shrink-0 items-center gap-1 text-sm font-semibold transition-colors"

@@ -30,6 +30,8 @@ type Props = {
   preselectedCourseId?: string;
   /** Tier pre-selected via ?tier= query param (optional). */
   preselectedTier?: Tier;
+  /** Profession pre-selected via ?prof= (profesional tier only). */
+  preselectedProf?: "farmaceutico" | "tecnico" | "otro";
   /** Open cohorts fetched from the DB by the server page. */
   cohorts: CohortOption[];
   /** Version stamp of the legal docs the user is accepting — typically the
@@ -53,6 +55,7 @@ export function InscripcionForm({
   locale,
   preselectedCourseId,
   preselectedTier,
+  preselectedProf,
   cohorts,
   docsVersion,
 }: Props) {
@@ -89,7 +92,14 @@ export function InscripcionForm({
   // profesional tier — the $495 student price is students-only).
   const [tipoProfesional, setTipoProfesional] = useState<
     "farmaceutico" | "tecnico" | "otro" | ""
-  >("");
+  >(
+    preselectedTier === "profesional" &&
+      (preselectedProf === "farmaceutico" ||
+        preselectedProf === "tecnico" ||
+        preselectedProf === "otro")
+      ? preselectedProf
+      : "",
+  );
   // When tipoProfesional === "otro": `otraProfesion` is a code from the
   // `otrasProfesiones` list, or "otro" → the free text in `otraProfesionTexto`.
   const [otraProfesion, setOtraProfesion] = useState<string>("");
@@ -125,6 +135,14 @@ export function InscripcionForm({
     // Student tier requires the matrícula photo before checkout.
     if (tier === "student" && !matriculaFile) {
       setError(t("matricula.required"));
+      return;
+    }
+
+    // Professional tier requires a recorded profession — CE eligibility
+    // (farmacéutico/técnico) keys on this field, so a pharmacist who pays
+    // without it would silently fall to a no-CE completion cert.
+    if (tier === "profesional" && !profesion.trim()) {
+      setError(t("errors.professionRequired"));
       return;
     }
 

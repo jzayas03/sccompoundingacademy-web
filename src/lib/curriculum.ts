@@ -15,6 +15,7 @@
  */
 
 import type { ModuleQuizId } from "@/lib/quizzes/types";
+import { isCeEligible } from "@/lib/professions";
 
 /** Mirror of `users.tier` (Drizzle `tierEnum` + nullable). */
 export type UserTier = "pharmacist" | "profesional" | "student" | null;
@@ -60,10 +61,15 @@ export function requiredOrdinals(tier: UserTier): number[] {
   return getCurriculum(tier).map((m) => m.ordinal);
 }
 
-/** ACPE Standard 3 disclosure applies only to CE-bearing tiers. The
- *  student track earns no ACPE CE, so its dashboard omits the block. */
-export function showAcpeDisclosure(tier: UserTier): boolean {
-  return tier !== "student";
+/** ACPE Standard 3 disclosure applies only to CE-bearing enrollees: legacy
+ *  `tier === "pharmacist"` rows and professional-tier pharmacists/techs.
+ *  Students and non-pharmacy professionals (no CE) omit the block.
+ *  Delegates to the leaf predicate in `@/lib/professions`. */
+export function showAcpeDisclosure(
+  tier: UserTier,
+  professionalType: string | null,
+): boolean {
+  return isCeEligible(tier, professionalType);
 }
 
 /** i18n message key holding the student module catalogue (title/day/

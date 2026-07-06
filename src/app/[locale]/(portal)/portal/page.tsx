@@ -190,7 +190,9 @@ function Dashboard({
 
       {/* ACPE Standard 3 — learner-facing financial-relationships
           disclosure. Must appear before any module content. */}
-      {showAcpeDisclosure(effectiveTier) && <AcpeDisclosure locale={locale} />}
+      {showAcpeDisclosure(effectiveTier, user.professionalType) && (
+        <AcpeDisclosure locale={locale} />
+      )}
 
       {/* Payment-pending alert — primary CTA when the user has not paid yet. */}
       {!isPaid && (

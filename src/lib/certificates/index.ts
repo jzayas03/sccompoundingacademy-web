@@ -3,6 +3,9 @@ import { and, desc, eq, inArray, sql } from "drizzle-orm";
 import { db } from "@/lib/db";
 import { certificates, quizAttempts } from "@/lib/db/schema";
 import { requiredOrdinals, type UserTier } from "@/lib/curriculum";
+import { certPrefix, type CertProgram } from "./program";
+
+export * from "./program";
 
 /**
  * Certificate lifecycle helpers for the SCCA portal.
@@ -30,24 +33,6 @@ export type EligibilityReport = {
   eligible: boolean;
   passedModules: Record<number, boolean>;
 };
-
-/** Which certificate program a given portal tier earns. The student
- *  track gets a non-ACPE completion certificate with its own numbering;
- *  everyone else (profesional / pharmacist / owner-null) gets the
- *  professional certificate. */
-export type CertProgram = "profesional" | "student";
-
-export function programForTier(tier: UserTier): CertProgram {
-  return tier === "student" ? "student" : "profesional";
-}
-
-/** Human-friendly cert-number prefix per program. The two prefixes are
- *  deliberately disjoint (`SCCA-` vs `SCCA-EST-`) so the `LIKE ${prefix}%`
- *  numbering query never crosses programs — student numbering and
- *  professional numbering each advance independently. */
-export function certPrefix(program: CertProgram, year: number): string {
-  return program === "student" ? `SCCA-EST-${year}-` : `SCCA-${year}-`;
-}
 
 /** Pure eligibility evaluator: given the ordinals the user has passed and
  *  their tier, returns whether every curriculum-required ordinal is
