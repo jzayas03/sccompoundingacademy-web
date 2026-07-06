@@ -97,6 +97,7 @@ export async function submitQuizAction(args: {
       name: user.name,
       email: user.email,
       tier: user.tier,
+      professionalType: user.professionalType,
       locale: locale === "en" ? "en" : "es",
     });
   }

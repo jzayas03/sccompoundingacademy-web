@@ -11,7 +11,7 @@ import { E, FONT, MARK_URL, button, bodyCell, renderEmail, esc } from "./_shell"
  * track is a non-ACPE completion certificate).
  */
 
-type CertProgram = "profesional" | "student";
+type CertProgram = "profesional" | "profesional-completion" | "student";
 
 type CertParams = {
   nombre: string;
@@ -28,6 +28,7 @@ export function buildCertificateReadyEmail(p: CertParams): {
 } {
   const es = p.locale === "es";
   const first = (p.nombre || "").trim().split(/\s+/)[0] ?? "";
+  const awardsCeus = p.program === "profesional";
 
   const subject = es
     ? "Tu certificado está listo · Santa Cruz Compounding Academy"
@@ -37,15 +38,18 @@ export function buildCertificateReadyEmail(p: CertParams): {
   const headline = es ? "¡Felicidades!" : "Congratulations!";
   const congrats = first ? `${first},` : es ? "¡Felicidades!" : "Congratulations!";
   const bodyText = es
-    ? "Completaste el curso <strong>Basic Non-Sterile Compounding</strong> satisfactoriamente. Tu certificado SCCA y la documentación de horas CE están listos para descargar."
-    : "You successfully completed <strong>Basic Non-Sterile Compounding</strong>. Your SCCA certificate and CE hour documentation are ready to download.";
+    ? `Completaste el curso <strong>Basic Non-Sterile Compounding</strong> satisfactoriamente. Tu certificado SCCA${awardsCeus ? " y la documentación de horas CE están listos" : " está listo"} para descargar.`
+    : `You successfully completed <strong>Basic Non-Sterile Compounding</strong>. Your SCCA certificate${awardsCeus ? " and CE hour documentation are ready" : " is ready"} to download.`;
   const badgeBig = es ? "Certificado listo" : "Certificate ready";
-  const badgeSub =
-    p.program === "student"
+  const badgeSub = awardsCeus
+    ? "ACPE 0151 · 1.8 CEUs"
+    : p.program === "student"
       ? es
         ? "USP 〈795〉 y 〈800〉 · Certificado de finalización"
         : "USP 〈795〉 & 〈800〉 · Certificate of completion"
-      : "ACPE 0151 · 1.8 CEUs";
+      : es
+        ? "Certificado de finalización"
+        : "Certificate of completion";
   const ctaLabel = es ? "Descargar certificado →" : "Download certificate →";
   const closing = es
     ? "Gracias por confiar en Santa Cruz Compounding Academy."
@@ -56,8 +60,8 @@ export function buildCertificateReadyEmail(p: CertParams): {
   const text = `${congrats}
 
 ${(es
-    ? "Completaste el curso Basic Non-Sterile Compounding satisfactoriamente. Tu certificado SCCA y la documentación de horas CE están listos para descargar."
-    : "You successfully completed Basic Non-Sterile Compounding. Your SCCA certificate and CE hour documentation are ready to download.")}
+    ? `Completaste el curso Basic Non-Sterile Compounding satisfactoriamente. Tu certificado SCCA${awardsCeus ? " y la documentación de horas CE están listos" : " está listo"} para descargar.`
+    : `You successfully completed Basic Non-Sterile Compounding. Your SCCA certificate${awardsCeus ? " and CE hour documentation are ready" : " is ready"} to download.`)}
 
 ${badgeBig} — ${badgeSub}
 
