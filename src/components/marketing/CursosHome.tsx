@@ -16,18 +16,19 @@ type CourseItem = {
 };
 
 /**
- * CursosHome — homepage two-track course cards.
+ * CursosHome — homepage three-track course cards.
  *
  * Recreated from the SCCA Design System handoff (Courses section): the
- * Professional track as a teal-deep card and the Student track as a
- * white card, each with a five-point highlight checklist and an Enroll
- * CTA. Distinct from `CursosGrid` (the detailed /cursos catalogue page)
- * — this is the leaner landing presentation only.
+ * Professional track (Farmacéuticos y Técnicos) as a teal-deep card, the
+ * Otros Profesionales track, and the Student track — the latter two as
+ * white cards — each with a highlight checklist and an Enroll CTA.
+ * Distinct from `CursosGrid` (the detailed /cursos catalogue page) — this
+ * is the leaner landing presentation only.
  *
  * Enrollment wiring (course id + tier → /inscripcion query) mirrors the
- * catalogue so both buttons reach the correct checkout. Copy comes from
- * `cursosGrid.items[]` plus the handoff's professional/student highlight
- * lists.
+ * catalogue so all three buttons reach the correct checkout. Copy comes
+ * from `cursosGrid.items[]` plus the handoff's professional/otros
+ * profesionales/student highlight lists.
  */
 export function CursosHome() {
   const t = useTranslations("cursosGrid");
@@ -40,7 +41,7 @@ export function CursosHome() {
     };
   };
   const { items, professionalHighlights, studentHighlights, otrosProfesionalesHighlights } =
-    messages.cursosGrid as typeof messages.cursosGrid & { otrosProfesionalesHighlights: string[] };
+    messages.cursosGrid;
   const professional = items.find((c) => c.id === "basic-compounding") ?? items[0];
   const student = items.find((c) => c.id === "student-foundations") ?? items[1];
   const otros = items.find((c) => c.id === "otros-profesionales");

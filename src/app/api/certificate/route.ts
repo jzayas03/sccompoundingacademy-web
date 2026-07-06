@@ -61,22 +61,20 @@ export async function GET(req: Request) {
   // number). See src/lib/admin.ts for the allowlist.
   const isOwner = isAdminEmail(session.user.email);
 
-  // Certificate program selects the cert variant: "student" renders a
-  // completion certificate with no ACPE CE credit / provider line, while
-  // "profesional" renders the credit-bearing ACPE variant. Owner/admin
-  // preview is controlled by ?preview= (ignoring their own row's tier/profession),
-  // while real (non-owner) users always get programFor(their tier, their
-  // professional_type) — preview never affects a non-owner.
   const preview = new URL(req.url).searchParams.get("preview");
   const effectiveTier = resolveEffectiveTier({
     isOwner,
     userTier: user.tier,
     preview,
   });
-  // Owner/admin preview: the program is chosen explicitly by ?preview= so the
-  // academy can QA every certificate variant regardless of their own row's
-  // tier/profession. Real users always get programFor(their tier, their
-  // professional_type) — preview never affects a non-owner.
+  // Certificate program selects the cert variant: "student" and
+  // "profesional-completion" render a completion certificate with no ACPE
+  // CE credit / provider line, while "profesional" renders the
+  // credit-bearing ACPE variant. Owner/admin preview is controlled
+  // explicitly by ?preview= so the academy can QA every certificate variant
+  // regardless of their own row's tier/profession; real (non-owner) users
+  // always get programFor(their tier, their professional_type) — preview
+  // never affects a non-owner.
   const program: CertProgram = isOwner
     ? preview === "completion"
       ? "profesional-completion"
