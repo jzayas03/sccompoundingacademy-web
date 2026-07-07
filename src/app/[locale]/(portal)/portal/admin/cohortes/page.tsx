@@ -218,6 +218,7 @@ export default async function CohortesAdminPage({
                     {AUDIENCE_LABELS[c.audience].es} ·{" "}
                     {enrolled} / {c.capacity} inscrito{enrolled === 1 ? "" : "s"} ·{" "}
                     {c.openForEnrollment ? "Abierto" : "Cerrado"}
+                    {c.featured ? " · Destacado" : ""}
                   </p>
                 </div>
 
