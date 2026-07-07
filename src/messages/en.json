@@ -803,6 +803,7 @@
   "cohort": {
     "eyebrow": "Next cohort",
     "headingFallback": "The next cohort",
+    "audienceLine": "For {label}",
     "description": "Three consecutive days at our Bayamón laboratory. Small cohort by design — seats are limited so every participant gets individual instructor review.",
     "seatsTotal": "{total} seats total",
     "remaining": "{remaining} remaining",

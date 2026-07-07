@@ -37,6 +37,7 @@ function parseCohort(formData: FormData): CohortInput {
     capacity: formData.get("capacity"),
     openForEnrollment: formData.get("openForEnrollment") === "on",
     audience: formData.get("audience"),
+    featured: formData.get("featured") === "on",
   });
   if (!getCourseById(f.courseId)) throw new Error("Curso inválido.");
   // Date-only strings → UTC midnight, matching how the `date` columns
@@ -54,6 +55,7 @@ function parseCohort(formData: FormData): CohortInput {
     capacity: f.capacity,
     openForEnrollment: f.openForEnrollment,
     audience: f.audience,
+    featured: f.featured,
   };
 }
 
