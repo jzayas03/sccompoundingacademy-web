@@ -130,15 +130,12 @@ export function InscripcionForm({
   // Cohorts for the selected course AND matching the enrollee's audience
   // (derived from tier + profesion). Depends on `profesion`, so this must
   // stay below its declaration above.
-  const availableCohorts = useMemo(
-    () =>
-      cohorts.filter(
-        (c) =>
-          c.courseId === courseId &&
-          visibleAudiences(tier, profesion).includes(c.audience),
-      ),
-    [courseId, cohorts, tier, profesion],
-  );
+  const availableCohorts = useMemo(() => {
+    const audiences = visibleAudiences(tier, profesion);
+    return cohorts.filter(
+      (c) => c.courseId === courseId && audiences.includes(c.audience),
+    );
+  }, [courseId, cohorts, tier, profesion]);
 
   // A previously-selected cohort can fall out of `availableCohorts` when the
   // tier/profession changes (e.g. switching from student to profesional) —
