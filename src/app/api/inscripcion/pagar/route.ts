@@ -31,6 +31,7 @@ export async function GET(req: Request): Promise<Response> {
     const reason =
       outcome.reason === "already-paid" ? "pagado"
       : outcome.reason === "cohort-closed" ? "cerrada"
+      : outcome.reason === "audience-mismatch" ? "cerrada"
       : outcome.reason === "not-approved" ? "invalido"
       : "error";
     return closed(reason);

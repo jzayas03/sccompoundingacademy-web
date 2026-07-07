@@ -16,6 +16,7 @@ export type CheckoutOutcome =
         | "already-paid"
         | "not-approved"
         | "cohort-closed"
+        | "audience-mismatch"
         | "no-price"
         | "stripe-error";
     };
@@ -61,6 +62,9 @@ export async function createStudentCheckoutSession(
   const cohort = row.cohortId ? await getCohort(row.cohortId) : undefined;
   if (!cohort || !cohort.openForEnrollment)
     return { ok: false, reason: "cohort-closed" };
+  if (cohort.audience !== "estudiante") {
+    return { ok: false, reason: "audience-mismatch" };
+  }
 
   const course = getCourseById(cohort.courseId);
   const pricing = course && getPricingByTier(course, "student");
