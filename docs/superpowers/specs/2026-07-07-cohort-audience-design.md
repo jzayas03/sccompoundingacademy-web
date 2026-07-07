@@ -159,19 +159,23 @@ const availableCohorts = useMemo(
 - `src/app/[locale]/(marketing)/inscripcion/page.tsx` (`:45-50`): include
   `audience` in the mapped `CohortOption`.
 
-## 5. Public / i18n display
+## 5. Labels (admin + server only in v1)
 
-- i18n `messages/{es,en}.json`: add the three audience labels (mirror
-  `AUDIENCE_LABELS`, or read from it — single source; the JSON is for any
-  surface that uses `t()`).
-- Enroll form: a small heading above the cohort dropdown — "Cohortes para
-  {audiencia}" — makes the audience explicit (the owner's "que lo diga
-  explícitamente"). Uses the label of the user's own audience (or a neutral
-  "Cohortes disponibles" while still undetermined).
-- Public "next cohort" surfaces (`CohortWaitlist` band, `CursosGrid` next-cohort):
-  append the audience label to the displayed cohort so a visitor sees who it is
-  for. This requires threading `audience` into `CohortBrief` (`CursosGrid`) and
-  the `(marketing)/page.tsx` → `CohortWaitlist` props.
+- i18n `messages/{es,en}.json`: add the three audience labels under
+  `cohortAudience.*` for the admin `<select>` options and the admin cohort list.
+  The pure `AUDIENCE_LABELS` map is the source for the server mismatch message
+  (which has no `t()` in scope). Keep the two in sync (a small test asserts the
+  JSON keys match the enum values).
+- The audience is stated explicitly to the **admin** (the select + the cohort
+  list) and to a rejected enrollee (the server mismatch message names the
+  audience). The enroll form filtering (§4) already means a student only ever
+  sees student cohorts, etc.
+
+**Deferred to a later PR (public marketing display — owner-confirmed out of v1):**
+labeling the audience on the public landing "next cohort" band
+(`CohortWaitlist`), the `CursosGrid` next-cohort line, and a "Cohortes para
+{audiencia}" heading in the enroll form. v1 does **not** touch
+`CohortWaitlist.tsx`, `CursosGrid.tsx`, or `[locale]/(marketing)/page.tsx`.
 
 ## Testing
 
@@ -199,12 +203,12 @@ const availableCohorts = useMemo(
   since the pilot has essentially no professional/student enrollees yet
   (confirmed 2026-07-06 audit), blast radius is minimal. Owner reviews audiences
   post-deploy.
-- **Landing "next cohort" with multiple open audiences:** v1 labels whichever
-  cohort is shown (earliest open); a per-audience "next cohort" selector on the
-  landing is a follow-up, not in this spec.
+- **Public marketing display of audience is out of v1** (owner decision) — the
+  landing "next cohort" band, `CursosGrid`, and any per-audience "next cohort"
+  selector are a follow-up PR.
 - No change to pricing, Stripe, CE logic, or the certificate pipeline.
 
-## Files touched
+## Files touched (v1)
 
 Schema/data: `src/lib/db/schema.ts`, `drizzle/0011_cohort_audience.sql`,
 `src/lib/cohorts.ts`, `src/lib/cohorts/audience.ts` (new).
@@ -212,7 +216,8 @@ Admin: `portal/admin/cohortes/page.tsx`, `portal/admin/cohortes/actions.ts`.
 Enrollment: `api/inscripcion/route.ts`, `lib/inscripcion/checkout.ts`,
 `marketing/inscripcion/InscripcionForm.tsx`,
 `[locale]/(marketing)/inscripcion/page.tsx`.
-Display/i18n: `messages/es.json`, `messages/en.json`,
-`marketing/CohortWaitlist.tsx`, `marketing/CursosGrid.tsx`,
-`[locale]/(marketing)/page.tsx`.
+i18n: `messages/es.json`, `messages/en.json` (audience labels for admin + server).
 Tests under `tests/`.
+
+**Not touched in v1** (deferred): `marketing/CohortWaitlist.tsx`,
+`marketing/CursosGrid.tsx`, `[locale]/(marketing)/page.tsx`.
