@@ -5,7 +5,14 @@ import { NextIntlClientProvider } from "next-intl";
 import esMessages from "@/messages/es.json";
 import { InscripcionForm } from "@/components/marketing/inscripcion/InscripcionForm";
 
-const cohorts = [{ id: "c1", courseId: "basic-compounding", label: "Cohorte" }];
+const cohorts = [
+  {
+    id: "c1",
+    courseId: "basic-compounding",
+    label: "Cohorte",
+    audience: "otros_profesionales" as const,
+  },
+];
 
 describe("InscripcionForm preselectedProf", () => {
   it("opens the Otro profession branch when prof=otro", () => {

@@ -297,6 +297,11 @@ export async function POST(req: Request) {
     const matriculaDocUrl =
       tier === "student" ? md.matricula_doc_url?.trim() || null : null;
     const matriculaSubmittedAt = tier === "student" ? new Date() : null;
+    // Cohort audience (tier vs. cohort.audience) was already validated at
+    // checkout-session creation (see /api/inscripcion) and is intentionally
+    // NOT re-checked here: the enrollee paid for what they selected, and
+    // re-validating against a since-edited cohort could wrongly reject an
+    // already-paid enrollment.
     let upserted: { id: string; verification: string | null } | undefined;
     try {
       const [row] = await db

@@ -6,6 +6,7 @@ import { SectionBanner } from "@/components/portal/SectionBanner";
 import { Link } from "@/i18n/routing";
 import { auth } from "@/lib/auth";
 import { isAdminEmail } from "@/lib/admin";
+import { AUDIENCE_LABELS } from "@/lib/cohorts/audience";
 import { COURSES } from "@/lib/courses";
 import {
   listCohorts,
@@ -83,6 +84,23 @@ function CohortFieldset({ cohort }: { cohort?: Cohort }) {
           defaultValue={cohort?.capacity ?? 12}
           className={inputCls}
         />
+      </label>
+      <label className="block">
+        <span className={labelCls}>Audiencia</span>
+        <select
+          name="audience"
+          required
+          defaultValue={cohort?.audience ?? "farmaceutico_tecnico"}
+          className={inputCls}
+        >
+          {(["farmaceutico_tecnico", "otros_profesionales", "estudiante"] as const).map(
+            (a) => (
+              <option key={a} value={a}>
+                {AUDIENCE_LABELS[a].es}
+              </option>
+            ),
+          )}
+        </select>
       </label>
       <label className="block">
         <span className={labelCls}>
@@ -188,6 +206,7 @@ export default async function CohortesAdminPage({
                     {formatCohortLabel(c, "es")}
                   </h3>
                   <p className="text-gray-700 text-xs">
+                    {AUDIENCE_LABELS[c.audience].es} ·{" "}
                     {enrolled} / {c.capacity} inscrito{enrolled === 1 ? "" : "s"} ·{" "}
                     {c.openForEnrollment ? "Abierto" : "Cerrado"}
                   </p>

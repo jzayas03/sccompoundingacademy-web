@@ -1,6 +1,7 @@
 import { and, asc, count, eq, isNotNull } from "drizzle-orm";
 import { db } from "@/lib/db";
 import { cohorts, users, type Cohort } from "@/lib/db/schema";
+import type { CohortAudience } from "@/lib/cohorts/audience";
 
 /**
  * Cohort data layer.
@@ -30,6 +31,7 @@ export type CohortInput = {
   endDate: Date;
   capacity: number;
   openForEnrollment: boolean;
+  audience: CohortAudience;
 };
 
 /** Every cohort, earliest first — for the admin management view. */

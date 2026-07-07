@@ -47,6 +47,7 @@ export default async function Page({
     id: c.id,
     courseId: c.courseId,
     label: formatCohortLabel(c, loc),
+    audience: c.audience,
   }));
 
   return (

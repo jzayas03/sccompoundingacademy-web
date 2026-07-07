@@ -141,6 +141,12 @@ export const verificationTokens = pgTable(
   (vt) => [primaryKey({ columns: [vt.identifier, vt.token] })],
 );
 
+export const cohortAudienceEnum = pgEnum("cohort_audience", [
+  "farmaceutico_tecnico",
+  "otros_profesionales",
+  "estudiante",
+]);
+
 export const cohorts = pgTable("cohorts", {
   id: text("id")
     .primaryKey()
@@ -154,6 +160,8 @@ export const cohorts = pgTable("cohorts", {
   endDate: date("end_date", { mode: "date" }).notNull(),
   capacity: integer("capacity").notNull(),
   openForEnrollment: boolean("open_for_enrollment").notNull().default(true),
+  /** Who this cohort enrolls. Enforced at enrollment (see lib/cohorts/audience.ts). */
+  audience: cohortAudienceEnum("audience").notNull().default("farmaceutico_tecnico"),
 });
 
 export const quizAttempts = pgTable("quiz_attempts", {

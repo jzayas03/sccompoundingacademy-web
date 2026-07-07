@@ -54,6 +54,7 @@ const openCohort = {
   id: "c1",
   courseId: "basic-compounding" as const,
   openForEnrollment: true,
+  audience: "estudiante",
 } as unknown as import("@/lib/cohorts").Cohort;
 
 describe("createStudentCheckoutSession", () => {

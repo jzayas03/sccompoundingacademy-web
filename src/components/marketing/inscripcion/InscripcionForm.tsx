@@ -6,6 +6,7 @@ import { useTranslations } from "next-intl";
 import { Link } from "@/i18n/routing";
 import { COURSES, DEFAULT_TIER, type Tier } from "@/lib/courses";
 import { resolveProfesion } from "@/lib/inscripcion/profesion";
+import { visibleAudiences, type CohortAudience } from "@/lib/cohorts/audience";
 import {
   VERIFICATION_ACCEPTED_TYPES,
   matriculaFileIssue,
@@ -23,6 +24,7 @@ export type CohortOption = {
   id: string;
   courseId: string;
   label: string;
+  audience: CohortAudience;
 };
 
 type Props = {
@@ -69,11 +71,12 @@ export function InscripcionForm({
       : COURSES[0]!.id,
   );
 
-  const availableCohorts = useMemo(
-    () => cohorts.filter((c) => c.courseId === courseId),
-    [courseId, cohorts],
+  // Initial guess only (unfiltered by audience — tier/profesion aren't known
+  // yet at mount). The reset logic below corrects it once `availableCohorts`
+  // is computable, on the very next render.
+  const [cohorteId, setCohorteId] = useState<string>(
+    cohorts.find((c) => c.courseId === courseId)?.id ?? "",
   );
-  const [cohorteId, setCohorteId] = useState<string>(availableCohorts[0]?.id ?? "");
 
   // When course changes, pick the first cohort of the new course.
   function onCourseChange(next: string) {
@@ -123,6 +126,36 @@ export function InscripcionForm({
     otraProfesion,
     otraProfesionTexto,
   );
+
+  // Cohorts for the selected course AND matching the enrollee's audience
+  // (derived from tier + profesion). Depends on `profesion`, so this must
+  // stay below its declaration above.
+  const availableCohorts = useMemo(() => {
+    const audiences = visibleAudiences(tier, profesion);
+    return cohorts.filter(
+      (c) => c.courseId === courseId && audiences.includes(c.audience),
+    );
+  }, [courseId, cohorts, tier, profesion]);
+
+  // A previously-selected cohort can fall out of `availableCohorts` when the
+  // tier/profession changes (e.g. switching from student to profesional) —
+  // clear it so a stale, now-invalid cohort id never reaches submit.
+  //
+  // Adjusted synchronously during render (not in a useEffect): this is the
+  // React-endorsed pattern for "reset state when a derived value changes"
+  // (react.dev/learn/you-might-not-need-an-effect#adjusting-some-state-when-a-prop-changes)
+  // and it's what this codebase's react-hooks/set-state-in-effect lint rule
+  // requires — an effect that unconditionally calls setState from a
+  // useMemo-derived dependency is flagged as a cascading-render anti-pattern.
+  const [prevAvailableCohorts, setPrevAvailableCohorts] = useState<CohortOption[] | null>(
+    null,
+  );
+  if (availableCohorts !== prevAvailableCohorts) {
+    setPrevAvailableCohorts(availableCohorts);
+    if (!availableCohorts.some((c) => c.id === cohorteId)) {
+      setCohorteId(availableCohorts[0]?.id ?? "");
+    }
+  }
 
   async function onSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
