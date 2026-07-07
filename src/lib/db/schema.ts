@@ -160,6 +160,8 @@ export const cohorts = pgTable("cohorts", {
   endDate: date("end_date", { mode: "date" }).notNull(),
   capacity: integer("capacity").notNull(),
   openForEnrollment: boolean("open_for_enrollment").notNull().default(true),
+  /** Highlighted on the public landing "next cohort" band. See lib/cohorts/featured.ts. */
+  featured: boolean("featured").notNull().default(false),
   /** Who this cohort enrolls. Enforced at enrollment (see lib/cohorts/audience.ts). */
   audience: cohortAudienceEnum("audience").notNull().default("farmaceutico_tecnico"),
 });

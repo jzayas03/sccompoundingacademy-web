@@ -31,6 +31,7 @@ export type CohortInput = {
   endDate: Date;
   capacity: number;
   openForEnrollment: boolean;
+  featured: boolean;
   audience: CohortAudience;
 };
 
