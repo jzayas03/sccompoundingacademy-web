@@ -29,6 +29,7 @@ const base = {
   endDate: "2026-08-14",
   capacity: "12",
   openForEnrollment: true,
+  featured: true,
 };
 
 describe("CohortFields audience", () => {
@@ -39,6 +40,25 @@ describe("CohortFields audience", () => {
     expect(CohortFields.safeParse({ ...base, audience: "nope" }).success).toBe(false);
   });
   it("rejects a missing audience", () => {
+    expect(CohortFields.safeParse({ ...base }).success).toBe(false);
+  });
+});
+
+describe("CohortFields featured", () => {
+  const base = {
+    courseId: "basic-compounding",
+    name: "",
+    startDate: "2026-08-12",
+    endDate: "2026-08-14",
+    capacity: "12",
+    openForEnrollment: true,
+    audience: "estudiante",
+  };
+  it("accepts featured true/false", () => {
+    expect(CohortFields.safeParse({ ...base, featured: true }).success).toBe(true);
+    expect(CohortFields.safeParse({ ...base, featured: false }).success).toBe(true);
+  });
+  it("rejects a missing featured", () => {
     expect(CohortFields.safeParse({ ...base }).success).toBe(false);
   });
 });

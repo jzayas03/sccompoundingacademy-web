@@ -126,6 +126,15 @@ function CohortFieldset({ cohort }: { cohort?: Cohort }) {
         />
         Abierto para inscripción
       </label>
+      <label className="flex items-center gap-2 text-sm text-gray-900">
+        <input
+          type="checkbox"
+          name="featured"
+          defaultChecked={cohort?.featured ?? false}
+          className="h-4 w-4 accent-teal-deep"
+        />
+        Destacar en el landing
+      </label>
     </>
   );
 }
