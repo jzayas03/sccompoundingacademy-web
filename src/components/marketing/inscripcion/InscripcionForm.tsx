@@ -150,7 +150,9 @@ export function InscripcionForm({
   // and it's what this codebase's react-hooks/set-state-in-effect lint rule
   // requires — an effect that unconditionally calls setState from a
   // useMemo-derived dependency is flagged as a cascading-render anti-pattern.
-  const [prevAvailableCohorts, setPrevAvailableCohorts] = useState(availableCohorts);
+  const [prevAvailableCohorts, setPrevAvailableCohorts] = useState<CohortOption[] | null>(
+    null,
+  );
   if (availableCohorts !== prevAvailableCohorts) {
     setPrevAvailableCohorts(availableCohorts);
     if (!availableCohorts.some((c) => c.id === cohorteId)) {
