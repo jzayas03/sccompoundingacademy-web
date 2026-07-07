@@ -28,13 +28,14 @@ async function assertAdmin(): Promise<void> {
   }
 }
 
-const CohortFields = z.object({
+export const CohortFields = z.object({
   courseId: z.string().min(1),
   name: z.string().trim().max(120),
   startDate: z.string().regex(/^\d{4}-\d{2}-\d{2}$/),
   endDate: z.string().regex(/^\d{4}-\d{2}-\d{2}$/),
   capacity: z.coerce.number().int().min(1).max(1000),
   openForEnrollment: z.boolean(),
+  audience: z.enum(["farmaceutico_tecnico", "otros_profesionales", "estudiante"]),
 });
 
 function parseCohort(formData: FormData): CohortInput {
@@ -45,6 +46,7 @@ function parseCohort(formData: FormData): CohortInput {
     endDate: formData.get("endDate"),
     capacity: formData.get("capacity"),
     openForEnrollment: formData.get("openForEnrollment") === "on",
+    audience: formData.get("audience"),
   });
   if (!getCourseById(f.courseId)) throw new Error("Curso inválido.");
   // Date-only strings → UTC midnight, matching how the `date` columns
@@ -61,6 +63,7 @@ function parseCohort(formData: FormData): CohortInput {
     endDate,
     capacity: f.capacity,
     openForEnrollment: f.openForEnrollment,
+    audience: f.audience,
   };
 }
 
