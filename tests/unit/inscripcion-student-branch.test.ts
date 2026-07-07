@@ -66,6 +66,7 @@ vi.mock("@/lib/cohorts", () => ({
     id: "cohort-2026-q1",
     courseId: "basic-compounding",
     openForEnrollment: true,
+    audience: "estudiante",
   }),
 }));
 

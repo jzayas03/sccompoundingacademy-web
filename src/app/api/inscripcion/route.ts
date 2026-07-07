@@ -5,6 +5,7 @@ import { z } from "zod";
 import { stripe } from "@/lib/stripe";
 import { getCourseById, getPricingByTier } from "@/lib/courses";
 import { getCohort, enrollmentCountByCohort } from "@/lib/cohorts";
+import { enrolleeAudience, audienceMismatchMessage } from "@/lib/cohorts/audience";
 import { getSiteUrl } from "@/lib/siteUrl";
 import { rateLimit, clientIp } from "@/lib/ratelimit";
 import { verifyTurnstile } from "@/lib/turnstile";
@@ -153,6 +154,14 @@ export async function POST(req: Request) {
   }
   if (!cohort.openForEnrollment) {
     return NextResponse.json({ error: "Cohorte cerrada para inscripciones." }, { status: 400 });
+  }
+
+  const wanted = enrolleeAudience(data.tier, data.tipo_profesional);
+  if (!wanted || cohort.audience !== wanted) {
+    return NextResponse.json(
+      { error: audienceMismatchMessage(cohort.audience, data.locale === "en" ? "en" : "es") },
+      { status: 400 },
+    );
   }
 
   // Student tier requires the matrícula photo uploaded before checkout, and

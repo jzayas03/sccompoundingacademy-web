@@ -63,3 +63,12 @@ describe("AUDIENCE_LABELS", () => {
     }
   });
 });
+
+describe("enrollment gate decision", () => {
+  it("blocks a student from a farmaceutico_tecnico cohort", () => {
+    expect(audienceMatches("farmaceutico_tecnico", "student", null)).toBe(false);
+  });
+  it("allows a matching professional", () => {
+    expect(audienceMatches("otros_profesionales", "profesional", "medico")).toBe(true);
+  });
+});
