@@ -4,6 +4,7 @@ import { useTranslations, useMessages, useLocale } from "next-intl";
 import { Container } from "@/components/ui/Container";
 import { Reveal } from "@/components/ui/Reveal";
 import { Button } from "@/components/ui/Button";
+import { AUDIENCE_LABELS, type CohortAudience } from "@/lib/cohorts/audience";
 
 type Status = "idle" | "submitting" | "success" | "error";
 
@@ -20,10 +21,12 @@ export function CohortWaitlist({
   total,
   remaining,
   cohortLabel,
+  audience,
 }: {
   total: number | null;
   remaining: number | null;
   cohortLabel: string | null;
+  audience: CohortAudience | null;
 }) {
   const t = useTranslations("cohort");
   const messages = useMessages() as unknown as { cohort: { form: { roles: string[] } } };
@@ -79,6 +82,11 @@ export function CohortWaitlist({
             <h2 className="font-heading text-off-white mt-3.5 text-3xl font-bold tracking-[-0.03em] sm:text-4xl">
               {cohortLabel ?? t("headingFallback")}
             </h2>
+            {audience && (
+              <p className="font-heading mt-2 text-sm font-semibold" style={{ color: "rgba(230,234,130,0.85)" }}>
+                {t("audienceLine", { label: AUDIENCE_LABELS[audience][locale === "en" ? "en" : "es"] })}
+              </p>
+            )}
             <p className="text-off-white/80 mt-3.5 max-w-md text-[15px] leading-relaxed">
               {t("description")}
             </p>

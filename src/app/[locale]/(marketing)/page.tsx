@@ -3,6 +3,7 @@ import { setRequestLocale } from "next-intl/server";
 import { pageMetadata } from "@/lib/seo";
 import { homepageJsonLd } from "@/lib/structuredData";
 import { listOpenCohortsSafe, enrollmentCountByCohort, formatCohortLabel } from "@/lib/cohorts";
+import { pickFeaturedCohort } from "@/lib/cohorts/featured";
 import { Hero } from "@/components/marketing/Hero";
 import { ConfianzaCarousel } from "@/components/marketing/ConfianzaCarousel";
 import { CursosHome } from "@/components/marketing/CursosHome";
@@ -55,7 +56,7 @@ export default async function LandingPage({ params }: { params: Promise<{ locale
   // predates the latest migration, just renders without cohort data.
   // Production has the migrated DB; admin cohort edits revalidate this page.
   const openCohorts = await listOpenCohortsSafe();
-  const next = openCohorts[0];
+  const next = pickFeaturedCohort(openCohorts);
 
   // Seat-scarcity meter for the waitlist section, from real data: total =
   // the next cohort's capacity, remaining = capacity − PAID enrollees
@@ -111,7 +112,12 @@ export default async function LandingPage({ params }: { params: Promise<{ locale
       <Hero />
       <ConfianzaCarousel />
       <CursosHome />
-      <CohortWaitlist total={seatTotal} remaining={seatRemaining} cohortLabel={cohortLabel} />
+      <CohortWaitlist
+        total={seatTotal}
+        remaining={seatRemaining}
+        cohortLabel={cohortLabel}
+        audience={next?.audience ?? null}
+      />
       <Instructor />
       <VideoIntro />
       <FaqClean />
