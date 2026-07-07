@@ -296,6 +296,7 @@
     "intro": "Un programa integrado de 18 horas presenciales (3 días · 6 hrs/día) que cubre USP 〈795〉 y 〈800〉 a través de tres módulos consecutivos. Teoría y práctica supervisada el mismo día, en el laboratorio activo de Santa Cruz Pharma Care.",
     "durationLabel": "Duración",
     "nextCohortLabel": "Próxima cohorte",
+    "cohortAudience": "para {label}",
     "courseCta": "Inscribirme",
     "courseLinkAria": "Ir a la inscripción del curso",
     "modulesLabel": "Módulos",
@@ -342,6 +343,7 @@
         "id": "basic-compounding",
         "level": "Fundamentos",
         "title": "Compounding No Estéril Básico — Farmacéuticos y Técnicos",
+        "audience": "farmaceutico_tecnico",
         "description": "Curso integrado de 18 horas presenciales para farmacéuticos y técnicos. Cubre fundamentos regulatorios (USP 〈795〉, 〈800〉, Ley de Farmacia de PR, DQSA), formulación y casos clínicos por especialidad.",
         "duration": "18 h · 3 días",
         "modules": [
@@ -370,6 +372,7 @@
         "level": "Fundamentos",
         "uspLabel": "USP 〈795〉 + 〈800〉",
         "title": "Track de Estudiantes — Compounding No Estéril",
+        "audience": "estudiante",
         "description": "Programa presencial para estudiantes pre-licenciatura. Dos módulos didácticos sobre los capítulos USP que rigen el compounding no estéril y el manejo de drogas peligrosas, impartidos en nuestra sede en Bayamón.",
         "duration": "Presencial · Bayamón",
         "modules": [
@@ -401,6 +404,7 @@
         "level": "Fundamentos",
         "uspLabel": "USP 〈795〉 + 〈800〉",
         "title": "Otros Profesionales",
+        "audience": "otros_profesionales",
         "description": "El mismo curso presencial de 18 horas (USP 〈795〉 y 〈800〉) para otros profesionales licenciados no farmacéuticos. Misma formación y práctica supervisada; certificado de finalización sin créditos CE de ACPE.",
         "duration": "18 h · 3 días",
         "courseRef": "basic-compounding",

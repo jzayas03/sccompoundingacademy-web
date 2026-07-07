@@ -27,6 +27,7 @@ export default async function Page({ params }: { params: Promise<{ locale: strin
   const cohortsForGrid: CohortBrief[] = openCohorts.map((c) => ({
     courseId: c.courseId,
     startDate: c.startDate.toISOString().slice(0, 10),
+    audience: c.audience,
   }));
   return <CursosGrid openCohorts={cohortsForGrid} />;
 }

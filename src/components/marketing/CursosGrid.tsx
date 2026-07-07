@@ -3,6 +3,7 @@ import { Link } from "@/i18n/routing";
 import { Container } from "@/components/ui/Container";
 import { Reveal } from "@/components/ui/Reveal";
 import { getCourseById, type Tier } from "@/lib/courses";
+import { AUDIENCE_LABELS, type CohortAudience } from "@/lib/cohorts/audience";
 
 /** One open cohort, trimmed to what the grid footer needs. The server
  * page fetches these from the DB (`lib/cohorts.ts`) and passes them in. */
@@ -10,6 +11,7 @@ export type CohortBrief = {
   courseId: string;
   /** ISO date (yyyy-mm-dd) of the cohort's first day. */
   startDate: string;
+  audience: CohortAudience;
 };
 
 type ModuleItem = {
@@ -34,6 +36,7 @@ type CourseItem = {
   courseRef?: string;
   enrollProf?: string;
   noCe?: boolean;
+  audience: CohortAudience;
 };
 
 /**
@@ -62,10 +65,12 @@ export function CursosGrid({ openCohorts }: { openCohorts: CohortBrief[] }) {
   const items = messages.cursosGrid.items;
   const includesItems = messages.cursosGrid.includesItems;
 
-  function nextCohortLabel(courseId: string): string | null {
-    // `openCohorts` arrives ordered earliest-first, so the first match is
-    // the upcoming cohort for this course.
-    const cohort = openCohorts.find((c) => c.courseId === courseId);
+  function nextCohortLabel(courseId: string, audience: CohortAudience): string | null {
+    // `openCohorts` arrives ordered earliest-first, so the first match is the
+    // upcoming cohort for this course + audience.
+    const cohort = openCohorts.find(
+      (c) => c.courseId === courseId && c.audience === audience,
+    );
     if (!cohort) return null;
     return new Intl.DateTimeFormat(locale === "es" ? "es-PR" : "en-US", {
       month: "long",
@@ -102,7 +107,10 @@ export function CursosGrid({ openCohorts }: { openCohorts: CohortBrief[] }) {
         <Reveal as="ul" className="mt-12 grid grid-cols-1 gap-6 sm:gap-8 lg:mt-16">
           {items.map((course) => {
             const courseData = getCourseById(course.courseRef ?? course.id);
-            const cohortMonth = nextCohortLabel(course.courseRef ?? course.id);
+            const cohortMonth = nextCohortLabel(
+              course.enrollCourseId ?? course.courseRef ?? course.id,
+              course.audience,
+            );
             const uspLabel = courseData?.uspLabel ?? course.uspLabel;
             const cardIncludes = course.includesItems ?? includesItems;
             return (
@@ -231,6 +239,10 @@ export function CursosGrid({ openCohorts }: { openCohorts: CohortBrief[] }) {
                               <span className="text-gray-900 font-semibold capitalize">
                                 {cohortMonth}
                               </span>
+                              {" · "}
+                              {t("cohortAudience", {
+                                label: AUDIENCE_LABELS[course.audience][locale === "es" ? "es" : "en"],
+                              })}
                             </p>
                           )}
                         </div>
