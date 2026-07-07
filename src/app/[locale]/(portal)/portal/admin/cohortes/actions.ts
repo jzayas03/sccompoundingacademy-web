@@ -1,7 +1,6 @@
 "use server";
 
 import { revalidatePath } from "next/cache";
-import { z } from "zod";
 import { auth } from "@/lib/auth";
 import { isAdminEmail } from "@/lib/admin";
 import { getCourseById } from "@/lib/courses";
@@ -12,6 +11,7 @@ import {
   enrollmentCountByCohort,
   type CohortInput,
 } from "@/lib/cohorts";
+import { CohortFields } from "./fields";
 
 /**
  * Server actions for the cohort management admin page
@@ -27,16 +27,6 @@ async function assertAdmin(): Promise<void> {
     throw new Error("No autorizado.");
   }
 }
-
-export const CohortFields = z.object({
-  courseId: z.string().min(1),
-  name: z.string().trim().max(120),
-  startDate: z.string().regex(/^\d{4}-\d{2}-\d{2}$/),
-  endDate: z.string().regex(/^\d{4}-\d{2}-\d{2}$/),
-  capacity: z.coerce.number().int().min(1).max(1000),
-  openForEnrollment: z.boolean(),
-  audience: z.enum(["farmaceutico_tecnico", "otros_profesionales", "estudiante"]),
-});
 
 function parseCohort(formData: FormData): CohortInput {
   const f = CohortFields.parse({

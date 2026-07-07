@@ -20,7 +20,7 @@ vi.mock("@/lib/cohorts", () => ({
   enrollmentCountByCohort: vi.fn(),
 }));
 
-import { CohortFields } from "@/app/[locale]/(portal)/portal/admin/cohortes/actions";
+import { CohortFields } from "@/app/[locale]/(portal)/portal/admin/cohortes/fields";
 
 const base = {
   courseId: "basic-compounding",
