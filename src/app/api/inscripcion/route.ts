@@ -14,8 +14,20 @@ import { users } from "@/lib/db/schema";
 import { notifyMatriculaReview } from "@/lib/portal/notify-matricula-review";
 import { buildPendingStudentValues } from "@/lib/inscripcion/pending-enrollment";
 import { inscripcionSchema, inscripcionErrorMessage } from "@/lib/inscripcion/schema";
+import {
+  discardMatriculaBlob,
+  MATRICULA_BLOB_URL_RE,
+} from "@/lib/inscripcion/blob-cleanup";
+import { inscripcionApiError } from "@/lib/inscripcion/api-errors";
 
 export const runtime = "nodejs";
+
+/** Locale for the 429 path, where the body is deliberately unread: cheap
+ *  sniff of Accept-Language. Everywhere else the parsed body's `locale` wins. */
+function headerLocale(req: Request): "es" | "en" {
+  const al = req.headers.get("accept-language") ?? "";
+  return al.trim().toLowerCase().startsWith("en") ? "en" : "es";
+}
 
 /**
  * POST /api/inscripcion — enrollment form submission (two distinct paths).
@@ -95,7 +107,7 @@ export async function POST(req: Request) {
   const rl = await rateLimit("inscripcion", ip, 8, 60);
   if (!rl.success) {
     return NextResponse.json(
-      { error: "Demasiados intentos. Espera un momento e inténtalo de nuevo." },
+      { error: inscripcionApiError("rate-limited", headerLocale(req)) },
       { status: 429, headers: { "Retry-After": String(rl.retryAfterSeconds) } },
     );
   }
@@ -120,12 +132,18 @@ export async function POST(req: Request) {
       (body as { locale?: unknown }).locale === "en"
         ? "en"
         : "es";
+    const rawUrl =
+      typeof body === "object" && body !== null
+        ? (body as { matricula_doc_url?: unknown }).matricula_doc_url
+        : undefined;
+    await discardMatriculaBlob(typeof rawUrl === "string" ? rawUrl : undefined);
     return NextResponse.json(
       { error: inscripcionErrorMessage(flattened, locale), issues: flattened },
       { status: 400 },
     );
   }
   const data = parsed.data;
+  const loc: "es" | "en" = data.locale === "en" ? "en" : "es";
 
   // ── Abuse shield 2: Cloudflare Turnstile (CAPTCHA) ───────────────────
   // Proves a human (well, a browser that solved the challenge) is behind
@@ -136,11 +154,9 @@ export async function POST(req: Request) {
       ip,
       errorCodes: turnstile.errorCodes,
     });
+    await discardMatriculaBlob(data.matricula_doc_url);
     return NextResponse.json(
-      {
-        error:
-          "No pudimos verificar que eres una persona. Recarga la página e inténtalo de nuevo.",
-      },
+      { error: inscripcionApiError("turnstile", loc) },
       { status: 403 },
     );
   }
@@ -150,15 +166,24 @@ export async function POST(req: Request) {
   const course = getCourseById(data.curso_id);
   const cohort = await getCohort(data.cohorte_id);
   if (!course || !cohort || cohort.courseId !== course.id) {
-    return NextResponse.json({ error: "Curso o cohorte inválido." }, { status: 400 });
+    await discardMatriculaBlob(data.matricula_doc_url);
+    return NextResponse.json(
+      { error: inscripcionApiError("invalid-cohort", loc) },
+      { status: 400 },
+    );
   }
   if (!cohort.openForEnrollment) {
-    return NextResponse.json({ error: "Cohorte cerrada para inscripciones." }, { status: 400 });
+    await discardMatriculaBlob(data.matricula_doc_url);
+    return NextResponse.json(
+      { error: inscripcionApiError("cohort-closed", loc) },
+      { status: 400 },
+    );
   }
 
   if (!audienceMatches(cohort.audience, data.tier, data.tipo_profesional)) {
+    await discardMatriculaBlob(data.matricula_doc_url);
     return NextResponse.json(
-      { error: audienceMismatchMessage(cohort.audience, data.locale === "en" ? "en" : "es") },
+      { error: audienceMismatchMessage(cohort.audience, loc) },
       { status: 400 },
     );
   }
@@ -170,13 +195,12 @@ export async function POST(req: Request) {
   // Accept both public and private Blob hosts. The matrícula store is private
   // (identity document), so fresh uploads land on `…private.blob…`; `public`
   // stays accepted for backward compatibility.
-  const BLOB_URL_RE =
-    /^https:\/\/[a-z0-9]+\.(?:public|private)\.blob\.vercel-storage\.com\//;
   const matriculaDocUrl =
     data.tier === "student" ? (data.matricula_doc_url ?? "").trim() : "";
-  if (data.tier === "student" && !BLOB_URL_RE.test(matriculaDocUrl)) {
+  if (data.tier === "student" && !MATRICULA_BLOB_URL_RE.test(matriculaDocUrl)) {
+    await discardMatriculaBlob(matriculaDocUrl);
     return NextResponse.json(
-      { error: "Sube una foto de tu matrícula activa para inscribirte como estudiante." },
+      { error: inscripcionApiError("matricula-required", loc) },
       { status: 400 },
     );
   }
@@ -221,8 +245,9 @@ export async function POST(req: Request) {
         .limit(1);
       const [existingRow] = existingRows;
       if (existingRow?.paidAt) {
+        await discardMatriculaBlob(matriculaDocUrl);
         return NextResponse.json(
-          { error: "Ya tienes una inscripción registrada con este correo. Escríbenos si necesitas ayuda." },
+          { error: inscripcionApiError("already-enrolled", loc) },
           { status: 409 },
         );
       }
@@ -238,8 +263,9 @@ export async function POST(req: Request) {
 
       if (!row) {
         // Defensive: onConflictDoUpdate should always return a row.
+        await discardMatriculaBlob(matriculaDocUrl);
         return NextResponse.json(
-          { error: "No pudimos registrar tu matrícula. Intenta nuevamente o escríbenos." },
+          { error: inscripcionApiError("register-failed", loc) },
           { status: 500 },
         );
       }
@@ -262,8 +288,9 @@ export async function POST(req: Request) {
       }
     } catch (err) {
       console.error("[inscripcion] student pending upsert failed", err);
+      await discardMatriculaBlob(matriculaDocUrl);
       return NextResponse.json(
-        { error: "No pudimos registrar tu matrícula. Intenta nuevamente o escríbenos." },
+        { error: inscripcionApiError("register-failed", loc) },
         { status: 500 },
       );
     }
@@ -285,7 +312,7 @@ export async function POST(req: Request) {
       .limit(1);
     if (existingRow?.paidAt) {
       return NextResponse.json(
-        { error: "Ya tienes una inscripción registrada con este correo. Escríbenos si necesitas ayuda." },
+        { error: inscripcionApiError("already-enrolled", loc) },
         { status: 409 },
       );
     }
@@ -295,7 +322,10 @@ export async function POST(req: Request) {
 
   const pricing = getPricingByTier(course, data.tier);
   if (!pricing) {
-    return NextResponse.json({ error: "Tier de precio inválido." }, { status: 400 });
+    return NextResponse.json(
+      { error: inscripcionApiError("invalid-tier", loc) },
+      { status: 400 },
+    );
   }
   const stripePriceId = process.env[pricing.stripePriceEnvKey];
   if (!stripePriceId) {
@@ -303,7 +333,7 @@ export async function POST(req: Request) {
       `[inscripcion] Missing env var ${pricing.stripePriceEnvKey} — Stripe Price ID not configured for ${course.id}/${data.tier}`,
     );
     return NextResponse.json(
-      { error: "Servicio de cobro no configurado. Por favor escríbenos." },
+      { error: inscripcionApiError("price-missing", loc) },
       { status: 503 },
     );
   }
@@ -330,10 +360,7 @@ export async function POST(req: Request) {
     const paid = (await enrollmentCountByCohort()).get(cohort.id) ?? 0;
     if (paid >= cohort.capacity) {
       return NextResponse.json(
-        {
-          error:
-            "Este cohorte ya está lleno. Escríbenos y te avisamos del próximo cupo disponible.",
-        },
+        { error: inscripcionApiError("cohort-full", loc) },
         { status: 409 },
       );
     }
@@ -409,7 +436,10 @@ export async function POST(req: Request) {
     );
 
     if (!session.url) {
-      return NextResponse.json({ error: "Stripe no devolvió URL de checkout." }, { status: 500 });
+      return NextResponse.json(
+        { error: inscripcionApiError("checkout-no-url", loc) },
+        { status: 500 },
+      );
     }
     return NextResponse.json({ url: session.url });
   } catch (err) {
@@ -422,7 +452,7 @@ export async function POST(req: Request) {
       message: e?.message,
     });
     return NextResponse.json(
-      { error: "No se pudo iniciar el cobro. Intenta nuevamente o escríbenos." },
+      { error: inscripcionApiError("checkout-failed", loc) },
       { status: 500 },
     );
   }

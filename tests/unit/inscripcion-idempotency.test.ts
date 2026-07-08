@@ -11,6 +11,7 @@ vi.mock("@/lib/portal/notify-matricula-review", () => ({
 vi.mock("@/lib/stripe", () => ({
   stripe: () => ({ checkout: { sessions: { create: vi.fn() } } }),
 }));
+vi.mock("@vercel/blob", () => ({ del: vi.fn().mockResolvedValue(undefined) }));
 
 import { checkoutIdempotencyKey } from "@/app/api/inscripcion/route";
 
