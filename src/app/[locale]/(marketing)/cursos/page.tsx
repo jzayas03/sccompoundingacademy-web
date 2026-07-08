@@ -1,6 +1,6 @@
 import { setRequestLocale } from "next-intl/server";
 import { CursosGrid, type CohortBrief } from "@/components/marketing/CursosGrid";
-import { listOpenCohortsSafe } from "@/lib/cohorts";
+import { listOpenCohortsSafe, enrollmentCountByCohort } from "@/lib/cohorts";
 
 // Same freshness contract as the landing: on-demand revalidation (payment
 // webhook + admin cohort actions) keeps open-cohort references current; this
@@ -24,10 +24,19 @@ export default async function Page({ params }: { params: Promise<{ locale: strin
   // Cohorts come from the DB; `listOpenCohortsSafe` degrades to [] if the
   // query fails (see the landing page for the rationale).
   const openCohorts = await listOpenCohortsSafe();
+  // Paid seat counts — degrade like the landing: a failed count query marks
+  // nothing full rather than crashing the page.
+  let counts = new Map<string, number>();
+  try {
+    counts = await enrollmentCountByCohort();
+  } catch {
+    counts = new Map();
+  }
   const cohortsForGrid: CohortBrief[] = openCohorts.map((c) => ({
     courseId: c.courseId,
     startDate: c.startDate.toISOString().slice(0, 10),
     audience: c.audience,
+    full: (counts.get(c.id) ?? 0) >= c.capacity,
   }));
   return <CursosGrid openCohorts={cohortsForGrid} />;
 }

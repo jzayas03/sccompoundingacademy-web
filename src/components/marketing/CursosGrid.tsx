@@ -12,6 +12,8 @@ export type CohortBrief = {
   /** ISO date (yyyy-mm-dd) of the cohort's first day. */
   startDate: string;
   audience: CohortAudience;
+  /** Paid enrollees ≥ capacity — the card flags it and offers the waitlist. */
+  full: boolean;
 };
 
 type ModuleItem = {
@@ -65,18 +67,22 @@ export function CursosGrid({ openCohorts }: { openCohorts: CohortBrief[] }) {
   const items = messages.cursosGrid.items;
   const includesItems = messages.cursosGrid.includesItems;
 
-  function nextCohortLabel(courseId: string, audience: CohortAudience): string | null {
+  function nextCohortLabel(
+    courseId: string,
+    audience: CohortAudience,
+  ): { label: string; full: boolean } | null {
     // `openCohorts` arrives ordered earliest-first, so the first match is the
     // upcoming cohort for this course + audience.
     const cohort = openCohorts.find(
       (c) => c.courseId === courseId && c.audience === audience,
     );
     if (!cohort) return null;
-    return new Intl.DateTimeFormat(locale === "es" ? "es-PR" : "en-US", {
+    const label = new Intl.DateTimeFormat(locale === "es" ? "es-PR" : "en-US", {
       month: "long",
       year: "numeric",
       timeZone: "UTC",
     }).format(new Date(cohort.startDate));
+    return { label, full: cohort.full };
   }
 
   return (
@@ -107,7 +113,7 @@ export function CursosGrid({ openCohorts }: { openCohorts: CohortBrief[] }) {
         <Reveal as="ul" className="mt-12 grid grid-cols-1 gap-6 sm:gap-8 lg:mt-16">
           {items.map((course) => {
             const courseData = getCourseById(course.courseRef ?? course.id);
-            const cohortMonth = nextCohortLabel(
+            const nextCohort = nextCohortLabel(
               course.enrollCourseId ?? course.courseRef ?? course.id,
               course.audience,
             );
@@ -233,36 +239,57 @@ export function CursosGrid({ openCohorts }: { openCohorts: CohortBrief[] }) {
                             {t("durationLabel")}{" "}
                             <span className="text-gray-900 font-semibold">{course.duration}</span>
                           </p>
-                          {cohortMonth && (
+                          {nextCohort && (
                             <p className="text-gray-700 font-heading mt-1 text-xs font-medium tracking-wide uppercase">
                               {t("nextCohortLabel")}{" "}
                               <span className="text-gray-900 font-semibold capitalize">
-                                {cohortMonth}
+                                {nextCohort.label}
                               </span>
                               {" · "}
                               {t("cohortAudience", {
                                 label: AUDIENCE_LABELS[course.audience][locale === "es" ? "es" : "en"],
                               })}
+                              {nextCohort.full && (
+                                <>
+                                  {" · "}
+                                  <span className="text-red-700 font-semibold">
+                                    {t("cohortFull")}
+                                  </span>
+                                </>
+                              )}
                             </p>
                           )}
                         </div>
-                        <Link
-                          href={{
-                            pathname: "/inscripcion",
-                            query: {
-                              course: course.enrollCourseId ?? course.id,
-                              ...(course.enrollTier ? { tier: course.enrollTier } : {}),
-                              ...(course.enrollProf ? { prof: course.enrollProf } : {}),
-                            },
-                          }}
-                          className="font-heading text-teal-deep group-hover:text-teal inline-flex shrink-0 items-center gap-1 text-sm font-semibold transition-colors"
-                          aria-label={`${t("courseLinkAria")}: ${course.title}`}
-                        >
-                          <span>{t("courseCta")}</span>
-                          <span aria-hidden className="transition-transform group-hover:translate-x-0.5">
-                            →
-                          </span>
-                        </Link>
+                        {nextCohort?.full ? (
+                          <Link
+                            href={{ pathname: "/", hash: "cohort" }}
+                            className="font-heading text-teal-deep group-hover:text-teal inline-flex shrink-0 items-center gap-1 text-sm font-semibold transition-colors"
+                            aria-label={`${t("waitlistCta")}: ${course.title}`}
+                          >
+                            <span>{t("waitlistCta")}</span>
+                            <span aria-hidden className="transition-transform group-hover:translate-x-0.5">
+                              →
+                            </span>
+                          </Link>
+                        ) : (
+                          <Link
+                            href={{
+                              pathname: "/inscripcion",
+                              query: {
+                                course: course.enrollCourseId ?? course.id,
+                                ...(course.enrollTier ? { tier: course.enrollTier } : {}),
+                                ...(course.enrollProf ? { prof: course.enrollProf } : {}),
+                              },
+                            }}
+                            className="font-heading text-teal-deep group-hover:text-teal inline-flex shrink-0 items-center gap-1 text-sm font-semibold transition-colors"
+                            aria-label={`${t("courseLinkAria")}: ${course.title}`}
+                          >
+                            <span>{t("courseCta")}</span>
+                            <span aria-hidden className="transition-transform group-hover:translate-x-0.5">
+                              →
+                            </span>
+                          </Link>
+                        )}
                       </div>
                     </div>
                   </div>
