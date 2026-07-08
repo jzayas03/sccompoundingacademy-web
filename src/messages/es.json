@@ -297,6 +297,8 @@
     "durationLabel": "Duración",
     "nextCohortLabel": "Próxima cohorte",
     "cohortAudience": "para {label}",
+    "cohortFull": "llena",
+    "waitlistCta": "Lista de espera",
     "courseCta": "Inscribirme",
     "courseLinkAria": "Ir a la inscripción del curso",
     "modulesLabel": "Módulos",

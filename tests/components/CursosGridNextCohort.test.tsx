@@ -6,8 +6,8 @@ import esMessages from "@/messages/es.json";
 import { CursosGrid } from "@/components/marketing/CursosGrid";
 
 const openCohorts = [
-  { courseId: "basic-compounding", startDate: "2026-08-12", audience: "farmaceutico_tecnico" as const },
-  { courseId: "basic-compounding", startDate: "2026-08-19", audience: "estudiante" as const },
+  { courseId: "basic-compounding", startDate: "2026-08-12", audience: "farmaceutico_tecnico" as const, full: false },
+  { courseId: "basic-compounding", startDate: "2026-08-19", audience: "estudiante" as const, full: false },
 ];
 
 function card(title: string): HTMLElement {
@@ -37,5 +37,29 @@ describe("CursosGrid per-audience next cohort", () => {
     const otros = card("Otros Profesionales");
     expect(otros.textContent).not.toContain("Próxima cohorte");
     expect(otros.textContent).not.toContain("para Otros Profesionales");
+  });
+
+  it("full next cohort: shows 'llena' and swaps the CTA to the waitlist", () => {
+    render(
+      <NextIntlClientProvider locale="es" messages={esMessages}>
+        <CursosGrid
+          openCohorts={[
+            { courseId: "basic-compounding", startDate: "2026-08-12", audience: "farmaceutico_tecnico" as const, full: true },
+            { courseId: "basic-compounding", startDate: "2026-08-19", audience: "estudiante" as const, full: false },
+          ]}
+        />
+      </NextIntlClientProvider>,
+    );
+
+    const farm = card("Compounding No Estéril Básico — Farmacéuticos y Técnicos");
+    expect(farm.textContent).toContain("llena");
+    expect(within(farm).getByRole("link", { name: /lista de espera/i })).toBeTruthy();
+    // The regular enroll CTA is gone from THIS card…
+    expect(within(farm).queryByText("Inscribirme")).toBeNull();
+
+    // …while the non-full student card keeps the normal CTA and no "llena".
+    const student = card("Track de Estudiantes — Compounding No Estéril");
+    expect(student.textContent).not.toContain("llena");
+    expect(within(student).queryByRole("link", { name: /lista de espera/i })).toBeNull();
   });
 });

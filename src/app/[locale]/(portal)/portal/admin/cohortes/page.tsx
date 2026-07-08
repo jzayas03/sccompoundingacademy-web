@@ -218,7 +218,11 @@ export default async function CohortesAdminPage({
                   </h3>
                   <p className="text-gray-700 text-xs">
                     {AUDIENCE_LABELS[c.audience].es} ·{" "}
-                    {enrolled} / {c.capacity} inscrito{enrolled === 1 ? "" : "s"} ·{" "}
+                    {enrolled} / {c.capacity} inscrito{enrolled === 1 ? "" : "s"}
+                    {enrolled > c.capacity && (
+                      <span className="text-red-700 font-semibold"> · sobrecupo</span>
+                    )}{" "}
+                    ·{" "}
                     {c.openForEnrollment
                       ? isEnrollable(c, now)
                         ? "Abierto"
