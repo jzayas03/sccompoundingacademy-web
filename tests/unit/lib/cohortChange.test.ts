@@ -84,6 +84,21 @@ describe("validateCohortChange", () => {
     ).toBe("audience-mismatch");
   });
 
+  it("audience mismatch WITH force still → 'audience-mismatch'", () => {
+    expect(
+      validateCohortChange({
+        ...base,
+        tier: "student",
+        currentCohortId: "student",
+        force: true,
+        destAudience: "farmaceutico_tecnico",
+        destCapacity: 10,
+        destPaidCount: 0,
+        destCohortId: "farm",
+      }),
+    ).toBe("audience-mismatch");
+  });
+
   it("full without force → 'full'", () => {
     expect(
       validateCohortChange({
