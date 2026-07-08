@@ -2,7 +2,13 @@ import type { Cohort } from "@/lib/db/schema";
 import { audienceMatches, type CohortAudience } from "@/lib/cohorts/audience";
 
 /** Outcome of a proposed cohort change. */
-export type ChangeCode = "same" | "audience-mismatch" | "full" | "ok";
+export type ChangeCode =
+  | "same"
+  | "audience-mismatch"
+  | "course-mismatch"
+  | "closed"
+  | "full"
+  | "ok";
 
 /** A destination-cohort option for the roster dropdown: the cohort plus its
  *  current seat state. `full` means paid enrollees ≥ capacity. */
@@ -13,22 +19,27 @@ export type CohortOption = {
 };
 
 /**
- * Cohorts the admin may move THIS student into: audience matches the student's
- * profile, excluding the student's current cohort. Full cohorts are INCLUDED
- * (flagged `full`) so the admin can still force a move into them. Pure + DB-free.
- * `counts` is the paid-enrollee map from `enrollmentCountByCohort()`.
+ * Cohorts the admin may move THIS student into: same course, open for
+ * enrollment, audience matches the student's profile, excluding the student's
+ * current cohort. Full cohorts are INCLUDED (flagged `full`) so the admin can
+ * still force a move into them. Pure + DB-free. `counts` is the paid-enrollee
+ * map from `enrollmentCountByCohort()`; `currentCourseId` is null when the
+ * student has no current cohort, which yields no destinations.
  */
 export function eligibleCohortsForChange(
   cohorts: readonly Cohort[],
   tier: string,
   professionalType: string | null | undefined,
   currentCohortId: string | null,
+  currentCourseId: string | null,
   counts: Map<string, number>,
 ): CohortOption[] {
   return cohorts
     .filter(
       (c) =>
         c.id !== currentCohortId &&
+        c.openForEnrollment &&
+        c.courseId === currentCourseId &&
         audienceMatches(c.audience, tier, professionalType),
     )
     .map((c) => {
@@ -39,23 +50,29 @@ export function eligibleCohortsForChange(
 
 /**
  * Decide whether a cohort change is allowed — the single source of truth for
- * the rules (the client dropdown filter is only UX). Audience mismatch is a
- * hard barrier that `force` never overrides; `force` bypasses capacity only.
- * `destPaidCount` is the destination cohort's current paid enrollees.
+ * the rules (the client dropdown filter is only UX). Audience, course, and
+ * closed status are hard barriers `force` never overrides; `force` bypasses
+ * capacity only. `destPaidCount` is the destination cohort's current paid
+ * enrollees.
  */
 export function validateCohortChange(args: {
   destAudience: CohortAudience;
   destCapacity: number;
   destPaidCount: number;
+  destCourseId: string;
+  destOpen: boolean;
   tier: string;
   professionalType: string | null | undefined;
   currentCohortId: string | null;
+  currentCourseId: string | null;
   destCohortId: string;
   force: boolean;
 }): ChangeCode {
   if (args.destCohortId === args.currentCohortId) return "same";
   if (!audienceMatches(args.destAudience, args.tier, args.professionalType))
     return "audience-mismatch";
+  if (args.destCourseId !== args.currentCourseId) return "course-mismatch";
+  if (!args.destOpen) return "closed";
   const full = args.destPaidCount >= args.destCapacity;
   if (full && !args.force) return "full";
   return "ok";

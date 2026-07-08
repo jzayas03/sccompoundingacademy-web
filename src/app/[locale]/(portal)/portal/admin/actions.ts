@@ -226,14 +226,22 @@ export async function changeCohort(
   const dest = await getCohort(destCohortId);
   if (!dest) return { ok: false, message: "Cohorte no encontrada." };
 
+  const currentCohort = student.cohortId
+    ? await getCohort(student.cohortId)
+    : undefined;
+  const currentCourseId = currentCohort?.courseId ?? null;
+
   const counts = await enrollmentCountByCohort();
   const code = validateCohortChange({
     destAudience: dest.audience,
     destCapacity: dest.capacity,
     destPaidCount: counts.get(dest.id) ?? 0,
+    destCourseId: dest.courseId,
+    destOpen: dest.openForEnrollment,
     tier: student.tier ?? "",
     professionalType: student.professionalType,
     currentCohortId: student.cohortId,
+    currentCourseId,
     destCohortId: dest.id,
     force,
   });
@@ -245,6 +253,10 @@ export async function changeCohort(
       ok: false,
       message: "Esa cohorte no corresponde al perfil del alumno.",
     };
+  if (code === "course-mismatch")
+    return { ok: false, message: "Esa cohorte es de otro curso." };
+  if (code === "closed")
+    return { ok: false, message: "Esa cohorte está cerrada para inscripción." };
   if (code === "full") {
     const n = counts.get(dest.id) ?? 0;
     return {
