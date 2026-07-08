@@ -22,10 +22,14 @@ const mocks = vi.hoisted(() => ({
   insertFn: vi.fn(),
   /** Resolves .returning() at the end of the upsert chain. */
   insertReturningFn: vi.fn(),
+  /** @vercel/blob del() — asserts orphaned-blob cleanup on rejection paths. */
+  blobDelFn: vi.fn(),
 }));
 
 // ── module mocks ───────────────────────────────────────────────────────────────
 vi.mock("server-only", () => ({}));
+
+vi.mock("@vercel/blob", () => ({ del: mocks.blobDelFn }));
 
 vi.mock("@/lib/db", () => ({
   db: {
@@ -82,6 +86,7 @@ vi.mock("@/lib/siteUrl", () => ({
 }));
 
 import { POST } from "@/app/api/inscripcion/route";
+import { inscripcionApiError } from "@/lib/inscripcion/api-errors";
 
 // ── fixtures ───────────────────────────────────────────────────────────────────
 const STUDENT_PAYLOAD = {
@@ -123,6 +128,7 @@ describe("POST /api/inscripcion — student branch", () => {
   beforeEach(() => {
     vi.clearAllMocks();
     mocks.notifyFn.mockResolvedValue(undefined);
+    mocks.blobDelFn.mockResolvedValue(undefined);
     // Wire insertFn to return the upsert chain by default.
     mocks.insertFn.mockReturnValue({
       values: vi.fn().mockReturnValue({
@@ -160,8 +166,39 @@ describe("POST /api/inscripcion — student branch", () => {
 
     expect(res.status).toBe(409);
     expect(json).toMatchObject({ error: expect.stringContaining("inscripción registrada") });
+    expect(json).toEqual({ error: inscripcionApiError("already-enrolled", "es") });
     expect(mocks.insertFn).not.toHaveBeenCalled();
     expect(mocks.notifyFn).not.toHaveBeenCalled();
+  });
+
+  it("rejected submission with a store-matching matricula URL → orphaned blob discarded", async () => {
+    mocks.selectLimitFn.mockResolvedValue([
+      { id: "user-1", paidAt: new Date("2026-01-15T00:00:00Z") },
+    ]);
+
+    const res = await POST(makeRequest(STUDENT_PAYLOAD));
+
+    expect(res.status).toBe(409);
+    expect(mocks.blobDelFn).toHaveBeenCalledExactlyOnceWith(STUDENT_PAYLOAD.matricula_doc_url);
+  });
+
+  it("rejected submission with a foreign (non-store) matricula URL → blob NOT discarded", async () => {
+    // A foreign URL fails the matricula-required accept-check (400) before
+    // the submission ever reaches the duplicate-payment 409 above — both are
+    // post-parse rejection paths that wire the same cleanup call, and
+    // `discardMatriculaBlob` is a no-op for a URL outside our own store.
+    mocks.selectLimitFn.mockResolvedValue([
+      { id: "user-1", paidAt: new Date("2026-01-15T00:00:00Z") },
+    ]);
+    const foreignPayload = {
+      ...STUDENT_PAYLOAD,
+      matricula_doc_url: "https://evil.example.com/not-ours.jpg",
+    };
+
+    const res = await POST(makeRequest(foreignPayload));
+
+    expect(res.status).toBe(400);
+    expect(mocks.blobDelFn).not.toHaveBeenCalled();
   });
 });
 
@@ -195,8 +232,7 @@ describe("POST /api/inscripcion — profesional branch duplicate-payment guard (
 
     expect(res.status).toBe(409);
     expect(json).toMatchObject({
-      error:
-        "Ya tienes una inscripción registrada con este correo. Escríbenos si necesitas ayuda.",
+      error: inscripcionApiError("already-enrolled", "es"),
     });
     expect(mocks.stripeCreateFn).not.toHaveBeenCalled();
   });
