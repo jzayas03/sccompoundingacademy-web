@@ -168,11 +168,14 @@ export default async function AdminPage({
   const paidByCohort = await enrollmentCountByCohort();
   const openCohorts = cohortList.filter((c) => c.openForEnrollment);
   const totalSeats = openCohorts.reduce((s, c) => s + c.capacity, 0);
-  const seatsTaken = openCohorts.reduce(
-    (s, c) => s + (paidByCohort.get(c.id) ?? 0),
+  // M2: clamp PER COHORT before summing, not once on the aggregate. An
+  // overbooked cohort (paid > capacity, e.g. after a force-move) would
+  // otherwise let its surplus silently cancel out another cohort's real
+  // remaining seats in the total.
+  const seatsRemaining = openCohorts.reduce(
+    (s, c) => s + Math.max(0, c.capacity - (paidByCohort.get(c.id) ?? 0)),
     0,
   );
-  const seatsRemaining = Math.max(0, totalSeats - seatsTaken);
   const completionRate =
     roster.length > 0 ? Math.round((certRows.length / roster.length) * 100) : 0;
 

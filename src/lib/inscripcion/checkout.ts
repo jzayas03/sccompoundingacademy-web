@@ -4,7 +4,7 @@ import { db } from "@/lib/db";
 import { users } from "@/lib/db/schema";
 import { stripe } from "@/lib/stripe";
 import { getSiteUrl } from "@/lib/siteUrl";
-import { getCohort } from "@/lib/cohorts";
+import { getCohort, enrollmentCountByCohort } from "@/lib/cohorts";
 import { getCourseById, getPricingByTier } from "@/lib/courses";
 
 export type CheckoutOutcome =
@@ -65,6 +65,15 @@ export async function createStudentCheckoutSession(
   if (cohort.audience !== "estudiante") {
     return { ok: false, reason: "audience-mismatch" };
   }
+  // C2: capacity guard, mirroring the profesional-tier guard at
+  // /api/inscripcion/route.ts:297-310. Seats taken = PAID enrollees, the
+  // same count the public seat meter shows. Reuses "cohort-closed" rather
+  // than adding a distinct reason: every caller (the pay-link page) already
+  // renders "cohort-closed" as "this cohort is no longer available", which
+  // is exactly true here too, and a new reason would ripple into that UI's
+  // switch/copy for no behavioral gain.
+  const paid = (await enrollmentCountByCohort()).get(cohort.id) ?? 0;
+  if (paid >= cohort.capacity) return { ok: false, reason: "cohort-closed" };
 
   const course = getCourseById(cohort.courseId);
   const pricing = course && getPricingByTier(course, "student");

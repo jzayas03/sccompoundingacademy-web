@@ -45,7 +45,6 @@ describe("studentPaidUpdate", () => {
 
   const result = studentPaidUpdate({
     stripeCustomerId: "cus_123",
-    cohortId: "cohort-2026-q1",
   });
 
   const NOW_AFTER = Date.now();
@@ -61,8 +60,8 @@ describe("studentPaidUpdate", () => {
     expect(result.stripeCustomerId).toBe("cus_123");
   });
 
-  it("maps cohortId through", () => {
-    expect(result.cohortId).toBe("cohort-2026-q1");
+  it("does NOT include cohortId (C3: Path A never re-stamps the cohort)", () => {
+    expect(result).not.toHaveProperty("cohortId");
   });
 
   it("does NOT include studentVerification", () => {
