@@ -148,6 +148,12 @@ where the locale is EN.
   approve/reject flow uses it).
 - Cleanup is fire-and-forget-with-await (awaited, but never throws) — worst
   case a blob survives (status quo today), never a broken response.
+- Threat model note: cleanup deletes the client-supplied URL when it matches
+  our store host, without proving it was uploaded in this request. Deleting a
+  VICTIM's referenced blob would require guessing their URL (random store id +
+  random pathname suffix — unguessable without DB/admin-email access), and
+  `del()` is scoped to our own token, so foreign stores are unreachable. The
+  8/min/IP rate limit caps abuse. Accepted residual risk.
 - Copy risk is zero for ES (verbatim strings); EN strings are new copy.
 
 ## Files touched
