@@ -30,6 +30,7 @@ import {
 import { AdminEditEmail } from "@/components/portal/AdminEditEmail";
 import { AdminChangeCohort } from "@/components/portal/AdminChangeCohort";
 import { eligibleCohortsForChange } from "@/lib/cohorts/change";
+import { isEnrollable } from "@/lib/cohorts/enrollable";
 
 export const metadata: Metadata = {
   title: "Administración · SCCA Portal",
@@ -166,7 +167,8 @@ export default async function AdminPage({
   // has no DB table — those signups go straight to the ops inbox — so there
   // is no card for it.)
   const paidByCohort = await enrollmentCountByCohort();
-  const openCohorts = cohortList.filter((c) => c.openForEnrollment);
+  // Mirrors the public landing: date-auto-closed cohorts don't count as open.
+  const openCohorts = cohortList.filter((c) => isEnrollable(c, now));
   const totalSeats = openCohorts.reduce((s, c) => s + c.capacity, 0);
   // M2: clamp PER COHORT before summing, not once on the aggregate. An
   // overbooked cohort (paid > capacity, e.g. after a force-move) would

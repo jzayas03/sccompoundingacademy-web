@@ -2,6 +2,7 @@ import { and, asc, count, eq, isNotNull } from "drizzle-orm";
 import { db } from "@/lib/db";
 import { cohorts, users, type Cohort } from "@/lib/db/schema";
 import type { CohortAudience } from "@/lib/cohorts/audience";
+import { isEnrollable } from "@/lib/cohorts/enrollable";
 
 /**
  * Cohort data layer.
@@ -46,11 +47,17 @@ export async function listCohorts(): Promise<Cohort[]> {
  */
 export async function listOpenCohorts(courseId?: string): Promise<Cohort[]> {
   const open = eq(cohorts.openForEnrollment, true);
-  return db
+  const rows = await db
     .select()
     .from(cohorts)
     .where(courseId ? and(open, eq(cohorts.courseId, courseId)) : open)
     .orderBy(asc(cohorts.startDate));
+  // Date-based auto-close: what the landing copy promises ("cierra dos
+  // semanas antes de la fecha de inicio"), enforced at read time — no cron
+  // to drift. Payment paths and the admin change-cohort control deliberately
+  // do NOT use this (see lib/cohorts/enrollable.ts).
+  const now = new Date();
+  return rows.filter((c) => isEnrollable(c, now));
 }
 
 export async function getCohort(id: string): Promise<Cohort | undefined> {

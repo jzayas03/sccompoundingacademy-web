@@ -5,6 +5,7 @@ import { z } from "zod";
 import { stripe } from "@/lib/stripe";
 import { getCourseById, getPricingByTier } from "@/lib/courses";
 import { getCohort, enrollmentCountByCohort } from "@/lib/cohorts";
+import { isEnrollable } from "@/lib/cohorts/enrollable";
 import { audienceMatches, audienceMismatchMessage } from "@/lib/cohorts/audience";
 import { getSiteUrl } from "@/lib/siteUrl";
 import { rateLimit, clientIp } from "@/lib/ratelimit";
@@ -172,7 +173,9 @@ export async function POST(req: Request) {
       { status: 400 },
     );
   }
-  if (!cohort.openForEnrollment) {
+  // Manual flag AND the 14-day date cutoff (defense in depth: this gate
+  // reads via getCohort, not listOpenCohorts, so it must apply the same rule).
+  if (!isEnrollable(cohort, new Date())) {
     await discardMatriculaBlob(data.matricula_doc_url);
     return NextResponse.json(
       { error: inscripcionApiError("cohort-closed", loc) },
