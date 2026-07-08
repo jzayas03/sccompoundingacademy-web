@@ -67,7 +67,14 @@ vi.mock("@/lib/cohorts", () => ({
     courseId: "basic-compounding",
     openForEnrollment: true,
     audience: "estudiante",
+    capacity: 10,
   }),
+  enrollmentCountByCohort: vi.fn().mockResolvedValue(new Map()),
+}));
+
+vi.mock("@/lib/cohorts/audience", () => ({
+  audienceMatches: vi.fn().mockReturnValue(true),
+  audienceMismatchMessage: vi.fn().mockReturnValue("Audiencia inválida."),
 }));
 
 vi.mock("@/lib/siteUrl", () => ({
@@ -85,6 +92,19 @@ const STUDENT_PAYLOAD = {
   cohorte_id: "cohort-2026-q1",
   tier: "student",
   matricula_doc_url: "https://abc123.private.blob.vercel-storage.com/mat.jpg",
+  acepto_terminos: true as const,
+  acepto_version_docs: "v2026-06-01",
+  locale: "es" as const,
+};
+
+const PROFESIONAL_PAYLOAD = {
+  nombre: "Carlos Ruiz",
+  email: "carlos@example.com",
+  telefono: "787-555-0199",
+  curso_id: "basic-compounding",
+  cohorte_id: "cohort-2026-q1",
+  tier: "profesional",
+  tipo_profesional: "farmaceutico",
   acepto_terminos: true as const,
   acepto_version_docs: "v2026-06-01",
   locale: "es" as const,
@@ -142,5 +162,42 @@ describe("POST /api/inscripcion — student branch", () => {
     expect(json).toMatchObject({ error: expect.stringContaining("inscripción registrada") });
     expect(mocks.insertFn).not.toHaveBeenCalled();
     expect(mocks.notifyFn).not.toHaveBeenCalled();
+  });
+});
+
+describe("POST /api/inscripcion — profesional branch duplicate-payment guard (I1)", () => {
+  beforeEach(() => {
+    vi.clearAllMocks();
+    // getPricingByTier is mocked to always return STRIPE_PRICE_ID_STUDENT's
+    // env key regardless of tier (see the @/lib/courses mock above).
+    process.env.STRIPE_PRICE_ID_STUDENT = "price_test";
+    mocks.stripeCreateFn.mockResolvedValue({ url: "https://stripe.test/sess" });
+  });
+
+  it("no existing paid row → proceeds to create a Stripe Checkout Session", async () => {
+    mocks.selectLimitFn.mockResolvedValue([]);
+
+    const res = await POST(makeRequest(PROFESIONAL_PAYLOAD));
+    const json = await res.json();
+
+    expect(res.status).toBe(200);
+    expect(json).toEqual({ url: "https://stripe.test/sess" });
+    expect(mocks.stripeCreateFn).toHaveBeenCalledOnce();
+  });
+
+  it("existing paid row → HTTP 409 with the same message as the student branch, Stripe NOT called", async () => {
+    mocks.selectLimitFn.mockResolvedValue([
+      { id: "user-2", paidAt: new Date("2026-01-15T00:00:00Z") },
+    ]);
+
+    const res = await POST(makeRequest(PROFESIONAL_PAYLOAD));
+    const json = await res.json();
+
+    expect(res.status).toBe(409);
+    expect(json).toMatchObject({
+      error:
+        "Ya tienes una inscripción registrada con este correo. Escríbenos si necesitas ayuda.",
+    });
+    expect(mocks.stripeCreateFn).not.toHaveBeenCalled();
   });
 });

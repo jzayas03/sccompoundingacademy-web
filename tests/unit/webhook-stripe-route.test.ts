@@ -239,7 +239,10 @@ describe("POST /api/webhooks/stripe — DB path routing", () => {
     expect(setArg).toHaveProperty("paidAt");
     expect(setArg.paidAt).toBeInstanceOf(Date);
     expect(setArg).toHaveProperty("stripeCustomerId");
-    expect(setArg).toHaveProperty("cohortId");
+
+    // cohortId must NOT appear (C3): Path A never re-stamps the cohort —
+    // the pre-payment row already carries the authoritative cohort.
+    expect(setArg).not.toHaveProperty("cohortId");
 
     // Verification fields must NOT appear — the admin already approved this row.
     expect(setArg).not.toHaveProperty("studentVerification");
@@ -286,5 +289,102 @@ describe("POST /api/webhooks/stripe — DB path routing", () => {
 
     // db.update (stamp-by-id path) must NOT have been taken.
     expect(mocks.dbUpdateFn).not.toHaveBeenCalled();
+  });
+});
+
+describe("POST /api/webhooks/stripe — C1 claim-safety invariant", () => {
+  beforeEach(() => {
+    vi.clearAllMocks();
+    process.env.STRIPE_WEBHOOK_SECRET = "whsec_test";
+    mocks.recordInscripcionFn.mockResolvedValue(null);
+    mocks.notifyFn.mockResolvedValue(undefined);
+    mocks.sendOpsAlertFn.mockResolvedValue(undefined);
+  });
+
+  // ── Pre-stamp throw → claim released, 500 (Stripe retries) ────────────
+  it("stamp-by-id DB write throws → claim is released and response is 500", async () => {
+    mocks.constructEventFn.mockReturnValue(makeStripeEvent());
+
+    // First db.insert call: idempotency claim on processedStripeEvents.
+    mocks.dbInsertFn.mockReturnValueOnce(idempotencyInsertChain());
+
+    // db.update(users).set(...).where(...).returning(...) rejects — the
+    // payment stamp itself fails.
+    mocks.dbUpdateFn.mockReturnValue({
+      set: vi.fn().mockReturnValue({
+        where: vi.fn().mockReturnValue({
+          returning: vi.fn().mockRejectedValue(new Error("db unreachable")),
+        }),
+      }),
+    });
+
+    // db.delete(...).where(...) — the claim-release call.
+    const deleteWhereFn = vi.fn().mockResolvedValue(undefined);
+    mocks.dbDeleteFn.mockReturnValue({ where: deleteWhereFn });
+
+    const res = await POST(makeWebhookRequest());
+
+    expect(res.status).toBe(500);
+    // The claim row must have been released so a Stripe resend reprocesses.
+    expect(mocks.dbDeleteFn).toHaveBeenCalledOnce();
+    expect(deleteWhereFn).toHaveBeenCalledOnce();
+    // Airtable/emails must NOT have run — the stamp never completed.
+    expect(mocks.recordInscripcionFn).not.toHaveBeenCalled();
+    // Ops alert fires so a human knows to investigate/resend.
+    expect(mocks.sendOpsAlertFn).toHaveBeenCalledOnce();
+  });
+
+  // ── Post-stamp throw (Airtable) → claim kept, 200 (no re-stamp on retry) ──
+  it("post-stamp Airtable failure → claim is KEPT and response is still 200", async () => {
+    mocks.constructEventFn.mockReturnValue(makeStripeEvent());
+
+    mocks.dbInsertFn.mockReturnValueOnce(idempotencyInsertChain());
+
+    mocks.updateSetCapture.mockReturnValue({
+      where: vi.fn().mockReturnValue({
+        returning: vi.fn().mockResolvedValue([{ id: "u1" }]),
+      }),
+    });
+    mocks.dbUpdateFn.mockReturnValue({ set: mocks.updateSetCapture });
+
+    // The stamp succeeds, but the post-stamp Airtable call throws.
+    mocks.recordInscripcionFn.mockRejectedValue(new Error("Airtable down"));
+
+    const res = await POST(makeWebhookRequest());
+
+    expect(res.status).toBe(200);
+    // The claim must NOT be released — a Stripe retry must not re-run the
+    // (already-successful) payment stamp and duplicate side effects.
+    expect(mocks.dbDeleteFn).not.toHaveBeenCalled();
+    // The DB stamp itself did happen.
+    expect(mocks.updateSetCapture).toHaveBeenCalledOnce();
+    // Ops alert fires so a human knows Airtable needs a manual look.
+    expect(mocks.sendOpsAlertFn).toHaveBeenCalledOnce();
+  });
+
+  // ── Bad metadata (I6) → claim released, 200 (resend can retry once fixed) ──
+  it("bad metadata (missing course/cohort) → claim is released and response is 200", async () => {
+    mocks.constructEventFn.mockReturnValue(
+      makeStripeEvent({ curso_id: "", cohorte_id: "" }),
+    );
+
+    mocks.dbInsertFn.mockReturnValueOnce(idempotencyInsertChain());
+
+    const deleteWhereFn = vi.fn().mockResolvedValue(undefined);
+    mocks.dbDeleteFn.mockReturnValue({ where: deleteWhereFn });
+
+    const { getCourseById } = await import("@/lib/courses");
+    vi.mocked(getCourseById).mockReturnValueOnce(
+      undefined as unknown as ReturnType<typeof getCourseById>,
+    );
+
+    const res = await POST(makeWebhookRequest());
+
+    expect(res.status).toBe(200);
+    const json = await res.json();
+    expect(json).toMatchObject({ received: true, error: "bad metadata" });
+    expect(mocks.dbDeleteFn).toHaveBeenCalledOnce();
+    expect(deleteWhereFn).toHaveBeenCalledOnce();
+    expect(mocks.sendOpsAlertFn).toHaveBeenCalledOnce();
   });
 });

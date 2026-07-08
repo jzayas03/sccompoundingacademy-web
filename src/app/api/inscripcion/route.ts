@@ -244,13 +244,22 @@ export async function POST(req: Request) {
         );
       }
 
-      await notifyMatriculaReview({
-        userId: row.id,
-        name: data.nombre || null,
-        email: lowercasedEmail,
-        docUrl: matriculaDocUrl,
-        submittedAt,
-      });
+      // M1: the DB upsert above already committed — the enrollment is
+      // persisted regardless of what happens next. The admin review email is
+      // best-effort; a Resend outage here must not surface as a failed
+      // enrollment to the student (they'd otherwise see an error despite
+      // having successfully submitted their matrícula).
+      try {
+        await notifyMatriculaReview({
+          userId: row.id,
+          name: data.nombre || null,
+          email: lowercasedEmail,
+          docUrl: matriculaDocUrl,
+          submittedAt,
+        });
+      } catch (notifyErr) {
+        console.error("[inscripcion] notifyMatriculaReview failed", notifyErr);
+      }
     } catch (err) {
       console.error("[inscripcion] student pending upsert failed", err);
       return NextResponse.json(
@@ -259,6 +268,29 @@ export async function POST(req: Request) {
       );
     }
     return NextResponse.json({ pending: true });
+  }
+
+  // I1: duplicate-payment pre-check, mirroring the student-tier check above
+  // (~217-228). The profesional tier previously had NO guard here — a
+  // repeat submission (double-click, retried form, or an attacker replaying
+  // a captured request) would open a second Checkout Session for someone
+  // who already paid. `paidAt` is only ever set by the Stripe webhook and
+  // never unset, so a non-null value means checkout already completed.
+  try {
+    const lowercasedEmail = data.email.trim().toLowerCase();
+    const [existingRow] = await db
+      .select({ id: users.id, paidAt: users.paidAt })
+      .from(users)
+      .where(eq(users.email, lowercasedEmail))
+      .limit(1);
+    if (existingRow?.paidAt) {
+      return NextResponse.json(
+        { error: "Ya tienes una inscripción registrada con este correo. Escríbenos si necesitas ayuda." },
+        { status: 409 },
+      );
+    }
+  } catch (err) {
+    console.error("[inscripcion] profesional duplicate-payment check failed, allowing", err);
   }
 
   const pricing = getPricingByTier(course, data.tier);

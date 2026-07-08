@@ -1,14 +1,16 @@
 "use server";
 
+import { count, eq } from "drizzle-orm";
 import { revalidatePath } from "next/cache";
 import { auth } from "@/lib/auth";
 import { isAdminEmail } from "@/lib/admin";
 import { getCourseById } from "@/lib/courses";
+import { db } from "@/lib/db";
+import { users } from "@/lib/db/schema";
 import {
   createCohort,
   updateCohort,
   deleteCohort,
-  enrollmentCountByCohort,
   type CohortInput,
 } from "@/lib/cohorts";
 import { CohortFields } from "./fields";
@@ -77,11 +79,19 @@ export async function deleteCohortAction(formData: FormData): Promise<void> {
   await assertAdmin();
   const id = String(formData.get("id") ?? "");
   if (!id) throw new Error("Falta el identificador del cohorte.");
-  // A cohort with paid enrollees is never deletable — their roster /
-  // certificate references would dangle. Close it for enrollment instead.
-  const counts = await enrollmentCountByCohort();
-  if ((counts.get(id) ?? 0) > 0) {
-    throw new Error("No se puede eliminar un cohorte con inscritos.");
+  // I2: a cohort with ANY user row referencing it is never deletable — not
+  // just paid enrollees. `enrollmentCountByCohort` (paid-only) previously
+  // gated this, which let an admin delete a cohort that still had approved-
+  // but-unpaid students or a pending matrícula review pointing at it,
+  // orphaning `users.cohortId`. Close it for enrollment instead.
+  const [ref] = await db
+    .select({ n: count() })
+    .from(users)
+    .where(eq(users.cohortId, id));
+  if ((ref?.n ?? 0) > 0) {
+    throw new Error(
+      "No se puede eliminar un cohorte con inscritos o solicitudes pendientes.",
+    );
   }
   await deleteCohort(id);
   revalidatePath("/", "layout");

@@ -115,11 +115,12 @@ export type EditEmailState = { ok: boolean; message: string };
  * duplicate account under the correct email while their real (paid)
  * account sits under the typo. A plain rename would hit the unique index.
  * So when the target email already exists we only proceed if that account
- * is provably empty — no payment, no quiz attempts, no certificate — in
- * which case we drop it (every `user` FK is ON DELETE CASCADE) and rename,
- * atomically via `db.batch` (the neon-http driver has no interactive
- * transactions). If the target account has payment or progress we refuse
- * and leave it for a human to merge.
+ * is provably empty — no payment, no quiz attempts, no certificate, and no
+ * verification (matrícula) in progress — in which case we drop it (every
+ * `user` FK is ON DELETE CASCADE) and rename, atomically via `db.batch`
+ * (the neon-http driver has no interactive transactions). If the target
+ * account has payment, progress, or a pending verification we refuse and
+ * leave it for a human to merge.
  */
 export async function updateUserEmail(
   _prev: EditEmailState,
@@ -143,7 +144,12 @@ export async function updateUserEmail(
   }
 
   const [other] = await db
-    .select({ id: users.id, paidAt: users.paidAt })
+    .select({
+      id: users.id,
+      paidAt: users.paidAt,
+      verificationDocUrl: users.verificationDocUrl,
+      verificationSubmittedAt: users.verificationSubmittedAt,
+    })
     .from(users)
     .where(eq(users.email, email))
     .limit(1);
@@ -159,12 +165,20 @@ export async function updateUserEmail(
       .from(certificates)
       .where(eq(certificates.userId, other.id))
       .limit(1);
-    const isEmptyDuplicate = !other.paidAt && !quiz && !cert;
+    // I3: also refuse when the duplicate has an in-flight verification
+    // (matrícula uploaded, awaiting admin decision) — deleting it would
+    // silently drop a pending review the owner hasn't acted on yet.
+    const isEmptyDuplicate =
+      !other.paidAt &&
+      !quiz &&
+      !cert &&
+      !other.verificationDocUrl &&
+      !other.verificationSubmittedAt;
     if (!isEmptyDuplicate) {
       return {
         ok: false,
         message:
-          "Ese correo ya pertenece a una cuenta con pago o progreso. Revísalo manualmente.",
+          "Ese correo ya pertenece a una cuenta con pago, progreso o una verificación en curso. Revísalo manualmente.",
       };
     }
     // Atomic: drop the empty duplicate (FKs cascade), then rename.
@@ -217,11 +231,19 @@ export async function changeCohort(
       tier: users.tier,
       professionalType: users.professionalType,
       cohortId: users.cohortId,
+      paidAt: users.paidAt,
     })
     .from(users)
     .where(eq(users.id, userId))
     .limit(1);
   if (!student) return { ok: false, message: "Usuario no encontrado." };
+  // M3: only a paid enrollee has a cohort seat to move. Moving an unpaid
+  // (pending or approved-but-unpaid) student would write `cohortId` on a
+  // row `enrollmentCountByCohort` never counted in the first place — a
+  // silent no-op that could mislead the admin into thinking the move
+  // affected capacity.
+  if (!student.paidAt)
+    return { ok: false, message: "El alumno no tiene un pago registrado." };
 
   const dest = await getCohort(destCohortId);
   if (!dest) return { ok: false, message: "Cohorte no encontrada." };
@@ -231,6 +253,11 @@ export async function changeCohort(
     : undefined;
   const currentCourseId = currentCohort?.courseId ?? null;
 
+  // Read-then-write race accepted at this scale: two concurrent admin moves
+  // (or a move racing a webhook-driven payment) could both read the same
+  // `counts` snapshot and both pass the capacity check, briefly oversubscribing
+  // the destination by one seat (mirrors the accepted trade-off documented on
+  // `enrollmentCountByCohort` in lib/cohorts.ts).
   const counts = await enrollmentCountByCohort();
   const code = validateCohortChange({
     destAudience: dest.audience,

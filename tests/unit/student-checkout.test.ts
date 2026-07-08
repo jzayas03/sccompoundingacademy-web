@@ -15,19 +15,25 @@ const { createSessionMock } = vi.hoisted(() => ({
 vi.mock("@/lib/db", () => ({
   db: { select: () => ({ from: () => ({ where: () => ({ limit: () => mockRows }) }) }) },
 }));
-vi.mock("@/lib/cohorts", () => ({ getCohort: vi.fn() }));
+vi.mock("@/lib/cohorts", () => ({
+  getCohort: vi.fn(),
+  enrollmentCountByCohort: vi.fn(),
+}));
 vi.mock("@/lib/stripe", () => ({
   stripe: () => ({ checkout: { sessions: { create: createSessionMock } } }),
 }));
 vi.mock("@/lib/siteUrl", () => ({ getSiteUrl: () => "https://sccompoundingacademy.com" }));
 
 import { createStudentCheckoutSession } from "@/lib/inscripcion/checkout";
-import { getCohort } from "@/lib/cohorts";
+import { getCohort, enrollmentCountByCohort } from "@/lib/cohorts";
 
 beforeEach(() => {
   process.env.STRIPE_PRICE_ID_STUDENT = "price_student_test";
   mockRows = [];
   vi.mocked(getCohort).mockReset();
+  vi.mocked(enrollmentCountByCohort).mockReset();
+  // Default: no paid enrollees yet — most tests don't care about capacity.
+  vi.mocked(enrollmentCountByCohort).mockResolvedValue(new Map());
   createSessionMock.mockReset();
   createSessionMock.mockResolvedValue({ url: "https://stripe.test/sess" });
 });
@@ -55,6 +61,7 @@ const openCohort = {
   courseId: "basic-compounding" as const,
   openForEnrollment: true,
   audience: "estudiante",
+  capacity: 10,
 } as unknown as import("@/lib/cohorts").Cohort;
 
 describe("createStudentCheckoutSession", () => {
@@ -93,6 +100,28 @@ describe("createStudentCheckoutSession", () => {
   it("mints a session for the happy path", async () => {
     mockRows = [approvedRow];
     vi.mocked(getCohort).mockResolvedValue(openCohort);
+    const r = await createStudentCheckoutSession("u1");
+    expect(r).toEqual({ ok: true, url: "https://stripe.test/sess" });
+  });
+
+  // C2: capacity guard — mirrors the profesional-tier guard at
+  // /api/inscripcion/route.ts:297-310. Without this, an approved student
+  // could pay into an already-full cohort.
+  it("rejects a full cohort (paid count >= capacity)", async () => {
+    mockRows = [approvedRow];
+    vi.mocked(getCohort).mockResolvedValue(openCohort); // capacity: 10
+    vi.mocked(enrollmentCountByCohort).mockResolvedValue(
+      new Map([["c1", 10]]),
+    );
+    const r = await createStudentCheckoutSession("u1");
+    expect(r).toEqual({ ok: false, reason: "cohort-closed" });
+    expect(createSessionMock).not.toHaveBeenCalled();
+  });
+
+  it("allows checkout when paid count is below capacity", async () => {
+    mockRows = [approvedRow];
+    vi.mocked(getCohort).mockResolvedValue(openCohort); // capacity: 10
+    vi.mocked(enrollmentCountByCohort).mockResolvedValue(new Map([["c1", 9]]));
     const r = await createStudentCheckoutSession("u1");
     expect(r).toEqual({ ok: true, url: "https://stripe.test/sess" });
   });

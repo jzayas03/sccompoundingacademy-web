@@ -39,13 +39,11 @@ export function webhookUserStrategy(
 
 export interface StudentPaidUpdateInput {
   stripeCustomerId: string | null;
-  cohortId: string;
 }
 
 export interface StudentPaidUpdateSet {
   paidAt: Date;
   stripeCustomerId: string | null;
-  cohortId: string;
 }
 
 /**
@@ -56,6 +54,12 @@ export interface StudentPaidUpdateSet {
  * verificationDocUrl, verificationSubmittedAt, verifiedAt, rejectedAt) are
  * intentionally absent — the admin approved the student BEFORE payment, so
  * those values must not be touched.
+ *
+ * `cohortId` is ALSO intentionally absent (C3): the pre-payment row already
+ * carries the authoritative cohort — set at enrollment, or moved afterwards
+ * by an admin via `changeCohort`. Re-stamping it here from the Checkout
+ * Session metadata would silently undo an admin's cohort move if the
+ * student's browser still held a pay link minted before the move.
  */
 export function studentPaidUpdate(
   input: StudentPaidUpdateInput,
@@ -63,6 +67,5 @@ export function studentPaidUpdate(
   return {
     paidAt: new Date(),
     stripeCustomerId: input.stripeCustomerId,
-    cohortId: input.cohortId,
   };
 }
