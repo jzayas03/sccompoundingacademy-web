@@ -7,6 +7,12 @@ import { reviews, users, quizAttempts, certificates } from "@/lib/db/schema";
 import { auth } from "@/lib/auth";
 import { isAdminEmail } from "@/lib/admin";
 import { applyVerificationDecision } from "@/lib/portal/apply-verification-decision";
+import {
+  getCohort,
+  enrollmentCountByCohort,
+  formatCohortLabel,
+} from "@/lib/cohorts";
+import { validateCohortChange } from "@/lib/cohorts/change";
 
 async function requireAdmin(): Promise<void> {
   const session = await auth();
@@ -176,4 +182,85 @@ export async function updateUserEmail(
   await db.update(users).set({ email }).where(eq(users.id, userId));
   revalidatePath("/es/portal/admin");
   return { ok: true, message: `Correo actualizado a ${email}.` };
+}
+
+export type ChangeCohortState = { ok: boolean; message: string };
+
+/**
+ * Admin: move an enrolled student to a different cohort.
+ *
+ * `users.cohortId` is otherwise only ever written at enrollment (the
+ * inscription form and the Stripe webhook); this is the one path that
+ * reassigns it afterwards. The rules live in `validateCohortChange`
+ * (pure, unit-tested): audience must match the student's profile — a hard
+ * barrier `force` never overrides — and a full destination cohort
+ * (paid ≥ capacity) is blocked unless the admin passes `force`, which
+ * bypasses the capacity check only. Seats are counted by
+ * `enrollmentCountByCohort` (paid enrollees per cohort), so after the write
+ * the source cohort's count drops and the destination's rises with no other
+ * bookkeeping; we revalidate the admin page and the public seat-meter pages.
+ */
+export async function changeCohort(
+  _prev: ChangeCohortState,
+  formData: FormData,
+): Promise<ChangeCohortState> {
+  await requireAdmin();
+
+  const userId = String(formData.get("userId") ?? "");
+  const destCohortId = String(formData.get("cohortId") ?? "");
+  const force = formData.get("force") === "on";
+  if (!userId || !destCohortId) return { ok: false, message: "Faltan datos." };
+
+  const [student] = await db
+    .select({
+      id: users.id,
+      tier: users.tier,
+      professionalType: users.professionalType,
+      cohortId: users.cohortId,
+    })
+    .from(users)
+    .where(eq(users.id, userId))
+    .limit(1);
+  if (!student) return { ok: false, message: "Usuario no encontrado." };
+
+  const dest = await getCohort(destCohortId);
+  if (!dest) return { ok: false, message: "Cohorte no encontrada." };
+
+  const counts = await enrollmentCountByCohort();
+  const code = validateCohortChange({
+    destAudience: dest.audience,
+    destCapacity: dest.capacity,
+    destPaidCount: counts.get(dest.id) ?? 0,
+    tier: student.tier ?? "",
+    professionalType: student.professionalType,
+    currentCohortId: student.cohortId,
+    destCohortId: dest.id,
+    force,
+  });
+
+  if (code === "same")
+    return { ok: true, message: "El alumno ya está en esa cohorte." };
+  if (code === "audience-mismatch")
+    return {
+      ok: false,
+      message: "Esa cohorte no corresponde al perfil del alumno.",
+    };
+  if (code === "full") {
+    const n = counts.get(dest.id) ?? 0;
+    return {
+      ok: false,
+      message: `Cohorte llena (${n}/${dest.capacity}). Marca "forzar" para moverlo de todos modos.`,
+    };
+  }
+
+  await db.update(users).set({ cohortId: dest.id }).where(eq(users.id, userId));
+  revalidatePath("/es/portal/admin");
+  revalidatePath("/es");
+  revalidatePath("/en");
+  revalidatePath("/es/cursos");
+  revalidatePath("/en/cursos");
+  return {
+    ok: true,
+    message: `Cohorte cambiada a ${formatCohortLabel(dest, "es")}.`,
+  };
 }

@@ -24,6 +24,7 @@ export function enrolleeAudience(
   professionalType: string | null | undefined,
 ): CohortAudience | null {
   if (tier === "student") return "estudiante";
+  if (tier === "pharmacist") return "farmaceutico_tecnico";
   if (tier === "profesional") {
     if (!professionalType?.trim()) return null;
     return isPharmacyRole(professionalType) ? "farmaceutico_tecnico" : "otros_profesionales";
