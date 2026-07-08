@@ -8,34 +8,29 @@ import { AUDIENCE_LABELS, type CohortAudience } from "@/lib/cohorts/audience";
 
 type Status = "idle" | "submitting" | "success" | "error";
 
+export type CohortBlock = {
+  audience: CohortAudience;
+  cohortLabel: string;
+  total: number;
+  remaining: number;
+  featured: boolean;
+};
+
 /**
  * CohortWaitlist — "Next cohort" scarcity + waitlist (§5 of the v2 handoff).
  *
- * Left: cohort heading (real cohort label) + a seat-scarcity meter driven
- * by live data (`total` = capacity, `remaining` = capacity − paid). Right:
- * a glass "Reserve your seat" form that posts to /api/waitlist (emails the
- * ops inbox — no payment). The meter is omitted when there is no open
+ * Left: one seat-scarcity meter block per audience with an open cohort
+ * (`blocks`, featured audience first — see `cohortBlocks`). Right: a glass
+ * "Reserve your seat" form that posts to /api/waitlist (emails the ops
+ * inbox — no payment). The block stack is omitted when there is no open
  * cohort to count.
  */
-export function CohortWaitlist({
-  total,
-  remaining,
-  cohortLabel,
-  audience,
-}: {
-  total: number | null;
-  remaining: number | null;
-  cohortLabel: string | null;
-  audience: CohortAudience | null;
-}) {
+export function CohortWaitlist({ blocks }: { blocks: CohortBlock[] }) {
   const t = useTranslations("cohort");
   const messages = useMessages() as unknown as { cohort: { form: { roles: string[] } } };
   const roles = messages.cohort.form.roles;
   const locale = useLocale();
   const [status, setStatus] = useState<Status>("idle");
-
-  const showMeter = typeof total === "number" && total > 0 && typeof remaining === "number";
-  const filled = showMeter ? Math.max(0, total - remaining) : 0;
 
   const FIELD =
     "block w-full rounded-lg border px-3.5 py-2.5 text-sm text-off-white outline-none " +
@@ -58,7 +53,7 @@ export function CohortWaitlist({
           name: data.get("name"),
           email: data.get("email"),
           role: data.get("role"),
-          cohort: cohortLabel ?? "",
+          cohort: blocks[0]?.cohortLabel ?? "",
           locale,
         }),
       });
@@ -80,39 +75,18 @@ export function CohortWaitlist({
               {t("eyebrow")}
             </p>
             <h2 className="font-heading text-off-white mt-3.5 text-3xl font-bold tracking-[-0.03em] sm:text-4xl">
-              {cohortLabel ?? t("headingFallback")}
+              {blocks.length ? t("headingUpcoming") : t("headingFallback")}
             </h2>
-            {audience && (
-              <p className="font-heading mt-2 text-sm font-semibold" style={{ color: "rgba(230,234,130,0.85)" }}>
-                {t("audienceLine", { label: AUDIENCE_LABELS[audience][locale === "en" ? "en" : "es"] })}
-              </p>
-            )}
             <p className="text-off-white/80 mt-3.5 max-w-md text-[15px] leading-relaxed">
               {t("description")}
             </p>
 
-            {showMeter && (
-              <div className="mt-8 max-w-md">
-                <div className="mb-2.5 flex items-baseline justify-between">
-                  <span className="text-off-white/60 font-heading text-[0.72rem] font-semibold tracking-[0.1em] uppercase">
-                    {t("seatsTotal", { total })}
-                  </span>
-                  <span className="text-chartreuse font-heading text-sm font-bold">
-                    {t("remaining", { remaining })}
-                  </span>
-                </div>
-                <div className="flex gap-1.5">
-                  {Array.from({ length: total }).map((_, k) => (
-                    <div
-                      key={k}
-                      className="h-2 flex-1 rounded-full"
-                      style={{
-                        background: k < filled ? "var(--color-chartreuse)" : "rgba(255,255,255,0.14)",
-                      }}
-                    />
-                  ))}
-                </div>
-                <p className="text-off-white/50 mt-3.5 text-[12.5px]">{t("closesNote")}</p>
+            {blocks.length > 0 && (
+              <div className="mt-8 max-w-md space-y-6">
+                {blocks.map((block) => (
+                  <CohortMeterBlock key={block.audience} block={block} />
+                ))}
+                <p className="text-off-white/50 text-[12.5px]">{t("closesNote")}</p>
               </div>
             )}
           </div>
@@ -172,5 +146,45 @@ export function CohortWaitlist({
         </Reveal>
       </Container>
     </section>
+  );
+}
+
+function CohortMeterBlock({ block }: { block: CohortBlock }) {
+  const t = useTranslations("cohort");
+  const locale = useLocale();
+  const filled = Math.max(0, block.total - block.remaining);
+  return (
+    <div className={block.featured ? "border-chartreuse border-l-2 pl-4" : "border-white/10 border-l-2 pl-4"}>
+      <p className="font-heading text-off-white text-sm font-semibold">
+        {block.featured && (
+          <span aria-hidden className="text-chartreuse">
+            ★{" "}
+          </span>
+        )}
+        {AUDIENCE_LABELS[block.audience][locale === "en" ? "en" : "es"]}
+        <span className="text-off-white/60"> · {block.cohortLabel}</span>
+      </p>
+      {block.total > 0 && (
+        <div className="mt-2.5">
+          <div className="mb-2 flex items-baseline justify-between">
+            <span className="text-off-white/60 font-heading text-[0.72rem] font-semibold tracking-[0.1em] uppercase">
+              {t("seatsTotal", { total: block.total })}
+            </span>
+            <span className="text-chartreuse font-heading text-sm font-bold">
+              {t("remaining", { remaining: block.remaining })}
+            </span>
+          </div>
+          <div className="flex gap-1.5">
+            {Array.from({ length: block.total }).map((_, k) => (
+              <div
+                key={k}
+                className="h-2 flex-1 rounded-full"
+                style={{ background: k < filled ? "var(--color-chartreuse)" : "rgba(255,255,255,0.14)" }}
+              />
+            ))}
+          </div>
+        </div>
+      )}
+    </div>
   );
 }

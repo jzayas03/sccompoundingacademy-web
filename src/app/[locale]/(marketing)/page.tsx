@@ -4,10 +4,11 @@ import { pageMetadata } from "@/lib/seo";
 import { homepageJsonLd } from "@/lib/structuredData";
 import { listOpenCohortsSafe, enrollmentCountByCohort, formatCohortLabel } from "@/lib/cohorts";
 import { pickFeaturedCohort } from "@/lib/cohorts/featured";
+import { cohortBlocks } from "@/lib/cohorts/blocks";
 import { Hero } from "@/components/marketing/Hero";
 import { ConfianzaCarousel } from "@/components/marketing/ConfianzaCarousel";
 import { CursosHome } from "@/components/marketing/CursosHome";
-import { CohortWaitlist } from "@/components/marketing/CohortWaitlist";
+import { CohortWaitlist, type CohortBlock } from "@/components/marketing/CohortWaitlist";
 import { Instructor } from "@/components/marketing/Instructor";
 import { VideoIntro } from "@/components/marketing/VideoIntro";
 import { FaqClean } from "@/components/marketing/FaqClean";
@@ -58,23 +59,24 @@ export default async function LandingPage({ params }: { params: Promise<{ locale
   const openCohorts = await listOpenCohortsSafe();
   const next = pickFeaturedCohort(openCohorts);
 
-  // Seat-scarcity meter for the waitlist section, from real data: total =
-  // the next cohort's capacity, remaining = capacity − PAID enrollees
+  // Seat-scarcity meters for the waitlist section, from real data: one block
+  // per audience with an open cohort (featured audience first), each with
+  // total = capacity, remaining = capacity − PAID enrollees
   // (`enrollmentCountByCohort`). Only completed payments consume a seat, so
-  // an approved-but-unpaid student never makes the cohort read as full. All
-  // best-effort — if the count query fails, the meter is simply hidden.
-  let seatTotal: number | null = null;
-  let seatRemaining: number | null = null;
-  let cohortLabel: string | null = null;
-  if (next) {
-    seatTotal = next.capacity;
-    cohortLabel = formatCohortLabel(next, locale as "es" | "en");
-    try {
-      const counts = await enrollmentCountByCohort();
-      seatRemaining = Math.max(0, next.capacity - (counts.get(next.id) ?? 0));
-    } catch {
-      seatRemaining = null;
-    }
+  // an approved-but-unpaid student never makes a cohort read as full. All
+  // best-effort — if the count query fails, the block stack is simply empty.
+  let cohortBlockProps: CohortBlock[] = [];
+  try {
+    const counts = await enrollmentCountByCohort();
+    cohortBlockProps = cohortBlocks(openCohorts, counts, next?.audience ?? null).map((b) => ({
+      audience: b.audience,
+      cohortLabel: formatCohortLabel(b, locale as "es" | "en"),
+      total: b.capacity,
+      remaining: b.remaining,
+      featured: b.featured,
+    }));
+  } catch {
+    cohortBlockProps = [];
   }
 
   const jsonLd = homepageJsonLd(
@@ -112,12 +114,7 @@ export default async function LandingPage({ params }: { params: Promise<{ locale
       <Hero />
       <ConfianzaCarousel />
       <CursosHome />
-      <CohortWaitlist
-        total={seatTotal}
-        remaining={seatRemaining}
-        cohortLabel={cohortLabel}
-        audience={next?.audience ?? null}
-      />
+      <CohortWaitlist blocks={cohortBlockProps} />
       <Instructor />
       <VideoIntro />
       <FaqClean />
