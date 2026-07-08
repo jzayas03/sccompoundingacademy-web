@@ -28,6 +28,8 @@ import {
   extendStudentAccess,
 } from "./actions";
 import { AdminEditEmail } from "@/components/portal/AdminEditEmail";
+import { AdminChangeCohort } from "@/components/portal/AdminChangeCohort";
+import { eligibleCohortsForChange } from "@/lib/cohorts/change";
 
 export const metadata: Metadata = {
   title: "Administración · SCCA Portal",
@@ -260,7 +262,24 @@ export default async function AdminPage({
                   <td className="py-2 pr-4 text-gray-700">{r.phone ?? "—"}</td>
                   <td className="py-2 pr-4 text-gray-700">{r.tier ?? "—"}</td>
                   <td className="py-2 pr-4 text-gray-700">{fmtDate(r.paidAt)}</td>
-                  <td className="py-2 pr-4 text-gray-700">{cohortLabel(r.cohortId, cohortById)}</td>
+                  <td className="py-2 pr-4 text-gray-700">
+                    <AdminChangeCohort
+                      userId={r.id}
+                      currentLabel={cohortLabel(r.cohortId, cohortById)}
+                      options={eligibleCohortsForChange(
+                        cohortList,
+                        r.tier ?? "",
+                        r.professionalType,
+                        r.cohortId,
+                        paidByCohort,
+                      ).map((o) => ({
+                        id: o.cohort.id,
+                        label: formatCohortLabel(o.cohort, "es"),
+                        full: o.full,
+                        remaining: o.remaining,
+                      }))}
+                    />
+                  </td>
                   <td className="py-2">
                     <p className="text-xs">
                       {accessActive ? (
