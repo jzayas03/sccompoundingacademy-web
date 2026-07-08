@@ -72,6 +72,11 @@ vi.mock("@/lib/cohorts", () => ({
     openForEnrollment: true,
     audience: "estudiante",
     capacity: 10,
+    // Well past the 14-day enrollment cutoff relative to "now" — this
+    // fixture exercises the manual-flag/duplicate-payment gates, not the
+    // date cutoff, so pin startDate comfortably in the future (+90 days)
+    // rather than a static date that would eventually rot and flip closed.
+    startDate: new Date(Date.now() + 90 * 24 * 60 * 60 * 1000),
   }),
   enrollmentCountByCohort: vi.fn().mockResolvedValue(new Map()),
 }));

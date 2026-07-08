@@ -14,6 +14,7 @@ import {
   formatCohortLabel,
   type Cohort,
 } from "@/lib/cohorts";
+import { isEnrollable } from "@/lib/cohorts/enrollable";
 import {
   createCohortAction,
   updateCohortAction,
@@ -160,6 +161,7 @@ export default async function CohortesAdminPage({
 
   const cohorts = await listCohorts();
   const counts = await enrollmentCountByCohort();
+  const now = new Date();
 
   return (
     <div className="mx-auto max-w-3xl">
@@ -217,7 +219,11 @@ export default async function CohortesAdminPage({
                   <p className="text-gray-700 text-xs">
                     {AUDIENCE_LABELS[c.audience].es} ·{" "}
                     {enrolled} / {c.capacity} inscrito{enrolled === 1 ? "" : "s"} ·{" "}
-                    {c.openForEnrollment ? "Abierto" : "Cerrado"}
+                    {c.openForEnrollment
+                      ? isEnrollable(c, now)
+                        ? "Abierto"
+                        : "Abierto · cierre por fecha"
+                      : "Cerrado"}
                     {c.featured ? " · Destacado" : ""}
                   </p>
                 </div>
