@@ -12,7 +12,13 @@ describe("CursosGrid", () => {
     render(
       <NextIntlClientProvider locale="es" messages={esMessages}>
         <CursosGrid
-          openCohorts={[{ courseId: "basic-compounding", startDate: "2026-09-01" }]}
+          openCohorts={[
+            { courseId: "basic-compounding", startDate: "2026-09-01", audience: "farmaceutico_tecnico" },
+            // Cohort lookup is now audience-scoped (see CursosGridNextCohort.test.tsx),
+            // so the Otros Profesionales card (audience "otros_profesionales") needs
+            // its own matching cohort to keep resolving a date below.
+            { courseId: "basic-compounding", startDate: "2026-09-01", audience: "otros_profesionales" },
+          ]}
         />
       </NextIntlClientProvider>,
     );

@@ -296,6 +296,7 @@
     "intro": "An integrated 18-hour in-person program (3 days · 6 hrs/day) covering USP 〈795〉 and 〈800〉 across three consecutive modules. Theory and supervised practice on the same day, in the working lab at Santa Cruz Pharma Care.",
     "durationLabel": "Duration",
     "nextCohortLabel": "Next cohort",
+    "cohortAudience": "for {label}",
     "courseCta": "Enroll",
     "courseLinkAria": "Go to course enrollment",
     "modulesLabel": "Modules",
@@ -342,6 +343,7 @@
         "id": "basic-compounding",
         "level": "Foundations",
         "title": "Basic Non-Sterile Compounding — Pharmacists & Technicians",
+        "audience": "farmaceutico_tecnico",
         "description": "Integrated 18-hour in-person course for pharmacists and pharmacy technicians. Covers regulatory foundations (USP 〈795〉, 〈800〉, PR Pharmacy Act, DQSA), formulation, and clinical cases by specialty.",
         "duration": "18 h · 3 days",
         "modules": [
@@ -370,6 +372,7 @@
         "level": "Foundations",
         "uspLabel": "USP 〈795〉 + 〈800〉",
         "title": "Student Track — Nonsterile Compounding",
+        "audience": "estudiante",
         "description": "An in-person program for pre-licensure students. Two didactic modules on the USP chapters that govern nonsterile compounding and hazardous-drug handling, taught at our Bayamón campus.",
         "duration": "In-person · Bayamón",
         "modules": [
@@ -401,6 +404,7 @@
         "level": "Foundations",
         "uspLabel": "USP 〈795〉 + 〈800〉",
         "title": "Other Professionals",
+        "audience": "otros_profesionales",
         "description": "The same 18-hour in-person course (USP 〈795〉 and 〈800〉) for other licensed non-pharmacist professionals. Same training and supervised practice; certificate of completion with no ACPE CE credit.",
         "duration": "18 h · 3 days",
         "courseRef": "basic-compounding",
