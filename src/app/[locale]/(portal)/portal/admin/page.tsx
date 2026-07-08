@@ -271,6 +271,7 @@ export default async function AdminPage({
                         r.tier ?? "",
                         r.professionalType,
                         r.cohortId,
+                        r.cohortId ? (cohortById.get(r.cohortId)?.courseId ?? null) : null,
                         paidByCohort,
                       ).map((o) => ({
                         id: o.cohort.id,
