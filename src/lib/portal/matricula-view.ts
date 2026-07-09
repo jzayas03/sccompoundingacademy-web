@@ -37,7 +37,10 @@ export async function fetchViewableMatricula(
     console.error("[matricula-view] fetch failed", err);
     return null;
   }
-  if (!upstream.ok) return null;
+  if (!upstream.ok) {
+    console.error(`[matricula-view] upstream responded ${upstream.status}`);
+    return null;
+  }
 
   const rawType = upstream.headers.get("content-type") ?? "";
   const buf = Buffer.from(await upstream.arrayBuffer());
