@@ -29,7 +29,11 @@ export async function signedMatriculaUrl(
 
   let pathname: string;
   try {
-    pathname = new URL(docUrl).pathname.replace(/^\/+/, "");
+    // The store knows the blob by its DECODED pathname (uploads keep the
+    // student's original filename, spaces and accents included), but
+    // `URL.pathname` is percent-encoded. Signing the encoded form produces a
+    // signature for a different object and the fetch 403s.
+    pathname = decodeURIComponent(new URL(docUrl).pathname).replace(/^\/+/, "");
   } catch {
     return null;
   }
