@@ -9,15 +9,9 @@ import {
 const START = new Date("2026-08-12T00:00:00.000Z");
 
 describe("enrollmentCutoff", () => {
-  it("is 14 days before start, at UTC midnight", () => {
-    expect(ENROLLMENT_CUTOFF_DAYS).toBe(14);
-    expect(enrollmentCutoff(START).toISOString()).toBe("2026-07-29T00:00:00.000Z");
-  });
-
-  it("crosses month boundaries correctly", () => {
-    expect(
-      enrollmentCutoff(new Date("2026-08-05T00:00:00.000Z")).toISOString(),
-    ).toBe("2026-07-22T00:00:00.000Z");
+  it("is the start date itself (0-day cutoff), at UTC midnight", () => {
+    expect(ENROLLMENT_CUTOFF_DAYS).toBe(0);
+    expect(enrollmentCutoff(START).toISOString()).toBe("2026-08-12T00:00:00.000Z");
   });
 
   it("does not mutate the input date", () => {
@@ -30,24 +24,28 @@ describe("enrollmentCutoff", () => {
 describe("isEnrollable", () => {
   const open = { openForEnrollment: true, startDate: START };
 
-  it("true well before the cutoff", () => {
+  it("true well before the start", () => {
     expect(isEnrollable(open, new Date("2026-07-08T15:00:00.000Z"))).toBe(true);
   });
 
-  it("true just before the cutoff instant", () => {
-    expect(isEnrollable(open, new Date("2026-07-28T23:59:59.999Z"))).toBe(true);
+  it("true inside the final two weeks (the old 14-day window)", () => {
+    expect(isEnrollable(open, new Date("2026-08-05T15:00:00.000Z"))).toBe(true);
   });
 
-  it("false AT the cutoff instant (strict <)", () => {
-    expect(isEnrollable(open, new Date("2026-07-29T00:00:00.000Z"))).toBe(false);
+  it("true just before the start instant", () => {
+    expect(isEnrollable(open, new Date("2026-08-11T23:59:59.999Z"))).toBe(true);
   });
 
-  it("false after the cutoff and after the start", () => {
-    expect(isEnrollable(open, new Date("2026-08-01T00:00:00.000Z"))).toBe(false);
+  it("false AT the start instant (strict <)", () => {
+    expect(isEnrollable(open, new Date("2026-08-12T00:00:00.000Z"))).toBe(false);
+  });
+
+  it("false after the start", () => {
+    expect(isEnrollable(open, new Date("2026-08-13T00:00:00.000Z"))).toBe(false);
     expect(isEnrollable(open, new Date("2026-09-01T00:00:00.000Z"))).toBe(false);
   });
 
-  it("false when manually closed, even far before the cutoff", () => {
+  it("false when manually closed, even far before the start", () => {
     expect(
       isEnrollable(
         { openForEnrollment: false, startDate: START },

@@ -813,7 +813,7 @@
     "description": "Three consecutive days at our Bayamón laboratory. Small cohort by design — seats are limited so every participant gets individual instructor review.",
     "seatsTotal": "{total} seats total",
     "remaining": "{remaining} remaining",
-    "closesNote": "Enrollment closes when the cohort fills or two weeks before the start date.",
+    "closesNote": "Enrollment closes when the cohort fills or when the course begins.",
     "form": {
       "heading": "Reserve your seat",
       "subnote": "No payment now — we'll reach out to confirm.",

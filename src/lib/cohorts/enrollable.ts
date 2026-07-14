@@ -1,8 +1,10 @@
 import type { Cohort } from "@/lib/db/schema";
 
 /** Public enrollment closes this many days before the cohort starts —
- *  matches the published closesNote copy ("dos semanas antes"). */
-export const ENROLLMENT_CUTOFF_DAYS = 14;
+ *  matches the published closesNote copy ("al comenzar el curso").
+ *  0 = a cohort accepts enrollment until the day it begins; was 14
+ *  ("dos semanas antes"), relaxed 2026-07 so late seats can still fill. */
+export const ENROLLMENT_CUTOFF_DAYS = 0;
 
 /** UTC instant at which public enrollment for this start date closes:
  *  00:00 UTC of (startDate − ENROLLMENT_CUTOFF_DAYS). `startDate` is a
