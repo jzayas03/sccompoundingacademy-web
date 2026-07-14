@@ -819,7 +819,7 @@
     "description": "Tres días consecutivos en nuestro laboratorio de Bayamón. Cohorte pequeña por diseño — los cupos son limitados para que cada participante reciba revisión individual del instructor.",
     "seatsTotal": "{total} cupos en total",
     "remaining": "{remaining} disponibles",
-    "closesNote": "La inscripción cierra cuando la cohorte se llena o dos semanas antes de la fecha de inicio.",
+    "closesNote": "La inscripción cierra cuando la cohorte se llena o al comenzar el curso.",
     "form": {
       "heading": "Reserva tu cupo",
       "subnote": "Sin pago ahora — te contactaremos para confirmar.",
