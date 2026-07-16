@@ -879,7 +879,19 @@
       "submit": "Send link",
       "submitting": "Sending…",
       "errorBody": "We couldn't send the link. Double-check the address or try again in a few minutes.",
+      "linkExpiredBody": "Your link expired or was already used. Enter your email and we'll send you a new one.",
+      "authErrorBody": "We couldn't sign you in. Request a new sign-in link.",
       "backToHome": "Back to home"
+    },
+    "confirm": {
+      "eyebrow": "Student portal",
+      "title": "Confirm your sign-in",
+      "body": "Press the button to enter the student portal. This step protects your link from automated email filters.",
+      "cta": "Enter portal",
+      "pending": "Signing in…",
+      "invalidTitle": "Invalid link",
+      "invalidBody": "This link is incomplete or no longer valid. Request a new one from the sign-in page.",
+      "requestNew": "Request a new link"
     },
     "verify": {
       "eyebrow": "Student portal",

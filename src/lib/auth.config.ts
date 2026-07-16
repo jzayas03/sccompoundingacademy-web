@@ -40,6 +40,11 @@ export const authConfig = {
   pages: {
     signIn: "/es/portal/login",
     verifyRequest: "/es/portal/verify",
+    // Auth errors (expired/used magic link → ?error=Verification) land
+    // on the login page, which renders a localized banner — instead of
+    // Auth.js's unbranded English error page. Static `/es` prefix for
+    // the same reason as the two entries above.
+    error: "/es/portal/login",
   },
   providers: [],
 } satisfies NextAuthConfig;

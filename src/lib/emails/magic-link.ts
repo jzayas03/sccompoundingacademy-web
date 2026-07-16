@@ -9,7 +9,11 @@ import { E, FONT, button, bodyCell, renderEmail, esc } from "./_shell";
  */
 
 type MagicLinkParams = {
-  /** Full sign-in URL produced by Auth.js — short-lived, single-use. */
+  /**
+   * Sign-in URL for the email CTA. Since the prefetch-safe interstitial
+   * (lib/portal/magic-link-confirm.ts) this is the /portal/confirmar
+   * page URL, not the raw single-use Auth.js callback.
+   */
   url: string;
   /** UI locale to render the email in. */
   locale: "es" | "en";
