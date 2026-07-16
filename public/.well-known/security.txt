@@ -1,0 +1,7 @@
+# Security contact for Santa Cruz Compounding Academy (RFC 9116).
+# Report vulnerabilities privately to the address below — please do not
+# open public GitHub issues for security findings.
+Contact: mailto:info@sccompoundingacademy.com
+Expires: 2027-07-31T00:00:00.000Z
+Preferred-Languages: es, en
+Canonical: https://sccompoundingacademy.com/.well-known/security.txt
