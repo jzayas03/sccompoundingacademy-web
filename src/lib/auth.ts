@@ -6,6 +6,7 @@ import { authConfig } from "@/lib/auth.config";
 import { db } from "@/lib/db";
 import { accounts, sessions, users, verificationTokens } from "@/lib/db/schema";
 import { buildMagicLinkEmail } from "@/lib/emails/magic-link";
+import { buildConfirmPageUrl } from "@/lib/portal/magic-link-confirm";
 
 /**
  * Auth.js v5 — full Node-runtime instance. Spreads the shared
@@ -71,9 +72,14 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
           return;
         }
         const resend = new ResendSDK(RESEND_API_KEY);
+        const locale = extractLocaleFromCallbackUrl(url);
+        // The email links to the /portal/confirmar interstitial, NOT to
+        // the raw callback URL: email security scanners prefetch links
+        // and were consuming the single-use token before the student
+        // clicked (see lib/portal/magic-link-confirm.ts).
         const { subject, html, text } = buildMagicLinkEmail({
-          url,
-          locale: extractLocaleFromCallbackUrl(url),
+          url: buildConfirmPageUrl(url, locale),
+          locale,
         });
         const { error } = await resend.emails.send({
           from: EMAIL_FROM,

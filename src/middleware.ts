@@ -28,7 +28,10 @@ const intlMiddleware = createMiddleware(routing);
 function isPublicPortalPath(pathname: string): boolean {
   return (
     pathname.endsWith("/portal/login") ||
-    pathname.endsWith("/portal/verify")
+    pathname.endsWith("/portal/verify") ||
+    // Magic-link interstitial — reached from the email, before a session
+    // exists (see lib/portal/magic-link-confirm.ts).
+    pathname.endsWith("/portal/confirmar")
   );
 }
 

@@ -885,7 +885,19 @@
       "submit": "Enviar enlace",
       "submitting": "Enviando…",
       "errorBody": "No pudimos enviar el enlace. Verifica el correo o intenta de nuevo en unos minutos.",
+      "linkExpiredBody": "Tu enlace expiró o ya fue usado. Escribe tu correo y te enviaremos uno nuevo.",
+      "authErrorBody": "No pudimos iniciar tu sesión. Solicita un nuevo enlace de acceso.",
       "backToHome": "Volver al inicio"
+    },
+    "confirm": {
+      "eyebrow": "Portal del estudiante",
+      "title": "Confirma tu acceso",
+      "body": "Pulsa el botón para entrar al portal del estudiante. Este paso protege tu enlace de los filtros automáticos de correo.",
+      "cta": "Entrar al portal",
+      "pending": "Entrando…",
+      "invalidTitle": "Enlace inválido",
+      "invalidBody": "Este enlace está incompleto o ya no es válido. Solicita uno nuevo desde la página de acceso.",
+      "requestNew": "Pedir un nuevo enlace"
     },
     "verify": {
       "eyebrow": "Portal del estudiante",

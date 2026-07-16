@@ -14,8 +14,10 @@ export const metadata: Metadata = {
 
 export default async function PortalLoginPage({
   params,
+  searchParams,
 }: {
   params: Promise<{ locale: string }>;
+  searchParams: Promise<{ error?: string }>;
 }) {
   const { locale } = await params;
   setRequestLocale(locale);
@@ -26,10 +28,25 @@ export default async function PortalLoginPage({
     redirect(`/${locale}/portal`);
   }
 
-  return <LoginPanel locale={locale} />;
+  // Auth.js redirects failed sign-ins here (`pages.error` in
+  // auth.config.ts) with ?error=<code>. "Verification" = the magic link
+  // expired or was already used — the one students actually hit.
+  const { error } = await searchParams;
+  const authError =
+    error === "Verification" ? ("expired" as const)
+    : error ? ("generic" as const)
+    : null;
+
+  return <LoginPanel locale={locale} authError={authError} />;
 }
 
-function LoginPanel({ locale }: { locale: string }) {
+function LoginPanel({
+  locale,
+  authError,
+}: {
+  locale: string;
+  authError: "expired" | "generic" | null;
+}) {
   const t = useTranslations("portal.login");
   return (
     <div className="flex min-h-screen items-center justify-center px-6 py-16">
@@ -43,6 +60,15 @@ function LoginPanel({ locale }: { locale: string }) {
           {t("title")}
         </h1>
         <p className="text-gray-700 mt-2 text-sm leading-relaxed">{t("subtitle")}</p>
+
+        {authError && (
+          <p
+            role="alert"
+            className="border-gray-300 mt-5 rounded-md border bg-white px-4 py-3 text-sm text-gray-900"
+          >
+            {t(authError === "expired" ? "linkExpiredBody" : "authErrorBody")}
+          </p>
+        )}
 
         <LoginForm locale={locale} />
 
