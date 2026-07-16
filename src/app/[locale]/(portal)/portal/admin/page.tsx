@@ -1,12 +1,12 @@
 import type { Metadata } from "next";
 import { redirect } from "next/navigation";
-import { and, desc, eq, isNotNull } from "drizzle-orm";
+import { and, desc, eq, gte, isNotNull } from "drizzle-orm";
 import { setRequestLocale } from "next-intl/server";
 import { GlassCard } from "@/components/glass/GlassCard";
 import { SectionBanner } from "@/components/portal/SectionBanner";
 import { auth } from "@/lib/auth";
 import { db } from "@/lib/db";
-import { users, reviews, certificates } from "@/lib/db/schema";
+import { users, reviews, certificates, emailEvents } from "@/lib/db/schema";
 import { isAdminEmail } from "@/lib/admin";
 import {
   listCohorts,
@@ -49,6 +49,13 @@ export const metadata: Metadata = {
  * `ADMIN_EMAILS` allowlist (see lib/admin.ts). A signed-in student who
  * is not an admin is bounced to their own dashboard.
  */
+/** Status word in Spanish for each Resend problem-event type. */
+const EMAIL_EVENT_LABEL: Record<string, string> = {
+  "email.bounced": "Rebotado",
+  "email.complained": "Marcado spam",
+  "email.failed": "Fallo de envío",
+};
+
 function fmtDate(d: Date | null): string {
   if (!d) return "—";
   return new Intl.DateTimeFormat("es-PR", {
@@ -159,6 +166,29 @@ export default async function AdminPage({
   );
   // Single clock for the roster's per-student access-window status column.
   const now = new Date();
+
+  // Delivery problems reported by the Resend webhook (bounced / complained /
+  // failed) in the last 30 days. Wrapped so the whole admin panel survives
+  // the table not existing yet (migration 0013 is applied to Neon by hand,
+  // and may land after this code deploys).
+  const emailProblems = await db
+    .select({
+      id: emailEvents.id,
+      eventType: emailEvents.eventType,
+      recipient: emailEvents.recipient,
+      subject: emailEvents.subject,
+      createdAt: emailEvents.createdAt,
+    })
+    .from(emailEvents)
+    .where(
+      gte(emailEvents.createdAt, new Date(now.getTime() - 30 * 24 * 60 * 60 * 1000)),
+    )
+    .orderBy(desc(emailEvents.createdAt))
+    .limit(20)
+    .catch((error): [] => {
+      console.error("[admin] email_events query failed — hiding section", error);
+      return [];
+    });
 
   // Real stat-card figures — no placeholders. "Cupos disponibles" mirrors
   // the public landing: only OPEN cohorts count, and seats taken are PAID
@@ -436,6 +466,50 @@ export default async function AdminPage({
               </li>
             ))}
           </ul>
+        </section>
+      )}
+
+      {/* Email delivery problems reported by the Resend webhook — only
+          rendered when something actually bounced, so a healthy system
+          adds no noise to the panel. */}
+      {emailProblems.length > 0 && (
+        <section aria-labelledby="correos-rebotados-heading" className="mt-12">
+          <h2
+            id="correos-rebotados-heading"
+            className="font-heading text-teal-deep text-xl font-semibold sm:text-2xl"
+          >
+            Correos con problemas de entrega ({emailProblems.length})
+          </h2>
+          <p className="text-gray-700 mt-2 text-sm">
+            Estas direcciones rebotaron o rechazaron un correo en los últimos
+            30 días. El estudiante no está recibiendo nada: corrige la
+            dirección desde el roster (&quot;editar correo&quot;) o pídele una
+            personal.
+          </p>
+          <GlassCard className="mt-6 overflow-x-auto p-6 sm:p-8">
+            <table className="w-full border-collapse text-left text-sm tabular-nums">
+              <thead>
+                <tr className="text-teal-deep/80 border-gray-300 border-b text-xs uppercase tracking-wide">
+                  <th className="py-2 pr-4 font-semibold">Fecha</th>
+                  <th className="py-2 pr-4 font-semibold">Tipo</th>
+                  <th className="py-2 pr-4 font-semibold">Destinatario</th>
+                  <th className="py-2 font-semibold">Asunto</th>
+                </tr>
+              </thead>
+              <tbody>
+                {emailProblems.map((e) => (
+                  <tr key={e.id} className="border-gray-200 border-b last:border-0">
+                    <td className="py-2 pr-4 text-gray-700">{fmtDate(e.createdAt)}</td>
+                    <td className="py-2 pr-4 text-gray-900">
+                      {EMAIL_EVENT_LABEL[e.eventType] ?? e.eventType}
+                    </td>
+                    <td className="py-2 pr-4 text-gray-900">{e.recipient}</td>
+                    <td className="py-2 text-gray-700">{e.subject ?? "—"}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </GlassCard>
         </section>
       )}
 

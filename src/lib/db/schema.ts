@@ -271,6 +271,26 @@ export const processedStripeEvents = pgTable("processed_stripe_events", {
   processedAt: timestamp("processed_at", { mode: "date" }).defaultNow().notNull(),
 });
 
+/**
+ * Resend delivery-problem ledger — one row per bounced / complained /
+ * failed email, written by the /api/webhooks/resend endpoint and surfaced
+ * on the admin dashboard. Exists so "student X never gets our emails"
+ * shows up in the admin instead of arriving as a complaint (the July 2026
+ * cohort lockout was diagnosed blind for exactly this reason).
+ *
+ * Keyed by the delivery's `svix-id` header: Svix retries reuse the id, so
+ * a duplicate insert conflicts and the handler short-circuits — same
+ * idempotency pattern as `processedStripeEvents`. Rows are operational
+ * bookkeeping and can be pruned after ~90 days.
+ */
+export const emailEvents = pgTable("email_events", {
+  id: text("id").primaryKey(),
+  eventType: text("event_type").notNull(),
+  recipient: text("recipient").notNull(),
+  subject: text("subject"),
+  createdAt: timestamp("created_at", { mode: "date" }).defaultNow().notNull(),
+});
+
 export type User = typeof users.$inferSelect;
 export type NewUser = typeof users.$inferInsert;
 export type Cohort = typeof cohorts.$inferSelect;
