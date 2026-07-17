@@ -1,61 +1,48 @@
 import type { Question } from "./types";
 
 /**
- * Día 1 — Fundamentos regulatorios + Cápsulas.
+ * Día 1 — Fundamentos regulatorios, USP <795>/<800>, Ley de Farmacia PR,
+ * DQSA y cápsulas.
  *
- * Banco de 15 preguntas transcrito verbatim del PDF del Lcdo. Reyes
- * ("PRE POST TEST -SCCA Día #1 .pages.pdf", 2026). Las explicaciones
- * quedan en blanco hasta que el owner las redacte — la UI esconde el
- * toggle "ver explicaciones" cuando todas están vacías en un módulo.
+ * Banco de 15 preguntas transcrito del docx oficial en español del Lcdo.
+ * Reyes ("Post-Tests_Compounding_Dias_1-3.docx", 2026). El mismo banco
+ * sirve pre-test y post-test. Las explicaciones vienen de la columna
+ * "Observación" del documento fuente.
  */
 export const dia1: readonly Question[] = [
   {
     id: "M1-Q1",
     prompt:
-      "This USP chapter describes the minimum standards to be followed for the preparation of compounded non sterile preparations. For humans and animals:",
+      "Este capítulo USP describe los estándares mínimos a seguir para la preparación de formulaciones compounded no estériles (humanos y animales):",
     type: "multiple-choice",
     options: [
       { letter: "A", text: "513" },
       { letter: "B", text: "795" },
       { letter: "C", text: "797" },
       { letter: "D", text: "800" },
-      { letter: "E", text: "none of above is correct" },
+      { letter: "E", text: "ninguna de las anteriores es correcta" },
     ],
     correctAnswer: "B",
-    explanation: "",
+    explanation: "USP <795> Nov 2023.",
   },
   {
     id: "M1-Q2",
     prompt:
-      "This chapter describe practice and quality standards for handling hazardous drugs to promote patient safety, worker safety and environmental protection:",
+      "Este capítulo describe estándares de práctica y calidad para el manejo de medicamentos peligrosos, para promover la seguridad del paciente, la del trabajador y la protección ambiental:",
     type: "multiple-choice",
     options: [
       { letter: "A", text: "513" },
       { letter: "B", text: "795" },
       { letter: "C", text: "797" },
       { letter: "D", text: "800" },
-      { letter: "E", text: "none of above" },
+      { letter: "E", text: "ninguna de las anteriores" },
     ],
     correctAnswer: "D",
-    explanation: "",
+    explanation: "USP <800>.",
   },
   {
     id: "M1-Q3",
-    prompt: "The “Hazardous” Drug Chapter of the USP applies to:",
-    type: "multiple-choice",
-    options: [
-      { letter: "A", text: "storage of hazardous drugs" },
-      { letter: "B", text: "compounding of hazardous drugs" },
-      { letter: "C", text: "administration of a hazardous drug (For example I.V.)" },
-      { letter: "D", text: "disposal of a sterile or non-sterile hazardous preparation" },
-      { letter: "E", text: "all of above is correct" },
-    ],
-    correctAnswer: "E",
-    explanation: "",
-  },
-  {
-    id: "M1-Q4",
-    prompt: "The hazardous drug list is prepared by:",
+    prompt: "La lista de medicamentos peligrosos es preparada por:",
     type: "multiple-choice",
     options: [
       { letter: "A", text: "USP" },
@@ -65,154 +52,191 @@ export const dia1: readonly Question[] = [
       { letter: "E", text: "OSHA" },
     ],
     correctAnswer: "D",
-    explanation: "",
+    explanation: "NIOSH 2024 (CDC/NIOSH Pub 2025-103).",
+  },
+  {
+    id: "M1-Q4",
+    prompt:
+      "Para el compounding de medicamentos peligrosos estériles y no estériles se requiere como PPE:",
+    type: "multiple-choice",
+    options: [
+      { letter: "A", text: "batas" },
+      { letter: "B", text: "cubierta de cabeza y cabello" },
+      { letter: "C", text: "cubre-zapatos" },
+      { letter: "D", text: "dos pares de guantes de quimioterapia" },
+      { letter: "E", text: "todas las anteriores son correctas" },
+    ],
+    correctAnswer: "E",
+    explanation: "USP <800> · NIOSH 2024.",
   },
   {
     id: "M1-Q5",
-    prompt: "For compounding sterile and non-sterile hazardous it is required as PPE:",
+    prompt:
+      "Según la Ley de Farmacia de Puerto Rico, con respecto al compounding, la ley le permite:",
     type: "multiple-choice",
     options: [
-      { letter: "A", text: "gowns" },
-      { letter: "B", text: "head and hair cover" },
-      { letter: "C", text: "shoe covers" },
-      { letter: "D", text: "two pairs of chemotherapy gloves" },
-      { letter: "E", text: "all of above is correct" },
+      {
+        letter: "A",
+        text: "preparar solo una cantidad limitada de una preparación de compounding para inventario",
+      },
+      {
+        letter: "B",
+        text: "no puede preparar un compounding en anticipación a una receta",
+      },
+      {
+        letter: "C",
+        text: "la cantidad de unidades a preparar depende del BUD de la preparación",
+      },
+      {
+        letter: "D",
+        text: "la cantidad de unidades depende de la frecuencia de recetas por día",
+      },
+      { letter: "E", text: "ninguna de las anteriores es correcta" },
     ],
-    correctAnswer: "E",
-    explanation: "",
+    correctAnswer: "B",
+    explanation: "Ley Núm. 247-2004 · Reglamento 156.",
   },
   {
     id: "M1-Q6",
-    prompt:
-      "According to the Puerto Rico Pharmacy Law with respect to compounding the law allows you to:",
+    prompt: "DQSA:",
     type: "multiple-choice",
     options: [
-      { letter: "A", text: "prepare only a limited amount of a compounding preparation for stock" },
-      { letter: "B", text: "you can not prepare a compounding in anticipation to a prescription" },
-      { letter: "C", text: "the amount of units to be prepare depends on the BUD of the preparation" },
-      { letter: "D", text: "the amount of units to be prepare depends on the frequency of prescriptions per day" },
-      { letter: "E", text: "none of above is correct" },
+      { letter: "A", text: "se refiere al Drug Quality Security Act" },
+      {
+        letter: "B",
+        text: "fortaleció significativamente la autoridad de la FDA sobre el compounding farmacéutico",
+      },
+      { letter: "C", text: "crea una nueva categoría de “Outsourcing Facility”" },
+      { letter: "D", text: "fue aprobada en 2013" },
+      { letter: "E", text: "todas las anteriores son correctas" },
     ],
-    correctAnswer: "B",
-    explanation: "",
+    correctAnswer: "E",
+    explanation: "DQSA H.R. 3204, 2013 · FDA.",
   },
   {
     id: "M1-Q7",
-    prompt: "DQSA",
+    prompt: "Para la formulación de cápsulas debemos conocer:",
     type: "multiple-choice",
     options: [
-      { letter: "A", text: "it refers to Drug Quality Security Act" },
-      { letter: "B", text: "significantly enhanced the FDA’s authority over pharmaceutical compounding" },
-      { letter: "C", text: "creates a new category of “Outsourcing Facility”" },
-      { letter: "D", text: "was passed in 2013" },
-      { letter: "E", text: "all of above is correct" },
+      { letter: "A", text: "la densidad del API" },
+      { letter: "B", text: "la densidad de todos los ingredientes de la cápsula" },
+      {
+        letter: "C",
+        text: "el packing statistic de todos los ingredientes de la cápsula",
+      },
+      { letter: "D", text: "los ingredientes peligrosos de la cápsula" },
+      { letter: "E", text: "ninguna de las anteriores es correcta" },
     ],
-    correctAnswer: "E",
-    explanation: "",
+    correctAnswer: "C",
+    explanation: "USP <795> 2023 · Allen's.",
   },
   {
     id: "M1-Q8",
-    prompt: "For the formulation of capsules we most know:",
+    prompt: "El BUD asignado a las cápsulas usualmente es:",
     type: "multiple-choice",
     options: [
-      { letter: "A", text: "density of the API" },
-      { letter: "B", text: "density of all ingredients in the capsule" },
-      { letter: "C", text: "the packing statistics of all ingredients of the capsule" },
-      { letter: "D", text: "the hazardous ingredientes of the capsule" },
-      { letter: "E", text: "none of above is correct" },
+      { letter: "A", text: "30 días" },
+      { letter: "B", text: "90 días" },
+      {
+        letter: "C",
+        text: "180 días o la fecha de expiración de cualquier ingrediente si es menor de 180 días (la menor de ambas)",
+      },
+      { letter: "D", text: "180 días" },
+      { letter: "E", text: "ninguna de las anteriores es correcta" },
     ],
     correctAnswer: "C",
-    explanation: "",
+    explanation: "USP <795> Nov 2023.",
   },
   {
     id: "M1-Q9",
-    prompt: "The BUD assigned to capsules is usually:",
+    prompt: "El packing statistic de un ingrediente:",
     type: "multiple-choice",
     options: [
-      { letter: "A", text: "30 days" },
-      { letter: "B", text: "90 days" },
-      { letter: "C", text: "180 days or expiration date of any ingredient if less than 180 days, the lesser one" },
-      { letter: "D", text: "180 days" },
-      { letter: "E", text: "none of above is corred" },
+      { letter: "A", text: "puede ser provisto por el distribuidor" },
+      { letter: "B", text: "puede calcularse en el laboratorio" },
+      { letter: "C", text: "es parte de la monografía del ingrediente" },
+      { letter: "D", text: "es provisto por la USP" },
+      { letter: "E", text: "A y B son correctas" },
     ],
-    correctAnswer: "C",
-    explanation: "",
+    correctAnswer: "E",
+    explanation: "USP <795> 2023 · PCCA · Allen's.",
   },
   {
     id: "M1-Q10",
-    prompt: "The packing statistic of an ingredient:",
-    type: "multiple-choice",
-    options: [
-      { letter: "A", text: "may be supply by the distributor" },
-      { letter: "B", text: "may be calculated in the laboratory" },
-      { letter: "C", text: "is part of the monograph of the ingredient" },
-      { letter: "D", text: "it is supplied by the USP" },
-      { letter: "E", text: "A and B are correct" },
-    ],
-    correctAnswer: "E",
-    explanation: "",
-  },
-  {
-    id: "M1-Q11",
     prompt:
-      "If the pack stat for progesterone is 270mg for capsule size 1, How much of the volume of the capsule will occupy 100 mg of progesterone:",
+      "Si el pack stat de la progesterona es 270 mg para cápsula tamaño 1, ¿qué porcentaje del volumen de la cápsula ocuparán 100 mg de progesterona?",
     type: "multiple-choice",
     options: [
       { letter: "A", text: "3.7%" },
       { letter: "B", text: "37%" },
       { letter: "C", text: "370%" },
       { letter: "D", text: "63%" },
-      { letter: "E", text: "none of above is correct" },
+      { letter: "E", text: "ninguna de las anteriores es correcta" },
     ],
     correctAnswer: "B",
-    explanation: "",
+    explanation: "USP <795> 2023 · Allen's. 100 ÷ 270 × 100 = 37%.",
   },
   {
-    id: "M1-Q12",
+    id: "M1-Q11",
     prompt:
-      "If the pack stat for progesterone is 270 mg for capsule size 1 and the volume of capsule size 0 is 1.95 tunes the volume of size 1 what will be the pack stat for capsule size 0.",
+      "Si el pack stat de la progesterona es 270 mg para cápsula tamaño 1 y el volumen de la cápsula tamaño 0 es 1.95 veces el volumen del tamaño 1, ¿cuál será el pack stat de la cápsula tamaño 0?",
     type: "multiple-choice",
     options: [
       { letter: "A", text: "271.95 mg" },
       { letter: "B", text: "268.05 mg" },
       { letter: "C", text: "526.5 mg" },
       { letter: "D", text: "138.46 mg" },
-      { letter: "E", text: "none of above is correct" },
+      { letter: "E", text: "ninguna de las anteriores es correcta" },
     ],
     correctAnswer: "C",
-    explanation: "",
+    explanation: "USP <795> 2023. 270 × 1.95 = 526.5 mg.",
+  },
+  {
+    id: "M1-Q12",
+    prompt: "Methocel es equivalente a Hypromellose.",
+    type: "true-false",
+    options: [
+      { letter: "TRUE", text: "Verdadero" },
+      { letter: "FALSE", text: "Falso" },
+    ],
+    correctAnswer: "TRUE",
+    explanation: "Dow Methocel Handbook · USP-NF · HPMC = Hypromellose.",
   },
   {
     id: "M1-Q13",
-    prompt: "Capsules are only to be administer orally.",
+    prompt: "Methocel es el ingrediente responsable de las cápsulas de liberación lenta.",
     type: "true-false",
     options: [
-      { letter: "TRUE", text: "True" },
-      { letter: "FALSE", text: "False" },
+      { letter: "TRUE", text: "Verdadero" },
+      { letter: "FALSE", text: "Falso" },
     ],
-    correctAnswer: "FALSE",
-    explanation: "",
+    correctAnswer: "TRUE",
+    explanation: "USP <795> 2023 · mecanismo de matriz HPMC.",
   },
   {
     id: "M1-Q14",
-    prompt: "Methocel is equivalent to Hypromellose.",
+    prompt:
+      "Las farmacias de compounding no tienen permitido elaborar productos comercialmente disponibles. Si un producto comercialmente disponible está en escasez, la farmacia de compounding puede duplicar el producto hasta que termine la escasez.",
     type: "true-false",
     options: [
-      { letter: "TRUE", text: "True" },
-      { letter: "FALSE", text: "False" },
+      { letter: "TRUE", text: "Verdadero" },
+      { letter: "FALSE", text: "Falso" },
     ],
     correctAnswer: "TRUE",
-    explanation: "",
+    explanation:
+      "Excepción de drug shortage — permite compounding temporal mientras dura la escasez.",
   },
   {
     id: "M1-Q15",
-    prompt: "Methocel is the ingredient responsible for slow release capsules.",
+    prompt:
+      "Las farmacias de compounding se clasifican en 503A y 503B: 503A compone productos estériles; 503B compone productos no estériles.",
     type: "true-false",
     options: [
-      { letter: "TRUE", text: "True" },
-      { letter: "FALSE", text: "False" },
+      { letter: "TRUE", text: "Verdadero" },
+      { letter: "FALSE", text: "Falso" },
     ],
-    correctAnswer: "TRUE",
-    explanation: "",
+    correctAnswer: "FALSE",
+    explanation:
+      "La distinción 503A/503B no se basa en estéril vs. no estéril, sino en el modelo de práctica.",
   },
 ] as const;
