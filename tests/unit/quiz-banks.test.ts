@@ -57,17 +57,15 @@ describe.each(banks)("quiz bank %s", (_name, bank) => {
 
 /**
  * Professional (Día 1-3) banks. Same certificate-critical integrity guard,
- * but with two differences from the student banks above: explanations are
- * intentionally blank (the owner has not written them), and the banks mix
- * multiple-choice with true/false (2 options). Counts are pinned to the
- * 2026 "versión actualizada" — Día 2 is 10 (the Enalapril block moved to
- * Día 3); Día 1 and Día 3 are 15.
+ * but unlike the student banks these mix multiple-choice with true/false
+ * (2 options). Counts are pinned to the official Spanish docx
+ * ("Post-Tests_Compounding_Dias_1-3.docx", 2026): 15 questions per day.
  */
 const proBanks: ReadonlyArray<
   readonly [string, readonly Question[], number]
 > = [
   ["dia-1", dia1, 15],
-  ["dia-2", dia2, 10],
+  ["dia-2", dia2, 15],
   ["dia-3", dia3, 15],
 ];
 
@@ -102,9 +100,10 @@ describe.each(proBanks)(
       }
     });
 
-    it("every question has a non-empty prompt and option texts", () => {
+    it("every question has a non-empty prompt, option texts, and explanation", () => {
       for (const q of bank) {
         expect(q.prompt.trim(), q.id).not.toBe("");
+        expect(q.explanation.trim(), q.id).not.toBe("");
         for (const o of q.options) {
           expect(o.text.trim(), `${q.id}/${o.letter}`).not.toBe("");
         }
