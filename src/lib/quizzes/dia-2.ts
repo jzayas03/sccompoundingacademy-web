@@ -7,8 +7,10 @@ import type { Question } from "./types";
  * oficial v2.3 del Lcdo. Reyes ("Day2_Basic_Compounding_Non_Sterile_2_3",
  * agosto 2026 — reemplaza el docx original). Q11-Q15 comparten
  * la receta de hidroquinona enunciada en Q11 (el QuizForm permite volver
- * atrás para releerla). Las explicaciones vienen de la columna
- * "Observación" del documento fuente.
+ * atrás para releerla). Las explicaciones son las justificaciones del
+ * instruccional ACPE oficial ("Instruccional Día #2 - revisado 07132026"),
+ * traducidas al español. En Q1 y Q8 la clave del instruccional difiere de
+ * la clave de la presentación v2.3; prevalece la presentación (ver PR).
  */
 export const dia2: readonly Question[] = [
   {
@@ -23,7 +25,8 @@ export const dia2: readonly Question[] = [
       { letter: "E", text: "ninguna de las anteriores es correcta" },
     ],
     correctAnswer: "C",
-    explanation: "USP <795> 2023.",
+    explanation:
+      "USP <795> (2023) asigna a las preparaciones no acuosas no sólidas — como los supositorios — un BUD de hasta 90 días, salvo que la fecha de expiración de un ingrediente sea anterior. El BUD asignado mantiene la calidad del medicamento y la seguridad del paciente.",
   },
   {
     id: "M2-Q2",
@@ -41,7 +44,8 @@ export const dia2: readonly Question[] = [
       { letter: "E", text: "ninguna de las anteriores es correcta" },
     ],
     correctAnswer: "A",
-    explanation: "Allen's · PCCA Suppository Guide.",
+    explanation:
+      "El dióxido de silicio funciona como agente de suspensión: mantiene el API distribuido uniformemente en toda la masa del supositorio, promoviendo contenido uniforme y dosis consistentes. No aumenta la solubilidad, ni ajusta el pH, ni afecta el metabolismo.",
   },
   {
     id: "M2-Q3",
@@ -55,7 +59,8 @@ export const dia2: readonly Question[] = [
       { letter: "E", text: "ninguna de las anteriores es correcta" },
     ],
     correctAnswer: "C",
-    explanation: "PCCA · Allen's — regla de +10% de excedente (overage).",
+    explanation:
+      "Al preparar supositorios se calcula un excedente (overage) de aproximadamente 10% para compensar las pérdidas al verter, moldear y transferir: una receta de 30 supositorios requiere preparar aproximadamente 33. Así se asegura producto suficiente para dispensar.",
   },
   {
     id: "M2-Q4",
@@ -69,7 +74,8 @@ export const dia2: readonly Question[] = [
       { letter: "E", text: "ninguna de las anteriores es correcta" },
     ],
     correctAnswer: "B",
-    explanation: "USP <795> 2023 · Allen's.",
+    explanation:
+      "Los supositorios se conservan mejor refrigerados para preservar su forma, consistencia y estabilidad, especialmente con bases que se ablandan o funden a temperatura ambiente. La refrigeración previene la deformación; el calor excesivo compromete la preparación.",
   },
   {
     id: "M2-Q5",
@@ -86,7 +92,8 @@ export const dia2: readonly Question[] = [
       { letter: "E", text: "todas las anteriores son correctas" },
     ],
     correctAnswer: "E",
-    explanation: "ACOG · NIH/NICHD · PCCA Women's Health.",
+    explanation:
+      "Los supositorios de progesterona se usan para prevenir el aborto espontáneo en embarazos de alto riesgo, reducir el riesgo de parto prematuro, dar soporte de fase lútea y soporte tras tratamientos de fertilidad. La progesterona mantiene el ambiente uterino durante el embarazo, así que todas las indicaciones son correctas.",
   },
   {
     id: "M2-Q6",
@@ -101,7 +108,8 @@ export const dia2: readonly Question[] = [
       { letter: "E", text: "todas las anteriores son correctas" },
     ],
     correctAnswer: "E",
-    explanation: "AAD · PCCA Dermatology.",
+    explanation:
+      "Las preparaciones dermatológicas compounded se usan comúnmente para acné, psoriasis, melasma y pérdida de cabello cuando se necesita terapia individualizada: el compounding permite concentraciones, combinaciones y formas de dosificación no disponibles comercialmente.",
   },
   {
     id: "M2-Q7",
@@ -115,7 +123,8 @@ export const dia2: readonly Question[] = [
       { letter: "E", text: "ninguna de las anteriores es correcta" },
     ],
     correctAnswer: "D",
-    explanation: "USP <795> 2023 · PCCA Equipment Guide.",
+    explanation:
+      "El mill farmacéutico reduce el tamaño de partícula, mejora la mezcla y ayuda a distribuir el API uniformemente en el diluente o base. La reducción del tamaño de partícula mejora la homogeneidad y consistencia de la preparación; todas las funciones listadas son correctas.",
   },
   {
     id: "M2-Q8",
@@ -130,7 +139,7 @@ export const dia2: readonly Question[] = [
     ],
     correctAnswer: "B",
     explanation:
-      "EMP = Electronic Mortar and Pestle. PCCA Women's Health Compounding Guide · IJPC.",
+      "EMP = Electronic Mortar and Pestle (mortero y pistilo electrónicos), equipo de mezclado del laboratorio de compounding usado para homogeneizar cremas y geles con velocidad y tiempo controlados.",
   },
   {
     id: "M2-Q9",
@@ -144,7 +153,8 @@ export const dia2: readonly Question[] = [
       { letter: "E", text: "ninguna de las anteriores es correcta" },
     ],
     correctAnswer: "D",
-    explanation: "LDN Research Trust · IJPC · BMC Dermatology 2018.",
+    explanation:
+      "La naltrexona de dosis baja (LDN) se ha explorado en condiciones inflamatorias y autoinmunes como la enfermedad de Hailey-Hailey, la psoriasis y la esclerodermia: puede modular vías inflamatorias y la actividad inmune. Todas las condiciones listadas son aplicaciones terapéuticas potenciales.",
   },
   {
     id: "M2-Q10",
@@ -158,7 +168,8 @@ export const dia2: readonly Question[] = [
       { letter: "E", text: "ninguna de las anteriores es correcta" },
     ],
     correctAnswer: "D",
-    explanation: "AAD Hair Loss Guidelines · PCCA.",
+    explanation:
+      "Minoxidil, finasterida y dutasterida se utilizan todos en el tratamiento de la alopecia (AAD Hair Loss Guidelines · PCCA).",
   },
   {
     id: "M2-Q11",
@@ -174,7 +185,7 @@ export const dia2: readonly Question[] = [
     ],
     correctAnswer: "C",
     explanation:
-      "La hidroquinona es el agente despigmentante de referencia; el ácido salicílico mejora la penetración mediante exfoliación.",
+      "Esta crema compounded está indicada principalmente para el melasma y otros trastornos de hiperpigmentación: la hidroquinona es el agente despigmentante de referencia y el ácido salicílico mejora la penetración mediante exfoliación de la piel.",
   },
   {
     id: "M2-Q12",
@@ -189,7 +200,7 @@ export const dia2: readonly Question[] = [
     ],
     correctAnswer: "A",
     explanation:
-      "La vitamina C protege la hidroquinona de la oxidación y mejora la estabilidad de la fórmula.",
+      "La vitamina C actúa principalmente como antioxidante: protege la hidroquinona de la oxidación y mejora la estabilidad de la formulación. También contribuye a aclarar la piel al reducir la producción de melanina y neutralizar radicales libres.",
   },
   {
     id: "M2-Q13",
@@ -204,7 +215,7 @@ export const dia2: readonly Question[] = [
     ],
     correctAnswer: "B",
     explanation:
-      "La hidroquinona es susceptible a oxidación y fotodegradación al exponerse a la luz solar.",
+      "La hidroquinona se recomienda a la hora de dormir porque es susceptible a oxidación y fotodegradación al exponerse a la luz solar.",
   },
   {
     id: "M2-Q14",
@@ -220,7 +231,7 @@ export const dia2: readonly Question[] = [
     ],
     correctAnswer: "C",
     explanation:
-      "61 G de ingredientes fijos = 90% de la fórmula; el 8% de hidroquinona equivale a 5.42 G.",
+      "Los 61 G de ingredientes fijos representan el 90% de la fórmula (hidroquinona 8% + ácido salicílico 2% = 10% restante); entonces el 8% de hidroquinona equivale a 5.42 G.",
   },
   {
     id: "M2-Q15",
@@ -235,6 +246,6 @@ export const dia2: readonly Question[] = [
     ],
     correctAnswer: "C",
     explanation:
-      "La hidroquinona está en forma de cristales; el mill reducirá el tamaño de partícula.",
+      "La hidroquinona está en forma de cristales; el mill reduce el tamaño de partícula para lograr una crema uniforme y sin gránulos.",
   },
 ] as const;

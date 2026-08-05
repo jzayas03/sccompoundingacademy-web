@@ -4,10 +4,11 @@ import type { Question } from "./types";
  * Día 1 — Fundamentos regulatorios, USP <795>/<800>, Ley de Farmacia PR,
  * DQSA y cápsulas.
  *
- * Banco de 15 preguntas transcrito del docx oficial en español del Lcdo.
- * Reyes ("Post-Tests_Compounding_Dias_1-3.docx", 2026). El mismo banco
- * sirve pre-test y post-test. Las explicaciones vienen de la columna
- * "Observación" del documento fuente.
+ * Banco de 15 preguntas sincronizado con la POST-PRUEBA de la presentación
+ * oficial v2.3 del Lcdo. Reyes ("Day1_Basic_Compounding_Non_Sterile_2_3_2",
+ * agosto 2026). El mismo banco sirve pre-test y post-test. Las
+ * explicaciones son las justificaciones del instruccional ACPE oficial
+ * ("instruccional día #1 - revisado 2026"), traducidas al español.
  */
 export const dia1: readonly Question[] = [
   {
@@ -23,7 +24,8 @@ export const dia1: readonly Question[] = [
       { letter: "E", text: "ninguna de las anteriores es correcta" },
     ],
     correctAnswer: "B",
-    explanation: "USP <795> Nov 2023.",
+    explanation:
+      "USP <795> establece los estándares del compounding farmacéutico no estéril para humanos y animales: guía la formulación, preparación, almacenamiento, BUD, etiquetado y aseguramiento de calidad. Aplica específicamente a preparaciones no estériles.",
   },
   {
     id: "M1-Q2",
@@ -38,7 +40,8 @@ export const dia1: readonly Question[] = [
       { letter: "E", text: "ninguna de las anteriores" },
     ],
     correctAnswer: "D",
-    explanation: "USP <800>.",
+    explanation:
+      "USP <800> establece los estándares para el manejo seguro de medicamentos peligrosos en entornos de salud: protege al paciente, al personal y al ambiente durante recepción, preparación, administración, almacenamiento y disposición, y define los requisitos de PPE y contención.",
   },
   {
     id: "M1-Q3",
@@ -52,7 +55,8 @@ export const dia1: readonly Question[] = [
       { letter: "E", text: "OSHA" },
     ],
     correctAnswer: "D",
-    explanation: "NIOSH 2024 (CDC/NIOSH Pub 2025-103).",
+    explanation:
+      "NIOSH (National Institute for Occupational Safety and Health) prepara la lista de medicamentos peligrosos usada en entornos de salud, identificando fármacos con riesgos por toxicidad, efectos reproductivos, carcinogenicidad o toxicidad de órganos. USP <800> usa esa lista para determinar las precauciones de manejo.",
   },
   {
     id: "M1-Q4",
@@ -67,7 +71,8 @@ export const dia1: readonly Question[] = [
       { letter: "E", text: "todas las anteriores son correctas" },
     ],
     correctAnswer: "E",
-    explanation: "USP <800> · NIOSH 2024.",
+    explanation:
+      "El manejo de medicamentos peligrosos requiere múltiples formas de PPE: batas, cubierta de cabeza y cabello, cubre-zapatos y guantes de quimioterapia. Estas medidas en capas reducen la exposición ocupacional y el riesgo de contaminación (USP <800>).",
   },
   {
     id: "M1-Q5",
@@ -94,7 +99,8 @@ export const dia1: readonly Question[] = [
       { letter: "E", text: "ninguna de las anteriores es correcta" },
     ],
     correctAnswer: "B",
-    explanation: "Ley Núm. 247-2004 · Reglamento 156.",
+    explanation:
+      "La Ley de Farmacia de PR restringe el compounding anticipado y enfatiza la receta específica por paciente: el compounding atiende necesidades individualizadas y no funciona como manufactura. Esto protege al paciente y mantiene el cumplimiento regulatorio.",
   },
   {
     id: "M1-Q6",
@@ -111,7 +117,8 @@ export const dia1: readonly Question[] = [
       { letter: "E", text: "todas las anteriores son correctas" },
     ],
     correctAnswer: "E",
-    explanation: "DQSA H.R. 3204, 2013 · FDA.",
+    explanation:
+      "El DQSA fortaleció la supervisión de la FDA sobre el compounding, creó la categoría de Outsourcing Facility (503B) y fue aprobado en 2013; también aclaró los estándares de las farmacias tradicionales 503A. Todas las aseveraciones son correctas.",
   },
   {
     id: "M1-Q7",
@@ -128,7 +135,8 @@ export const dia1: readonly Question[] = [
       { letter: "E", text: "ninguna de las anteriores es correcta" },
     ],
     correctAnswer: "C",
-    explanation: "USP <795> 2023 · Allen's.",
+    explanation:
+      "El packing statistic determina cuánto volumen ocupa cada ingrediente dentro de la cápsula, lo que permite calcular con exactitud el volumen de llenado y asegurar consistencia en la formulación, evitando déficit o desborde durante la preparación.",
   },
   {
     id: "M1-Q8",
@@ -145,7 +153,8 @@ export const dia1: readonly Question[] = [
       { letter: "E", text: "ninguna de las anteriores es correcta" },
     ],
     correctAnswer: "C",
-    explanation: "USP <795> Nov 2023.",
+    explanation:
+      "Las cápsulas preparadas con ingredientes no acuosos usualmente reciben un BUD de hasta 180 días, salvo que algún ingrediente expire antes: la fecha de expiración más temprana limita el BUD asignado. Esto mantiene la calidad y seguridad del producto.",
   },
   {
     id: "M1-Q9",
@@ -159,7 +168,8 @@ export const dia1: readonly Question[] = [
       { letter: "E", text: "A y B son correctas" },
     ],
     correctAnswer: "E",
-    explanation: "USP <795> 2023 · PCCA · Allen's.",
+    explanation:
+      "El packing statistic puede ser provisto por el suplidor/distribuidor o determinarse experimentalmente en el laboratorio. Estos valores alimentan los cálculos de formulación y estimación de volumen; valores exactos mejoran la consistencia de dosis y la uniformidad de las cápsulas.",
   },
   {
     id: "M1-Q10",
@@ -174,7 +184,8 @@ export const dia1: readonly Question[] = [
       { letter: "E", text: "ninguna de las anteriores es correcta" },
     ],
     correctAnswer: "B",
-    explanation: "USP <795> 2023 · Allen's. 100 ÷ 270 × 100 = 37%.",
+    explanation:
+      "El porcentaje ocupado se calcula dividiendo la cantidad recetada entre el packing statistic: 100 mg ÷ 270 mg = 0.37 → 37% del volumen de la cápsula. Este cálculo es necesario para estimar cuánto relleno (filler) falta por añadir.",
   },
   {
     id: "M1-Q11",
@@ -189,7 +200,8 @@ export const dia1: readonly Question[] = [
       { letter: "E", text: "ninguna de las anteriores es correcta" },
     ],
     correctAnswer: "C",
-    explanation: "USP <795> 2023. 270 × 1.95 = 526.5 mg.",
+    explanation:
+      "El nuevo packing statistic se calcula multiplicando el valor original por el cambio de volumen: 270 mg × 1.95 = 526.5 mg. La cápsula tamaño 0 tiene mayor capacidad y admite más material; este cálculo guía la selección del tamaño de cápsula correcto.",
   },
   {
     id: "M1-Q12",
@@ -200,7 +212,8 @@ export const dia1: readonly Question[] = [
       { letter: "FALSE", text: "Falso" },
     ],
     correctAnswer: "TRUE",
-    explanation: "Dow Methocel Handbook · USP-NF · HPMC = Hypromellose.",
+    explanation:
+      "Methocel es un nombre comercial de la hipromelosa (hidroxipropil metilcelulosa, HPMC), polímero de uso común en formas de dosificación farmacéuticas, incluyendo formulaciones de liberación modificada. Por eso la aseveración es verdadera.",
   },
   {
     id: "M1-Q13",
@@ -211,7 +224,8 @@ export const dia1: readonly Question[] = [
       { letter: "FALSE", text: "Falso" },
     ],
     correctAnswer: "TRUE",
-    explanation: "USP <795> 2023 · mecanismo de matriz HPMC.",
+    explanation:
+      "Methocel (hipromelosa/HPMC) se usa como polímero controlador de liberación en formulaciones de liberación sostenida: al exponerse a fluidos forma una barrera de gel que enlentece la liberación del fármaco. Por esa propiedad se usa ampliamente en cápsulas de liberación lenta.",
   },
   {
     id: "M1-Q14",
@@ -224,7 +238,7 @@ export const dia1: readonly Question[] = [
     ],
     correctAnswer: "TRUE",
     explanation:
-      "Excepción de drug shortage — permite compounding temporal mientras dura la escasez.",
+      "Las farmacias de compounding generalmente no pueden duplicar medicamentos comercialmente disponibles; sin embargo, si el medicamento está oficialmente en escasez, el compounding se permite para atender la necesidad del paciente hasta que retorne la disponibilidad. Esto protege el acceso a la terapia.",
   },
   {
     id: "M1-Q15",
@@ -237,6 +251,6 @@ export const dia1: readonly Question[] = [
     ],
     correctAnswer: "FALSE",
     explanation:
-      "La distinción 503A/503B no se basa en estéril vs. no estéril, sino en el modelo de práctica.",
+      "La distinción 503A/503B no se basa en estéril vs. no estéril: las farmacias 503A hacen compounding tradicional específico por paciente, mientras que las 503B (outsourcing facilities) pueden componer a granel bajo supervisión de la FDA. Por eso la aseveración es falsa.",
   },
 ] as const;

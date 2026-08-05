@@ -16,8 +16,10 @@ import type { Question } from "./types";
  *
  * Cada `prompt` re-inline-a el escenario correspondiente para que la UI
  * siga sin necesitar un modelo de contexto compartido entre preguntas.
- * Las explicaciones vienen de la columna "Observación" del documento
- * fuente.
+ * Las explicaciones son las justificaciones del instruccional ACPE oficial
+ * ("Instruccional Día #3 - revisado 07132026"), traducidas al español.
+ * En Q10 prevalece la clave de la presentación v2.3 (E), que resuelve la
+ * ambigüedad del "Sig: II mg" que el instruccional dejaba abierta.
  */
 export const dia3: readonly Question[] = [
   {
@@ -34,7 +36,7 @@ export const dia3: readonly Question[] = [
     ],
     correctAnswer: "C",
     explanation:
-      "2.5 mg/G × 35 G = 87.5 mg total de Bi-est; 80% = 70 mg de estriol.",
+      "La receta indica Bi-est 80/20 a 2.5 mg/G y se dispensan 35 G: 2.5 mg × 35 G = 87.5 mg totales de Bi-est. Como el estriol representa el 80% de la formulación, 80% de 87.5 mg = 70 mg de estriol.",
   },
   {
     id: "M3-Q2",
@@ -50,7 +52,7 @@ export const dia3: readonly Question[] = [
     ],
     correctAnswer: "E",
     explanation:
-      "3.0 mg/G × 35 G = 105 mg — no coincide con ninguna opción.",
+      "La receta contiene testosterona 3 mg/G en una cantidad total de 35 G: 3 mg × 35 G = 105 mg. Como 105 mg no aparece entre las opciones, la respuesta correcta es “ninguna de las anteriores”.",
   },
   {
     id: "M3-Q3",
@@ -65,7 +67,8 @@ export const dia3: readonly Question[] = [
       { letter: "E", text: "ninguna de las anteriores es correcta" },
     ],
     correctAnswer: "C",
-    explanation: "0.5 G ÷ 0.25 G/click = 2 clicks.",
+    explanation:
+      "La Sig indica aplicar 0.5 G diarios y el Topi-CLICK comúnmente dispensa 0.25 G por click: 0.5 G ÷ 0.25 G/click = 2 clicks diarios. Esto asegura una dosificación exacta y reproducible.",
   },
   {
     id: "M3-Q4",
@@ -80,7 +83,8 @@ export const dia3: readonly Question[] = [
       { letter: "E", text: "ninguna de las anteriores es correcta" },
     ],
     correctAnswer: "B",
-    explanation: "Topi-CLICK Microclick PI.",
+    explanation:
+      "El dispensador Microclick tiene una capacidad estándar de aproximadamente 9.5 G. Conocer la capacidad del dispositivo asegura suficiente volumen de medicamento para la dispensación y la entrega exacta de la dosis; es común en cremas hormonales.",
   },
   {
     id: "M3-Q5",
@@ -95,7 +99,8 @@ export const dia3: readonly Question[] = [
       { letter: "E", text: "ninguna de las anteriores es correcta" },
     ],
     correctAnswer: "C",
-    explanation: "PI del fabricante del Microclick.",
+    explanation:
+      "Cada microclick dispensa una cantidad pequeña y estandarizada de producto, típicamente 0.05 cc (mL). Los dispositivos de dosis estandarizada mejoran la adherencia del paciente y la consistencia de la dosis.",
   },
   {
     id: "M3-Q6",
@@ -110,7 +115,8 @@ export const dia3: readonly Question[] = [
       { letter: "E", text: "ninguna de las anteriores es correcta" },
     ],
     correctAnswer: "C",
-    explanation: "1 mg/0.1 G = 10 mg/G; 10 mg/G × 12 G = 120 mg.",
+    explanation:
+      "La concentración de la formulación es 1 mg por 0.1 G, es decir 10 mg/G. Para 12 G: 10 mg/G × 12 G = 120 mg de testosterona. Así se mantiene la concentración correcta en toda la preparación.",
   },
   {
     id: "M3-Q7",
@@ -126,7 +132,7 @@ export const dia3: readonly Question[] = [
     ],
     correctAnswer: "B",
     explanation:
-      "Propilenglicol — primera elección en BHRT transdérmico.",
+      "El propilenglicol se usa comúnmente como potenciador de penetración en formulaciones tópicas compounded para mejorar la absorción dérmica: facilita el paso del fármaco a través de la barrera cutánea y mejora el desempeño de la fórmula.",
   },
   {
     id: "M3-Q8",
@@ -141,7 +147,8 @@ export const dia3: readonly Question[] = [
       { letter: "E", text: "ninguna de las anteriores es correcta" },
     ],
     correctAnswer: "B",
-    explanation: "5 mL/100 mL = x/12 mL; x = 0.6 mL.",
+    explanation:
+      "Se plantea la proporción 5 mL/100 mL = x/12; despejando, x = (5 × 12) ÷ 100 = 0.6 mL. Los cálculos proporcionales correctos mantienen la consistencia de la formulación.",
   },
   {
     id: "M3-Q9",
@@ -156,7 +163,8 @@ export const dia3: readonly Question[] = [
       { letter: "E", text: "ninguna de las anteriores es correcta" },
     ],
     correctAnswer: "B",
-    explanation: "2 mg/día ÷ 1 mg/mL × 30 días = 60 mL.",
+    explanation:
+      "Enalapril 1 mg/mL con Sig II mg PO QD significa 2 mg diarios, equivalentes a 2 mL diarios. Para un suplido de 30 días, la cantidad total es 2 mL × 30 días = 60 mL.",
   },
   {
     id: "M3-Q10",
@@ -172,7 +180,7 @@ export const dia3: readonly Question[] = [
     ],
     correctAnswer: "E",
     explanation:
-      "2 mg/día ÷ 1 mg/mL = 2 mL/día — no aparece entre las opciones (clave oficial de la presentación v2.3).",
+      "La concentración es 1 mg/mL y la Sig II mg PO QD equivale a 2 mg diarios → 2 mL al día, cantidad que no aparece entre las opciones (clave oficial de la presentación v2.3).",
   },
   {
     id: "M3-Q11",
@@ -187,7 +195,8 @@ export const dia3: readonly Question[] = [
       { letter: "E", text: "ninguna de las anteriores es correcta" },
     ],
     correctAnswer: "D",
-    explanation: "Enalapril compounding PI · USP <795>.",
+    explanation:
+      "Las suspensiones orales compounded como la de enalapril frecuentemente requieren refrigeración para preservar la estabilidad y mantener la potencia. El almacenamiento correcto reduce la degradación; la etiqueta de refrigeración mejora la seguridad del medicamento.",
   },
   {
     id: "M3-Q12",
@@ -201,7 +210,8 @@ export const dia3: readonly Question[] = [
       { letter: "E", text: "ninguna de las anteriores es correcta" },
     ],
     correctAnswer: "D",
-    explanation: "Enalapril PI · Allen's.",
+    explanation:
+      "Una suspensión compounded debe llevar “agitar bien antes de usar” para asegurar la distribución uniforme del fármaco antes de administrar, y el enalapril suele recomendarse antes de las comidas para favorecer la absorción y la consistencia. Ambas etiquetas son apropiadas.",
   },
   {
     id: "M3-Q13",
@@ -215,7 +225,8 @@ export const dia3: readonly Question[] = [
       { letter: "E", text: "ninguna de las anteriores es correcta" },
     ],
     correctAnswer: "D",
-    explanation: "AAP · ISMP Pediatric · USP <795>.",
+    explanation:
+      "La receta requiere los accesorios de dispensación apropiados: adaptador press-in, botella ámbar y jeringa oral para una dosificación exacta y una administración segura. Estos suministros mejoran la precisión, la estabilidad del medicamento y la adherencia del paciente.",
   },
   {
     id: "M3-Q14",
@@ -231,7 +242,7 @@ export const dia3: readonly Question[] = [
     ],
     correctAnswer: "C",
     explanation:
-      "1.5 mL × 3 dosis/día = 4.5 mL/día; × 30 días = 135 mL.",
+      "La dosis recetada es 1.5 mL cada 8 horas, es decir 3 dosis al día = 4.5 mL diarios. Para un suplido de 30 días, el volumen total es 4.5 mL × 30 días = 135 mL, que es lo que se debe preparar y dispensar.",
   },
   {
     id: "M3-Q15",
@@ -246,6 +257,7 @@ export const dia3: readonly Question[] = [
       { letter: "E", text: "ninguna de las anteriores es correcta" },
     ],
     correctAnswer: "A",
-    explanation: "1.5 mL × 100 mg/mL = 150 mg.",
+    explanation:
+      "La suspensión de gabapentina tiene una concentración de 100 mg/mL y la dosis recetada es 1.5 mL: 1.5 mL × 100 mg/mL = 150 mg de gabapentina por dosis.",
   },
 ] as const;
