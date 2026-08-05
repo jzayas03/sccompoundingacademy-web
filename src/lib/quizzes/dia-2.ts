@@ -3,8 +3,9 @@ import type { Question } from "./types";
 /**
  * Día 2 — Supositorios y formulaciones dermatológicas.
  *
- * Banco de 15 preguntas transcrito del docx oficial en español del Lcdo.
- * Reyes ("Post-Tests_Compounding_Dias_1-3.docx", 2026). Q11-Q15 comparten
+ * Banco de 15 preguntas sincronizado con la POST-PRUEBA de la presentación
+ * oficial v2.3 del Lcdo. Reyes ("Day2_Basic_Compounding_Non_Sterile_2_3",
+ * agosto 2026 — reemplaza el docx original). Q11-Q15 comparten
  * la receta de hidroquinona enunciada en Q11 (el QuizForm permite volver
  * atrás para releerla). Las explicaciones vienen de la columna
  * "Observación" del documento fuente.
@@ -118,19 +119,18 @@ export const dia2: readonly Question[] = [
   },
   {
     id: "M2-Q8",
-    prompt:
-      "¿Cuál base para supositorios tiene un punto de fusión de aproximadamente 34-36°C y se funde rápidamente a temperatura corporal?",
+    prompt: "El acrónimo EMP significa:",
     type: "multiple-choice",
     options: [
-      { letter: "A", text: "Manteca de Cacao (Theobroma Oil)" },
-      { letter: "B", text: "Witepsol" },
-      { letter: "C", text: "Glicerina Gelatinada" },
-      { letter: "D", text: "PEG (Polietilenglicol)" },
+      { letter: "A", text: "equilibrar la masa y la presión" },
+      { letter: "B", text: "mortero y pistilo electrónicos" },
+      { letter: "C", text: "proceso de manufactura electrónica" },
+      { letter: "D", text: "la combinación de estradiol y progesterona micronizada" },
       { letter: "E", text: "ninguna de las anteriores es correcta" },
     ],
-    correctAnswer: "A",
+    correctAnswer: "B",
     explanation:
-      "Allen's · PCCA Suppository Bases — la manteca de cacao funde a 34-36°C, temperatura corporal.",
+      "EMP = Electronic Mortar and Pestle. PCCA Women's Health Compounding Guide · IJPC.",
   },
   {
     id: "M2-Q9",

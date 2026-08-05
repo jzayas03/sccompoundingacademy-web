@@ -3,8 +3,9 @@ import type { Question } from "./types";
 /**
  * Día 3 — Pediátrico, veterinario y BHRT.
  *
- * Banco de 15 preguntas transcrito del docx oficial en español del Lcdo.
- * Reyes ("Post-Tests_Compounding_Dias_1-3.docx", 2026).
+ * Banco de 15 preguntas sincronizado con la POST-PRUEBA de la presentación
+ * oficial v2.3 del Lcdo. Reyes ("Day3_Basic_Compounding_Non_Sterile_2_3",
+ * agosto 2026 — reemplaza el docx original).
  *
  * Estructura del banco:
  *   - Q1-Q3  : Rx Bi-est 80/20 2.5 mg/G + Testosterona 3.0 mg/G,
@@ -169,9 +170,9 @@ export const dia3: readonly Question[] = [
       { letter: "D", text: "8 mL" },
       { letter: "E", text: "ninguna de las anteriores es correcta" },
     ],
-    correctAnswer: "C",
+    correctAnswer: "E",
     explanation:
-      "Nota del documento fuente — la Sig “II mg” se interpreta como 4 mg/día por convención de la clase; verificar con el profesor la clave oficial.",
+      "2 mg/día ÷ 1 mg/mL = 2 mL/día — no aparece entre las opciones (clave oficial de la presentación v2.3).",
   },
   {
     id: "M3-Q11",
