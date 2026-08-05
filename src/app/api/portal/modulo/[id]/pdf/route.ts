@@ -1,10 +1,12 @@
 import { NextResponse } from "next/server";
-import { eq } from "drizzle-orm";
+import { and, eq } from "drizzle-orm";
 import { auth } from "@/lib/auth";
 import { isAdminEmail } from "@/lib/admin";
 import { db } from "@/lib/db";
-import { users } from "@/lib/db/schema";
+import { users, quizAttempts } from "@/lib/db/schema";
 import { findAttachment, resolveViewableModule } from "@/lib/curriculum";
+import { getQuiz, type ModuleQuizId } from "@/lib/quizzes";
+import { resolveModuleAccess } from "@/lib/portal/module-access";
 import { resolveVerificationGate } from "@/lib/portal/verification-gate";
 import { readModuloPdf } from "@/lib/portal/module-pdf";
 import { getCohort } from "@/lib/cohorts";
@@ -21,11 +23,17 @@ export const runtime = "nodejs";
  * paid product from a guessable URL).
  *
  * Gate: signed in → module belongs to the viewer's tier (owners may view any)
- * → student matrícula approved → paid (or owner). `?lang=en` picks the
- * English file when present. `?anejo={slug}` serves one of the module's
- * declared activity annexes instead of the main PDF — the slug must exist
- * in the module's curriculum entry (whitelist, never a raw filename), and
- * every gate above applies identically.
+ * → student matrícula approved → paid AND pre-test taken (or owner, who
+ * bypasses both) → course-access window open. The payment + pre-test pair
+ * is decided by the SAME `resolveModuleAccess` policy the module page uses,
+ * so the two can never drift apart: gating only the page would let a paid
+ * student read a later module's material straight from this URL without
+ * ever taking that module's diagnostic pre-test.
+ *
+ * `?lang=en` picks the English file when present. `?anejo={slug}` serves one
+ * of the module's declared activity annexes instead of the main PDF — the
+ * slug must exist in the module's curriculum entry (whitelist, never a raw
+ * filename), and every gate above applies identically.
  */
 export async function GET(
   request: Request,
@@ -43,6 +51,7 @@ export async function GET(
 
   const [user] = await db
     .select({
+      id: users.id,
       tier: users.tier,
       paidAt: users.paidAt,
       studentVerification: users.studentVerification,
@@ -72,9 +81,39 @@ export async function GET(
     return new NextResponse("Acceso restringido", { status: 403 });
   }
 
-  // Paywall — the whole point of this route.
-  if (!user.paidAt && !isOwner) {
-    return new NextResponse("Pago requerido", { status: 402 });
+  // Payment + pre-test gate — the same policy object the module page runs,
+  // so this URL can never serve material the page itself would have
+  // withheld. The pre-attempt lookup only runs when it can change the
+  // outcome (a paid non-owner on a module that has a quiz bank).
+  const hasQuiz = getQuiz(id as ModuleQuizId).length > 0;
+  let hasPreAttempt = false;
+  if (!isOwner && user.paidAt && hasQuiz) {
+    const [preDone] = await db
+      .select({ id: quizAttempts.id })
+      .from(quizAttempts)
+      .where(
+        and(
+          eq(quizAttempts.userId, user.id),
+          eq(quizAttempts.moduleId, viewable.module.ordinal),
+          eq(quizAttempts.phase, "pre"),
+        ),
+      )
+      .limit(1);
+    hasPreAttempt = Boolean(preDone);
+  }
+
+  const access = resolveModuleAccess({
+    isOwner,
+    hasPaid: Boolean(user.paidAt),
+    hasQuiz,
+    hasPreAttempt,
+  });
+  if (access.kind === "redirect") {
+    // The page redirects; an API returns a status. "dashboard" is the
+    // unpaid branch (402, the paywall), "pre-test" is the diagnostic gate.
+    return access.to === "dashboard"
+      ? new NextResponse("Pago requerido", { status: 402 })
+      : new NextResponse("Pre-test requerido", { status: 403 });
   }
 
   // Access window — material access ends 30 days after the cohort closes
