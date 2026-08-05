@@ -4,7 +4,7 @@ import { auth } from "@/lib/auth";
 import { isAdminEmail } from "@/lib/admin";
 import { db } from "@/lib/db";
 import { users } from "@/lib/db/schema";
-import { resolveViewableModule } from "@/lib/curriculum";
+import { findAttachment, resolveViewableModule } from "@/lib/curriculum";
 import { resolveVerificationGate } from "@/lib/portal/verification-gate";
 import { readModuloPdf } from "@/lib/portal/module-pdf";
 import { getCohort } from "@/lib/cohorts";
@@ -22,7 +22,10 @@ export const runtime = "nodejs";
  *
  * Gate: signed in → module belongs to the viewer's tier (owners may view any)
  * → student matrícula approved → paid (or owner). `?lang=en` picks the
- * English file when present.
+ * English file when present. `?anejo={slug}` serves one of the module's
+ * declared activity annexes instead of the main PDF — the slug must exist
+ * in the module's curriculum entry (whitelist, never a raw filename), and
+ * every gate above applies identically.
  */
 export async function GET(
   request: Request,
@@ -34,8 +37,9 @@ export async function GET(
   }
 
   const { id } = await params;
-  const lang =
-    new URL(request.url).searchParams.get("lang") === "en" ? "en" : "es";
+  const searchParams = new URL(request.url).searchParams;
+  const lang = searchParams.get("lang") === "en" ? "en" : "es";
+  const anejoSlug = searchParams.get("anejo");
 
   const [user] = await db
     .select({
@@ -88,7 +92,20 @@ export async function GET(
     return new NextResponse("Acceso al material vencido", { status: 403 });
   }
 
-  const bytes = await readModuloPdf(viewable.module.pdfBasename, lang);
+  // File selection: the main module PDF (with its optional English
+  // variant), or — when `?anejo=` names a declared attachment — that
+  // annex's Spanish-only file. An unknown slug is a 404, same as an
+  // unknown module id.
+  let basename = viewable.module.pdfBasename;
+  let fileLang: "es" | "en" = lang;
+  if (anejoSlug !== null) {
+    const attachment = findAttachment(viewable.module, anejoSlug);
+    if (!attachment) return new NextResponse("No encontrado", { status: 404 });
+    basename = attachment.basename;
+    fileLang = "es";
+  }
+
+  const bytes = await readModuloPdf(basename, fileLang);
   if (!bytes) return new NextResponse("No disponible", { status: 404 });
 
   return new NextResponse(new Uint8Array(bytes), {

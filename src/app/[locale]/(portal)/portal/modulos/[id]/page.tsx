@@ -175,6 +175,16 @@ export default async function ModulePage({
     ? `/api/portal/modulo/${id}/pdf?lang=en`
     : null;
 
+  // Activity annexes (anejos) declared in the curriculum. Same existence
+  // check as the main PDF so a declared-but-missing file never renders a
+  // dead link; served through the same gated API route via `?anejo=`.
+  const anejos = (mod.attachments ?? [])
+    .filter((a) => moduloPdfExists(a.basename, "es"))
+    .map((a) => ({
+      slug: a.slug,
+      href: `/api/portal/modulo/${id}/pdf?anejo=${a.slug}`,
+    }));
+
   return (
     <ModuleView
       id={id}
@@ -182,6 +192,7 @@ export default async function ModulePage({
       day={day}
       esPdfHref={esPdfHref}
       enPdfHref={enPdfHref}
+      anejos={anejos}
       hasQuiz={hasQuiz}
       preview={preview}
     />
@@ -194,6 +205,7 @@ function ModuleView({
   day,
   esPdfHref,
   enPdfHref,
+  anejos,
   hasQuiz,
   preview,
 }: {
@@ -202,6 +214,7 @@ function ModuleView({
   day: number;
   esPdfHref: string | null;
   enPdfHref: string | null;
+  anejos: { slug: string; href: string }[];
   hasQuiz: boolean;
   preview?: "student" | "profesional";
 }) {
@@ -243,6 +256,33 @@ function ModuleView({
       <section aria-label={t("viewerTitle")} className="mt-10">
         <ModulePdfViewer esPdfHref={esPdfHref} enPdfHref={enPdfHref} />
       </section>
+
+      {/* Anejos — activity sheets for the module. Unlike the view-only
+          lecture material above, these open in a new tab through the same
+          gated API route so the student can print and fill them in. */}
+      {anejos.length > 0 && (
+        <section aria-label={t("attachments.title")} className="mt-8">
+          <p className="font-heading text-teal-deep/80 flex items-center text-xs font-semibold tracking-[0.18em] uppercase">
+            <span aria-hidden className="bg-chartreuse mr-3 inline-block h-4 w-1 shrink-0 rounded-sm" />
+            {t("attachments.title")}
+          </p>
+          <p className="text-gray-700 mt-2 text-sm">{t("attachments.hint")}</p>
+          <ul className="mt-4 flex flex-col gap-3">
+            {anejos.map((a) => (
+              <li key={a.slug}>
+                <a
+                  href={a.href}
+                  target="_blank"
+                  rel="noopener"
+                  className="text-teal-deep hover:text-teal text-base underline underline-offset-2"
+                >
+                  {t(`attachments.items.${a.slug}`)}
+                </a>
+              </li>
+            ))}
+          </ul>
+        </section>
+      )}
 
       {/* Action row — post-test link.
           PR 5 swaps the post-test CTA's `href` to /portal/modulos/[id]/post-test

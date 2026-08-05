@@ -938,6 +938,14 @@
       "viewerError": "Couldn't load the material. Reload the page and try again.",
       "pdfMissingTitle": "PDF coming soon",
       "pdfMissingBody": "The material for this module is still being produced. We'll email you when it's available.",
+      "attachments": {
+        "title": "Module worksheets",
+        "hint": "Activity sheets to work through during the module. They open in a new tab; print them to fill them in.",
+        "items": {
+          "capsule-packing": "Capsule packing page (Fagron)",
+          "pack-stat": "Pack stat determination worksheet"
+        }
+      },
       "downloadCta": "Download PDF",
       "postTestCta": "Go to post-test",
       "postTestPendingHint": "The question bank for this module has not been produced yet."

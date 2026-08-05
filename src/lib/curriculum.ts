@@ -20,6 +20,18 @@ import { isCeEligible } from "@/lib/professions";
 /** Mirror of `users.tier` (Drizzle `tierEnum` + nullable). */
 export type UserTier = "pharmacist" | "profesional" | "student" | null;
 
+/**
+ * A supplementary activity sheet (anejo) served alongside a module's main
+ * PDF. `slug` doubles as the API selector (`?anejo={slug}`) and the i18n
+ * title key under `portal.module.attachments.items`; `basename` resolves
+ * `private/modulos/{basename}.pdf`. Anejos are Spanish-only (no `-en`
+ * variant) and are served through the same gated route as the main PDF.
+ */
+export type ModuleAttachment = {
+  slug: string;
+  basename: string;
+};
+
 export type CurriculumModule = {
   /** Route param + quiz-bank key, e.g. "modulo-1" | "usp-795". */
   id: ModuleQuizId;
@@ -27,10 +39,20 @@ export type CurriculumModule = {
   ordinal: number;
   /** public/modulos/{pdfBasename}.pdf (and -en.pdf when present). */
   pdfBasename: string;
+  /** Optional activity annexes (hojas de trabajo) for the module. */
+  attachments?: readonly ModuleAttachment[];
 };
 
 const PROFESIONAL: readonly CurriculumModule[] = [
-  { id: "modulo-1", ordinal: 1, pdfBasename: "dia-1" },
+  {
+    id: "modulo-1",
+    ordinal: 1,
+    pdfBasename: "dia-1",
+    attachments: [
+      { slug: "capsule-packing", basename: "dia-1-anejo-capsule-packing" },
+      { slug: "pack-stat", basename: "dia-1-anejo-pack-stat" },
+    ],
+  },
   { id: "modulo-2", ordinal: 2, pdfBasename: "dia-2" },
   { id: "modulo-3", ordinal: 3, pdfBasename: "dia-3" },
 ];
@@ -54,6 +76,16 @@ export function resolveModule(
   id: string,
 ): CurriculumModule | null {
   return getCurriculum(tier).find((m) => m.id === id) ?? null;
+}
+
+/** Resolve an anejo slug within a module's attachments, or null (→ 404).
+ *  The slug acts as a whitelist: only basenames declared in the curriculum
+ *  can ever be read, so the file selector can't reach arbitrary paths. */
+export function findAttachment(
+  module: CurriculumModule,
+  slug: string,
+): ModuleAttachment | null {
+  return module.attachments?.find((a) => a.slug === slug) ?? null;
 }
 
 /** Curriculum ordinals required for a completion certificate. */

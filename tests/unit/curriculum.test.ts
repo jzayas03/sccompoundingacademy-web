@@ -1,5 +1,6 @@
 import { describe, expect, it } from "vitest";
 import {
+  findAttachment,
   getCurriculum,
   requiredOrdinals,
   resolveModule,
@@ -32,6 +33,37 @@ describe("getCurriculum", () => {
       ]);
     },
   );
+});
+
+describe("findAttachment", () => {
+  const dia1 = getCurriculum("profesional")[0];
+
+  it("declares the two Day 1 activity annexes", () => {
+    expect(dia1.attachments?.map((a) => a.slug)).toEqual([
+      "capsule-packing",
+      "pack-stat",
+    ]);
+    expect(dia1.attachments?.map((a) => a.basename)).toEqual([
+      "dia-1-anejo-capsule-packing",
+      "dia-1-anejo-pack-stat",
+    ]);
+  });
+
+  it("resolves a declared slug to its attachment", () => {
+    expect(findAttachment(dia1, "pack-stat")?.basename).toBe(
+      "dia-1-anejo-pack-stat",
+    );
+  });
+
+  it("returns null for an unknown slug (whitelist → 404)", () => {
+    expect(findAttachment(dia1, "unknown")).toBeNull();
+    expect(findAttachment(dia1, "../../etc/passwd")).toBeNull();
+  });
+
+  it("returns null for modules without attachments", () => {
+    const dia2 = getCurriculum("profesional")[1];
+    expect(findAttachment(dia2, "capsule-packing")).toBeNull();
+  });
 });
 
 describe("resolveModule", () => {
