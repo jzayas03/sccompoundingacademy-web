@@ -22,6 +22,7 @@ import {
 import { resolveViewableModule, getModuleCatalogue } from "@/lib/curriculum";
 import { isAdminEmail } from "@/lib/admin";
 import { QuizForm } from "@/components/portal/QuizForm";
+import { ModuleStepper } from "@/components/portal/ModuleStepper";
 import { submitQuizAction } from "./actions";
 
 export const metadata: Metadata = {
@@ -175,6 +176,8 @@ function PostTestPanel({
             {moduleData.title}
           </p>
         )}
+        {/* Step 3 of 3 — the graded attempt that closes the module. */}
+        <ModuleStepper step="post-test" />
       </div>
 
       {isEmpty ? (

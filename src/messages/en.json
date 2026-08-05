@@ -927,6 +927,19 @@
       "reviewPromptBody": "Your feedback helps us improve the course for future cohorts.",
       "reviewPromptCta": "Leave a review"
     },
+    "stepper": {
+      "ariaLabel": "Module steps",
+      "preTest": "Pre-test",
+      "presentation": "Presentation",
+      "postTest": "Post-test",
+      "doneSuffix": "done",
+      "next": {
+        "pre-test": "Start with the pre-test",
+        "module": "Continue to the presentation",
+        "post-test": "Take the post-test",
+        "completed": "Review the presentation"
+      }
+    },
     "module": {
       "eyebrow": "Module",
       "backToDashboard": "Back to portal",
@@ -1050,6 +1063,9 @@
       "noAnswerSelected": "(unanswered)",
       "retryButton": "Retry",
       "backToModule": "Back to module",
+      "backToDashboard": "Back to the portal",
+      "nextModuleButton": "Continue to the next module",
+      "certificateButton": "View my certificate",
       "noAttemptFound": "You haven't completed this post-test yet."
     },
     "preTest": {
