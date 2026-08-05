@@ -944,6 +944,14 @@
       "viewerError": "No se pudo cargar el material. Recargá la página e intentá de nuevo.",
       "pdfMissingTitle": "PDF próximamente",
       "pdfMissingBody": "El material de este módulo aún se está produciendo. Te avisaremos por correo cuando esté disponible.",
+      "attachments": {
+        "title": "Anejos del módulo",
+        "hint": "Hojas de actividad para trabajar durante el módulo. Se abren en una pestaña nueva; imprimilas para completarlas.",
+        "items": {
+          "capsule-packing": "Hoja de empaque de cápsulas (Fagron)",
+          "pack-stat": "Hoja de trabajo — Determinación de Pack Stat"
+        }
+      },
       "downloadCta": "Descargar PDF",
       "postTestCta": "Ir al post-test",
       "postTestPendingHint": "El banco de preguntas para este módulo aún no ha sido producido."
