@@ -46,8 +46,11 @@ export default async function ResultsPage({
   const mod = viewable.module;
   const moduleId = id as ModuleQuizId;
 
-  // Most recent attempt for this user+module. Older attempts stay in the
-  // DB for future analytics; the results screen always reflects "latest".
+  // Most recent POST-test attempt for this user+module. Older attempts
+  // stay in the DB for future analytics; the results screen always
+  // reflects "latest". The `phase` filter matters: without it a student
+  // who has only taken the pre-test would see that diagnostic attempt
+  // rendered as post-test results, complete with pass/fail copy.
   const [attempt] = await db
     .select()
     .from(quizAttempts)
@@ -55,6 +58,7 @@ export default async function ResultsPage({
       and(
         eq(quizAttempts.userId, user.id),
         eq(quizAttempts.moduleId, mod.ordinal),
+        eq(quizAttempts.phase, "post"),
       ),
     )
     .orderBy(desc(quizAttempts.submittedAt))

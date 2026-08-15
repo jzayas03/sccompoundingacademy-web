@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import { notFound, redirect } from "next/navigation";
-import { eq } from "drizzle-orm";
+import { and, eq } from "drizzle-orm";
 import { useMessages, useTranslations } from "next-intl";
 import { setRequestLocale } from "next-intl/server";
 import { Container } from "@/components/ui/Container";
@@ -8,7 +8,11 @@ import { GlassCard } from "@/components/glass/GlassCard";
 import { Link } from "@/i18n/routing";
 import { auth } from "@/lib/auth";
 import { db } from "@/lib/db";
-import { users } from "@/lib/db/schema";
+import { users, quizAttempts } from "@/lib/db/schema";
+import { resolveModuleAccess } from "@/lib/portal/module-access";
+import { resolveVerificationGate } from "@/lib/portal/verification-gate";
+import { getCohort } from "@/lib/cohorts";
+import { isCourseAccessActive } from "@/lib/portal/course-access";
 import {
   getQuiz,
   getPassingThreshold,
@@ -43,15 +47,72 @@ export default async function PostTestPage({
     .limit(1);
   if (!user) redirect(`/${locale}/portal/login`);
   const isOwner = isAdminEmail(session.user.email);
-  if (!user.paidAt && !isOwner) {
-    redirect(`/${locale}/portal`);
-  }
 
   const viewable = resolveViewableModule({ isOwner, userTier: user.tier, id });
   if (!viewable) notFound();
   const moduleId = id as ModuleQuizId;
 
+  // Student matrícula gate — same defense-in-depth as the module page.
+  if (
+    resolveVerificationGate({
+      isOwner,
+      tier: user.tier,
+      studentVerification: user.studentVerification,
+    }) === "redirect-verificacion"
+  ) {
+    redirect(`/${locale}/portal/verificacion`);
+  }
+
   const questions = getQuiz(moduleId);
+
+  // Payment + pre-test gate. The post-test is the graded attempt that
+  // earns the certificate, so it must sit BEHIND the same policy that
+  // guards the module content — otherwise a paid student can reach the
+  // credit-bearing test by URL without the diagnostic pre-test or the
+  // presentation, which makes the pre/post pair meaningless.
+  let hasPreAttempt = false;
+  if (!isOwner && user.paidAt && questions.length > 0) {
+    const [preDone] = await db
+      .select({ id: quizAttempts.id })
+      .from(quizAttempts)
+      .where(
+        and(
+          eq(quizAttempts.userId, user.id),
+          eq(quizAttempts.moduleId, viewable.module.ordinal),
+          eq(quizAttempts.phase, "pre"),
+        ),
+      )
+      .limit(1);
+    hasPreAttempt = Boolean(preDone);
+  }
+
+  const access = resolveModuleAccess({
+    isOwner,
+    hasPaid: Boolean(user.paidAt) || isOwner,
+    hasQuiz: questions.length > 0,
+    hasPreAttempt,
+  });
+  if (access.kind === "redirect") {
+    redirect(
+      access.to === "pre-test"
+        ? `/${locale}/portal/modulos/${moduleId}/pre-test`
+        : `/${locale}/portal`,
+    );
+  }
+
+  // Access window — a graduate past the 30-day window keeps the
+  // certificate but cannot sit the test again.
+  const cohort = user.cohortId ? await getCohort(user.cohortId) : null;
+  if (
+    !isCourseAccessActive({
+      isOwner,
+      cohortEndDate: cohort?.endDate ?? null,
+      accessExtendedUntil: user.accessExtendedUntil,
+      now: new Date(),
+    })
+  ) {
+    redirect(`/${locale}/portal`);
+  }
   const threshold = getPassingThreshold();
 
   return (
