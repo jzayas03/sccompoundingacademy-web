@@ -11,10 +11,13 @@ import { users, type User } from "@/lib/db/schema";
 import { isEligibleForCertificate } from "@/lib/certificates";
 import {
   showAcpeDisclosure,
+  getCurriculum,
   getModuleCatalogue,
   resolveEffectiveTier,
   type UserTier,
 } from "@/lib/curriculum";
+import { getModuleSteps } from "@/lib/portal/module-progress";
+import { stepPathname, type ModuleStep } from "@/lib/portal/module-step";
 import { isAdminEmail } from "@/lib/admin";
 import { getCohort } from "@/lib/cohorts";
 import {
@@ -113,12 +116,22 @@ export default async function PortalDashboardPage({
     now: new Date(),
   });
 
+  // Per-module step (pre-prueba → presentación → post-prueba) so each
+  // card can say where the student stands and link to that step, instead
+  // of always pointing at the module page and letting a silent redirect
+  // decide. One query for the whole curriculum.
+  const moduleSteps =
+    user.paidAt || isOwner
+      ? await getModuleSteps(user.id, getCurriculum(effectiveTier))
+      : {};
+
   return (
     <Dashboard
       user={user}
       sessionEmail={session.user.email}
       certEligible={certEligible}
       passedModules={report.passedModules}
+      moduleSteps={moduleSteps}
       isOwner={isOwner}
       effectiveTier={effectiveTier}
       preview={effectivePreview}
@@ -133,6 +146,7 @@ function Dashboard({
   sessionEmail,
   certEligible,
   passedModules,
+  moduleSteps,
   isOwner,
   effectiveTier,
   preview,
@@ -143,6 +157,7 @@ function Dashboard({
   sessionEmail: string;
   certEligible: boolean;
   passedModules: Record<number, boolean>;
+  moduleSteps: Record<string, ModuleStep>;
   isOwner: boolean;
   effectiveTier: UserTier;
   preview?: "profesional" | "student";
@@ -150,6 +165,7 @@ function Dashboard({
   accessExpiresAt: Date | null;
 }) {
   const t = useTranslations("portal.dashboard");
+  const tStep = useTranslations("portal.stepper");
   const locale = useLocale() === "en" ? "en" : "es";
   const modules = getModuleCatalogue(useMessages(), effectiveTier);
   const displayName = user.name?.trim() || sessionEmail.split("@")[0] || t("fallbackName");
@@ -172,6 +188,10 @@ function Dashboard({
   // index `idx` is completed iff its ordinal (idx+1) passed.
   const isCompleted = (idx: number) => passedModules[idx + 1] === true;
   const completedCount = modules.filter((_, idx) => isCompleted(idx)).length;
+  // Where the student stands in each module's 3-step journey. Falls back
+  // to "pre-test" (the entry point) for a module with no recorded state.
+  const stepOf = (moduleId: string): ModuleStep =>
+    moduleSteps[moduleId] ?? "pre-test";
 
   return (
     <>
@@ -324,7 +344,10 @@ function Dashboard({
               {canOpenModules ? (
                 <Link
                   href={{
-                    pathname: "/portal/modulos/[id]",
+                    // Land on the step the student is actually on, so the
+                    // card is a continue-button rather than a door that
+                    // silently bounces them to a test they didn't expect.
+                    pathname: stepPathname(stepOf(mod.id)),
                     params: { id: mod.id },
                     ...(preview ? { query: { preview } } : {}),
                   }}
@@ -360,10 +383,12 @@ function Dashboard({
                       <p className="text-gray-700 mt-3 text-sm leading-relaxed">
                         {mod.summary}
                       </p>
-                      {/* Available badge — chartreuse accent. */}
-                      <span className="bg-chartreuse text-teal-deep absolute right-3 top-3 inline-flex items-center gap-1 rounded-full px-2 py-1 text-[10px] font-semibold tracking-wide uppercase">
-                        {t("openBadge")} →
-                      </span>
+                      {/* Next step — what this card will actually open.
+                          Replaces the generic "Disponible", which said
+                          nothing about where the student left off. */}
+                      <p className="text-teal-deep mt-4 text-sm font-semibold">
+                        {tStep(`next.${stepOf(mod.id)}`)} →
+                      </p>
                     </GlassCard>
                   )}
                 </Link>

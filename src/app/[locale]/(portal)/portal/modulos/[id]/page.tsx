@@ -17,6 +17,7 @@ import { moduloPdfExists } from "@/lib/portal/module-pdf";
 import { getCohort } from "@/lib/cohorts";
 import { isCourseAccessActive } from "@/lib/portal/course-access";
 import { ModulePdfViewer } from "@/components/portal/ModulePdfViewer";
+import { ModuleStepper } from "@/components/portal/ModuleStepper";
 
 export const metadata: Metadata = {
   title: "Módulo · SCCA Portal",
@@ -249,6 +250,9 @@ function ModuleView({
             {moduleData.summary}
           </p>
         )}
+        {/* Step 2 of 3 — the pre-test is already recorded (the gate above
+            guarantees it), the post-test is what comes next. */}
+        {hasQuiz && <ModuleStepper step="module" />}
       </div>
 
       {/* Viewer — the ES/EN toggle, the inline (view-only) PDF object,

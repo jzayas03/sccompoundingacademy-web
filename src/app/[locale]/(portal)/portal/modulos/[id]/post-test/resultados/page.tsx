@@ -10,7 +10,8 @@ import { auth } from "@/lib/auth";
 import { db } from "@/lib/db";
 import { quizAttempts, users } from "@/lib/db/schema";
 import { getQuiz, getPassingThreshold, type ModuleQuizId } from "@/lib/quizzes";
-import { resolveViewableModule } from "@/lib/curriculum";
+import { resolveViewableModule, getCurriculum } from "@/lib/curriculum";
+import { isEligibleForCertificate } from "@/lib/certificates";
 import { isAdminEmail } from "@/lib/admin";
 import { ResultsList } from "./results-list";
 
@@ -74,10 +75,23 @@ export default async function ResultsPage({
   const questions = getQuiz(moduleId);
   const threshold = getPassingThreshold();
 
+  // Forward path after a pass: the next module in the curriculum, or the
+  // certificate once every module is done. Without this the screen dead-
+  // ends on "retry / back to the module you just finished" even though
+  // the pass may have just unlocked the certificate.
+  const curriculum = getCurriculum(viewable.tier);
+  const nextModule =
+    curriculum.find((m) => m.ordinal === mod.ordinal + 1)?.id ?? null;
+  const certEligible = attempt.passed
+    ? (await isEligibleForCertificate(user.id, viewable.tier)).eligible
+    : false;
+
   return (
     <ResultsPanel
       locale={locale as "es" | "en"}
       moduleId={moduleId}
+      nextModuleId={nextModule}
+      certEligible={certEligible}
       questions={questions}
       attempt={{
         score: attempt.score ?? 0,
@@ -93,12 +107,16 @@ export default async function ResultsPage({
 function ResultsPanel({
   locale,
   moduleId,
+  nextModuleId,
+  certEligible,
   questions,
   attempt,
   threshold,
 }: {
   locale: "es" | "en";
   moduleId: ModuleQuizId;
+  nextModuleId: string | null;
+  certEligible: boolean;
   questions: ReturnType<typeof getQuiz>;
   attempt: {
     score: number;
@@ -172,19 +190,54 @@ function ResultsPanel({
         </div>
       </GlassCard>
 
+      {/* Forward path. On a pass the primary action moves the student ON
+          — next module, or the certificate when the curriculum is done —
+          instead of offering to retake a test they just passed. On a
+          fail the primary action is the retry. */}
       <div className="mt-6 flex flex-col gap-3 sm:flex-row sm:items-center">
-        <Link
-          href={{ pathname: "/portal/modulos/[id]/post-test", params: { id: moduleId } }}
-          className="bg-chartreuse text-teal-deep ring-teal-deep/15 shadow-soft hover:bg-chartreuse/95 hover:shadow-lift font-heading inline-flex h-12 items-center justify-center rounded-md px-6 text-sm font-semibold ring-1 transition-[color,background-color,box-shadow,transform] duration-200 motion-safe:hover:-translate-y-px sm:text-base"
-        >
-          {t("retryButton")}
-        </Link>
-        <Link
-          href={{ pathname: "/portal/modulos/[id]", params: { id: moduleId } }}
-          className="border-teal-deep text-teal-deep hover:bg-teal-deep hover:text-off-white font-heading inline-flex h-12 items-center justify-center rounded-md border px-6 text-sm font-semibold transition-colors"
-        >
-          {t("backToModule")}
-        </Link>
+        {attempt.passed ? (
+          <>
+            {certEligible ? (
+              <Link
+                href="/portal/certificado"
+                className="bg-chartreuse text-teal-deep ring-teal-deep/15 shadow-soft hover:bg-chartreuse/95 hover:shadow-lift font-heading inline-flex h-12 items-center justify-center rounded-md px-6 text-sm font-semibold ring-1 transition-[color,background-color,box-shadow,transform] duration-200 motion-safe:hover:-translate-y-px sm:text-base"
+              >
+                {t("certificateButton")} →
+              </Link>
+            ) : nextModuleId ? (
+              <Link
+                href={{
+                  pathname: "/portal/modulos/[id]/pre-test",
+                  params: { id: nextModuleId },
+                }}
+                className="bg-chartreuse text-teal-deep ring-teal-deep/15 shadow-soft hover:bg-chartreuse/95 hover:shadow-lift font-heading inline-flex h-12 items-center justify-center rounded-md px-6 text-sm font-semibold ring-1 transition-[color,background-color,box-shadow,transform] duration-200 motion-safe:hover:-translate-y-px sm:text-base"
+              >
+                {t("nextModuleButton")} →
+              </Link>
+            ) : null}
+            <Link
+              href="/portal"
+              className="border-teal-deep text-teal-deep hover:bg-teal-deep hover:text-off-white font-heading inline-flex h-12 items-center justify-center rounded-md border px-6 text-sm font-semibold transition-colors"
+            >
+              {t("backToDashboard")}
+            </Link>
+          </>
+        ) : (
+          <>
+            <Link
+              href={{ pathname: "/portal/modulos/[id]/post-test", params: { id: moduleId } }}
+              className="bg-chartreuse text-teal-deep ring-teal-deep/15 shadow-soft hover:bg-chartreuse/95 hover:shadow-lift font-heading inline-flex h-12 items-center justify-center rounded-md px-6 text-sm font-semibold ring-1 transition-[color,background-color,box-shadow,transform] duration-200 motion-safe:hover:-translate-y-px sm:text-base"
+            >
+              {t("retryButton")}
+            </Link>
+            <Link
+              href={{ pathname: "/portal/modulos/[id]", params: { id: moduleId } }}
+              className="border-teal-deep text-teal-deep hover:bg-teal-deep hover:text-off-white font-heading inline-flex h-12 items-center justify-center rounded-md border px-6 text-sm font-semibold transition-colors"
+            >
+              {t("backToModule")}
+            </Link>
+          </>
+        )}
       </div>
 
       <ResultsList questions={questions} answers={attempt.answers} />
