@@ -819,6 +819,8 @@
       "subnote": "No payment now — we'll reach out to confirm.",
       "name": "Full name",
       "email": "Email address",
+      "phone": "Phone number (WhatsApp or mobile)",
+      "phoneHint": "Digits, spaces, parentheses or dashes only — at least 7 digits.",
       "rolePlaceholder": "I am a…",
       "roles": [
         "Licensed pharmacist",

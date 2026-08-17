@@ -52,6 +52,7 @@ export function CohortWaitlist({ blocks }: { blocks: CohortBlock[] }) {
         body: JSON.stringify({
           name: data.get("name"),
           email: data.get("email"),
+          phone: data.get("phone"),
           role: data.get("role"),
           cohort: blocks[0]?.cohortLabel ?? "",
           locale,
@@ -115,6 +116,17 @@ export function CohortWaitlist({ blocks }: { blocks: CohortBlock[] }) {
                   type="email"
                   required
                   placeholder={t("form.email")}
+                  className={FIELD}
+                  style={fieldStyle}
+                />
+                <input
+                  name="phone"
+                  type="tel"
+                  inputMode="tel"
+                  required
+                  pattern="\+?[\d\s().-]{7,20}"
+                  title={t("form.phoneHint")}
+                  placeholder={t("form.phone")}
                   className={FIELD}
                   style={fieldStyle}
                 />

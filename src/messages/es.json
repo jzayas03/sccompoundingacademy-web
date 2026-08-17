@@ -825,6 +825,8 @@
       "subnote": "Sin pago ahora — te contactaremos para confirmar.",
       "name": "Nombre completo",
       "email": "Correo electrónico",
+      "phone": "Teléfono (WhatsApp o celular)",
+      "phoneHint": "Solo números, espacios, paréntesis o guiones — mínimo 7 dígitos.",
       "rolePlaceholder": "Soy…",
       "roles": [
         "Farmacéutico licenciado",
