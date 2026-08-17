@@ -13,6 +13,7 @@ import { getQuiz, sanitizeQuiz, type ModuleQuizId } from "@/lib/quizzes";
 import { resolveViewableModule, getModuleCatalogue } from "@/lib/curriculum";
 import { isAdminEmail } from "@/lib/admin";
 import { QuizForm } from "@/components/portal/QuizForm";
+import { ModuleStepper } from "@/components/portal/ModuleStepper";
 import { submitPreTestAction } from "./actions";
 
 export const metadata: Metadata = {
@@ -129,6 +130,9 @@ function PreTestPanel({
             {moduleData.title}
           </p>
         )}
+        {/* Step 1 of 3 — makes it obvious this test comes BEFORE the
+            presentation, which is the whole point of a diagnostic. */}
+        <ModuleStepper step="pre-test" />
       </div>
 
       {isEmpty ? (
