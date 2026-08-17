@@ -14,6 +14,9 @@ const schema = z.object({
   name: z.string().min(1).max(120),
   email: z.string().email().max(255),
   role: z.string().min(1).max(80),
+  // Optional server-side: clients cached from before the field shipped still
+  // post without it. The form itself marks it required.
+  phone: z.string().trim().regex(/^\+?[\d\s().-]{7,20}$/).optional(),
   cohort: z.string().max(120).optional().nullable(),
   locale: z.enum(["es", "en"]),
 });
@@ -42,12 +45,13 @@ export async function POST(req: Request) {
   }
 
   const resend = new Resend(apiKey);
-  const { name, email, role, cohort, locale } = parsed.data;
+  const { name, email, role, phone, cohort, locale } = parsed.data;
   const html = `
     <h2>Nueva solicitud de lista de espera / New waitlist signup</h2>
     <p><strong>Nombre / Name:</strong> ${escapeHtml(name)}</p>
     <p><strong>Email:</strong> ${escapeHtml(email)}</p>
     <p><strong>Rol / Role:</strong> ${escapeHtml(role)}</p>
+    ${phone ? `<p><strong>Teléfono / Phone:</strong> ${escapeHtml(phone)}</p>` : ""}
     ${cohort ? `<p><strong>Cohorte / Cohort:</strong> ${escapeHtml(cohort)}</p>` : ""}
     <p><strong>Locale:</strong> ${locale}</p>
   `;
