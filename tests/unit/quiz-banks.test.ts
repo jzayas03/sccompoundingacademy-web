@@ -58,8 +58,8 @@ describe.each(banks)("quiz bank %s", (_name, bank) => {
 /**
  * Professional (Día 1-3) banks. Same certificate-critical integrity guard,
  * but unlike the student banks these mix multiple-choice with true/false
- * (2 options). Counts are pinned to the official Spanish docx
- * ("Post-Tests_Compounding_Dias_1-3.docx", 2026): 15 questions per day.
+ * (2 options). Counts are pinned to the official English decks
+ * ("Day{1,2,3}_Basic_Compounding_Non_Sterile_EN", 2026): 15 questions per day.
  */
 const proBanks: ReadonlyArray<
   readonly [string, readonly Question[], number]

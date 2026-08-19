@@ -1,251 +1,256 @@
 import type { Question } from "./types";
 
 /**
- * Día 2 — Supositorios y formulaciones dermatológicas.
+ * Day 2 — Suppositories, dermatology, topical compounding and equipment.
  *
- * Banco de 15 preguntas sincronizado con la POST-PRUEBA de la presentación
- * oficial v2.3 del Lcdo. Reyes ("Day2_Basic_Compounding_Non_Sterile_2_3",
- * agosto 2026 — reemplaza el docx original). Q11-Q15 comparten
- * la receta de hidroquinona enunciada en Q11 (el QuizForm permite volver
- * atrás para releerla). Las explicaciones son las justificaciones del
- * instruccional ACPE oficial ("Instruccional Día #2 - revisado 07132026"),
- * traducidas al español. En Q1 y Q8 la clave del instruccional difiere de
- * la clave de la presentación v2.3; prevalece la presentación (ver PR).
+ * 15-question bank synced with the POST-TEST of the official English deck
+ * by Lcdo. Reyes ("Day2_Basic_Compounding_Non_Sterile_EN", August 2026).
+ * Prompts and options are the deck's literal text; explanations are the
+ * rationales from the deck's ANSWER KEY. The same bank serves the
+ * pre-test and the post-test. Answer letters are unchanged from the
+ * Spanish v2.3 bank (verified 15/15 against the EN key).
+ *
+ * Q11–Q15 share one hydroquinone Rx; the Rx is stated in Q11 (as in the
+ * deck, "Use this prescription to answer questions 11 through 15").
  */
 export const dia2: readonly Question[] = [
   {
     id: "M2-Q1",
-    prompt: "La mayoría de los supositorios tienen un BUD asignado de:",
+    prompt: "Most suppositories have an assigned BUD of:",
     type: "multiple-choice",
     options: [
-      { letter: "A", text: "30 días" },
-      { letter: "B", text: "60 días" },
-      { letter: "C", text: "90 días" },
-      { letter: "D", text: "180 días" },
-      { letter: "E", text: "ninguna de las anteriores es correcta" },
+      { letter: "A", text: "30 days" },
+      { letter: "B", text: "60 days" },
+      { letter: "C", text: "90 days" },
+      { letter: "D", text: "180 days" },
+      { letter: "E", text: "none of the above is correct" },
     ],
     correctAnswer: "C",
     explanation:
-      "USP <795> (2023) asigna a las preparaciones no acuosas no sólidas — como los supositorios — un BUD de hasta 90 días, salvo que la fecha de expiración de un ingrediente sea anterior. El BUD asignado mantiene la calidad del medicamento y la seguridad del paciente.",
+      "USP <795> defaults non-aqueous liquid/semisolid formulations without supporting stability data to a 90-day BUD; the 180-day default is reserved for solid oral dosage forms such as capsules.",
   },
   {
     id: "M2-Q2",
     prompt:
-      "El uso del dióxido de silicio en el compounding de supositorios es que, como agente de suspensión:",
+      "The use of silicon dioxide in compounding suppositories is that, as a suspending agent, it:",
     type: "multiple-choice",
     options: [
       {
         letter: "A",
-        text: "ayuda a la distribución del API a través de toda la masa del supositorio",
+        text: "helps distribute the API throughout the entire suppository mass",
       },
-      { letter: "B", text: "aumenta la solubilidad del API" },
-      { letter: "C", text: "ajusta el pH de la preparación" },
-      { letter: "D", text: "mejora el metabolismo del API" },
-      { letter: "E", text: "ninguna de las anteriores es correcta" },
+      { letter: "B", text: "increases the solubility of the API" },
+      { letter: "C", text: "adjusts the pH of the preparation" },
+      { letter: "D", text: "improves the metabolism of the API" },
+      { letter: "E", text: "none of the above is correct" },
     ],
     correctAnswer: "A",
     explanation:
-      "El dióxido de silicio funciona como agente de suspensión: mantiene el API distribuido uniformemente en toda la masa del supositorio, promoviendo contenido uniforme y dosis consistentes. No aumenta la solubilidad, ni ajusta el pH, ni afecta el metabolismo.",
+      "Silicon dioxide is a suspending agent — it distributes the API evenly through the suppository mass. It does not increase solubility, adjust pH, or affect metabolism.",
   },
   {
     id: "M2-Q3",
-    prompt: "Si tiene una receta para 30 supositorios, se recomienda calcular para:",
+    prompt:
+      "If you have a prescription for 30 suppositories, it is recommended to calculate for:",
     type: "multiple-choice",
     options: [
-      { letter: "A", text: "30 supositorios" },
-      { letter: "B", text: "31 supositorios" },
-      { letter: "C", text: "33 supositorios" },
-      { letter: "D", text: "40 supositorios" },
-      { letter: "E", text: "ninguna de las anteriores es correcta" },
+      { letter: "A", text: "30 suppositories" },
+      { letter: "B", text: "31 suppositories" },
+      { letter: "C", text: "33 suppositories" },
+      { letter: "D", text: "40 suppositories" },
+      { letter: "E", text: "none of the above is correct" },
     ],
     correctAnswer: "C",
     explanation:
-      "Al preparar supositorios se calcula un excedente (overage) de aproximadamente 10% para compensar las pérdidas al verter, moldear y transferir: una receta de 30 supositorios requiere preparar aproximadamente 33. Así se asegura producto suficiente para dispensar.",
+      "The overage rule adds a mandatory +10% to compensate for losses during molding, scraping, and QC: 30 suppositories × 1.10 = 33.",
   },
   {
     id: "M2-Q4",
-    prompt: "Los supositorios se conservan mejor:",
+    prompt: "Suppositories are best stored:",
     type: "multiple-choice",
     options: [
-      { letter: "A", text: "a temperatura ambiente" },
-      { letter: "B", text: "en el refrigerador" },
-      { letter: "C", text: "en el congelador" },
-      { letter: "D", text: "entre 45° y 50°C" },
-      { letter: "E", text: "ninguna de las anteriores es correcta" },
+      { letter: "A", text: "at room temperature" },
+      { letter: "B", text: "in the refrigerator" },
+      { letter: "C", text: "in the freezer" },
+      { letter: "D", text: "between 45° and 50°C" },
+      { letter: "E", text: "none of the above is correct" },
     ],
     correctAnswer: "B",
     explanation:
-      "Los supositorios se conservan mejor refrigerados para preservar su forma, consistencia y estabilidad, especialmente con bases que se ablandan o funden a temperatura ambiente. La refrigeración previene la deformación; el calor excesivo compromete la preparación.",
+      "Cocoa butter — the most common suppository base — melts at 34–36°C and must be refrigerated (2–8°C); refrigeration is the safe default, even though firm PEG/Witepsol bases can be room-temperature stable.",
   },
   {
     id: "M2-Q5",
-    prompt: "Los supositorios de progesterona se usan durante el embarazo para:",
+    prompt: "Progesterone suppositories are used during pregnancy to:",
     type: "multiple-choice",
     options: [
       {
         letter: "A",
-        text: "prevenir el aborto espontáneo en embarazadas de alto riesgo",
+        text: "prevent spontaneous abortion in high-risk pregnancies",
       },
-      { letter: "B", text: "reducir el riesgo de parto prematuro" },
-      { letter: "C", text: "soporte tras tratamientos de fertilidad" },
-      { letter: "D", text: "soporte de fase lútea" },
-      { letter: "E", text: "todas las anteriores son correctas" },
+      { letter: "B", text: "reduce the risk of preterm birth" },
+      { letter: "C", text: "provide support after fertility treatments" },
+      { letter: "D", text: "provide luteal phase support" },
+      { letter: "E", text: "all of the above are correct" },
     ],
     correctAnswer: "E",
     explanation:
-      "Los supositorios de progesterona se usan para prevenir el aborto espontáneo en embarazos de alto riesgo, reducir el riesgo de parto prematuro, dar soporte de fase lútea y soporte tras tratamientos de fertilidad. La progesterona mantiene el ambiente uterino durante el embarazo, así que todas las indicaciones son correctas.",
+      "ACOG and NIH/NICHD recognize compounded vaginal progesterone for all four indications: preventing spontaneous abortion, reducing preterm birth, IVF luteal support, and primary luteal-phase support.",
   },
   {
     id: "M2-Q6",
     prompt:
-      "Condición(es) dermatológica(s) común(es) tratada(s) con preparación de compounding:",
+      "Dermatological condition(s) commonly treated with a compounded preparation:",
     type: "multiple-choice",
     options: [
-      { letter: "A", text: "acné" },
+      { letter: "A", text: "acne" },
       { letter: "B", text: "psoriasis" },
       { letter: "C", text: "melasma" },
-      { letter: "D", text: "pérdida de cabello" },
-      { letter: "E", text: "todas las anteriores son correctas" },
+      { letter: "D", text: "hair loss" },
+      { letter: "E", text: "all of the above are correct" },
     ],
     correctAnswer: "E",
     explanation:
-      "Las preparaciones dermatológicas compounded se usan comúnmente para acné, psoriasis, melasma y pérdida de cabello cuando se necesita terapia individualizada: el compounding permite concentraciones, combinaciones y formas de dosificación no disponibles comercialmente.",
+      "Acne, psoriasis, melasma, and hair loss are all routinely treated with individualized compounded topical preparations.",
   },
   {
     id: "M2-Q7",
-    prompt: "El mill es un equipo utilizado para:",
+    prompt: "The mill is equipment used to:",
     type: "multiple-choice",
     options: [
-      { letter: "A", text: "reducir el tamaño de partícula de los ingredientes" },
-      { letter: "B", text: "mezclar de forma muy homogénea todos los ingredientes" },
-      { letter: "C", text: "distribuir el API en el diluente" },
-      { letter: "D", text: "todas las anteriores son correctas" },
-      { letter: "E", text: "ninguna de las anteriores es correcta" },
+      { letter: "A", text: "reduce the particle size of the ingredients" },
+      { letter: "B", text: "mix all the ingredients very homogeneously" },
+      { letter: "C", text: "distribute the API in the diluent" },
+      { letter: "D", text: "all of the above are correct" },
+      { letter: "E", text: "none of the above is correct" },
     ],
     correctAnswer: "D",
     explanation:
-      "El mill farmacéutico reduce el tamaño de partícula, mejora la mezcla y ayuda a distribuir el API uniformemente en el diluente o base. La reducción del tamaño de partícula mejora la homogeneidad y consistencia de la preparación; todas las funciones listadas son correctas.",
+      "A 3-roller ointment mill reduces API particle size, and in doing so also produces a smoother, more homogeneous cream with the API evenly distributed through the vehicle.",
   },
   {
     id: "M2-Q8",
-    prompt: "El acrónimo EMP significa:",
+    prompt: "The acronym EMP stands for:",
     type: "multiple-choice",
     options: [
-      { letter: "A", text: "equilibrar la masa y la presión" },
-      { letter: "B", text: "mortero y pistilo electrónicos" },
-      { letter: "C", text: "proceso de manufactura electrónica" },
-      { letter: "D", text: "la combinación de estradiol y progesterona micronizada" },
-      { letter: "E", text: "ninguna de las anteriores es correcta" },
+      { letter: "A", text: "equilibrate the mass and the pressure" },
+      { letter: "B", text: "electronic mortar and pestle" },
+      { letter: "C", text: "electronic manufacturing process" },
+      {
+        letter: "D",
+        text: "the combination of estradiol and micronized progesterone",
+      },
+      { letter: "E", text: "none of the above is correct" },
     ],
     correctAnswer: "B",
     explanation:
-      "EMP = Electronic Mortar and Pestle (mortero y pistilo electrónicos), equipo de mezclado del laboratorio de compounding usado para homogeneizar cremas y geles con velocidad y tiempo controlados.",
+      "EMP stands for Electronic Mortar and Pestle — the mechanized device commercially known as the Unguator®.",
   },
   {
     id: "M2-Q9",
-    prompt: "La naltrexona de dosis baja puede ayudar a pacientes con:",
+    prompt: "Low-dose naltrexone can help patients with:",
     type: "multiple-choice",
     options: [
-      { letter: "A", text: "enfermedad de Hailey-Hailey" },
+      { letter: "A", text: "Hailey-Hailey disease" },
       { letter: "B", text: "psoriasis" },
-      { letter: "C", text: "esclerodermia" },
-      { letter: "D", text: "todas las anteriores son correctas" },
-      { letter: "E", text: "ninguna de las anteriores es correcta" },
+      { letter: "C", text: "scleroderma" },
+      { letter: "D", text: "all of the above are correct" },
+      { letter: "E", text: "none of the above is correct" },
     ],
     correctAnswer: "D",
     explanation:
-      "La naltrexona de dosis baja (LDN) se ha explorado en condiciones inflamatorias y autoinmunes como la enfermedad de Hailey-Hailey, la psoriasis y la esclerodermia: puede modular vías inflamatorias y la actividad inmune. Todas las condiciones listadas son aplicaciones terapéuticas potenciales.",
+      "Low-dose naltrexone (1.5–4.5 mg/day) is reported to help Hailey-Hailey disease, refractory psoriasis, and scleroderma, among other immune-modulated conditions.",
   },
   {
     id: "M2-Q10",
-    prompt: "La pérdida de cabello puede tratarse con:",
+    prompt: "Hair loss can be treated with:",
     type: "multiple-choice",
     options: [
       { letter: "A", text: "minoxidil" },
-      { letter: "B", text: "finasterida" },
-      { letter: "C", text: "dutasterida" },
-      { letter: "D", text: "todas las anteriores son correctas" },
-      { letter: "E", text: "ninguna de las anteriores es correcta" },
+      { letter: "B", text: "finasteride" },
+      { letter: "C", text: "dutasteride" },
+      { letter: "D", text: "all of the above are correct" },
+      { letter: "E", text: "none of the above is correct" },
     ],
     correctAnswer: "D",
     explanation:
-      "Minoxidil, finasterida y dutasterida se utilizan todos en el tratamiento de la alopecia (AAD Hair Loss Guidelines · PCCA).",
+      "Minoxidil, finasteride, and dutasteride act through different mechanisms (vasodilation and 5α-reductase inhibition) and are often compounded together for androgenetic alopecia.",
   },
   {
     id: "M2-Q11",
     prompt:
-      "Rx: Hidroquinona 8% · Ácido Salicílico 2% · Vit. C 550 mg × 2 · Betametasona Valerato 15 G · Crema Emoliente 45 G · Mezclar y preparar esta crema · Sig: aplicar según indicado. Usa esta receta para contestar las preguntas 11 a la 15. ¿Para el tratamiento de qué condición se recomienda esta preparación?",
+      "Rx: Hydroquinone 8% · Salicylic Acid 2% · Vit. C 550 mg × 2 · Betamethasone Valerate 15 G · Emollient Cream 45 G · Mix and prepare this cream · Sig: apply as directed. Use this prescription to answer questions 11 through 15. This preparation is recommended for the treatment of which condition?",
     type: "multiple-choice",
     options: [
       { letter: "A", text: "psoriasis" },
-      { letter: "B", text: "acné" },
+      { letter: "B", text: "acne" },
       { letter: "C", text: "melasma" },
-      { letter: "D", text: "rosácea" },
-      { letter: "E", text: "ninguna de las anteriores es correcta" },
+      { letter: "D", text: "rosacea" },
+      { letter: "E", text: "none of the above is correct" },
     ],
     correctAnswer: "C",
     explanation:
-      "Esta crema compounded está indicada principalmente para el melasma y otros trastornos de hiperpigmentación: la hidroquinona es el agente despigmentante de referencia y el ácido salicílico mejora la penetración mediante exfoliación de la piel.",
+      "Hydroquinone (a tyrosinase-inhibiting depigmenting agent) combined with salicylic acid for penetration is the classic compounded formula for melasma.",
   },
   {
     id: "M2-Q12",
-    prompt: "La vitamina C se incluye en esta preparación como:",
+    prompt: "Vitamin C is included in this preparation as:",
     type: "multiple-choice",
     options: [
-      { letter: "A", text: "antioxidante" },
-      { letter: "B", text: "agente despigmentante" },
-      { letter: "C", text: "potenciador de penetración" },
-      { letter: "D", text: "todas las anteriores son correctas" },
-      { letter: "E", text: "ninguna de las anteriores es correcta" },
+      { letter: "A", text: "an antioxidant" },
+      { letter: "B", text: "a depigmenting agent" },
+      { letter: "C", text: "a penetration enhancer" },
+      { letter: "D", text: "all of the above are correct" },
+      { letter: "E", text: "none of the above is correct" },
     ],
     correctAnswer: "A",
     explanation:
-      "La vitamina C actúa principalmente como antioxidante: protege la hidroquinona de la oxidación y mejora la estabilidad de la formulación. También contribuye a aclarar la piel al reducir la producción de melanina y neutralizar radicales libres.",
+      "Vitamin C protects hydroquinone from oxidation, preserving the stability and potency of the formula — not a depigmenting or penetration-enhancing role.",
   },
   {
     id: "M2-Q13",
-    prompt: "Se recomienda aplicar esta preparación:",
+    prompt: "It is recommended to apply this preparation:",
     type: "multiple-choice",
     options: [
-      { letter: "A", text: "todo el día y la noche" },
-      { letter: "B", text: "a la hora de dormir" },
-      { letter: "C", text: "solo durante el día" },
-      { letter: "D", text: "cada 6 horas, día y noche" },
-      { letter: "E", text: "ninguna de las anteriores es correcta" },
+      { letter: "A", text: "all day and night" },
+      { letter: "B", text: "at bedtime" },
+      { letter: "C", text: "during the day only" },
+      { letter: "D", text: "every 6 hours, day and night" },
+      { letter: "E", text: "none of the above is correct" },
     ],
     correctAnswer: "B",
     explanation:
-      "La hidroquinona se recomienda a la hora de dormir porque es susceptible a oxidación y fotodegradación al exponerse a la luz solar.",
+      "Hydroquinone degrades on light exposure (oxidation/photodegradation), so it is applied only at bedtime, paired with strict daytime sun protection.",
   },
   {
     id: "M2-Q14",
     prompt:
-      "La cantidad de hidroquinona requerida para preparar esta formulación es:",
+      "The amount of hydroquinone required to prepare this formulation is:",
     type: "multiple-choice",
     options: [
       { letter: "A", text: "3.61 G" },
       { letter: "B", text: "4.80 G" },
       { letter: "C", text: "5.42 G" },
       { letter: "D", text: "6.00 G" },
-      { letter: "E", text: "ninguna de las anteriores es correcta" },
+      { letter: "E", text: "none of the above is correct" },
     ],
     correctAnswer: "C",
     explanation:
-      "Los 61 G de ingredientes fijos representan el 90% de la fórmula (hidroquinona 8% + ácido salicílico 2% = 10% restante); entonces el 8% de hidroquinona equivale a 5.42 G.",
+      "The fixed-weight ingredients (Vit. C + Betamethasone + Emollient Cream ≈ 61 G) make up the other 90% of the batch (100% − 8% HQ − 2% SA): 61 G ÷ 0.90 = 67.8 G total, then 8% × 67.8 G = 5.42 G of hydroquinone.",
   },
   {
     id: "M2-Q15",
-    prompt: "Se recomienda preparar esta fórmula utilizando:",
+    prompt: "It is recommended to prepare this formula using:",
     type: "multiple-choice",
     options: [
-      { letter: "A", text: "mezclador de alta velocidad" },
-      { letter: "B", text: "balanza analítica" },
+      { letter: "A", text: "a high-speed mixer" },
+      { letter: "B", text: "an analytical balance" },
       { letter: "C", text: "mill" },
-      { letter: "D", text: "un buen potenciador de penetración" },
-      { letter: "E", text: "ninguna de las anteriores es correcta" },
+      { letter: "D", text: "a good penetration enhancer" },
+      { letter: "E", text: "none of the above is correct" },
     ],
     correctAnswer: "C",
     explanation:
-      "La hidroquinona está en forma de cristales; el mill reduce el tamaño de partícula para lograr una crema uniforme y sin gránulos.",
+      "Hydroquinone is supplied as crystals; a mill is needed to reduce the particle size before it can be evenly incorporated into the cream base.",
   },
-] as const;
+];

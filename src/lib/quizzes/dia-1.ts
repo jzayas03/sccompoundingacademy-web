@@ -1,51 +1,52 @@
 import type { Question } from "./types";
 
 /**
- * Día 1 — Fundamentos regulatorios, USP <795>/<800>, Ley de Farmacia PR,
- * DQSA y cápsulas.
+ * Day 1 — Regulatory foundations, USP <795>/<800>, PR Pharmacy Act, DQSA
+ * and capsules.
  *
- * Banco de 15 preguntas sincronizado con la POST-PRUEBA de la presentación
- * oficial v2.3 del Lcdo. Reyes ("Day1_Basic_Compounding_Non_Sterile_2_3_2",
- * agosto 2026). El mismo banco sirve pre-test y post-test. Las
- * explicaciones son las justificaciones del instruccional ACPE oficial
- * ("instruccional día #1 - revisado 2026"), traducidas al español.
+ * 15-question bank synced with the POST-TEST of the official English deck
+ * by Lcdo. Reyes ("Day1_Basic_Compounding_Non_Sterile_EN", August 2026).
+ * Prompts and options are the deck's literal text; explanations are the
+ * rationales from the deck's ANSWER KEY. The same bank serves the
+ * pre-test and the post-test. Answer letters are unchanged from the
+ * Spanish v2.3 bank (verified 15/15 against the EN key).
  */
 export const dia1: readonly Question[] = [
   {
     id: "M1-Q1",
     prompt:
-      "Este capítulo USP describe los estándares mínimos a seguir para la preparación de formulaciones compounded no estériles (humanos y animales):",
+      "This USP chapter describes the minimum standards to follow for the preparation of non-sterile compounded formulations (human and animal):",
     type: "multiple-choice",
     options: [
       { letter: "A", text: "513" },
       { letter: "B", text: "795" },
       { letter: "C", text: "797" },
       { letter: "D", text: "800" },
-      { letter: "E", text: "ninguna de las anteriores es correcta" },
+      { letter: "E", text: "none of the above is correct" },
     ],
     correctAnswer: "B",
     explanation:
-      "USP <795> establece los estándares del compounding farmacéutico no estéril para humanos y animales: guía la formulación, preparación, almacenamiento, BUD, etiquetado y aseguramiento de calidad. Aplica específicamente a preparaciones no estériles.",
+      "USP General Chapter <795> sets the minimum standards for non-sterile compounded preparations (human and veterinary); <797> covers sterile compounding and <800> covers hazardous drugs.",
   },
   {
     id: "M1-Q2",
     prompt:
-      "Este capítulo describe estándares de práctica y calidad para el manejo de medicamentos peligrosos, para promover la seguridad del paciente, la del trabajador y la protección ambiental:",
+      "This chapter describes practice and quality standards for handling hazardous drugs, to promote patient safety, worker safety and environmental protection:",
     type: "multiple-choice",
     options: [
       { letter: "A", text: "513" },
       { letter: "B", text: "795" },
       { letter: "C", text: "797" },
       { letter: "D", text: "800" },
-      { letter: "E", text: "ninguna de las anteriores" },
+      { letter: "E", text: "none of the above" },
     ],
     correctAnswer: "D",
     explanation:
-      "USP <800> establece los estándares para el manejo seguro de medicamentos peligrosos en entornos de salud: protege al paciente, al personal y al ambiente durante recepción, preparación, administración, almacenamiento y disposición, y define los requisitos de PPE y contención.",
+      "USP <800> establishes the practice and quality standards for handling hazardous drugs to protect patients, personnel, and the environment.",
   },
   {
     id: "M1-Q3",
-    prompt: "La lista de medicamentos peligrosos es preparada por:",
+    prompt: "The list of hazardous drugs is prepared by:",
     type: "multiple-choice",
     options: [
       { letter: "A", text: "USP" },
@@ -56,201 +57,201 @@ export const dia1: readonly Question[] = [
     ],
     correctAnswer: "D",
     explanation:
-      "NIOSH (National Institute for Occupational Safety and Health) prepara la lista de medicamentos peligrosos usada en entornos de salud, identificando fármacos con riesgos por toxicidad, efectos reproductivos, carcinogenicidad o toxicidad de órganos. USP <800> usa esa lista para determinar las precauciones de manejo.",
+      "NIOSH publishes and periodically updates the List of Hazardous Drugs in Healthcare Settings (2024 list, CDC/NIOSH Pub 2025-103), which USP <800> incorporates by reference.",
   },
   {
     id: "M1-Q4",
     prompt:
-      "Para el compounding de medicamentos peligrosos estériles y no estériles se requiere como PPE:",
+      "For compounding sterile and non-sterile hazardous drugs, the required PPE is:",
     type: "multiple-choice",
     options: [
-      { letter: "A", text: "batas" },
-      { letter: "B", text: "cubierta de cabeza y cabello" },
-      { letter: "C", text: "cubre-zapatos" },
-      { letter: "D", text: "dos pares de guantes de quimioterapia" },
-      { letter: "E", text: "todas las anteriores son correctas" },
+      { letter: "A", text: "gowns" },
+      { letter: "B", text: "head and hair covers" },
+      { letter: "C", text: "shoe covers" },
+      { letter: "D", text: "two pairs of chemotherapy gloves" },
+      { letter: "E", text: "all of the above are correct" },
     ],
     correctAnswer: "E",
     explanation:
-      "El manejo de medicamentos peligrosos requiere múltiples formas de PPE: batas, cubierta de cabeza y cabello, cubre-zapatos y guantes de quimioterapia. Estas medidas en capas reducen la exposición ocupacional y el riesgo de contaminación (USP <800>).",
+      "USP <800> requires full PPE for hazardous-drug compounding — gowns, head/hair covers, shoe covers, and two pairs of ASTM D6978 chemotherapy gloves — for both sterile and non-sterile preparations.",
   },
   {
     id: "M1-Q5",
     prompt:
-      "Según la Ley de Farmacia de Puerto Rico, con respecto al compounding, la ley le permite:",
+      "Under the Puerto Rico Pharmacy Act, with respect to compounding, the law allows you to:",
     type: "multiple-choice",
     options: [
       {
         letter: "A",
-        text: "preparar solo una cantidad limitada de una preparación de compounding para inventario",
+        text: "prepare only a limited quantity of a compounded preparation for inventory",
       },
       {
         letter: "B",
-        text: "no puede preparar un compounding en anticipación a una receta",
+        text: "you may not compound in anticipation of a prescription",
       },
       {
         letter: "C",
-        text: "la cantidad de unidades a preparar depende del BUD de la preparación",
+        text: "the number of units to prepare depends on the BUD of the preparation",
       },
       {
         letter: "D",
-        text: "la cantidad de unidades depende de la frecuencia de recetas por día",
+        text: "the number of units depends on the frequency of prescriptions per day",
       },
-      { letter: "E", text: "ninguna de las anteriores es correcta" },
+      { letter: "E", text: "none of the above is correct" },
     ],
     correctAnswer: "B",
     explanation:
-      "La Ley de Farmacia de PR restringe el compounding anticipado y enfatiza la receta específica por paciente: el compounding atiende necesidades individualizadas y no funciona como manufactura. Esto protege al paciente y mantiene el cumplimiento regulatorio.",
+      "PR Act 247-2004 prohibits compounding a preparation in anticipation of a prescription; every preparation must be tied to an individual Rx and an identified patient.",
   },
   {
     id: "M1-Q6",
     prompt: "DQSA:",
     type: "multiple-choice",
     options: [
-      { letter: "A", text: "se refiere al Drug Quality Security Act" },
+      { letter: "A", text: "refers to the Drug Quality Security Act" },
       {
         letter: "B",
-        text: "fortaleció significativamente la autoridad de la FDA sobre el compounding farmacéutico",
+        text: "significantly strengthened FDA authority over pharmaceutical compounding",
       },
-      { letter: "C", text: "crea una nueva categoría de “Outsourcing Facility”" },
-      { letter: "D", text: "fue aprobada en 2013" },
-      { letter: "E", text: "todas las anteriores son correctas" },
+      { letter: "C", text: "creates a new “Outsourcing Facility” category" },
+      { letter: "D", text: "was enacted in 2013" },
+      { letter: "E", text: "all of the above are correct" },
     ],
     correctAnswer: "E",
     explanation:
-      "El DQSA fortaleció la supervisión de la FDA sobre el compounding, creó la categoría de Outsourcing Facility (503B) y fue aprobado en 2013; también aclaró los estándares de las farmacias tradicionales 503A. Todas las aseveraciones son correctas.",
+      "DQSA (Drug Quality and Security Act, enacted Nov. 2013) strengthened FDA authority over compounding and created the new 503B outsourcing-facility category — B, C, and D are all correct.",
   },
   {
     id: "M1-Q7",
-    prompt: "Para la formulación de cápsulas debemos conocer:",
+    prompt: "For capsule formulation we must know:",
     type: "multiple-choice",
     options: [
-      { letter: "A", text: "la densidad del API" },
-      { letter: "B", text: "la densidad de todos los ingredientes de la cápsula" },
+      { letter: "A", text: "the density of the API" },
+      { letter: "B", text: "the density of all the ingredients in the capsule" },
       {
         letter: "C",
-        text: "el packing statistic de todos los ingredientes de la cápsula",
+        text: "the packing statistic of all the ingredients in the capsule",
       },
-      { letter: "D", text: "los ingredientes peligrosos de la cápsula" },
-      { letter: "E", text: "ninguna de las anteriores es correcta" },
+      { letter: "D", text: "the hazardous ingredients in the capsule" },
+      { letter: "E", text: "none of the above is correct" },
     ],
     correctAnswer: "C",
     explanation:
-      "El packing statistic determina cuánto volumen ocupa cada ingrediente dentro de la cápsula, lo que permite calcular con exactitud el volumen de llenado y asegurar consistencia en la formulación, evitando déficit o desborde durante la preparación.",
+      "Formulating a capsule requires the packing statistic of every ingredient, since that determines how much of each fills the capsule shell — not density or hazard classification.",
   },
   {
     id: "M1-Q8",
-    prompt: "El BUD asignado a las cápsulas usualmente es:",
+    prompt: "The BUD assigned to capsules is usually:",
     type: "multiple-choice",
     options: [
-      { letter: "A", text: "30 días" },
-      { letter: "B", text: "90 días" },
+      { letter: "A", text: "30 days" },
+      { letter: "B", text: "90 days" },
       {
         letter: "C",
-        text: "180 días o la fecha de expiración de cualquier ingrediente si es menor de 180 días (la menor de ambas)",
+        text: "180 days or the expiration date of any ingredient if it is less than 180 days (whichever is shorter)",
       },
-      { letter: "D", text: "180 días" },
-      { letter: "E", text: "ninguna de las anteriores es correcta" },
+      { letter: "D", text: "180 days" },
+      { letter: "E", text: "none of the above is correct" },
     ],
     correctAnswer: "C",
     explanation:
-      "Las cápsulas preparadas con ingredientes no acuosos usualmente reciben un BUD de hasta 180 días, salvo que algún ingrediente expire antes: la fecha de expiración más temprana limita el BUD asignado. Esto mantiene la calidad y seguridad del producto.",
+      "USP <795> assigns capsules a default BUD of 180 days, but that default is capped by the expiration date of any component ingredient if it falls sooner than 180 days.",
   },
   {
     id: "M1-Q9",
-    prompt: "El packing statistic de un ingrediente:",
+    prompt: "The packing statistic of an ingredient:",
     type: "multiple-choice",
     options: [
-      { letter: "A", text: "puede ser provisto por el distribuidor" },
-      { letter: "B", text: "puede calcularse en el laboratorio" },
-      { letter: "C", text: "es parte de la monografía del ingrediente" },
-      { letter: "D", text: "es provisto por la USP" },
-      { letter: "E", text: "A y B son correctas" },
+      { letter: "A", text: "may be provided by the distributor" },
+      { letter: "B", text: "may be calculated in the laboratory" },
+      { letter: "C", text: "is part of the ingredient's monograph" },
+      { letter: "D", text: "is provided by USP" },
+      { letter: "E", text: "A and B are correct" },
     ],
     correctAnswer: "E",
     explanation:
-      "El packing statistic puede ser provisto por el suplidor/distribuidor o determinarse experimentalmente en el laboratorio. Estos valores alimentan los cálculos de formulación y estimación de volumen; valores exactos mejoran la consistencia de dosis y la uniformidad de las cápsulas.",
+      "The pack stat is either supplied by the API distributor (CoA/technical data sheet, A) or determined experimentally in the lab by hand-packing (B) — it is not published in a USP monograph.",
   },
   {
     id: "M1-Q10",
     prompt:
-      "Si el pack stat de la progesterona es 270 mg para cápsula tamaño 1, ¿qué porcentaje del volumen de la cápsula ocuparán 100 mg de progesterona?",
+      "If the pack stat of progesterone is 270 mg for a size 1 capsule, what percentage of the capsule volume will 100 mg of progesterone occupy?",
     type: "multiple-choice",
     options: [
       { letter: "A", text: "3.7%" },
       { letter: "B", text: "37%" },
       { letter: "C", text: "370%" },
       { letter: "D", text: "63%" },
-      { letter: "E", text: "ninguna de las anteriores es correcta" },
+      { letter: "E", text: "none of the above is correct" },
     ],
     correctAnswer: "B",
     explanation:
-      "El porcentaje ocupado se calcula dividiendo la cantidad recetada entre el packing statistic: 100 mg ÷ 270 mg = 0.37 → 37% del volumen de la cápsula. Este cálculo es necesario para estimar cuánto relleno (filler) falta por añadir.",
+      "% volume = (API weight ÷ pack stat) × 100 = (100 mg ÷ 270 mg) × 100 = 37%.",
   },
   {
     id: "M1-Q11",
     prompt:
-      "Si el pack stat de la progesterona es 270 mg para cápsula tamaño 1 y el volumen de la cápsula tamaño 0 es 1.95 veces el volumen del tamaño 1, ¿cuál será el pack stat de la cápsula tamaño 0?",
+      "If the pack stat of progesterone is 270 mg for a size 1 capsule and the volume of a size 0 capsule is 1.95 times the volume of size 1, what will the pack stat of the size 0 capsule be?",
     type: "multiple-choice",
     options: [
       { letter: "A", text: "271.95 mg" },
       { letter: "B", text: "268.05 mg" },
       { letter: "C", text: "526.5 mg" },
       { letter: "D", text: "138.46 mg" },
-      { letter: "E", text: "ninguna de las anteriores es correcta" },
+      { letter: "E", text: "none of the above is correct" },
     ],
     correctAnswer: "C",
     explanation:
-      "El nuevo packing statistic se calcula multiplicando el valor original por el cambio de volumen: 270 mg × 1.95 = 526.5 mg. La cápsula tamaño 0 tiene mayor capacidad y admite más material; este cálculo guía la selección del tamaño de cápsula correcto.",
+      "Pack stat scales proportionally with capsule volume: 270 mg × 1.95 (the #0-to-#1 volume ratio) = 526.5 mg.",
   },
   {
     id: "M1-Q12",
-    prompt: "Methocel es equivalente a Hypromellose.",
+    prompt: "Methocel is equivalent to Hypromellose.",
     type: "true-false",
     options: [
-      { letter: "TRUE", text: "Verdadero" },
-      { letter: "FALSE", text: "Falso" },
+      { letter: "TRUE", text: "True" },
+      { letter: "FALSE", text: "False" },
     ],
     correctAnswer: "TRUE",
     explanation:
-      "Methocel es un nombre comercial de la hipromelosa (hidroxipropil metilcelulosa, HPMC), polímero de uso común en formas de dosificación farmacéuticas, incluyendo formulaciones de liberación modificada. Por eso la aseveración es verdadera.",
+      "Methocel® is the trade name for hypromellose (HPMC) — the two terms refer to the same polymer.",
   },
   {
     id: "M1-Q13",
-    prompt: "Methocel es el ingrediente responsable de las cápsulas de liberación lenta.",
+    prompt: "Methocel is the ingredient responsible for slow-release capsules.",
     type: "true-false",
     options: [
-      { letter: "TRUE", text: "Verdadero" },
-      { letter: "FALSE", text: "Falso" },
+      { letter: "TRUE", text: "True" },
+      { letter: "FALSE", text: "False" },
     ],
     correctAnswer: "TRUE",
     explanation:
-      "Methocel (hipromelosa/HPMC) se usa como polímero controlador de liberación en formulaciones de liberación sostenida: al exponerse a fluidos forma una barrera de gel que enlentece la liberación del fármaco. Por esa propiedad se usa ampliamente en cápsulas de liberación lenta.",
+      "Methocel (HPMC) hydrates into a gel matrix that controls and slows drug release, making it the key excipient responsible for the SR effect.",
   },
   {
     id: "M1-Q14",
     prompt:
-      "Las farmacias de compounding no tienen permitido elaborar productos comercialmente disponibles. Si un producto comercialmente disponible está en escasez, la farmacia de compounding puede duplicar el producto hasta que termine la escasez.",
+      "Compounding pharmacies are not allowed to make commercially available products. If a commercially available product is in shortage, the compounding pharmacy may duplicate the product until the shortage ends.",
     type: "true-false",
     options: [
-      { letter: "TRUE", text: "Verdadero" },
-      { letter: "FALSE", text: "Falso" },
+      { letter: "TRUE", text: "True" },
+      { letter: "FALSE", text: "False" },
     ],
     correctAnswer: "TRUE",
     explanation:
-      "Las farmacias de compounding generalmente no pueden duplicar medicamentos comercialmente disponibles; sin embargo, si el medicamento está oficialmente en escasez, el compounding se permite para atender la necesidad del paciente hasta que retorne la disponibilidad. Esto protege el acceso a la terapia.",
+      "Compounding a copy of an FDA-approved product is normally prohibited, but the FDA Drug Shortage List creates a documented exception that allows it for as long as the shortage lasts.",
   },
   {
     id: "M1-Q15",
     prompt:
-      "Las farmacias de compounding se clasifican en 503A y 503B: 503A compone productos estériles; 503B compone productos no estériles.",
+      "Compounding pharmacies are classified as 503A and 503B: 503A compounds sterile products; 503B compounds non-sterile products.",
     type: "true-false",
     options: [
-      { letter: "TRUE", text: "Verdadero" },
-      { letter: "FALSE", text: "Falso" },
+      { letter: "TRUE", text: "True" },
+      { letter: "FALSE", text: "False" },
     ],
     correctAnswer: "FALSE",
     explanation:
-      "La distinción 503A/503B no se basa en estéril vs. no estéril: las farmacias 503A hacen compounding tradicional específico por paciente, mientras que las 503B (outsourcing facilities) pueden componer a granel bajo supervisión de la FDA. Por eso la aseveración es falsa.",
+      "This is a common myth — 503A vs. 503B is not a sterile-vs.-non-sterile split. Both can compound either type; the real difference is the regulatory model (individual Rx + state Board of Pharmacy vs. anticipatory batches + FDA cGMP).",
   },
-] as const;
+];
