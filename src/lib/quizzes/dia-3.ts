@@ -1,263 +1,263 @@
 import type { Question } from "./types";
 
 /**
- * Día 3 — Pediátrico, veterinario y BHRT.
+ * Day 3 — Pediatric, veterinary and BHRT.
  *
- * Banco de 15 preguntas sincronizado con la POST-PRUEBA de la presentación
- * oficial v2.3 del Lcdo. Reyes ("Day3_Basic_Compounding_Non_Sterile_2_3",
- * agosto 2026 — reemplaza el docx original).
+ * 15-question bank synced with the POST-TEST of the official English deck
+ * by Lcdo. Reyes ("Day3_Basic_Compounding_Non_Sterile_EN", August 2026).
+ * Prompts and options are the deck's literal text (each slide restates
+ * its "Patient: Rx: …" header, and so does each prompt here, since the
+ * portal shows one question at a time); explanations are the rationales
+ * from the deck's ANSWER KEY. The same bank serves the pre-test and the
+ * post-test. Answer letters are unchanged from the Spanish v2.3 bank
+ * (verified 15/15 against the EN key).
  *
- * Estructura del banco:
- *   - Q1-Q3  : Rx Bi-est 80/20 2.5 mg/G + Testosterona 3.0 mg/G,
- *              Disp. 35 G, Sig 0.5 G detrás de las rodillas QD, Refill 5.
- *   - Q4-Q8  : Rx Testosterona 1 mg/0.1 G, Disp. en microclick, Sig 1 mg QD.
- *   - Q9-Q13 : Rx Enalapril 1 mg/mL O.S., Sig II mg PO QD.
- *   - Q14-Q15: Rx Gabapentin 100 mg/mL (paciente veterinario).
- *
- * Cada `prompt` re-inline-a el escenario correspondiente para que la UI
- * siga sin necesitar un modelo de contexto compartido entre preguntas.
- * Las explicaciones son las justificaciones del instruccional ACPE oficial
- * ("Instruccional Día #3 - revisado 07132026"), traducidas al español.
- * En Q10 prevalece la clave de la presentación v2.3 (E), que resuelve la
- * ambigüedad del "Sig: II mg" que el instruccional dejaba abierta.
+ * Bank structure:
+ *   - Q1-Q3  : Rx Bi-est 80/20 2.5 mg/G + Testosterone 3.0 mg/G,
+ *              Disp. 35 G, Sig 0.5 G behind the knees QD, Refill 5.
+ *   - Q4-Q8  : Rx Testosterone 1 mg/0.1 G, Disp. in a microclick, Sig 1 mg QD.
+ *   - Q9-Q13 : Rx Enalapril 1 mg/mL O.S., Sig II mg PO QD, 30 days.
+ *   - Q14-Q15: Rx Gabapentin 100 mg/mL (veterinary patient).
  */
 export const dia3: readonly Question[] = [
   {
     id: "M3-Q1",
     prompt:
-      "Paciente: Rx: Bi-est 80/20, 2.5 mg/G · Testosterona 3.0 mg/G · Disp. 35 G · Sig: aplicar 0.5 G detrás de las rodillas QD · Refill 5. Usa esta receta para contestar las preguntas 1 a la 3. La cantidad de estriol requerida para esta formulación es:",
+      "Patient: Rx: Bi-est 80/20, 2.5 mg/G · Testosterone 3.0 mg/G · Disp. 35 G · Sig: apply 0.5 G behind the knees QD · Refill 5. Use this prescription to answer questions 1 through 3. The amount of estriol required for this formulation is:",
     type: "multiple-choice",
     options: [
       { letter: "A", text: "2.8 G" },
       { letter: "B", text: "700 mg" },
       { letter: "C", text: "70 mg" },
       { letter: "D", text: "17.5 mg" },
-      { letter: "E", text: "ninguna de las anteriores es correcta" },
+      { letter: "E", text: "none of the above is correct" },
     ],
     correctAnswer: "C",
     explanation:
-      "La receta indica Bi-est 80/20 a 2.5 mg/G y se dispensan 35 G: 2.5 mg × 35 G = 87.5 mg totales de Bi-est. Como el estriol representa el 80% de la formulación, 80% de 87.5 mg = 70 mg de estriol.",
+      "Total estrogen = 2.5 mg/G × 35 G = 87.5 mg; at the 80:20 Bi-est ratio, estriol (E3) = 87.5 mg × 0.80 = 70 mg.",
   },
   {
     id: "M3-Q2",
     prompt:
-      "Paciente: Rx: Bi-est 80/20, 2.5 mg/G · Testosterona 3.0 mg/G · Disp. 35 G. La cantidad de testosterona requerida para preparar esta formulación es:",
+      "Patient: Rx: Bi-est 80/20, 2.5 mg/G · Testosterone 3.0 mg/G · Disp. 35 G · Sig: apply 0.5 G behind the knees QD · Refill 5. The amount of testosterone required to prepare this formulation is:",
     type: "multiple-choice",
     options: [
       { letter: "A", text: "35 mg" },
       { letter: "B", text: "70 mg" },
       { letter: "C", text: "17.5 mg" },
       { letter: "D", text: "90 mg" },
-      { letter: "E", text: "ninguna de las anteriores es correcta" },
+      { letter: "E", text: "none of the above is correct" },
     ],
     correctAnswer: "E",
     explanation:
-      "La receta contiene testosterona 3 mg/G en una cantidad total de 35 G: 3 mg × 35 G = 105 mg. Como 105 mg no aparece entre las opciones, la respuesta correcta es “ninguna de las anteriores”.",
+      "Testosterone = 3.0 mg/G × 35 G = 105 mg, which is not among the listed options (A–D) — so the correct choice is E.",
   },
   {
     id: "M3-Q3",
     prompt:
-      "Paciente: Rx dispensada en Topi-CLICK · Sig: aplicar 0.5 G QD. Si este producto se dispensa en un Topi-CLICK, ¿cuántos clicks diarios debe aplicar el paciente?",
+      "Patient: Rx: Bi-est 80/20, 2.5 mg/G · Testosterone 3.0 mg/G · Disp. 35 G · Sig: apply 0.5 G behind the knees QD · Refill 5. If this product is dispensed in a Topi-CLICK, how many clicks per day should the patient apply?",
     type: "multiple-choice",
     options: [
       { letter: "A", text: "0.5 click" },
       { letter: "B", text: "1 click" },
       { letter: "C", text: "2 click" },
       { letter: "D", text: "5 click" },
-      { letter: "E", text: "ninguna de las anteriores es correcta" },
+      { letter: "E", text: "none of the above is correct" },
     ],
     correctAnswer: "C",
     explanation:
-      "La Sig indica aplicar 0.5 G diarios y el Topi-CLICK comúnmente dispensa 0.25 G por click: 0.5 G ÷ 0.25 G/click = 2 clicks diarios. Esto asegura una dosificación exacta y reproducible.",
+      "The Sig calls for 0.5 G/day; each Topi-CLICK click delivers 0.25 G, so 0.5 ÷ 0.25 = 2 clicks per day.",
   },
   {
     id: "M3-Q4",
     prompt:
-      "Paciente: Rx: Testosterona 1 mg/0.1 G · Disp. en microclick · Sig: 1 mg QD. Usa esta receta para contestar las preguntas 4 a la 8. ¿Cuál es la capacidad en G del microclick?",
+      "Patient: Rx: Testosterone 1 mg/0.1 G · Disp. in a microclick · Sig: 1 mg QD. Use this prescription to answer questions 4 through 8. What is the capacity of the microclick in G?",
     type: "multiple-choice",
     options: [
-      { letter: "A", text: "9 G" },
+      { letter: "A", text: "9G" },
       { letter: "B", text: "9.5 G" },
       { letter: "C", text: "30 G" },
       { letter: "D", text: "35 G" },
-      { letter: "E", text: "ninguna de las anteriores es correcta" },
+      { letter: "E", text: "none of the above is correct" },
     ],
     correctAnswer: "B",
     explanation:
-      "El dispensador Microclick tiene una capacidad estándar de aproximadamente 9.5 G. Conocer la capacidad del dispositivo asegura suficiente volumen de medicamento para la dispensación y la entrega exacta de la dosis; es común en cremas hormonales.",
+      "The standard Microclick® device has a 9.5 G capacity — much smaller than the 30/60/90/120 mL Topi-CLICK sizes, for very low-dose formulations.",
   },
   {
     id: "M3-Q5",
     prompt:
-      "Paciente: Microclick — un click. Al hacer un microclick, ¿cuánta cantidad de la preparación se dispensa?",
+      "Patient: Rx: Testosterone 1 mg/0.1 G · Disp. in a microclick · Sig: 1 mg QD. When you make one microclick, how much of the preparation is dispensed?",
     type: "multiple-choice",
     options: [
       { letter: "A", text: "0.025 cc" },
       { letter: "B", text: "0.5 cc" },
       { letter: "C", text: "0.05 cc" },
       { letter: "D", text: "0.1 cc" },
-      { letter: "E", text: "ninguna de las anteriores es correcta" },
+      { letter: "E", text: "none of the above is correct" },
     ],
     correctAnswer: "C",
     explanation:
-      "Cada microclick dispensa una cantidad pequeña y estandarizada de producto, típicamente 0.05 cc (mL). Los dispositivos de dosis estandarizada mejoran la adherencia del paciente y la consistencia de la dosis.",
+      "Each Microclick delivers 0.05 mL (≈ 0.05 g) per click — one-fifth the volume of a standard Topi-CLICK click (0.25 mL).",
   },
   {
     id: "M3-Q6",
     prompt:
-      "Paciente: Rx: Testosterona 1 mg/0.1 G · Disp. en microclick. ¿Cuánta testosterona es necesaria para preparar esta formulación si decide hacer un excedente de 12 G?",
+      "Patient: Rx: Testosterone 1 mg/0.1 G · Disp. in a microclick · Sig: 1 mg QD. How much testosterone is needed to prepare this formulation if you decide to make an excess of 12 G?",
     type: "multiple-choice",
     options: [
       { letter: "A", text: "1.2 mg" },
       { letter: "B", text: "12 mg" },
       { letter: "C", text: "120 mg" },
       { letter: "D", text: "10 mg" },
-      { letter: "E", text: "ninguna de las anteriores es correcta" },
+      { letter: "E", text: "none of the above is correct" },
     ],
     correctAnswer: "C",
     explanation:
-      "La concentración de la formulación es 1 mg por 0.1 G, es decir 10 mg/G. Para 12 G: 10 mg/G × 12 G = 120 mg de testosterona. Así se mantiene la concentración correcta en toda la preparación.",
+      "Concentration = 1 mg ÷ 0.1 G = 10 mg/G; for a 12 G batch, 10 mg/G × 12 G = 120 mg of testosterone.",
   },
   {
     id: "M3-Q7",
     prompt:
-      "Para esta formulación de testosterona transdérmica, ¿cuál será el potenciador de penetración más apropiado?",
+      "Patient: Rx: Testosterone 1 mg/0.1 G · Disp. in a microclick · Sig: 1 mg QD. For this transdermal testosterone formulation, which will be the most appropriate penetration enhancer?",
     type: "multiple-choice",
     options: [
       { letter: "A", text: "ethoxy diglycol" },
       { letter: "B", text: "propylene glycol" },
       { letter: "C", text: "versabase" },
       { letter: "D", text: "glycerin" },
-      { letter: "E", text: "ninguna de las anteriores es correcta" },
+      { letter: "E", text: "none of the above is correct" },
     ],
     correctAnswer: "B",
     explanation:
-      "El propilenglicol se usa comúnmente como potenciador de penetración en formulaciones tópicas compounded para mejorar la absorción dérmica: facilita el paso del fármaco a través de la barrera cutánea y mejora el desempeño de la fórmula.",
+      "Propylene glycol is the most used and best-tolerated penetration enhancer for transdermal BHRT/steroid formulations; DMSO is too irritating, and Versabase/glycerin are vehicles, not enhancers.",
   },
   {
     id: "M3-Q8",
     prompt:
-      "La fórmula para hacer 100 mL requiere 5 mL del potenciador de penetración. Si decide hacer solo 12 G de la fórmula, ¿cuánto potenciador de penetración usará?",
+      "Patient: Rx: Testosterone 1 mg/0.1 G · Disp. in a microclick · Sig: 1 mg QD. The formula to make 100 mL requires 5 mL of the penetration enhancer. If you decide to make only 12 G of the formula, how much penetration enhancer will you use?",
     type: "multiple-choice",
     options: [
       { letter: "A", text: "0.5 mL" },
       { letter: "B", text: "0.6 mL" },
       { letter: "C", text: "5 mL" },
       { letter: "D", text: "6 mL" },
-      { letter: "E", text: "ninguna de las anteriores es correcta" },
+      { letter: "E", text: "none of the above is correct" },
     ],
     correctAnswer: "B",
     explanation:
-      "Se plantea la proporción 5 mL/100 mL = x/12; despejando, x = (5 × 12) ÷ 100 = 0.6 mL. Los cálculos proporcionales correctos mantienen la consistencia de la formulación.",
+      "The formula uses 5 mL of enhancer per 100 mL; scaled to a 12 G batch: (5 mL ÷ 100) × 12 = 0.6 mL.",
   },
   {
     id: "M3-Q9",
     prompt:
-      "Paciente: Rx: Enalapril 1 mg/mL O.S. · Sig: II mg PO QD (2 mg PO una vez al día) · 30 días. Usa esta receta para contestar las preguntas 9 a la 13. ¿Qué cantidad dispensará?",
+      "Patient: Rx: Enalapril 1 mg/mL O.S. · Sig: II mg PO QD (2 mg PO once daily) · 30 days. Use this prescription to answer questions 9 through 13. What quantity will you dispense?",
     type: "multiple-choice",
     options: [
       { letter: "A", text: "30 mL" },
       { letter: "B", text: "60 mL" },
       { letter: "C", text: "90 mL" },
       { letter: "D", text: "180 mL" },
-      { letter: "E", text: "ninguna de las anteriores es correcta" },
+      { letter: "E", text: "none of the above is correct" },
     ],
     correctAnswer: "B",
     explanation:
-      "Enalapril 1 mg/mL con Sig II mg PO QD significa 2 mg diarios, equivalentes a 2 mL diarios. Para un suplido de 30 días, la cantidad total es 2 mL × 30 días = 60 mL.",
+      "2 mg/day ÷ 1 mg/mL = 2 mL/day; 2 mL/day × 30 days = 60 mL to dispense.",
   },
   {
     id: "M3-Q10",
     prompt:
-      "Paciente: Rx: Enalapril 1 mg/mL O.S. · Sig: II mg PO QD. ¿Cuántos mL tendrá que tomar el paciente al día?",
+      "Patient: Rx: Enalapril 1 mg/mL O.S. · Sig: II mg PO QD (2 mg PO once daily) · 30 days. How many mL will the patient have to take per day?",
     type: "multiple-choice",
     options: [
       { letter: "A", text: "0.5 mL" },
       { letter: "B", text: "1 mL" },
       { letter: "C", text: "4 mL" },
       { letter: "D", text: "8 mL" },
-      { letter: "E", text: "ninguna de las anteriores es correcta" },
+      { letter: "E", text: "none of the above is correct" },
     ],
     correctAnswer: "E",
     explanation:
-      "La concentración es 1 mg/mL y la Sig II mg PO QD equivale a 2 mg diarios → 2 mL al día, cantidad que no aparece entre las opciones (clave oficial de la presentación v2.3).",
+      "2 mg ÷ 1 mg/mL = 2 mL/day, which is not among the listed options (A–D) — so the correct choice is E.",
   },
   {
     id: "M3-Q11",
     prompt:
-      "Con respecto al almacenamiento, ¿qué etiqueta colocará en la suspensión de Enalapril?",
+      "Patient: Rx: Enalapril 1 mg/mL O.S. · Sig: II mg PO QD (2 mg PO once daily) · 30 days. Regarding storage, which label will you place on the Enalapril suspension?",
     type: "multiple-choice",
     options: [
-      { letter: "A", text: "mantener congelado" },
-      { letter: "B", text: "mantener a temperatura ambiente" },
-      { letter: "C", text: "mantener en el gabinete de seguridad" },
-      { letter: "D", text: "mantener en el refrigerador" },
-      { letter: "E", text: "ninguna de las anteriores es correcta" },
+      { letter: "A", text: "keep frozen" },
+      { letter: "B", text: "keep at room temperature" },
+      { letter: "C", text: "keep in the safety cabinet" },
+      { letter: "D", text: "keep in the refrigerator" },
+      { letter: "E", text: "none of the above is correct" },
     ],
     correctAnswer: "D",
     explanation:
-      "Las suspensiones orales compounded como la de enalapril frecuentemente requieren refrigeración para preservar la estabilidad y mantener la potencia. El almacenamiento correcto reduce la degradación; la etiqueta de refrigeración mejora la seguridad del medicamento.",
+      "This is an aqueous oral suspension with no preservative noted, so it is labeled to keep refrigerated to protect stability and limit microbial growth.",
   },
   {
     id: "M3-Q12",
-    prompt: "¿Qué otra etiqueta colocará?",
+    prompt:
+      "Patient: Rx: Enalapril 1 mg/mL O.S. · Sig: II mg PO QD (2 mg PO once daily) · 30 days. Which other label will you place?",
     type: "multiple-choice",
     options: [
-      { letter: "A", text: "agitar bien antes de usar" },
-      { letter: "B", text: "tomar 1 hora antes de las comidas" },
-      { letter: "C", text: "tomar 1 hora después de las comidas" },
-      { letter: "D", text: "A y B son correctas" },
-      { letter: "E", text: "ninguna de las anteriores es correcta" },
+      { letter: "A", text: "shake well before use" },
+      { letter: "B", text: "take 1 hour before meals" },
+      { letter: "C", text: "take 1 hour after meals" },
+      { letter: "D", text: "A and B are correct" },
+      { letter: "E", text: "none of the above is correct" },
     ],
     correctAnswer: "D",
     explanation:
-      "Una suspensión compounded debe llevar “agitar bien antes de usar” para asegurar la distribución uniforme del fármaco antes de administrar, y el enalapril suele recomendarse antes de las comidas para favorecer la absorción y la consistencia. Ambas etiquetas son apropiadas.",
+      "Both labels apply: shake well before use (uniform suspension) and take 1 hour before meals (per enalapril administration instructions).",
   },
   {
     id: "M3-Q13",
-    prompt: "¿Qué más proveerá con esta receta?",
+    prompt:
+      "Patient: Rx: Enalapril 1 mg/mL O.S. · Sig: II mg PO QD (2 mg PO once daily) · 30 days. What else will you provide with this prescription?",
     type: "multiple-choice",
     options: [
-      { letter: "A", text: "adaptador press-in" },
-      { letter: "B", text: "botella ámbar de dos onzas" },
-      { letter: "C", text: "jeringa oral de 3 mL" },
-      { letter: "D", text: "todas las anteriores" },
-      { letter: "E", text: "ninguna de las anteriores es correcta" },
+      { letter: "A", text: "press-in adapter" },
+      { letter: "B", text: "two-ounce amber bottle" },
+      { letter: "C", text: "3 mL oral syringe" },
+      { letter: "D", text: "all of the above" },
+      { letter: "E", text: "none of the above is correct" },
     ],
     correctAnswer: "D",
     explanation:
-      "La receta requiere los accesorios de dispensación apropiados: adaptador press-in, botella ámbar y jeringa oral para una dosificación exacta y una administración segura. Estos suministros mejoran la precisión, la estabilidad del medicamento y la adherencia del paciente.",
+      "A complete dispensing includes the press-in adapter, the 2 oz amber bottle (light protection), and a 3 mL oral syringe for accurate dosing.",
   },
   {
     id: "M3-Q14",
     prompt:
-      "Paciente: Rx: Gabapentin 100 mg/mL · Sig: 1.5 mL PO c/8 h. Usa esta receta para contestar las preguntas 14 a la 15. La cantidad a preparar para dispensar esta receta es:",
+      "Patient: Rx: Gabapentin 100 mg/mL · Sig: 1.5 mL PO q8h. Use this prescription to answer questions 14 through 15. The quantity to prepare in order to dispense this prescription is:",
     type: "multiple-choice",
     options: [
       { letter: "A", text: "30 mL" },
       { letter: "B", text: "60 mL" },
       { letter: "C", text: "135 mL" },
       { letter: "D", text: "135 mg" },
-      { letter: "E", text: "ninguna de las anteriores es correcta" },
+      { letter: "E", text: "none of the above is correct" },
     ],
     correctAnswer: "C",
     explanation:
-      "La dosis recetada es 1.5 mL cada 8 horas, es decir 3 dosis al día = 4.5 mL diarios. Para un suplido de 30 días, el volumen total es 4.5 mL × 30 días = 135 mL, que es lo que se debe preparar y dispensar.",
+      "At 1.5 mL q8h (3 doses/day) for the standard 30-day supply used throughout this course: 1.5 mL × 3 × 30 days = 135 mL.",
   },
   {
     id: "M3-Q15",
     prompt:
-      "Paciente: Mismo paciente veterinario — misma receta. La cantidad de gabapentina por dosis que recibirá este paciente es:",
+      "Patient: Rx: Gabapentin 100 mg/mL · Sig: 1.5 mL PO q8h. The amount of gabapentin per dose this patient will receive is:",
     type: "multiple-choice",
     options: [
       { letter: "A", text: "150 mg" },
       { letter: "B", text: "100 mg" },
       { letter: "C", text: "150 mL" },
       { letter: "D", text: "100 mL" },
-      { letter: "E", text: "ninguna de las anteriores es correcta" },
+      { letter: "E", text: "none of the above is correct" },
     ],
     correctAnswer: "A",
     explanation:
-      "La suspensión de gabapentina tiene una concentración de 100 mg/mL y la dosis recetada es 1.5 mL: 1.5 mL × 100 mg/mL = 150 mg de gabapentina por dosis.",
+      "At 100 mg/mL, a 1.5 mL dose contains 1.5 × 100 mg = 150 mg of gabapentin.",
   },
-] as const;
+];
