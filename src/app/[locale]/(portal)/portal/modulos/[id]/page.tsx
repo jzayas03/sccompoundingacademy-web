@@ -164,8 +164,8 @@ export default async function ModulePage({
     redirect(`/${locale}/portal`);
   }
 
-  // Module material lives at private/modulos/{basename}.pdf (Spanish) and,
-  // once the owner produces them, {basename}-en.pdf (English) — OUTSIDE
+  // Module material lives at private/modulos/{basename}.pdf (main deck —
+  // English since 2026-08) and optional {basename}-en.pdf — OUTSIDE
   // /public, served only through the authenticated + payment-gated
   // /api/portal/modulo/[id]/pdf route. The viewer shows a language toggle
   // only when both files are present.
