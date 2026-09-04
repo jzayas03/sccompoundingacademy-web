@@ -2,7 +2,7 @@ import { useLocale, useTranslations, useMessages } from "next-intl";
 import { Link } from "@/i18n/routing";
 import { Container } from "@/components/ui/Container";
 import { Reveal } from "@/components/ui/Reveal";
-import { getCourseById, type Tier } from "@/lib/courses";
+import { getCourseById, isPricingOffered, type Tier } from "@/lib/courses";
 import { AUDIENCE_LABELS, type CohortAudience } from "@/lib/cohorts/audience";
 
 /** One open cohort, trimmed to what the grid footer needs. The server
@@ -64,7 +64,12 @@ export function CursosGrid({ openCohorts }: { openCohorts: CohortBrief[] }) {
   const messages = useMessages() as unknown as {
     cursosGrid: { items: CourseItem[]; includesItems: string[] };
   };
-  const items = messages.cursosGrid.items;
+  // Solo tarjetas ofrecibles: un pricing registrationOnly sin su Stripe
+  // Price env se oculta (isPricingOffered, server-side) — la tarjeta de
+  // subgraduados aparece sola cuando el precio exista en el entorno.
+  const items = messages.cursosGrid.items.filter((card) =>
+    isPricingOffered(card.enrollCourseId ?? card.courseRef ?? card.id, card.enrollTier ?? "profesional"),
+  );
   const includesItems = messages.cursosGrid.includesItems;
 
   function nextCohortLabel(

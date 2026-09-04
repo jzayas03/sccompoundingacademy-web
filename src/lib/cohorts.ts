@@ -3,6 +3,7 @@ import { db } from "@/lib/db";
 import { cohorts, users, type Cohort } from "@/lib/db/schema";
 import type { CohortAudience } from "@/lib/cohorts/audience";
 import { isEnrollable } from "@/lib/cohorts/enrollable";
+import { registrationCountByCohort } from "@/lib/registrations";
 
 /**
  * Cohort data layer.
@@ -97,7 +98,9 @@ export async function deleteCohort(id: string): Promise<void> {
 }
 
 /**
- * Map of cohort id → number of PAID enrollees.
+ * Map of cohort id → number of PAID seats: portal enrollees (`users` with
+ * `paidAt`) PLUS registros livianos (`course_registrations`, spec
+ * 2026-09-04 — toda fila ahí ya es un pago completado).
  *
  * This is the single seat count used everywhere a cohort's fullness is
  * shown or enforced: the public seat meter, the admin availability stat,
@@ -108,6 +111,8 @@ export async function deleteCohort(id: string): Promise<void> {
  * it was removed because that made cohorts show full while real paid
  * enrolment was below capacity. Trade-off: two people could in theory pay
  * for the last seat at the same instant — accepted at this scale.)
+ * Para cohortes de cursos con teoría el término de registros es 0, así que
+ * la suma es inocua fuera del registro liviano.
  */
 export async function enrollmentCountByCohort(): Promise<Map<string, number>> {
   const rows = await db
@@ -118,6 +123,10 @@ export async function enrollmentCountByCohort(): Promise<Map<string, number>> {
   const map = new Map<string, number>();
   for (const r of rows) {
     if (r.cohortId) map.set(r.cohortId, r.n);
+  }
+  const registrations = await registrationCountByCohort();
+  for (const [cohortId, n] of registrations) {
+    map.set(cohortId, (map.get(cohortId) ?? 0) + n);
   }
   return map;
 }

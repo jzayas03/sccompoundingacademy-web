@@ -185,9 +185,10 @@ describe("POST /api/inscripcion — branch registro liviano", () => {
     expect(mocks.stripeCreateFn).not.toHaveBeenCalled();
   });
 
-  it("asientos suman usuarios + registros: cohorte llena → 409 cohort-full", async () => {
-    mocks.enrollmentCountFn.mockResolvedValue(new Map([["cohort-parte2", 6]]));
-    mocks.registrationCountFn.mockResolvedValue(new Map([["cohort-parte2", 4]]));
+  it("cohorte llena (conteo único, ya incluye registros) → 409 cohort-full", async () => {
+    // enrollmentCountByCohort pliega course_registrations (lib/cohorts.ts);
+    // el route consulta UN solo conteo.
+    mocks.enrollmentCountFn.mockResolvedValue(new Map([["cohort-parte2", 10]]));
 
     const res = await POST(makeRequest(PARTE2_PAYLOAD));
     const json = await res.json();
