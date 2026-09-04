@@ -5,6 +5,7 @@ import { z } from "zod";
 import { stripe } from "@/lib/stripe";
 import { getCourseById, getPricingByTier } from "@/lib/courses";
 import { getCohort, enrollmentCountByCohort } from "@/lib/cohorts";
+import { registrationExists, registrationCountByCohort } from "@/lib/registrations";
 import { isEnrollable } from "@/lib/cohorts/enrollable";
 import { audienceMatches, audienceMismatchMessage } from "@/lib/cohorts/audience";
 import { getSiteUrl } from "@/lib/siteUrl";
@@ -300,35 +301,56 @@ export async function POST(req: Request) {
     return NextResponse.json({ pending: true });
   }
 
-  // I1: duplicate-payment pre-check, mirroring the student-tier check above
-  // (~217-228). The profesional tier previously had NO guard here — a
-  // repeat submission (double-click, retried form, or an attacker replaying
-  // a captured request) would open a second Checkout Session for someone
-  // who already paid. `paidAt` is only ever set by the Stripe webhook and
-  // never unset, so a non-null value means checkout already completed.
-  try {
-    const lowercasedEmail = data.email.trim().toLowerCase();
-    const [existingRow] = await db
-      .select({ id: users.id, paidAt: users.paidAt })
-      .from(users)
-      .where(eq(users.email, lowercasedEmail))
-      .limit(1);
-    if (existingRow?.paidAt) {
-      return NextResponse.json(
-        { error: inscripcionApiError("already-enrolled", loc) },
-        { status: 409 },
-      );
-    }
-  } catch (err) {
-    console.error("[inscripcion] profesional duplicate-payment check failed, allowing", err);
-  }
-
+  // Pricing resolution moved ABOVE the duplicate pre-check: the check that
+  // applies depends on whether this pricing is registro liviano
+  // (`registrationOnly`, spec 2026-09-04) or a portal-account enrollment.
   const pricing = getPricingByTier(course, data.tier);
   if (!pricing) {
     return NextResponse.json(
       { error: inscripcionApiError("invalid-tier", loc) },
       { status: 400 },
     );
+  }
+  const registrationOnly = pricing.registrationOnly === true;
+
+  if (registrationOnly) {
+    // Registro liviano: el duplicado se mide contra `course_registrations`
+    // por (cohorte, email) — NUNCA contra `users`, para que un egresado de
+    // Parte 1 (fila en users) pueda registrarse sin choque. El UNIQUE de la
+    // tabla es la garantía final; esto solo evita abrir un checkout inútil.
+    try {
+      if (await registrationExists(cohort.id, data.email)) {
+        return NextResponse.json(
+          { error: inscripcionApiError("already-enrolled", loc) },
+          { status: 409 },
+        );
+      }
+    } catch (err) {
+      console.error("[inscripcion] registration duplicate check failed, allowing", err);
+    }
+  } else {
+    // I1: duplicate-payment pre-check, mirroring the student-tier check above
+    // (~217-228). The profesional tier previously had NO guard here — a
+    // repeat submission (double-click, retried form, or an attacker replaying
+    // a captured request) would open a second Checkout Session for someone
+    // who already paid. `paidAt` is only ever set by the Stripe webhook and
+    // never unset, so a non-null value means checkout already completed.
+    try {
+      const lowercasedEmail = data.email.trim().toLowerCase();
+      const [existingRow] = await db
+        .select({ id: users.id, paidAt: users.paidAt })
+        .from(users)
+        .where(eq(users.email, lowercasedEmail))
+        .limit(1);
+      if (existingRow?.paidAt) {
+        return NextResponse.json(
+          { error: inscripcionApiError("already-enrolled", loc) },
+          { status: 409 },
+        );
+      }
+    } catch (err) {
+      console.error("[inscripcion] profesional duplicate-payment check failed, allowing", err);
+    }
   }
   const stripePriceId = process.env[pricing.stripePriceEnvKey];
   if (!stripePriceId) {
@@ -360,8 +382,12 @@ export async function POST(req: Request) {
   // failure falls through to Stripe rather than hard-blocking a legitimate
   // enrollment.
   try {
+    // Seats taken = paid portal users + registros livianos. Para cohortes de
+    // cursos con teoría el segundo término es 0, así que sumar siempre es
+    // seguro y mantiene UN solo conteo en las dos familias de oferta.
     const paid = (await enrollmentCountByCohort()).get(cohort.id) ?? 0;
-    if (paid >= cohort.capacity) {
+    const registered = (await registrationCountByCohort()).get(cohort.id) ?? 0;
+    if (paid + registered >= cohort.capacity) {
       return NextResponse.json(
         { error: inscripcionApiError("cohort-full", loc) },
         { status: 409 },
@@ -423,6 +449,11 @@ export async function POST(req: Request) {
         acepto_user_agent: userAgent.slice(0, 480),
         acepto_version_docs: data.acepto_version_docs,
         locale: data.locale,
+        // Registro liviano: "1" ordena al webhook escribir en
+        // course_registrations en vez de users. Explícito en metadata (no
+        // re-derivado del catálogo) para que sobreviva a cambios de catálogo
+        // entre el checkout y el webhook.
+        registration_only: registrationOnly ? "1" : "",
       },
       success_url: successUrl,
       cancel_url: cancelUrl,
