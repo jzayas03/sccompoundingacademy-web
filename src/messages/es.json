@@ -704,6 +704,10 @@
       "student": {
         "label": "Estudiante",
         "note": "Solo estudiantes no licenciados (pre-PharmD o en programa de técnico). Requiere email institucional. Si no usas email institucional, escríbenos para verificación manual del Student ID."
+      },
+      "subgraduado": {
+        "label": "Estudiante Subgraduado",
+        "note": "Para estudiantes subgraduados interesados en aprender de compounding. Solo asistencia presencial — sin material de portal, sin pruebas y sin horas de CE."
       }
     },
     "matricula": {

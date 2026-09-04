@@ -94,7 +94,9 @@ function CohortFieldset({ cohort }: { cohort?: Cohort }) {
           defaultValue={cohort?.audience ?? "farmaceutico_tecnico"}
           className={inputCls}
         >
-          {(["farmaceutico_tecnico", "otros_profesionales", "estudiante"] as const).map(
+          {(
+            ["farmaceutico_tecnico", "otros_profesionales", "estudiante", "subgraduado"] as const
+          ).map(
             (a) => (
               <option key={a} value={a}>
                 {AUDIENCE_LABELS[a].es}

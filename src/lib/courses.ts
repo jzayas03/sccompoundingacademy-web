@@ -34,9 +34,9 @@
  * to surface CE credit info on the landing page and certificate.
  */
 
-export type CourseId = "basic-compounding";
+export type CourseId = "basic-compounding" | "parte-2";
 
-export type Tier = "profesional" | "student";
+export type Tier = "profesional" | "student" | "subgraduado";
 
 export type Pricing = {
   tier: Tier;
@@ -45,6 +45,14 @@ export type Pricing = {
   /** Display amount in USD cents — what we show users. Stripe is source
    * of truth at checkout; this is for the UI label only. */
   priceUsdCents: number;
+  /**
+   * Registro liviano (spec 2026-09-04): pagar → confirmación, SIN usuario
+   * de portal. El webhook escribe en `course_registrations` en vez de
+   * `users`; no hay material, pruebas, CE ni certificado. Cuando el env
+   * del price no está definido, el formulario no ofrece esta opción (y el
+   * API responde `price-missing` como defensa en profundidad).
+   */
+  registrationOnly?: true;
 };
 
 export type AcpeAccreditation = {
@@ -65,7 +73,13 @@ export type Course = {
   /** URL slug — used in /cursos/[slug] and ?course=slug query params. */
   slug: string;
   /** Programme depth marker — also displayed as the card eyebrow. */
-  level: "fundamentos";
+  level: "fundamentos" | "avanzado";
+  /**
+   * Título display bilingüe para contextos server-side sin i18n (emails
+   * del webhook). Las tarjetas públicas siguen viviendo en
+   * `messages/{es,en}.json` (`cursosGrid.items`, lookup por id).
+   */
+  displayTitle: { es: string; en: string };
   /** Total instruction hours, for the card footer and confirmation email. */
   hours: number;
   /** Number of presential days (one module per day). */
@@ -90,6 +104,10 @@ export const COURSES: readonly Course[] = [
     id: "basic-compounding",
     slug: "basic-compounding",
     level: "fundamentos",
+    displayTitle: {
+      es: "Compounding No Estéril Básico",
+      en: "Basic Non-Sterile Compounding",
+    },
     hours: 18,
     days: 3,
     hoursPerDay: 6,
@@ -105,6 +123,16 @@ export const COURSES: readonly Course[] = [
         stripePriceEnvKey: "STRIPE_PRICE_ID_STUDENT",
         priceUsdCents: 49_500,
       },
+      // Estudiantes subgraduados (registro liviano): cohortes dedicadas con
+      // audiencia "subgraduado". Precio de negocio aún por definir — mientras
+      // STRIPE_PRICE_ID_BASICO_SUBGRADUADO no exista en el entorno, el
+      // formulario no ofrece este tier. priceUsdCents 0 = "por anunciar".
+      {
+        tier: "subgraduado",
+        stripePriceEnvKey: "STRIPE_PRICE_ID_BASICO_SUBGRADUADO",
+        priceUsdCents: 0,
+        registrationOnly: true,
+      },
     ],
     acpe: {
       provider: "Colegio de Farmacéuticos de Puerto Rico",
@@ -113,6 +141,31 @@ export const COURSES: readonly Course[] = [
       ceus: 1.8,
       classification: "Knowledge-based, Level 1",
     },
+  },
+  // Parte 2 — curso avanzado (registro liviano, spec 2026-09-04): 2 días
+  // presenciales, sin CE (sin bloque `acpe`), sin material de portal ni
+  // certificado. Pagar → confirmación; el webhook escribe en
+  // `course_registrations`, nunca en `users`.
+  {
+    id: "parte-2",
+    slug: "parte-2",
+    level: "avanzado",
+    displayTitle: {
+      es: "Compounding No Estéril Avanzado — Parte 2",
+      en: "Advanced Non-Sterile Compounding — Part 2",
+    },
+    hours: 12,
+    days: 2,
+    hoursPerDay: 6,
+    uspLabel: "USP 〈795〉 + 〈800〉",
+    pricing: [
+      {
+        tier: "profesional",
+        stripePriceEnvKey: "STRIPE_PRICE_ID_PARTE2_PROFESIONAL",
+        priceUsdCents: 174_500,
+        registrationOnly: true,
+      },
+    ],
   },
 ] as const;
 
