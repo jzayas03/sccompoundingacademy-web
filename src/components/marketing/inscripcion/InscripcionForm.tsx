@@ -71,7 +71,7 @@ export function InscripcionForm({
   enabledTiers,
 }: Props) {
   const t = useTranslations("inscripcion");
-  const tCourses = useTranslations("cursosGrid.items");
+  const tCursosGrid = useTranslations("cursosGrid");
 
   const [courseId, setCourseId] = useState<string>(
     preselectedCourseId && COURSES.some((c) => c.id === preselectedCourseId)
@@ -448,10 +448,13 @@ export function InscripcionForm({
             required
           >
             {COURSES.map((c) => {
-              const item = tCourses.raw(`${COURSES.indexOf(c)}.title`) as string;
+              // Lookup por id: el orden de cursosGrid.items (i18n) no coincide
+              // necesariamente con el de COURSES (catálogo).
+              const items = tCursosGrid.raw("items") as { id: string; title: string }[];
+              const title = items.find((it) => it.id === c.id)?.title ?? c.id;
               return (
                 <option key={c.id} value={c.id}>
-                  {item}
+                  {title}
                 </option>
               );
             })}
