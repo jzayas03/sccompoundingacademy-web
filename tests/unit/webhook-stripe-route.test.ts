@@ -73,7 +73,10 @@ vi.mock("@/lib/alerts", () => ({
 }));
 
 vi.mock("@/lib/courses", () => ({
-  getCourseById: vi.fn().mockReturnValue({ id: "basic-compounding" }),
+  getCourseById: vi.fn().mockReturnValue({
+    id: "basic-compounding",
+    displayTitle: { es: "Compounding No Estéril Básico", en: "Basic Non-Sterile Compounding" },
+  }),
   formatPrice: vi.fn().mockReturnValue("$495.00"),
 }));
 
