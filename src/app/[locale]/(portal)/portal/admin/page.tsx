@@ -15,6 +15,8 @@ import {
   type Cohort,
 } from "@/lib/cohorts";
 import { professionLabel } from "@/lib/professions";
+import { listRegistrations, type CourseRegistration } from "@/lib/registrations";
+import { getCourseById, formatPrice } from "@/lib/courses";
 import { Link } from "@/i18n/routing";
 import {
   effectiveAccessExpiresAt,
@@ -190,6 +192,17 @@ export default async function AdminPage({
       return [];
     });
 
+  // Registros livianos (Parte 2 / Estudiantes Subgraduados, spec 2026-09-04):
+  // viven en course_registrations, NO en users — solo lectura, sin acciones.
+  // `.catch` con el mismo patrón que emailEvents: la tabla se migra a mano
+  // en Neon y puede no existir aún en un preview.
+  const registros = await listRegistrations().catch(
+    (error): CourseRegistration[] => {
+      console.error("[admin] course_registrations query failed — hiding rows", error);
+      return [];
+    },
+  );
+
   // Real stat-card figures — no placeholders. "Cupos disponibles" mirrors
   // the public landing: only OPEN cohorts count, and seats taken are PAID
   // enrollees (via enrollmentCountByCohort) so the two never disagree.
@@ -355,6 +368,68 @@ export default async function AdminPage({
                 </tr>
                 );
               })}
+            </tbody>
+          </table>
+        )}
+      </GlassCard>
+
+      {/* Registros livianos — Parte 2 y Estudiantes Subgraduados. Solo
+          lectura: el registro pagado es final; un reembolso se hace manual
+          en el panel de Stripe (+ borrado manual de la fila si aplica). */}
+      <GlassCard className="mt-10 overflow-x-auto p-6 sm:p-8">
+        <div className="flex flex-wrap items-center justify-between gap-3">
+          <h2 className="font-heading text-teal-deep text-lg font-semibold">
+            Registros — Parte 2 y Subgraduados ({registros.length})
+          </h2>
+          {/* Plain <a>: descarga CSV desde una API route (ver roster arriba). */}
+          {/* eslint-disable-next-line @next/next/no-html-link-for-pages */}
+          <a
+            href="/api/admin/export-registros"
+            className="border-teal-deep text-teal-deep hover:bg-teal-deep hover:text-off-white focus-visible:ring-chartreuse font-heading inline-flex h-9 items-center rounded-md border px-3 text-xs font-semibold transition-colors focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-offset-white focus-visible:outline-none"
+          >
+            Exportar CSV ↓
+          </a>
+        </div>
+        <p className="text-gray-700 mt-2 text-sm">
+          Inscripciones de solo asistencia (pagar → confirmación): sin cuenta de
+          portal, sin material y sin certificado. No aparecen en el roster de
+          arriba.
+        </p>
+        {registros.length === 0 ? (
+          <p className="text-gray-700 mt-4 text-sm">Sin registros aún.</p>
+        ) : (
+          <table className="mt-4 w-full border-collapse text-left text-sm tabular-nums">
+            <thead>
+              <tr className="text-teal-deep/80 border-gray-300 border-b text-xs uppercase tracking-wide">
+                <th className="py-2 pr-4 font-semibold">Nombre</th>
+                <th className="py-2 pr-4 font-semibold">Email</th>
+                <th className="py-2 pr-4 font-semibold">Teléfono</th>
+                <th className="py-2 pr-4 font-semibold">Profesión</th>
+                <th className="py-2 pr-4 font-semibold">Tier</th>
+                <th className="py-2 pr-4 font-semibold">Curso</th>
+                <th className="py-2 pr-4 font-semibold">Cohorte</th>
+                <th className="py-2 pr-4 font-semibold">Monto</th>
+                <th className="py-2 font-semibold">Pago</th>
+              </tr>
+            </thead>
+            <tbody>
+              {registros.map((r) => (
+                <tr key={r.id} className="border-gray-300/60 border-b align-top last:border-0">
+                  <td className="py-2 pr-4 text-gray-900">{r.nombre}</td>
+                  <td className="py-2 pr-4 text-gray-700">{r.email}</td>
+                  <td className="py-2 pr-4 text-gray-700">{r.telefono ?? "—"}</td>
+                  <td className="py-2 pr-4 text-gray-700">{professionLabel(r.profesion) || "—"}</td>
+                  <td className="py-2 pr-4 text-gray-700">{r.tier}</td>
+                  <td className="py-2 pr-4 text-gray-700">
+                    {getCourseById(r.courseId)?.displayTitle.es ?? r.courseId}
+                  </td>
+                  <td className="py-2 pr-4 text-gray-700">{cohortLabel(r.cohortId, cohortById)}</td>
+                  <td className="py-2 pr-4 text-gray-700">
+                    {r.amountCents != null ? formatPrice(r.amountCents) : "—"}
+                  </td>
+                  <td className="py-2 text-gray-700">{fmtDate(r.paidAt)}</td>
+                </tr>
+              ))}
             </tbody>
           </table>
         )}
