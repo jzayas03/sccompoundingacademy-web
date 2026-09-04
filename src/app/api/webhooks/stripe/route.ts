@@ -189,7 +189,9 @@ export async function POST(req: Request) {
       undefined;
 
     // Derive the human-facing strings the email uses.
-    const cursoTitulo = course.id; // i18n display happens in form/email at lookup time
+    // Título display bilingüe del catálogo — antes se pasaba `course.id`
+    // crudo y el asunto/cuerpo de los emails decía "basic-compounding".
+    const cursoTitulo = course.displayTitle[locale];
     const cohorteEtiqueta = formatCohortLabel(cohort, locale);
     const cohorteFechaInicio = formatCohortDate(cohort.startDate, locale);
     const cohorteFechaFin = formatCohortDate(cohort.endDate, locale);
