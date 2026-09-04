@@ -9,6 +9,7 @@ import {
   primaryKey,
   text,
   timestamp,
+  unique,
 } from "drizzle-orm/pg-core";
 import type { AdapterAccountType } from "next-auth/adapters";
 
@@ -145,6 +146,7 @@ export const cohortAudienceEnum = pgEnum("cohort_audience", [
   "farmaceutico_tecnico",
   "otros_profesionales",
   "estudiante",
+  "subgraduado",
 ]);
 
 export const cohorts = pgTable("cohorts", {
@@ -291,6 +293,43 @@ export const emailEvents = pgTable("email_events", {
   createdAt: timestamp("created_at", { mode: "date" }).defaultNow().notNull(),
 });
 
+/**
+ * Registro liviano (spec 2026-09-04): inscripciones "pagar → confirmación"
+ * que NO crean usuario del portal — el curso Parte 2 y el tier subgraduado
+ * del básico. Una fila por pago completado, escrita únicamente por el
+ * webhook de Stripe (idempotente por `stripeSessionId`). Sin unique global
+ * de email a propósito: un egresado de Parte 1 (fila en `users`) se registra
+ * aquí sin chocar; el UNIQUE (cohortId, email) solo impide el doble registro
+ * en la misma cohorte. `tier` es texto libre (como `users.professionalType`)
+ * — el enum Postgres `tier` de `users` queda intacto.
+ */
+export const courseRegistrations = pgTable(
+  "course_registrations",
+  {
+    id: text("id")
+      .primaryKey()
+      .$defaultFn(() => crypto.randomUUID()),
+    cohortId: text("cohort_id")
+      .notNull()
+      .references(() => cohorts.id),
+    /** Catalogue course id — denormalizado para reporting/CSV. */
+    courseId: text("course_id").notNull(),
+    /** "profesional" (parte-2) | "subgraduado" (básico) — texto libre. */
+    tier: text("tier").notNull(),
+    nombre: text("nombre").notNull(),
+    email: text("email").notNull(),
+    telefono: text("telefono"),
+    /** tipo_profesional cuando aplica (parte-2); null para subgraduado. */
+    profesion: text("profesion"),
+    /** Lo cobrado según Stripe (`session.amount_total`), en centavos. */
+    amountCents: integer("amount_cents"),
+    stripeSessionId: text("stripe_session_id").notNull().unique(),
+    paidAt: timestamp("paid_at", { mode: "date" }).notNull(),
+    createdAt: timestamp("created_at", { mode: "date" }).defaultNow().notNull(),
+  },
+  (t) => [unique("course_registrations_cohort_email_unique").on(t.cohortId, t.email)],
+);
+
 export type User = typeof users.$inferSelect;
 export type NewUser = typeof users.$inferInsert;
 export type Cohort = typeof cohorts.$inferSelect;
@@ -301,3 +340,5 @@ export type ReviewInvite = typeof reviewInvites.$inferSelect;
 export type NewReviewInvite = typeof reviewInvites.$inferInsert;
 export type CertificateEmail = typeof certificateEmails.$inferSelect;
 export type ProcessedStripeEvent = typeof processedStripeEvents.$inferSelect;
+export type CourseRegistration = typeof courseRegistrations.$inferSelect;
+export type NewCourseRegistration = typeof courseRegistrations.$inferInsert;

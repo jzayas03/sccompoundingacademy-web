@@ -8,12 +8,14 @@ import { isPharmacyRole } from "@/lib/professions";
 export type CohortAudience =
   | "farmaceutico_tecnico"
   | "otros_profesionales"
-  | "estudiante";
+  | "estudiante"
+  | "subgraduado";
 
 export const AUDIENCE_LABELS: Record<CohortAudience, { es: string; en: string }> = {
   farmaceutico_tecnico: { es: "Farmacéuticos y Técnicos", en: "Pharmacists & Technicians" },
   otros_profesionales: { es: "Otros Profesionales", en: "Other Professionals" },
   estudiante: { es: "Estudiantes", en: "Students" },
+  subgraduado: { es: "Estudiantes Subgraduados", en: "Undergraduate Students" },
 };
 
 /** Definitive audience for an enrollee, or null when undetermined (a
@@ -24,6 +26,7 @@ export function enrolleeAudience(
   professionalType: string | null | undefined,
 ): CohortAudience | null {
   if (tier === "student") return "estudiante";
+  if (tier === "subgraduado") return "subgraduado";
   if (tier === "pharmacist") return "farmaceutico_tecnico";
   if (tier === "profesional") {
     if (!professionalType?.trim()) return null;

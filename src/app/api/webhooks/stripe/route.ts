@@ -15,6 +15,8 @@ import { initialVerificationFor } from "@/lib/portal/initial-verification";
 import { notifyMatriculaReview } from "@/lib/portal/notify-matricula-review";
 import { sendOpsAlert } from "@/lib/alerts";
 import { webhookUserStrategy, studentPaidUpdate } from "@/lib/inscripcion/webhook-user";
+import { insertRegistration } from "@/lib/registrations";
+import { buildRegistroEmail } from "@/lib/emails/registro-confirmacion";
 
 export const runtime = "nodejs";
 
@@ -217,6 +219,111 @@ export async function POST(req: Request) {
       typeof session.customer === "string"
         ? session.customer
         : session.customer?.id ?? null;
+
+    // ── Registro liviano (spec 2026-09-04) ──────────────────────────────
+    // Ofertas "pagar → confirmación" sin cuenta de portal (Parte 2, tier
+    // subgraduado): la fila va a `course_registrations`, NUNCA a `users`.
+    // El flag viaja explícito en la metadata del checkout (no se re-deriva
+    // del catálogo) para sobrevivir cambios de catálogo entre el checkout
+    // y este webhook. Un throw del insert sube al catch exterior, que
+    // libera el claim de idempotencia y devuelve 500 → Stripe reintenta.
+    if (md.registration_only === "1") {
+      const { inserted } = await insertRegistration({
+        cohortId: cohort.id,
+        courseId: course.id,
+        tier: md.tier ?? "",
+        nombre: md.nombre ?? "",
+        email,
+        telefono: md.telefono || null,
+        profesion: md.tipo_profesional?.trim() || null,
+        amountCents: amountPaid,
+        stripeSessionId: session.id,
+        paidAt: new Date(),
+      });
+
+      // inserted:false = replay de la misma sesión (otra entrega del mismo
+      // pago con distinto event.id) — la fila ya existe, no reenviar emails.
+      if (inserted) {
+        // Side effects best-effort (mismo patrón post-stamp de abajo): un
+        // fallo aquí se loguea + ops alert, sin liberar el claim, y se
+        // devuelve 200 igual — el registro ya está persistido.
+        try {
+          try {
+            revalidatePath("/", "layout");
+          } catch (err) {
+            console.error("[stripe-webhook] revalidatePath failed", err);
+          }
+
+          const resend = getResend();
+          if (resend && email) {
+            const displayTitle = course.displayTitle[locale];
+            const conf = buildRegistroEmail({
+              nombre: md.nombre ?? "",
+              cursoTitulo: displayTitle,
+              cohorteEtiqueta,
+              cohorteFechaInicio,
+              cohorteFechaFin,
+              montoFormatted,
+              receiptUrl,
+              locale,
+            });
+            try {
+              // Sin welcome packet: el registro liviano no da acceso a
+              // material de curso.
+              await resend.emails.send({
+                from: FROM_ADDRESS,
+                to: email,
+                replyTo: REPLY_TO,
+                subject: conf.subject,
+                html: conf.html,
+                text: conf.text,
+              });
+            } catch (err) {
+              console.error("[stripe-webhook] registro confirmation email failed", err);
+            }
+
+            const internal = buildInternalEmail({
+              nombre: md.nombre ?? "",
+              email,
+              telefono: md.telefono ?? "",
+              licencia: md.licencia || undefined,
+              cursoTitulo: displayTitle,
+              cohorteEtiqueta,
+              montoFormatted,
+              stripeSessionId: session.id,
+              notas: md.notas || undefined,
+              acepto_timestamp: md.acepto_timestamp ?? "",
+              acepto_ip: md.acepto_ip ?? "",
+              locale,
+            });
+            try {
+              await resend.emails.send({
+                from: FROM_ADDRESS,
+                to: INTERNAL_RECIPIENT,
+                replyTo: email || REPLY_TO,
+                subject: internal.subject,
+                html: internal.html,
+                text: internal.text,
+              });
+            } catch (err) {
+              console.error("[stripe-webhook] registro internal email failed", err);
+            }
+          }
+        } catch (err) {
+          console.error("[stripe-webhook] registro side effects failed", err);
+          await sendOpsAlert("Registro pagado pero falló el envío de confirmación", {
+            email,
+            stripe_session_id: session.id,
+            cohorte_id: cohort.id,
+            error: err,
+            accion:
+              "El registro ya está guardado en course_registrations; verificar el envío de emails manualmente.",
+          });
+        }
+      }
+
+      return NextResponse.json({ received: true, registration: true });
+    }
 
     const record: InscripcionRecord = {
       nombre: md.nombre ?? "",

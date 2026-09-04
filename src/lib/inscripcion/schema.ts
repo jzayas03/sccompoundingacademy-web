@@ -19,7 +19,7 @@ export const inscripcionSchema = z
     licencia: z.string().trim().max(60).optional().or(z.literal("")),
     curso_id: z.string().trim().min(1),
     cohorte_id: z.string().trim().min(1),
-    tier: z.enum(["profesional", "student"]),
+    tier: z.enum(["profesional", "student", "subgraduado"]),
     // Public Blob URL of the student's matrícula photo, uploaded before
     // checkout. Required for the student tier (enforced in the handler);
     // empty/absent for profesional.

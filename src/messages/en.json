@@ -698,6 +698,10 @@
       "student": {
         "label": "Student",
         "note": "Only for non-licensed students (pre-PharmD or in a pharmacy technician program). Requires institutional email. If you don't have one, write to us for manual Student ID verification."
+      },
+      "subgraduado": {
+        "label": "Undergraduate Student",
+        "note": "For undergraduate students interested in learning compounding. On-site attendance only — no portal material, no tests and no CE hours."
       }
     },
     "matricula": {

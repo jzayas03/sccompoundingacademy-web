@@ -41,6 +41,13 @@ type Props = {
    * "Last updated" date of the docs at form-render time. Forwarded to the
    * server so the audit trail records *which* version was accepted. */
   docsVersion: string;
+  /**
+   * Tiers ofrecibles por curso, computados server-side según qué Stripe
+   * Price envs existen (registro liviano, spec 2026-09-04): un tier cuyo
+   * env falta no se ofrece (p. ej. subgraduado antes de definir su precio).
+   * Ausente (tests/consumidores legacy) → se ofrecen todos.
+   */
+  enabledTiers?: Record<string, Tier[]>;
 };
 
 /**
@@ -61,6 +68,7 @@ export function InscripcionForm({
   preselectedProf,
   cohorts,
   docsVersion,
+  enabledTiers,
 }: Props) {
   const t = useTranslations("inscripcion");
   const tCourses = useTranslations("cursosGrid.items");
@@ -86,7 +94,9 @@ export function InscripcionForm({
   }
 
   const [tier, setTier] = useState<Tier>(
-    preselectedTier === "profesional" || preselectedTier === "student"
+    preselectedTier === "profesional" ||
+      preselectedTier === "student" ||
+      preselectedTier === "subgraduado"
       ? preselectedTier
       : DEFAULT_TIER,
   );
@@ -116,6 +126,25 @@ export function InscripcionForm({
   const [matriculaFile, setMatriculaFile] = useState<File | null>(null);
 
   const selectedCourse = COURSES.find((c) => c.id === courseId);
+
+  // Pricing ofrecible del curso seleccionado: filtrado por `enabledTiers`
+  // (computado server-side según qué Stripe Price envs existen). Sin la
+  // prop, se ofrecen todos — compat con tests/consumidores legacy.
+  const offeredPricing = (selectedCourse?.pricing ?? []).filter(
+    (p) => !enabledTiers || (enabledTiers[courseId] ?? []).includes(p.tier),
+  );
+
+  // Si el tier activo dejó de ofrecerse (cambio de curso, o un preselected
+  // inválido), cae al primero ofrecible — mismo patrón render-adjust que el
+  // reset de cohortes más abajo.
+  const offeredKey = offeredPricing.map((p) => p.tier).join("|");
+  const [prevOfferedKey, setPrevOfferedKey] = useState<string | null>(null);
+  if (offeredKey !== prevOfferedKey) {
+    setPrevOfferedKey(offeredKey);
+    if (offeredPricing.length > 0 && !offeredPricing.some((p) => p.tier === tier)) {
+      setTier(offeredPricing[0]!.tier);
+    }
+  }
 
   // Profession value sent to the server as `tipo_profesional`. The "Otros
   // Profesionales" track (tipoProfesional === "otro") does not force a specific
@@ -295,7 +324,7 @@ export function InscripcionForm({
       <div>
         <p className={labelCls}>{t("fields.tier")}</p>
         <div className="mt-2 grid grid-cols-1 gap-3 sm:grid-cols-2">
-          {selectedCourse?.pricing.map((p) => {
+          {offeredPricing.map((p) => {
             const isActive = p.tier === tier;
             return (
               <button
