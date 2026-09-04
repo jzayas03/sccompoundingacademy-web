@@ -4,12 +4,13 @@ import { Button } from "@/components/ui/Button";
 import { Container } from "@/components/ui/Container";
 import { Reveal } from "@/components/ui/Reveal";
 import { cn } from "@/lib/cn";
-import { type Tier } from "@/lib/courses";
+import { isPricingOffered, type Tier } from "@/lib/courses";
 
 type CourseItem = {
   id: string;
   title: string;
   description: string;
+  courseRef?: string;
   enrollCourseId?: string;
   enrollTier?: Tier;
   enrollProf?: string;
@@ -38,14 +39,32 @@ export function CursosHome() {
       professionalHighlights: string[];
       studentHighlights: string[];
       otrosProfesionalesHighlights: string[];
+      parte2Highlights: string[];
+      subgraduadoHighlights: string[];
     };
   };
-  const { items, professionalHighlights, studentHighlights, otrosProfesionalesHighlights } =
-    messages.cursosGrid;
+  const {
+    items,
+    professionalHighlights,
+    studentHighlights,
+    otrosProfesionalesHighlights,
+    parte2Highlights,
+    subgraduadoHighlights,
+  } = messages.cursosGrid;
   const professional = items.find((c) => c.id === "basic-compounding") ?? items[0];
   const student = items.find((c) => c.id === "student-foundations") ?? items[1];
   const otros = items.find((c) => c.id === "otros-profesionales");
   if (!professional || !student) return null;
+
+  // Registro liviano (spec 2026-09-04): tarjetas gated por la presencia de
+  // su Stripe Price env — mismo criterio que /cursos (isPricingOffered).
+  const offered = (card: CourseItem | undefined): CourseItem | undefined =>
+    card &&
+    isPricingOffered(card.enrollCourseId ?? card.courseRef ?? card.id, card.enrollTier ?? "profesional")
+      ? card
+      : undefined;
+  const parte2 = offered(items.find((c) => c.id === "parte-2"));
+  const subgraduados = offered(items.find((c) => c.id === "estudiantes-subgraduados"));
 
   return (
     <section id="cursos" aria-label={t("heading")} className="bg-off-white">
@@ -77,6 +96,26 @@ export function CursosHome() {
             enrollAria={t("courseLinkAria")}
             priceNote={t("priceNoteStudent")}
           />
+          {parte2 && (
+            <CourseCard
+              tone="light"
+              course={parte2}
+              highlights={parte2Highlights}
+              enrollCta={t("courseCta")}
+              enrollAria={t("courseLinkAria")}
+              priceNote={t("priceNoteParte2")}
+            />
+          )}
+          {subgraduados && (
+            <CourseCard
+              tone="light"
+              course={subgraduados}
+              highlights={subgraduadoHighlights}
+              enrollCta={t("courseCta")}
+              enrollAria={t("courseLinkAria")}
+              priceNote={t("priceNoteSubgraduado")}
+            />
+          )}
         </Reveal>
       </Container>
     </section>

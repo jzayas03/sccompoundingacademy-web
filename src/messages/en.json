@@ -340,6 +340,20 @@
       "Small cohorts · materials and lunch included",
       "Supervised lab practice"
     ],
+    "parte2Highlights": [
+      "12 contact hours · 2 days · 6 hrs/day",
+      "Advanced non-sterile compounding practice",
+      "For pharmacists and technicians — no formal prerequisite",
+      "Direct registration: pay and receive your confirmation by email"
+    ],
+    "subgraduadoHighlights": [
+      "18 contact hours · 3 days · 6 hrs/day",
+      "Training from the ground up — USP 〈795〉 + 〈800〉",
+      "Dedicated cohorts for undergraduate students",
+      "Direct registration: pay and receive your confirmation by email"
+    ],
+    "priceNoteParte2": "Advanced practice, materials, and lunch included",
+    "priceNoteSubgraduado": "Attendance only — supervised practice and lunch included",
     "items": [
       {
         "id": "basic-compounding",

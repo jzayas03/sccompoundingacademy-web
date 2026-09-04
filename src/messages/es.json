@@ -340,6 +340,20 @@
       "Cohortes pequeñas · materiales y almuerzo incluidos",
       "Práctica supervisada en laboratorio"
     ],
+    "parte2Highlights": [
+      "12 horas de contacto · 2 días · 6 hrs/día",
+      "Práctica avanzada de compounding no estéril",
+      "Para farmacéuticos y técnicos — sin prerrequisito formal",
+      "Registro directo: pagas y recibes confirmación por email"
+    ],
+    "subgraduadoHighlights": [
+      "18 horas de contacto · 3 días · 6 hrs/día",
+      "Formación desde cero — USP 〈795〉 + 〈800〉",
+      "Cohortes dedicadas para estudiantes subgraduados",
+      "Registro directo: pagas y recibes confirmación por email"
+    ],
+    "priceNoteParte2": "Práctica avanzada, materiales y almuerzo incluidos",
+    "priceNoteSubgraduado": "Solo asistencia — práctica supervisada y almuerzo incluidos",
     "items": [
       {
         "id": "basic-compounding",
