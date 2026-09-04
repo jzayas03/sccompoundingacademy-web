@@ -1,4 +1,4 @@
-import { and, count, eq } from "drizzle-orm";
+import { and, count, desc, eq } from "drizzle-orm";
 import { db } from "@/lib/db";
 import {
   courseRegistrations,
@@ -50,6 +50,16 @@ export async function registrationExists(
     )
     .limit(1);
   return Boolean(row);
+}
+
+/** Todos los registros pagados, más reciente primero — para la vista admin
+ *  y el export CSV. Solo lectura: un registro pagado es final (reembolsos =
+ *  manual vía Stripe + borrado manual, ver runbook del admin). */
+export async function listRegistrations(): Promise<CourseRegistration[]> {
+  return db
+    .select()
+    .from(courseRegistrations)
+    .orderBy(desc(courseRegistrations.paidAt));
 }
 
 /**
