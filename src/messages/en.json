@@ -420,6 +420,38 @@
         "enrollCourseId": "basic-compounding",
         "enrollTier": "profesional",
         "enrollProf": "otro"
+      },
+      {
+        "id": "parte-2",
+        "level": "Advanced",
+        "title": "Advanced Non-Sterile Compounding — Part 2",
+        "audience": "farmaceutico_tecnico",
+        "description": "A 12-hour in-person course for pharmacists and technicians who already master the fundamentals of non-sterile compounding. Advanced lab practice; attendance only — no portal material or tests, and not continuing education.",
+        "duration": "12 h · 2 days",
+        "noCe": true,
+        "modules": [],
+        "includesItems": ["Supervised advanced practice", "Small-group format", "Lunch included"],
+        "credentialNote": "Attendance course — no ACPE CE credit. You'll receive your registration confirmation by email.",
+        "enrollCourseId": "parte-2"
+      },
+      {
+        "id": "estudiantes-subgraduados",
+        "level": "Foundations",
+        "title": "Undergraduate Students",
+        "audience": "subgraduado",
+        "description": "The 18-hour in-person course (USP 〈795〉 and 〈800〉) for undergraduate students interested in learning compounding from the ground up. Dedicated cohorts with their own dates; attendance only — no portal material or tests.",
+        "duration": "18 h · 3 days",
+        "courseRef": "basic-compounding",
+        "noCe": true,
+        "modules": [
+          { "id": "modulo-1", "day": "Day 1 · 6 hrs", "title": "Regulatory foundations and capsules", "summary": "USP 〈795〉 and 〈800〉, NIOSH, PPE, PR Pharmacy Act, DQSA; BUD math and a capsule lab." },
+          { "id": "modulo-2", "day": "Day 2 · 6 hrs", "title": "Suppositories, oral liquids, and dermatology", "summary": "Suppository formulation, oral suspensions, topical conditions, and pain-management preparations." },
+          { "id": "modulo-3", "day": "Day 3 · 6 hrs", "title": "Topical hormones, veterinary, and regulation", "summary": "BHRT, Topi-Click, penetration enhancers, 503A/503B, and veterinary compounding." }
+        ],
+        "includesItems": ["Supervised hands-on workshop", "Small-group format", "Lunch included"],
+        "credentialNote": "Attendance registration — no ACPE CE credit. You'll receive your registration confirmation by email.",
+        "enrollCourseId": "basic-compounding",
+        "enrollTier": "subgraduado"
       }
     ]
   },

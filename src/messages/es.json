@@ -420,6 +420,38 @@
         "enrollCourseId": "basic-compounding",
         "enrollTier": "profesional",
         "enrollProf": "otro"
+      },
+      {
+        "id": "parte-2",
+        "level": "Avanzado",
+        "title": "Compounding No Estéril Avanzado — Parte 2",
+        "audience": "farmaceutico_tecnico",
+        "description": "Curso presencial de 12 horas para farmacéuticos y técnicos que ya dominan los fundamentos del compounding no estéril. Práctica avanzada en laboratorio; solo asistencia — sin material de portal ni pruebas, y no es educación continua.",
+        "duration": "12 h · 2 días",
+        "noCe": true,
+        "modules": [],
+        "includesItems": ["Práctica avanzada supervisada", "Grupos pequeños", "Almuerzo incluido"],
+        "credentialNote": "Curso de asistencia — sin créditos CE de ACPE. Recibirás la confirmación de tu registro por email.",
+        "enrollCourseId": "parte-2"
+      },
+      {
+        "id": "estudiantes-subgraduados",
+        "level": "Fundamentos",
+        "title": "Estudiantes Subgraduados",
+        "audience": "subgraduado",
+        "description": "El curso presencial de 18 horas (USP 〈795〉 y 〈800〉) para estudiantes subgraduados interesados en aprender compounding desde cero. Cohortes dedicadas con fechas propias; solo asistencia — sin material de portal ni pruebas.",
+        "duration": "18 h · 3 días",
+        "courseRef": "basic-compounding",
+        "noCe": true,
+        "modules": [
+          { "id": "modulo-1", "day": "Día 1 · 6 hrs", "title": "Fundamentos regulatorios y cápsulas", "summary": "USP 〈795〉 y 〈800〉, NIOSH, PPE, Ley de Farmacia de PR, DQSA; cálculo de BUD y laboratorio de cápsulas." },
+          { "id": "modulo-2", "day": "Día 2 · 6 hrs", "title": "Supositorios, líquidos orales y dermatología", "summary": "Formulación de supositorios, suspensiones orales, condiciones tópicas y preparaciones para manejo del dolor." },
+          { "id": "modulo-3", "day": "Día 3 · 6 hrs", "title": "Hormonales tópicos, veterinaria y regulación", "summary": "BHRT, Topi-Click, penetration enhancers, 503A/503B y compounding veterinario." }
+        ],
+        "includesItems": ["Taller práctico supervisado", "Grupos pequeños", "Almuerzo incluido"],
+        "credentialNote": "Registro de asistencia — sin créditos CE de ACPE. Recibirás la confirmación de tu registro por email.",
+        "enrollCourseId": "basic-compounding",
+        "enrollTier": "subgraduado"
       }
     ]
   },
