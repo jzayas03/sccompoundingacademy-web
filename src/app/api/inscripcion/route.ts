@@ -5,7 +5,7 @@ import { z } from "zod";
 import { stripe } from "@/lib/stripe";
 import { getCourseById, getPricingByTier } from "@/lib/courses";
 import { getCohort, enrollmentCountByCohort } from "@/lib/cohorts";
-import { registrationExists, registrationCountByCohort } from "@/lib/registrations";
+import { registrationExists } from "@/lib/registrations";
 import { isEnrollable } from "@/lib/cohorts/enrollable";
 import { audienceMatches, audienceMismatchMessage } from "@/lib/cohorts/audience";
 import { getSiteUrl } from "@/lib/siteUrl";
@@ -382,12 +382,10 @@ export async function POST(req: Request) {
   // failure falls through to Stripe rather than hard-blocking a legitimate
   // enrollment.
   try {
-    // Seats taken = paid portal users + registros livianos. Para cohortes de
-    // cursos con teoría el segundo término es 0, así que sumar siempre es
-    // seguro y mantiene UN solo conteo en las dos familias de oferta.
+    // enrollmentCountByCohort ya incluye los registros livianos — es el
+    // conteo único de asientos en todo el sistema (ver lib/cohorts.ts).
     const paid = (await enrollmentCountByCohort()).get(cohort.id) ?? 0;
-    const registered = (await registrationCountByCohort()).get(cohort.id) ?? 0;
-    if (paid + registered >= cohort.capacity) {
+    if (paid >= cohort.capacity) {
       return NextResponse.json(
         { error: inscripcionApiError("cohort-full", loc) },
         { status: 409 },

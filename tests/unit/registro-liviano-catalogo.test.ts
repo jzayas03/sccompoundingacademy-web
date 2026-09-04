@@ -6,8 +6,13 @@
  * audiencia nueva mapea desde el tier, y el zod de inscripción acepta
  * subgraduado sin profesión (pero la sigue exigiendo a profesional).
  */
-import { describe, it, expect } from "vitest";
-import { COURSES, getCourseById, getPricingByTier } from "@/lib/courses";
+import { describe, it, expect, beforeEach, afterEach } from "vitest";
+import {
+  COURSES,
+  getCourseById,
+  getPricingByTier,
+  isPricingOffered,
+} from "@/lib/courses";
 import {
   enrolleeAudience,
   visibleAudiences,
@@ -54,6 +59,34 @@ describe("catálogo — displayTitle para emails server-side", () => {
       expect(c.displayTitle.es.length).toBeGreaterThan(0);
       expect(c.displayTitle.en.length).toBeGreaterThan(0);
     }
+  });
+});
+
+describe("isPricingOffered — gating por env de Stripe", () => {
+  beforeEach(() => {
+    delete process.env.STRIPE_PRICE_ID_PARTE2_PROFESIONAL;
+    delete process.env.STRIPE_PRICE_ID_BASICO_SUBGRADUADO;
+  });
+  afterEach(() => {
+    delete process.env.STRIPE_PRICE_ID_PARTE2_PROFESIONAL;
+    delete process.env.STRIPE_PRICE_ID_BASICO_SUBGRADUADO;
+  });
+
+  it("registrationOnly sin env → NO se ofrece; con env → sí", () => {
+    expect(isPricingOffered("parte-2", "profesional")).toBe(false);
+    expect(isPricingOffered("basic-compounding", "subgraduado")).toBe(false);
+
+    process.env.STRIPE_PRICE_ID_PARTE2_PROFESIONAL = "price_x";
+    process.env.STRIPE_PRICE_ID_BASICO_SUBGRADUADO = "price_y";
+    expect(isPricingOffered("parte-2", "profesional")).toBe(true);
+    expect(isPricingOffered("basic-compounding", "subgraduado")).toBe(true);
+  });
+
+  it("pricing con cuenta de portal → siempre ofrecido; curso/tier inexistente → no", () => {
+    expect(isPricingOffered("basic-compounding", "profesional")).toBe(true);
+    expect(isPricingOffered("basic-compounding", "student")).toBe(true);
+    expect(isPricingOffered("parte-2", "student")).toBe(false);
+    expect(isPricingOffered("no-existe", "profesional")).toBe(false);
   });
 });
 

@@ -181,6 +181,25 @@ export function getPricingByTier(course: Course, tier: Tier): Pricing | undefine
   return course.pricing.find((p) => p.tier === tier);
 }
 
+/**
+ * ¿Se puede ofrecer públicamente este curso+tier? (server-only: lee env)
+ *
+ * Un pricing `registrationOnly` sin su Stripe Price env NO se ofrece —
+ * oculta la tarjeta pública y la opción del formulario mientras el precio
+ * no exista (p. ej. subgraduado antes de definirlo). Sin la verja, el CTA
+ * aterrizaría en un form que resetea al primer tier ofrecible — el
+ * profesional de precio completo. Los pricing con cuenta de portal se
+ * ofrecen siempre (si su env faltara, el API responde 503 price-missing,
+ * comportamiento histórico).
+ */
+export function isPricingOffered(courseId: string, tier: Tier): boolean {
+  const course = getCourseById(courseId);
+  const pricing = course ? getPricingByTier(course, tier) : undefined;
+  if (!pricing) return false;
+  if (!pricing.registrationOnly) return true;
+  return Boolean(process.env[pricing.stripePriceEnvKey]);
+}
+
 /** Default tier shown selected in the inscription form. Covers RPh
  *  pharmacists and licensed pharmacy technicians. */
 export const DEFAULT_TIER: Tier = "profesional";
