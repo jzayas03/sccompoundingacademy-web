@@ -3,6 +3,13 @@
 Project rules for AI-assisted work in this repo. The global
 `~/.claude/CLAUDE.md` (workflow, hard rules) applies on top of this.
 
+## i18n (rule added 2026-09-04)
+
+- Arrays de i18n (`cursosGrid.items`, etc.) se resuelven por `id`, nunca
+  por índice posicional — el orden de i18n no coincide con el de los
+  catálogos TS (`COURSES`), y el desfase es silencioso (no lo detecta ni
+  tsc ni el build).
+
 ## Course material ↔ quiz banks (rule added 2026-08-19)
 
 - `src/lib/quizzes/dia-*.ts` (professional tier) MUST be the **literal

@@ -7,7 +7,7 @@ import {
   type CohortOption,
 } from "@/components/marketing/inscripcion/InscripcionForm";
 import { listOpenCohorts, formatCohortLabel } from "@/lib/cohorts";
-import { type Tier } from "@/lib/courses";
+import { COURSES, type Tier } from "@/lib/courses";
 
 export async function generateMetadata({
   params,
@@ -50,13 +50,30 @@ export default async function Page({
     audience: c.audience,
   }));
 
+  // Tiers ofrecibles por curso: solo los que tienen su Stripe Price env
+  // configurado (registro liviano, spec 2026-09-04). Server-only — el
+  // cliente no puede leer process.env, así que la decisión viaja como prop.
+  const enabledTiers: Record<string, Tier[]> = Object.fromEntries(
+    COURSES.map((c) => [
+      c.id,
+      c.pricing
+        .filter((p) => Boolean(process.env[p.stripePriceEnvKey]))
+        .map((p) => p.tier),
+    ]),
+  );
+
   return (
     <InscripcionPage
       locale={loc}
       preselectedCourseSlug={course}
-      preselectedTier={tier === "student" || tier === "profesional" ? tier : undefined}
+      preselectedTier={
+        tier === "student" || tier === "profesional" || tier === "subgraduado"
+          ? tier
+          : undefined
+      }
       preselectedProf={prof === "farmaceutico" || prof === "tecnico" || prof === "otro" ? prof : undefined}
       cohorts={cohorts}
+      enabledTiers={enabledTiers}
     />
   );
 }
@@ -67,12 +84,14 @@ function InscripcionPage({
   preselectedTier,
   preselectedProf,
   cohorts,
+  enabledTiers,
 }: {
   locale: "es" | "en";
   preselectedCourseSlug?: string;
   preselectedTier?: Tier;
   preselectedProf?: "farmaceutico" | "tecnico" | "otro";
   cohorts: CohortOption[];
+  enabledTiers: Record<string, Tier[]>;
 }) {
   const t = useTranslations("inscripcion");
   // Pull the version stamp of legal docs the user is accepting — same
@@ -105,6 +124,7 @@ function InscripcionPage({
             preselectedProf={preselectedProf}
             cohorts={cohorts}
             docsVersion={docsVersion}
+            enabledTiers={enabledTiers}
           />
         </div>
       </Container>
