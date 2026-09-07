@@ -725,6 +725,7 @@
     "noCohortsAvailable": "No open cohorts — write to us",
     "fields": {
       "curso": "Course",
+      "cambiarCurso": "Change course",
       "cohorte": "Cohort",
       "tier": "Enrollment type",
       "nombre": "Full name",

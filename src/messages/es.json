@@ -731,6 +731,7 @@
     "noCohortsAvailable": "Sin cohortes abiertas — escríbenos",
     "fields": {
       "curso": "Curso",
+      "cambiarCurso": "Cambiar curso",
       "cohorte": "Cohorte",
       "tier": "Tipo de inscripción",
       "nombre": "Nombre completo",

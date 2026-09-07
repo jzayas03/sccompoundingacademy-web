@@ -79,6 +79,13 @@ export function InscripcionForm({
       : COURSES[0]!.id,
   );
 
+  // Llegada desde una tarjeta (?course=): el curso queda fijo como texto,
+  // con "Cambiar curso" como escape — así no se puede escoger (y pagar) el
+  // curso equivocado por accidente.
+  const [courseLocked, setCourseLocked] = useState<boolean>(
+    Boolean(preselectedCourseId && COURSES.some((c) => c.id === preselectedCourseId)),
+  );
+
   // Initial guess only (unfiltered by audience — tier/profesion aren't known
   // yet at mount). The reset logic below corrects it once `availableCohorts`
   // is computable, on the very next render.
@@ -127,6 +134,11 @@ export function InscripcionForm({
 
   const selectedCourse = COURSES.find((c) => c.id === courseId);
 
+  // Lookup por id: el orden de cursosGrid.items (i18n) no coincide
+  // necesariamente con el de COURSES (catálogo).
+  const courseItems = tCursosGrid.raw("items") as { id: string; title: string }[];
+  const courseTitle = (id: string) => courseItems.find((it) => it.id === id)?.title ?? id;
+
   // Pricing ofrecible del curso seleccionado: filtrado por `enabledTiers`
   // (computado server-side según qué Stripe Price envs existen). Sin la
   // prop, se ofrecen todos — compat con tests/consumidores legacy.
@@ -143,6 +155,32 @@ export function InscripcionForm({
     setPrevOfferedKey(offeredKey);
     if (offeredPricing.length > 0 && !offeredPricing.some((p) => p.tier === tier)) {
       setTier(offeredPricing[0]!.tier);
+    }
+  }
+
+  // Cursos elegibles para el tipo de inscripción activo: un curso sin
+  // tarifa ofrecida para el tier (p. ej. Parte 2 para estudiantes) no se
+  // lista — antes, escogerlo cambiaba el tier en silencio y el participante
+  // podía pagar el curso equivocado. Derivado DESPUÉS del ajuste de tier de
+  // arriba, así `courseId` siempre pertenece a la lista.
+  const selectableCourses = COURSES.filter((c) =>
+    enabledTiers
+      ? (enabledTiers[c.id] ?? []).includes(tier)
+      : c.pricing.some((p) => p.tier === tier),
+  );
+
+  // URL a mano (p. ej. ?course=parte-2&tier=student) puede dejar un curso
+  // no elegible seleccionado — cae al primero elegible, mismo patrón
+  // render-adjust que el reset de tier/cohortes.
+  const selectableKey = selectableCourses.map((c) => c.id).join("|");
+  const [prevSelectableKey, setPrevSelectableKey] = useState<string | null>(null);
+  if (selectableKey !== prevSelectableKey) {
+    setPrevSelectableKey(selectableKey);
+    if (
+      selectableCourses.length > 0 &&
+      !selectableCourses.some((c) => c.id === courseId)
+    ) {
+      onCourseChange(selectableCourses[0]!.id);
     }
   }
 
@@ -438,28 +476,42 @@ export function InscripcionForm({
 
       {/* Course + cohort selectors */}
       <div className="grid grid-cols-1 gap-6 sm:grid-cols-2">
-        <label className="block">
+        <div className="block">
           <span className={labelCls}>{t("fields.curso")}</span>
-          <select
-            name="curso_id"
-            value={courseId}
-            onChange={(e) => onCourseChange(e.target.value)}
-            className={inputCls}
-            required
-          >
-            {COURSES.map((c) => {
-              // Lookup por id: el orden de cursosGrid.items (i18n) no coincide
-              // necesariamente con el de COURSES (catálogo).
-              const items = tCursosGrid.raw("items") as { id: string; title: string }[];
-              const title = items.find((it) => it.id === c.id)?.title ?? c.id;
-              return (
+          {courseLocked || selectableCourses.length <= 1 ? (
+            // Curso fijo (llegada desde tarjeta, o un solo curso elegible):
+            // texto en lugar de menú — el valor viaja en el payload desde el
+            // estado `courseId`, no desde un input.
+            <div>
+              <p className="mt-1.5 block w-full rounded-md border border-gray-300 bg-gray-50 px-3 py-2.5 text-base text-gray-900">
+                {courseTitle(courseId)}
+              </p>
+              {courseLocked && selectableCourses.length > 1 && (
+                <button
+                  type="button"
+                  onClick={() => setCourseLocked(false)}
+                  className="text-teal-deep mt-1.5 text-sm underline underline-offset-2"
+                >
+                  {t("fields.cambiarCurso")}
+                </button>
+              )}
+            </div>
+          ) : (
+            <select
+              name="curso_id"
+              value={courseId}
+              onChange={(e) => onCourseChange(e.target.value)}
+              className={inputCls}
+              required
+            >
+              {selectableCourses.map((c) => (
                 <option key={c.id} value={c.id}>
-                  {title}
+                  {courseTitle(c.id)}
                 </option>
-              );
-            })}
-          </select>
-        </label>
+              ))}
+            </select>
+          )}
+        </div>
         <label className="block">
           <span className={labelCls}>{t("fields.cohorte")}</span>
           <select
