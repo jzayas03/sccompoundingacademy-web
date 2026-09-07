@@ -12,7 +12,10 @@ export type CohortAudience =
   | "subgraduado";
 
 export const AUDIENCE_LABELS: Record<CohortAudience, { es: string; en: string }> = {
-  farmaceutico_tecnico: { es: "Farmacéuticos y Técnicos", en: "Pharmacists & Technicians" },
+  farmaceutico_tecnico: {
+    es: "Farmacéuticos y Técnicos (créditos de educación continua)",
+    en: "Pharmacists & Technicians (continuing education credits)",
+  },
   otros_profesionales: { es: "Otros Profesionales", en: "Other Professionals" },
   estudiante: { es: "Estudiantes de Farmacia", en: "Pharmacy Students" },
   subgraduado: { es: "Estudiantes Subgraduados", en: "Undergraduate Students" },
